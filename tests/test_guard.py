@@ -43,6 +43,17 @@ set_option maxHeartbeats 1000000 in
 set_option maxRecDepth 4000 in
 theorem t : True := trivial
 """,
+    "set_option usati dall'archivio": """
+set_option quotPrecheck false
+theorem t : True := trivial
+""",
+    "decide +kernel e' lecito": """
+-- `+kernel` fa controllare il KERNEL, il contrario di `+native`
+theorem t : (2:Nat) + 2 = 4 := by decide +kernel
+""",
+    "altre opzioni di tattica lecite": """
+theorem t : True := by simp +arith +decide
+""",
     "import leciti": """
 import FormalConjectures.Util.ProblemImports
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
@@ -142,6 +153,13 @@ CODICE_ESEGUIBILE = {
     "@[gcongr]": ("@[gcongr] def g := 1", "attributo:gcongr"),
     "@[fun_prop]": ("@[fun_prop] def f := 1", "attributo:fun_prop"),
     "@[export]": ("@[export mio_simbolo] def x := 1", "attributo:export"),
+
+    # --- `decide +native` e' `native_decide` con la sintassi nuova: lascia lo
+    # stesso assioma `Lean.ofReduceBool`. Non e' un caso ipotetico: 87
+    # dimostrazioni dell'archivio la usano.
+    "decide +native": ("theorem t : True := by decide +native", "opzione:+native"),
+    "decide+native": ("theorem t : True := by decide+native", "opzione:+native"),
+    "simp +native": ("theorem t : True := by simp +native", "opzione:+native"),
     "@[init]": ("@[init mioInit] def y := 1", "attributo:init"),
     "attribute [simproc]": ("attribute [simproc] qualcosa", "attributo:simproc"),
 
@@ -194,6 +212,12 @@ def test_il_guard_non_disturba_i_file_veri_dell_archivio():
     colpevoli = []
     for f in files:
         r = guard.check_source(f.read_text(encoding="utf-8"))
+        # `opzione:+native` NON va inclusa qui: e' un VERO positivo.
+        # 87 dimostrazioni dell'archivio usano `decide +native`, e il
+        # verificatore le rifiuta a ragione (lasciano l'assioma
+        # Lean.ofReduceBool). Non e' un falso allarme: e' il motivo per cui un
+        # problema "gia' risolto nell'archivio" non e' detto sia risolvibile
+        # sotto le nostre regole.
         nuove = [x for x in r.findings
                  if x.rule.startswith(("metaprogrammazione:", "attributo:"))
                  or x.rule in ("comando:meta", "comando:simproc", "comando:run_meta",

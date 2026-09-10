@@ -220,6 +220,12 @@ ALLOWED_OPTION_PREFIXES: tuple[str, ...] = (
     "synthInstance.", "pp.", "trace.", "linter.", "profiler",
     "autoImplicit", "relaxedAutoImplicit", "tactic.", "grind.",
     "aesop.", "exponentiation.", "backward.", "warn.",
+    # `quotPrecheck` riguarda il controllo anticipato delle citazioni nelle
+    # dichiarazioni di notazione: e' innocua e l'archivio la usa davvero
+    # (ErdosProblems/125.lean), quindi vietarla era un falso allarme.
+    "quotPrecheck",
+    # `hygiene` riguarda la cattura dei nomi nelle macro: non tocca il kernel.
+    "hygiene",
 )
 
 #: Opzioni esplicitamente vietate, con spiegazione dedicata (hanno la
@@ -233,6 +239,26 @@ BANNED_OPTIONS: dict[str, str] = {
     "bootstrap.inductiveCheckResultingUniverse": "disattiva un controllo del kernel",
     "genInjectivity": "disattiva la generazione di teoremi ausiliari",
     "structureDiamondWarning": "non pertinente",
+}
+
+#: Schemi vietati che non sono ne' parole singole ne' comandi: opzioni di
+#: tattica, sintassi alternative degli stessi trucchi.
+BANNED_PATTERNS: dict[str, tuple[str, str]] = {
+    # `decide +native` e' la sintassi nuova di `native_decide`, e lascia lo
+    # stesso assioma `Lean.ofReduceBool`. Scoperto leggendo l'archivio: le sue
+    # dimostrazioni di Selfridge.lean la usano, quindi il caso e' reale.
+    "opzione:+native": (
+        r"\+\s*native(?![A-Za-z0-9_'])",
+        "l'opzione `+native` (per esempio `decide +native`) fa calcolare il "
+        "compilatore invece del kernel: e' `native_decide` con un'altra "
+        "sintassi e lascia lo stesso assioma `Lean.ofReduceBool`. "
+        "Usa `decide` normale, oppure `decide +kernel`, che il kernel controlla."),
+    "assioma:Lean.ofReduceNat": (
+        r"(?<![A-Za-z0-9_'.])ofReduceNat(?![A-Za-z0-9_'])",
+        "`Lean.ofReduceNat` e' un altro assioma della valutazione compilata"),
+    "opzione:set_option in stringa": (
+        r"eval\s*%\[|evalExpr",
+        "valutazione di codice compilato"),
 }
 
 #: Moduli che il file candidato puo' importare.
@@ -306,6 +332,11 @@ def check_source(src: str) -> GuardReport:
         for attr, why in BANNED_ATTRS.items():
             if re.search(rf"@\[[^\]]*(?<!{_ID}){re.escape(attr)}(?!{_ID})", line):
                 add(idx, f"attributo:{attr}", why)
+
+        # --- schemi vietati (opzioni di tattica e sintassi alternative)
+        for regola, (schema, why) in BANNED_PATTERNS.items():
+            if re.search(schema, line):
+                add(idx, regola, why)
 
         # --- set_option
         for m in re.finditer(r"set_option\s+([A-Za-z_][\w.']*)", line):

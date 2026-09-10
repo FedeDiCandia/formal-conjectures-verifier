@@ -58,6 +58,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import config
 import guard
 import impronta as modulo_impronta
+import negazione
 import sandbox
 from index import ProblemIndex, Problem
 
@@ -67,6 +68,14 @@ from index import ProblemIndex, Problem
 # ---------------------------------------------------------------------------
 
 #: Esiti possibili.
+#: Modalita' di verifica.
+#:   stretta      -> si verifica l'enunciato dell'archivio come e' scritto.
+#:   confutazione -> si verifica la NEGAZIONE di un problema con `answer(sorry)`
+#:                   proposizionale, contro una sfida generata da noi (fidata).
+#:                   Vedi verifier/negazione.py.
+STRETTA = "stretta"
+CONFUTAZIONE = "confutazione"
+
 ACCEPTED = "ACCETTATO"
 REJECTED = "RIFIUTATO"
 ERROR = "ERRORE"
@@ -314,8 +323,15 @@ def verify(problem_id: str, candidate: Path | str, *,
            timeout: Optional[int] = None,
            slot: Optional[int] = None,
            keep_workspace: bool = False,
-           run_guard: bool = True) -> Result:
+           run_guard: bool = True,
+           modalita: str = STRETTA) -> Result:
     """Verifica `candidate` come dimostrazione del teorema `problem_id`.
+
+    `modalita=CONFUTAZIONE` verifica la NEGAZIONE del problema invece del
+    problema: serve per i 107 problemi aperti formalizzati con `answer(sorry)`
+    proposizionale, per i quali l'enunciato dell'archivio afferma che la
+    risposta e' "si'" e una confutazione non avrebbe altro modo di essere
+    verificata. Vedi verifier/negazione.py.
 
     `run_guard=False` salta il controllo sintattico preventivo. Serve SOLO ai
     test, per dimostrare che anche comparator — cioe' il giudice vero, non il
@@ -348,6 +364,24 @@ def verify(problem_id: str, candidate: Path | str, *,
         return done(ERROR, str(e))
     checks.append(Check("problema riconosciuto",
                         True, f"{problem.module} — categoria: {problem.category}"))
+
+    # --- 1bis. modalita' di verifica
+    if modalita not in (STRETTA, CONFUTAZIONE):
+        return done(ERROR, f"modalita' sconosciuta: {modalita!r} "
+                           f"(sono {STRETTA!r} e {CONFUTAZIONE!r})")
+    sfida_negata = None
+    if modalita == CONFUTAZIONE:
+        ok, perche = negazione.puo_essere_negato(problem)
+        if not ok:
+            checks.append(Check("il problema ammette una confutazione", False, perche))
+            return done(ERROR,
+                        f"Non si puo' costruire la sfida negata per {problem.theorem}: "
+                        f"{perche}")
+        sfida_negata = negazione.genera(problem)
+        checks.append(Check("il problema ammette una confutazione", True,
+                            "sfida negata generata dal sorgente dell'archivio: "
+                            "`answer(sorry)` sostituito da `answer(False)`, quindi "
+                            "l'enunciato passa da `True ↔ P` a `False ↔ P`, cioe' `¬P`"))
 
     # --- 2. l'enunciato originale e' verificabile?
     # Se l'enunciato stesso contiene un `sorry` (buco answer( ) non
@@ -394,8 +428,32 @@ def verify(problem_id: str, candidate: Path | str, *,
         sol_module = f"{config.SANDBOX_MODULE_PREFIX}.{sol_name}"
         sol_path.write_text(candidate.read_text(encoding="utf-8"), encoding="utf-8")
 
+        # --- quale modulo fa da Challenge
+        sfida_path = None
+        if sfida_negata is None:
+            modulo_sfida = problem.module          # l'archivio, intatto
+        else:
+            sfida_nome = f"Sfida{slot}"
+            sfida_path = sandbox_dir / f"{sfida_nome}.lean"
+            sfida_path.write_text(sfida_negata.testo, encoding="utf-8")
+            modulo_sfida = f"{config.SANDBOX_MODULE_PREFIX}.{sfida_nome}"
+            # La sfida la compiliamo NOI, fuori dalla sandbox: e' un file fidato,
+            # generato meccanicamente dal sorgente dell'archivio. Dentro la
+            # sandbox la scrittura dei suoi artefatti sarebbe vietata.
+            esito_sfida, uscita_sfida = _run_with_timeout(
+                [str(config.ELAN_BIN / "lake"), "build", modulo_sfida],
+                cwd=config.ARCHIVE, env=config.lean_env(), timeout=timeout)
+            if esito_sfida != 0:
+                checks.append(Check("la sfida negata compila", False,
+                                    "il file generato non compila"))
+                return done(ERROR,
+                            "La sfida negata non compila. E' un problema del "
+                            "generatore, non del candidato.",
+                            errors=_lean_errors(uscita_sfida), raw=uscita_sfida)
+            checks.append(Check("la sfida negata compila", True, modulo_sfida))
+
         cfg = {
-            "challenge_module": problem.module,
+            "challenge_module": modulo_sfida,
             "solution_module": sol_module,
             "theorem_names": [problem.theorem],
             "permitted_axioms": config.PERMITTED_AXIOMS,
@@ -469,6 +527,8 @@ def verify(problem_id: str, candidate: Path | str, *,
         if not keep_workspace:
             try:
                 sol_path.unlink(missing_ok=True)
+                if sfida_path is not None:
+                    sfida_path.unlink(missing_ok=True)
                 # rimuove anche l'artefatto compilato, per non lasciare spazzatura
                 built = (config.ARCHIVE / ".lake" / "build" / "lib" / "lean"
                          / config.SANDBOX_SUBDIR / f"{sol_name}")
@@ -496,6 +556,16 @@ def verify(problem_id: str, candidate: Path | str, *,
             ("accettato dal kernel", "termine di prova rieseguito nel kernel di Lean"),
         ]:
             checks.append(Check(nome, True, dettaglio))
+        if sfida_negata is not None:
+            return done(ACCEPTED,
+                        "CONFUTAZIONE VALIDA.\n\n"
+                        f"E' stato dimostrato `False ↔ P`, cioe' `¬P`: la risposta alla "
+                        f"domanda posta da {problem.theorem} e' NO.\n\n"
+                        "Attenzione: questo CONTRADDICE l'enunciato dell'archivio, che "
+                        "con `answer(sorry)` afferma che la risposta e' si'. Se la "
+                        "confutazione e' corretta, la formalizzazione dell'archivio va "
+                        "aggiornata a `answer(False)` (e il risultato va sottoposto a "
+                        "revisione umana prima di crederci).", raw=output)
         nota = "La dimostrazione e' valida."
         if problem.answer_placeholder_in_source:
             nota += (
@@ -555,6 +625,9 @@ def main() -> int:
     ap.add_argument("--timeout", type=int, default=None, help="secondi (default: %d)" % config.TIMEOUT_SECONDS)
     ap.add_argument("--jobs", type=int, default=None, help="processi Lean in parallelo (default: %d)" % config.MAX_PARALLEL)
     ap.add_argument("--batch", help="file JSONL con righe {\"problem\":..., \"file\":...}")
+    ap.add_argument("--confutazione", action="store_true",
+                    help="verifica la NEGAZIONE del problema (solo per i problemi con "
+                         "answer(sorry) proposizionale): l'enunciato diventa `False ↔ P`")
     ap.add_argument("--keep-workspace", action="store_true",
                     help="non cancellare il modulo Lean generato (per capire cosa e' successo)")
     args = ap.parse_args()
@@ -580,7 +653,9 @@ def main() -> int:
         ap.print_help()
         return 2
 
-    r = verify(args.problem, args.file, timeout=args.timeout, keep_workspace=args.keep_workspace)
+    r = verify(args.problem, args.file, timeout=args.timeout,
+               keep_workspace=args.keep_workspace,
+               modalita=CONFUTAZIONE if args.confutazione else STRETTA)
     print(r.to_json() if args.json else r.render())
     return 0 if r.accepted else 1
 

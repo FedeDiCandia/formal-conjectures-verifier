@@ -91,24 +91,96 @@ dedicata, che viene cancellata a fine verifica.
 
 ## Cosa aggiungiamo noi
 
-### 1. Il controllo sintattico preventivo (`guard.py`)
+### 1. L'isolamento della compilazione (`sandbox.py`)
 
 comparator, per giudicare, deve **compilare** il file candidato. E compilare un
-file Lean significa eseguire codice arbitrario (`#eval`, macro, elaboratori). Su
-Linux comparator isola la compilazione con `landrun`; **su macOS quella sandbox
-non esiste** e noi usiamo uno shim che non isola niente.
+file Lean significa eseguire codice arbitrario. Su Linux comparator isola la
+compilazione con `landrun`; su macOS `landrun` non esiste.
 
-Il guard e' la difesa in profondita': legge il file *prima* di compilarlo e
-rifiuta i costrutti che non servono a una dimostrazione onesta. Vedi il
-commento in cima a `verifier/guard.py` per l'elenco completo.
+La verifica gira quindi dentro `sandbox-exec`, il meccanismo di isolamento del
+kernel di macOS. Deprecato da Apple ma funzionante:
 
-Il guard **non** e' cio' che rende affidabile il verificatore: e' un filtro
-testuale, e un filtro testuale si puo' sempre aggirare. Le garanzie vere
-restano quelle di comparator. Per questo i test verificano entrambi i livelli
+| | |
+|---|---|
+| rete | **negata** |
+| scrittura | **solo** le tre cartelle che una verifica tocca davvero (misurate: i sorgenti del modulo temporaneo e i due rami di `.lake/build` che lo riguardano) e i temporanei |
+| lettura | negata su `.ssh`, `.aws`, `.gnupg`, le credenziali Anthropic e il `.env` |
+
+Collaudato con un candidato che usa `#eval` e `IO.FS.writeFile` per riscrivere
+un `.olean` dell'archivio. Il codice ostile stesso riporta:
+
+```
+sabotaggio impedito: operation not permitted (error code: 1)
+```
+
+e il file resta byte per byte identico. Il test include la **controprova**:
+senza sandbox la stessa scrittura riesce, altrimenti non avremmo dimostrato che
+e' la sandbox a fermarla.
+
+### 2. Il controllo dell'integrita' dell'archivio (`impronta.py`)
+
+Il README di comparator elenca fra i suoi assunti (il numero 2) che non si
+debbano aver compilato file potenzialmente ostili, perche' potrebbero aver
+alterato i file compilati da cui si legge l'enunciato. Noi facciamo verifiche a
+ripetizione nella stessa cartella: quell'assunto va **controllato**, non dato
+per buono.
+
+Prima e dopo ogni verifica si prende un'impronta:
+
+- i **5378 file dell'archivio** (786 `.olean` piu' i sorgenti, 126 MB) hashati
+  per contenuto, uno per uno, cosi' si puo' dire *quale* file e' cambiato;
+- i **111 232 file di Mathlib e delle dipendenze** (6,8 GB, troppi da hashare)
+  per metadati: percorso, dimensione, data al nanosecondo.
+
+Costa 0,75 secondi per impronta. Se qualcosa cambia, la verifica restituisce
+`ERRORE`, non un esito: un confronto contro un enunciato alterato non
+significherebbe niente.
+
+Perche' servono **entrambe** le difese: comparator esporta il Challenge *prima*
+di compilare la Solution, quindi un sabotaggio non altera la verifica in corso
+ma quelle successive. E l'impronta non si fida del meccanismo di isolamento,
+che e' deprecato da Apple e su Linux e' un altro.
+
+### 3. Il controllo sintattico preventivo (`guard.py`)
+
+Legge il file *prima* di compilarlo e rifiuta i costrutti che non servono a una
+dimostrazione onesta.
+
+Non e' cio' che rende affidabile il verificatore — e' un filtro testuale, e un
+filtro testuale si puo' sempre aggirare. Le garanzie vere restano quelle di
+comparator e della sandbox. Per questo i test verificano i livelli
 separatamente: che il guard blocchi, **e** che comparator rifiuti lo stesso file
 anche col guard disattivato.
 
-### 2. Il trattamento di `answer( )`
+Il primo collaudo con l'agente ha rivelato che **19 costrutti passavano**. Ora
+l'elenco viene dai sorgenti di Lean 4.27 (`Elab/BuiltinCommand.lean`, gli
+`@[builtin_command_elab ...]`) e dal censimento degli attributi di Mathlib che
+registrano codice eseguibile:
+
+- comandi: `run_meta`, `#eval!`, `simproc`, `register_simp_attr`,
+  `declare_syntax_cat`, `notation3`, `meta`, ...
+- attributi: `@[simproc]`, `@[tactic]`, `@[command_elab]`, `@[term_elab]`,
+  `@[norm_num]`, `@[positivity]`, `@[delab]`, `@[init]`, ...
+- **un controllo strutturale** sui tipi di metaprogrammazione (`MetaM`, `CoreM`,
+  `TacticM`, `IO`, `Expr`, `Syntax`...): invece di inseguire i comandi uno per
+  uno, rifiuta il file che *parla il linguaggio* della metaprogrammazione. E'
+  questo che intercetta anche i costrutti che non abbiamo previsto.
+
+Due bug corretti: `#eval!` sfuggiva perche' il punto esclamativo faceva parte
+dei caratteri di identificatore usati nel controllo, e `meta` veniva rimosso
+come modificatore *prima* del controllo, rendendo `meta def` invisibile.
+
+Trovato anche `decide +native`, la sintassi nuova di `native_decide`: lascia lo
+stesso assioma `Lean.ofReduceBool`. Non e' un caso ipotetico — **87
+dimostrazioni dell'archivio la usano**, e il verificatore le rifiuta a ragione.
+Conseguenza importante: *un problema "gia' risolto nell'archivio" non e' detto
+sia risolvibile sotto le nostre regole*.
+
+Contro i falsi allarmi c'e' un test che applica tutte le regole nuove ai **674
+file di problemi veri** dell'archivio: l'unica cosa che scatta e' `+native`, che
+e' un vero positivo.
+
+### 4. Il trattamento di `answer( )`
 
 Come spiegato in [01-archivio-formal-conjectures.md](01-archivio-formal-conjectures.md),
 l'opzione predefinita `google.answer = always_true` fa diventare `answer(sorry)`
@@ -130,7 +202,44 @@ insieme). Li' l'enunciato contiene davvero un `sorry`, e il verificatore:
 Confondere questi due casi sarebbe il modo piu' facile di costruire un sistema
 che "risolve" problemi aperti senza risolvere niente.
 
-### 3. Timeout e parallelismo
+#### Le sfide negate
+
+Resta un terzo caso, ed e' il piu' interessante. **107 problemi ancora aperti**
+sono formalizzati con `answer(sorry)` proposizionale, quindi l'enunciato che Lean
+vede e' `True ↔ P`: l'affermazione che la risposta e' **si'**.
+
+Se per uno di quei problemi la risposta giusta fosse **no**, il teorema com'e'
+scritto sarebbe falso e indimostrabile. Chi trovasse la confutazione non avrebbe
+modo di farla verificare: dovrebbe cambiare l'enunciato in `answer(False) ↔ P`,
+e il verificatore lo rifiuterebbe — giustamente, perche' e' un altro enunciato.
+
+`verifier/negazione.py` genera allora una seconda sfida, **fidata**: lo stesso
+file dell'archivio con `answer(sorry)` sostituito da `answer(False)` nella sola
+dichiarazione del teorema bersaglio. Ogni problema aperto ne ha quindi due:
+
+| modalita' | enunciato | significato |
+|---|---|---|
+| `stretta` (predefinita) | `True ↔ P` | la risposta e' si' — l'enunciato dell'archivio |
+| `confutazione` | `False ↔ P` | la risposta e' no, cioe' `¬P` |
+
+Il punto essenziale e' **chi genera** quel file: lo generiamo noi,
+meccanicamente, dal sorgente dell'archivio. Non lo scrive chi propone la
+dimostrazione — altrimenti potrebbe metterci dentro qualunque cosa.
+
+Uso:
+
+```bash
+./.venv/bin/python verifier/verify.py NOME_TEOREMA file.lean --confutazione
+```
+
+Come si collauda tutto questo senza risolvere un problema aperto: comparator
+confronta gli **enunciati** prima di controllare gli **assiomi**. Un candidato
+con la dimostrazione lasciata a `sorry` viene quindi rifiutato per `sorryAx` se
+l'enunciato combacia, e per "statement do not match" se differisce. Il motivo
+del rifiuto dice se gli enunciati combaciano, e quattro combinazioni bastano a
+dimostrare che le due sfide sono enunciati distinti e che funzionano entrambe.
+
+### 5. Timeout e parallelismo
 
 Ogni verifica gira con un tempo massimo. Alla scadenza viene ucciso **l'intero
 albero di processi** (`comparator` lancia `lake`, che lancia `lean`): ammazzare
@@ -146,16 +255,31 @@ due verifiche simultanee non si sovrascrivono i file.
 
 Onesta' intellettuale, elencata esplicitamente:
 
-1. **Su macOS non c'e' sandbox.** Un file candidato ostile potrebbe eseguire
-   codice durante la compilazione. Il guard riduce il rischio ma non lo
-   elimina. Su Linux, installando il vero `landrun`, la garanzia si recupera.
-2. **La correttezza del kernel di Lean e' un assunto.** comparator puo' usare
+1. **L'isolamento su macOS usa `sandbox-exec`, che Apple ha deprecato.** Funziona
+   ed e' verificato dai test, ma non e' un meccanismo su cui Apple si impegni.
+   Su Linux la strada giusta e' installare il vero `landrun` e puntarci
+   `FCS_LANDRUN`. Per questo il controllo dell'impronta esiste comunque: non si
+   fida della sandbox.
+2. **L'impronta usa i metadati per Mathlib, non il contenuto.** Percorso,
+   dimensione e data al nanosecondo: una modifica che conservasse tutti e tre
+   sfuggirebbe. Hashare 6,8 GB a ogni verifica non era praticabile. I file
+   dell'archivio, che sono quelli da cui si legge l'enunciato, sono invece
+   hashati per contenuto.
+3. **La correttezza del kernel di Lean e' un assunto.** comparator puo' usare
    kernel esterni indipendenti (`external_kernels`) per ridurre anche questo;
    noi non lo facciamo ancora.
-3. **La cache di Mathlib e' scaricata da internet.** Se quella cache contenesse
+4. **La cache di Mathlib e' scaricata da internet.** Se quella cache contenesse
    definizioni alterate, tutto il ragionamento cade. E' l'assunto standard di
    chiunque usi `lake exe cache get`.
-4. **La fedelta' della formalizzazione non e' verificabile.** Se l'enunciato
+5. **La fedelta' della formalizzazione non e' verificabile.** Se l'enunciato
    Lean nell'archivio non cattura davvero la congettura in italiano, una
    dimostrazione corretta di quell'enunciato non dimostra la congettura. E'
    un limite dell'archivio, non nostro, e l'archivio lo dichiara apertamente.
+6. **Il guard e' un filtro testuale, e i filtri testuali si aggirano.** Il
+   controllo strutturale sui tipi di metaprogrammazione alza molto l'asticella,
+   ma la difesa vera contro l'esecuzione di codice e' la sandbox, e contro le
+   scorciatoie logiche e' comparator.
+7. **Una confutazione verificata non e' una confutazione accettata.** La
+   modalita' `confutazione` garantisce che `¬P` sia dimostrato correttamente,
+   non che la formalizzazione di `P` sia fedele alla congettura originale. Un
+   risultato del genere va sottoposto a revisione umana prima di crederci.
