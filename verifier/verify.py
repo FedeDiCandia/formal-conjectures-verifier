@@ -226,14 +226,78 @@ def _classify(output: str) -> tuple[str, str]:
     return ("verifica di comparator", "comparator ha rifiutato il candidato")
 
 
-def _lean_errors(output: str) -> str:
-    """Estrae solo le righe di errore di Lean, per rimandarle all'agente."""
-    keep = []
-    for line in output.split("\n"):
-        if re.search(r"\berror\b|Illegal axiom|do not match|not found in|does not match|"
-                     r"rejected the solution|uncaught exception", line):
-            keep.append(line.rstrip())
-    return "\n".join(keep[:60])
+#: Righe con cui `lake` annuncia lo stato: non sono messaggi di Lean.
+_STATO_LAKE = re.compile(r"^(Building |Exporting |Build completed|Running |"
+                         r"[✔⚠✖ℹ] |info: \[|error: build failed|trace:)")
+
+#: Inizio di un messaggio di Lean. Il messaggio prosegue sulle righe successive
+#: finche' non ne comincia un altro o non compare una riga di stato di lake.
+_INIZIO_MESSAGGIO = re.compile(r"^(info|warning|error): ")
+
+#: Linter di STILE dell'archivio: si lamentano che il nostro modulo temporaneo
+#: non ha l'intestazione di copyright, non ha il docstring di modulo, ecc.
+#: Sono irrilevanti — il file candidato non e' un contributo all'archivio — e
+#: ripetono quindici righe di licenza a ogni messaggio, inondando il contesto.
+_RUMORE_LINTER = re.compile(
+    r"linter\.style\.(copyright|namespace|ams_attribute|category_attribute|moduleDocstring)"
+    r"|The copyright header is incorrect"
+    r"|missing a module docstring")
+
+#: Messaggi di comparator: righe isolate, senza il prefisso di Lean.
+_MESSAGGIO_COMPARATOR = re.compile(
+    r"Illegal axiom|do not match|does not match|not found in|Constant not found|"
+    r"rejected the solution|uncaught exception|kernel accepts")
+
+
+def _blocchi_messaggi(output: str) -> list[str]:
+    """Ricompone i messaggi di Lean, che sono blocchi su piu' righe."""
+    blocchi: list[str] = []
+    corrente: list[str] = []
+
+    def chiudi():
+        if corrente:
+            blocchi.append("\n".join(corrente).rstrip())
+            corrente.clear()
+
+    for riga in output.split("\n"):
+        if _INIZIO_MESSAGGIO.match(riga):
+            chiudi()
+            corrente.append(riga.rstrip())
+        elif _STATO_LAKE.match(riga):
+            chiudi()
+        elif corrente:
+            corrente.append(riga.rstrip())
+        elif _MESSAGGIO_COMPARATOR.search(riga):
+            blocchi.append(riga.rstrip())
+    chiudi()
+    return blocchi
+
+
+def _lean_errors(output: str, max_caratteri: int = 12_000) -> str:
+    """I messaggi di Lean e di comparator, da rimandare a chi ha scritto il file.
+
+    Include DELIBERATAMENTE anche i messaggi `info:`, cioe' l'output di
+    `#check`, `#print`, `exact?` e simili: sono il modo normale di ispezionare
+    una definizione, e senza di essi chi scrive la dimostrazione e' costretto a
+    dedurre le definizioni provocando errori di proposito.
+
+    Toglie invece i linter di stile dell'archivio, che sono puro rumore per un
+    file temporaneo e ripetono la licenza a ogni messaggio.
+    """
+    utili = [b for b in _blocchi_messaggi(output) if not _RUMORE_LINTER.search(b)]
+
+    # Toglie i duplicati esatti mantenendo l'ordine (Lean ripete lo stesso
+    # messaggio una volta per ogni passata di compilazione).
+    visti, unici = set(), []
+    for b in utili:
+        if b not in visti:
+            visti.add(b)
+            unici.append(b)
+
+    testo = "\n\n".join(unici)
+    if len(testo) > max_caratteri:
+        testo = testo[:max_caratteri] + f"\n\n... [messaggi troncati a {max_caratteri} caratteri]"
+    return testo
 
 
 # ---------------------------------------------------------------------------

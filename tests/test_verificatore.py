@@ -184,3 +184,66 @@ def test_9_verifiche_in_parallelo():
     assert len(risultati) == 2
     assert risultati[0].status == ACCEPTED, risultati[0].render()
     assert risultati[1].status == REJECTED, risultati[1].render()
+
+
+# --- Extra: i messaggi restituiti a chi ha scritto il file ------------------
+
+RUMORE_COPYRIGHT = """\
+Building FormalConjectures.Wikipedia.JugglerConjecture
+Build completed successfully (7993 jobs).
+⚠ [7993/7993] Built FormalConjectures._Judge.S0 (7.3s)
+warning: FormalConjectures/_Judge/S0.lean:1:0: The copyright header is incorrect. Please copy and paste the following one:
+/-
+Copyright 2026 The Formal Conjectures Authors.
+Licensed under the Apache License, Version 2.0 (the "License");
+-/
+
+Note: This linter can be disabled with `set_option linter.style.copyright.formalConjectures false`
+info: FormalConjectures/_Judge/S0.lean:8:0: @Nat.floor : {a : Type} -> a -> N
+info: FormalConjectures/_Judge/S0.lean:9:0: def Even : a -> Prop :=
+fun a => exists r, a = r + r
+error: FormalConjectures/_Judge/S0.lean:14:2: unsolved goals
+case h
+n : N
+|- n = 6
+uncaught exception: Illegal axiom detected: 'sorryAx'
+"""
+
+
+def test_10_i_messaggi_info_di_lean_arrivano_a_chi_scrive():
+    """`#check` e `#print` producono messaggi `info:`. Se li buttassimo via,
+    chi scrive la dimostrazione non avrebbe modo di ispezionare le definizioni
+    e dovrebbe dedurle provocando errori di proposito — cosa che e' davvero
+    successa durante il primo collaudo con l'agente."""
+    from verify import _lean_errors
+    out = _lean_errors(RUMORE_COPYRIGHT)
+    assert "@Nat.floor" in out, "l'output di #check deve arrivare"
+    assert "def Even" in out, "l'output di #print deve arrivare"
+    assert "fun a => exists r, a = r + r" in out, \
+        "le righe di continuazione del messaggio devono restare attaccate"
+
+
+def test_11_gli_errori_veri_arrivano_con_il_contesto():
+    from verify import _lean_errors
+    out = _lean_errors(RUMORE_COPYRIGHT)
+    assert "unsolved goals" in out
+    assert "|- n = 6" in out, "il contesto dell'obiettivo non dimostrato serve a capire l'errore"
+    assert "Illegal axiom detected: 'sorryAx'" in out
+
+
+def test_12_il_rumore_dei_linter_di_stile_viene_tolto():
+    """Il linter del copyright dell'archivio ripete quindici righe di licenza a
+    ogni messaggio: e' irrilevante per un file temporaneo e inonderebbe il
+    contesto di chi legge."""
+    from verify import _lean_errors
+    out = _lean_errors(RUMORE_COPYRIGHT)
+    assert "copyright" not in out.lower()
+    assert "Apache" not in out
+    assert "Building" not in out and "Build completed" not in out, \
+        "le righe di stato di lake non sono messaggi di Lean"
+
+
+def test_13_i_messaggi_ripetuti_compaiono_una_volta_sola():
+    from verify import _lean_errors
+    doppio = RUMORE_COPYRIGHT + RUMORE_COPYRIGHT
+    assert _lean_errors(doppio).count("@Nat.floor") == 1

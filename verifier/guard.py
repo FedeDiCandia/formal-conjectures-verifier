@@ -106,6 +106,11 @@ def strip_comments_and_strings(src: str) -> str:
 # falsi allarmi: `sorryFree` non deve far scattare la regola su `sorry`.
 _ID = r"[A-Za-z0-9_'!?À-ɏͰ-Ͽ⁰-₟ᴀ-ᵿ]"
 
+#: Come `_ID` ma senza `!` e `?`. Serve per i comandi che iniziano con `#`:
+#: `#eval!` e' un comando diverso da `#eval`, e con `_ID` (che contiene `!`)
+#: la ricerca di `#eval` non lo trovava — un buco vero, scoperto collaudando.
+_ID_CODA = r"[A-Za-z0-9_'À-ɏͰ-Ͽ⁰-₟ᴀ-ᵿ]"
+
 
 def _token(word: str) -> re.Pattern:
     return re.compile(rf"(?<!{_ID})(?<!\.){re.escape(word)}(?!{_ID})")
@@ -139,6 +144,18 @@ BANNED_COMMANDS: dict[str, str] = {
     "builtin_initialize": "`builtin_initialize` esegue codice al caricamento del modulo",
     "unsafe": "`unsafe` disattiva i controlli di terminazione e sicurezza",
     "extern": "`extern` collega la dichiarazione a codice esterno",
+    # --- aggiunti dopo aver letto i sorgenti di Lean 4.27 (Elab/BuiltinCommand.lean):
+    # questi sono i comandi che l'elaboratore registra come esecutori di codice.
+    "meta": "`meta` marca codice di metaprogrammazione, che gira durante la compilazione",
+    "run_meta": "`run_meta` esegue codice arbitrario in MetaM durante la compilazione",
+    "#eval!": "`#eval!` esegue codice arbitrario durante la compilazione",
+    "simproc": "una simproc e' codice che gira dentro `simp`",
+    "simproc_decl": "una simproc e' codice che gira dentro `simp`",
+    "builtin_simproc": "una simproc e' codice che gira dentro `simp`",
+    "register_simp_attr": "registra un attributo che fa girare codice dentro `simp`",
+    "declare_syntax_cat": "dichiarare una categoria sintattica serve solo a definire nuova sintassi",
+    "notation3": "e' una macro di Mathlib: altera il significato del codice",
+    "binderPredicate": "definisce nuova sintassi per i quantificatori",
 }
 
 #: Attributi vietati: cambiano il codice eseguito, non la matematica.
@@ -147,6 +164,53 @@ BANNED_ATTRS: dict[str, str] = {
     "extern": "`@[extern]` collega la dichiarazione a codice esterno",
     "csimp": "`@[csimp]` riscrive il codice compilato (rilevante per native_decide)",
     "never_extract": "attributo di basso livello non necessario a una dimostrazione",
+    # --- attributi che REGISTRANO codice eseguibile presso un elaboratore o una
+    # tattica. Non si applicano mai a un lemma ordinario: per usarli bisogna
+    # prima aver scritto codice di metaprogrammazione.
+    "simproc": "`@[simproc]` registra codice che gira dentro `simp`",
+    "tactic": "`@[tactic]` registra l'implementazione di una tattica",
+    "command_elab": "`@[command_elab]` registra un elaboratore di comandi",
+    "term_elab": "`@[term_elab]` registra un elaboratore di termini",
+    "builtin_command_elab": "registra un elaboratore di comandi",
+    "builtin_term_elab": "registra un elaboratore di termini",
+    "builtin_tactic": "registra l'implementazione di una tattica",
+    "builtin_simproc": "registra codice che gira dentro `simp`",
+    "delab": "`@[delab]` registra codice per la stampa dei termini",
+    "app_unexpander": "registra codice per la stampa dei termini",
+    "norm_num": "`@[norm_num]` registra un'estensione di `norm_num`, cioe' codice",
+    "positivity": "`@[positivity]` registra un'estensione di `positivity`, cioe' codice",
+    "gcongr": "`@[gcongr]` registra un'estensione di `gcongr`, cioe' codice",
+    "fun_prop": "`@[fun_prop]` registra un'estensione di `fun_prop`, cioe' codice",
+    "macro": "`@[macro]` registra una macro",
+    "export": "`@[export]` espone la dichiarazione al codice nativo",
+    "init": "`@[init]` fa eseguire codice al caricamento del modulo",
+    "builtin_init": "fa eseguire codice al caricamento del modulo",
+}
+
+#: Nomi di tipo che compaiono SOLO nel codice di metaprogrammazione.
+#: E' il controllo strutturale: invece di inseguire i comandi uno per uno,
+#: rifiutiamo il file che dichiara qualcosa in una monade di elaborazione o di
+#: input/output. Una dimostrazione matematica non ne ha mai bisogno.
+BANNED_META_TYPES: dict[str, str] = {
+    "MetaM": "monade di metaprogrammazione",
+    "CoreM": "monade di metaprogrammazione",
+    "TermElabM": "monade dell'elaboratore di termini",
+    "TacticM": "monade delle tattiche",
+    "CommandElabM": "monade dell'elaboratore di comandi",
+    "MacroM": "monade delle macro",
+    "AttrM": "monade degli attributi",
+    "IO": "input/output: permette di leggere e scrivere file, non serve a una dimostrazione",
+    "EIO": "input/output",
+    "BaseIO": "input/output",
+    "Simproc": "tipo delle procedure di semplificazione",
+    "NormNumExt": "estensione di `norm_num`, cioe' codice",
+    "PositivityExt": "estensione di `positivity`, cioe' codice",
+    "Expr": "rappresentazione interna dei termini: e' metaprogrammazione",
+    "Syntax": "albero sintattico: e' metaprogrammazione",
+    "TSyntax": "albero sintattico: e' metaprogrammazione",
+    "Elab": "spazio dei nomi dell'elaboratore",
+    "evalExpr": "valuta un termine come codice compilato",
+    "unsafeIO": "esegue input/output aggirando i controlli",
 }
 
 #: Prefissi di `set_option` CONSENTITI. Tutto il resto e' rifiutato: e' una
@@ -215,11 +279,28 @@ def check_source(src: str) -> GuardReport:
                                    f"NON si puo' importare il modulo del problema stesso.")
 
         # --- comandi vietati (a inizio riga, eventualmente dopo modificatori)
-        head = re.sub(r"^(private|protected|public|noncomputable|scoped|local|meta|@\[[^\]]*\])\s+",
+        # NB: `meta` NON va tolto qui — e' esso stesso un comando vietato
+        # (marca il codice di metaprogrammazione). Toglierlo lo rendeva invisibile.
+        head = re.sub(r"^(private|protected|public|noncomputable|scoped|local|@\[[^\]]*\])\s+",
                       "", stripped)
         for cmd, why in BANNED_COMMANDS.items():
-            if re.match(rf"^{re.escape(cmd)}(?!{_ID})", head):
+            coda = _ID_CODA if cmd.startswith("#") else _ID
+            if re.match(rf"^{re.escape(cmd)}(?!{coda})", head):
                 add(idx, f"comando:{cmd}", why)
+
+        # --- `attribute [X] ...` puo' applicare un attributo vietato a posteriori
+        for m in re.finditer(r"attribute\s*\[([^\]]*)\]", line):
+            for attr, why in BANNED_ATTRS.items():
+                if re.search(rf"(?<!{_ID}){re.escape(attr)}(?!{_ID})", m.group(1)):
+                    add(idx, f"attributo:{attr}", why)
+
+        # --- tipi di metaprogrammazione
+        for tipo, why in BANNED_META_TYPES.items():
+            if re.search(rf"(?<!{_ID})(?<!\.){re.escape(tipo)}(?!{_ID})", line):
+                add(idx, f"metaprogrammazione:{tipo}",
+                    f"il file nomina `{tipo}` ({why}). Una dimostrazione matematica non "
+                    f"usa la metaprogrammazione: se davvero serve, va consentito "
+                    f"consapevolmente in verifier/guard.py")
 
         # --- attributi vietati
         for attr, why in BANNED_ATTRS.items():

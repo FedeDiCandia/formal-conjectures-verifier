@@ -41,7 +41,12 @@ SCHEMA_LEAN_CHECK = {
         "dell'archivio non sono state ridefinite; gli unici assiomi usati sono "
         "propext, Classical.choice e Quot.sound.\n\n"
         "Usalo tutte le volte che vuoi: e' l'unico giudice che conta. "
-        "Una verifica richiede circa 30 secondi."
+        "Una verifica richiede circa 30 secondi.\n\n"
+        "Puoi usarlo anche per ESPLORARE, non solo per consegnare: i messaggi "
+        "informativi di Lean ti vengono restituiti, quindi funzionano "
+        "`#check nomeCostante`, `#print nomeDefinizione`, `example ... := by exact?` "
+        "e `open ... in #check ...`. Il file verra' rifiutato (manca il teorema "
+        "richiesto) ma riceverai comunque cio' che hai chiesto di ispezionare."
     ),
     "input_schema": {
         "type": "object",
