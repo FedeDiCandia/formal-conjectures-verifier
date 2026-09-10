@@ -1,0 +1,22 @@
+# Archivio Lean clonato (grande, gestito separatamente)
+external/formal-conjectures/
+external/comparator/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Ambiente / segreti
+.env
+*.key
+
+# Output temporanei
+runs/
+*.log
+.DS_Store
+
+# Lean build artifacts
+.lake/
+build/
