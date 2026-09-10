@@ -1,6 +1,6 @@
-# Archivio Lean clonato (grande, gestito separatamente)
-external/formal-conjectures/
-external/comparator/
+# Repository esterni clonati (grandi, gestiti da scripts/setup.sh)
+external/*/
+!external/.gitkeep
 
 # Python
 __pycache__/
