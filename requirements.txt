@@ -1,0 +1,4 @@
+# Dipendenze Python del progetto.
+# Installazione:  python3 -m venv .venv && ./.venv/bin/pip install -r requirements.txt
+pytest>=8
+anthropic>=1.0

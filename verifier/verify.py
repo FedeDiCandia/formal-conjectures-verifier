@@ -244,8 +244,15 @@ def verify(problem_id: str, candidate: Path | str, *,
            index: Optional[ProblemIndex] = None,
            timeout: Optional[int] = None,
            slot: Optional[int] = None,
-           keep_workspace: bool = False) -> Result:
-    """Verifica `candidate` come dimostrazione del teorema `problem_id`."""
+           keep_workspace: bool = False,
+           run_guard: bool = True) -> Result:
+    """Verifica `candidate` come dimostrazione del teorema `problem_id`.
+
+    `run_guard=False` salta il controllo sintattico preventivo. Serve SOLO ai
+    test, per dimostrare che anche comparator — cioe' il giudice vero, non il
+    filtro testuale — rifiuta sorry, assiomi aggiunti e native_decide. In uso
+    normale va lasciato attivo.
+    """
     started = time.time()
     candidate = Path(candidate)
     timeout = timeout or config.TIMEOUT_SECONDS
@@ -294,16 +301,16 @@ def verify(problem_id: str, candidate: Path | str, *,
     checks.append(Check("enunciato completo", True, "nessun buco `answer( )` da riempire"))
 
     # --- 3. controllo sintattico preventivo
-    report = guard.check_file(candidate)
+    report = guard.check_file(candidate) if run_guard else guard.GuardReport()
     if not report.ok:
         dettagli = "\n".join(str(f) for f in report.findings)
         checks.append(Check("controllo sintattico preventivo", False,
                             f"{len(report.findings)} violazioni"))
         return done(REJECTED,
                     "Il file contiene costrutti vietati:\n\n" + dettagli, errors=dettagli)
-    checks.append(Check("controllo sintattico preventivo", True,
+    checks.append(Check("controllo sintattico preventivo", run_guard,
                         "niente sorry/admit/axiom/native_decide, nessuna opzione pericolosa, "
-                        "import leciti"))
+                        "import leciti" if run_guard else "SALTATO (modalita' di test)"))
 
     # --- 4. prepara il modulo Solution dentro l'albero dell'archivio
     pool = get_pool()
