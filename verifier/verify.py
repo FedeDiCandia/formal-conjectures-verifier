@@ -370,7 +370,16 @@ def verify(problem_id: str, candidate: Path | str, *,
             ("accettato dal kernel", "termine di prova rieseguito nel kernel di Lean"),
         ]:
             checks.append(Check(nome, True, dettaglio))
-        return done(ACCEPTED, "La dimostrazione e' valida.", raw=output)
+        nota = "La dimostrazione e' valida."
+        if problem.answer_placeholder_in_source:
+            nota += (
+                "\n\nATTENZIONE — questo problema e' formalizzato con `answer(sorry)`. "
+                "Con l'opzione predefinita dell'archivio quel segnaposto diventa `True`, "
+                "quindi l'enunciato dimostrato e' `True ↔ P`, cioe' l'affermazione che la "
+                "risposta alla domanda e' SI'. La verifica formale e' corretta, ma il "
+                "benchmark ha gia' scelto per te il verso della risposta: se la risposta "
+                "giusta fosse NO, questo enunciato sarebbe falso e non dimostrabile.")
+        return done(ACCEPTED, nota, raw=output)
 
     nome_controllo, spiegazione = _classify(output)
     checks.append(Check(nome_controllo, False, spiegazione))

@@ -43,6 +43,31 @@ class Problem:
         return config.ARCHIVE / (self.module.replace(".", "/") + ".lean")
 
     @property
+    def answer_placeholder_in_source(self) -> bool:
+        """True se il SORGENTE del teorema contiene `answer(sorry)`.
+
+        Attenzione, e' diverso da `statement_has_sorry`. Quando la risposta e'
+        una proposizione, l'opzione predefinita `google.answer = always_true`
+        trasforma `answer(sorry)` in `True`, quindi l'enunciato elaborato NON
+        contiene piu' alcun sorry ed e' perfettamente verificabile...
+
+        ...ma vuol dire che la formalizzazione **da' per scontato che la
+        risposta sia "si'"**: `answer(sorry) ↔ P` diventa `True ↔ P`, cioe'
+        l'asserzione che P e' vera. Se la risposta corretta fosse "no", il
+        teorema cosi' com'e' scritto sarebbe falso e nessuno potrebbe
+        dimostrarlo onestamente; la soluzione richiederebbe di cambiare
+        l'enunciato in `answer(False) ↔ P`, che il verificatore rifiuta
+        (giustamente: e' un altro enunciato).
+
+        Non e' un difetto del verificatore: e' una proprieta' del benchmark, e
+        va detta a chi legge il risultato.
+        """
+        try:
+            return "answer(sorry)" in self.source_text().replace(" ", "")
+        except Exception:
+            return False
+
+    @property
     def is_already_solved_here(self) -> bool:
         """True se l'archivio contiene gia' una dimostrazione completa.
         Sono questi i problemi su cui ha senso collaudare il sistema."""
