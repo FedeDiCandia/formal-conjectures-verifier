@@ -49,6 +49,27 @@ import strumenti                              # noqa: E402
 MODELLO_PREDEFINITO = "claude-opus-5"
 
 
+def carica_env() -> None:
+    """Legge il file `.env` del progetto e ne mette le variabili nell'ambiente.
+
+    Serve per la chiave API. Il file e' escluso da git (vedi .gitignore), cosi'
+    la chiave non finisce per sbaglio in un commit. Le variabili gia' presenti
+    nell'ambiente hanno la precedenza e non vengono sovrascritte.
+    """
+    percorso = ROOT / ".env"
+    if not percorso.is_file():
+        return
+    for riga in percorso.read_text(encoding="utf-8").splitlines():
+        riga = riga.strip()
+        if not riga or riga.startswith("#") or "=" not in riga:
+            continue
+        chiave, _, valore = riga.partition("=")
+        chiave = chiave.strip()
+        valore = valore.strip().strip('"').strip("'")
+        if chiave and chiave not in os.environ:
+            os.environ[chiave] = valore
+
+
 # ---------------------------------------------------------------------------
 # Il testo di sistema (istruzioni fisse). Va tenuto STABILE fra una chiamata e
 # l'altra: e' la parte che viene messa in cache, e qualunque byte diverso
@@ -297,6 +318,8 @@ def main() -> int:
     ap.add_argument("--silenzioso", action="store_true")
     args = ap.parse_args()
 
+    carica_env()
+
     if not args.problemi:
         ap.error("indica almeno un teorema da tentare")
 
@@ -305,8 +328,11 @@ def main() -> int:
         print("Ambiente non pronto:\n  - " + "\n  - ".join(problemi_ambiente), file=sys.stderr)
         return 2
     if not os.environ.get("ANTHROPIC_API_KEY") and not os.environ.get("ANTHROPIC_AUTH_TOKEN"):
-        print("Manca la chiave API. Impostala con:\n"
-              "  export ANTHROPIC_API_KEY='...'", file=sys.stderr)
+        print("Manca la chiave API.\n"
+              f"Crea il file {ROOT / '.env'} con dentro una riga:\n"
+              "  ANTHROPIC_API_KEY=sk-ant-...\n"
+              "(il file e' gia' escluso da git, quindi la chiave non verra' mai committata)",
+              file=sys.stderr)
         return 2
 
     indice = ProblemIndex.load()
