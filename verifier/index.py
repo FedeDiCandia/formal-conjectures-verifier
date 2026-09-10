@@ -35,12 +35,34 @@ class Problem:
     formal_proof_link: Optional[str]
     proof_is_sorry_free: bool       # nell'archivio la dimostrazione e' gia' completa
     statement_has_sorry: bool       # l'ENUNCIATO ha un buco answer( ) non proposizionale
+    archive_proof_axioms: list[str]  # assiomi usati dalla dimostrazione dell'archivio
     range: Optional[dict]           # posizione nel file sorgente
 
     @property
     def source_file(self) -> Path:
         """Il file .lean che contiene questo teorema."""
         return config.ARCHIVE / (self.module.replace(".", "/") + ".lean")
+
+    #: Gli unici assiomi che il verificatore ammette.
+    ASSIOMI_AMMESSI = frozenset({"propext", "Classical.choice", "Quot.sound"})
+
+    @property
+    def archive_proof_is_clean(self) -> bool:
+        """True se la dimostrazione fornita dall'archivio passerebbe il nostro
+        verificatore.
+
+        Non basta che la dimostrazione esista e sia senza `sorry`: 87
+        dimostrazioni dell'archivio usano `decide +native`, che lascia
+        l'assioma `Lean.ofReduceBool`, e noi lo rifiutiamo. Sono quindi
+        problemi "risolti" che il nostro verificatore non accetta.
+        """
+        if not self.proof_is_sorry_free:
+            return False
+        return set(self.archive_proof_axioms) <= self.ASSIOMI_AMMESSI
+
+    @property
+    def archive_proof_forbidden_axioms(self) -> list[str]:
+        return sorted(set(self.archive_proof_axioms) - self.ASSIOMI_AMMESSI)
 
     @property
     def answer_placeholder_in_source(self) -> bool:
@@ -97,6 +119,7 @@ class Problem:
             formal_proof_link=d.get("formalProofLink"),
             proof_is_sorry_free=bool(d.get("proofIsSorryFree")),
             statement_has_sorry=bool(d.get("statementHasSorry")),
+            archive_proof_axioms=d.get("archiveProofAxioms") or [],
             range=d.get("range"),
         )
 
@@ -117,7 +140,8 @@ class ProblemIndex:
         return self._by_name[theorem]
 
     def find(self, *, category: Optional[str] = None, solved_here: Optional[bool] = None,
-             has_answer_hole: Optional[bool] = None) -> list[Problem]:
+             has_answer_hole: Optional[bool] = None,
+             archive_proof_clean: Optional[bool] = None) -> list[Problem]:
         out = self.problems
         if category is not None:
             out = [p for p in out if p.category == category]
@@ -125,6 +149,8 @@ class ProblemIndex:
             out = [p for p in out if p.is_already_solved_here == solved_here]
         if has_answer_hole is not None:
             out = [p for p in out if p.statement_has_sorry == has_answer_hole]
+        if archive_proof_clean is not None:
+            out = [p for p in out if p.archive_proof_is_clean == archive_proof_clean]
         return out
 
     @staticmethod
@@ -167,10 +193,18 @@ def _stats() -> None:
         print(f"  {n:5d}  {c}")
     solved = idx.find(solved_here=True)
     holes = idx.find(has_answer_hole=True)
+    puliti = idx.find(archive_proof_clean=True)
     print(f"\nCon dimostrazione gia' completa nell'archivio: {len(solved)}")
+    print(f"  di cui accettabili dal nostro verificatore: {len(puliti)}")
+    sporchi = [p for p in solved if not p.archive_proof_is_clean]
+    if sporchi:
+        from collections import Counter
+        motivi = Counter(a for p in sporchi for a in p.archive_proof_forbidden_axioms)
+        print(f"  le altre {len(sporchi)} usano assiomi non ammessi: "
+              + ", ".join(f"{a} ({n})" for a, n in motivi.most_common()))
     print(f"Con un buco answer( ) NON proposizionale nell'enunciato: {len(holes)}")
     print("\nEsempi di problemi gia' risolti e senza buchi (buoni per collaudare):")
-    good = [p for p in solved if not p.statement_has_sorry
+    good = [p for p in puliti if not p.statement_has_sorry
             and p.category in ("research solved", "textbook")]
     for p in good[:10]:
         print(f"  {p.theorem}   [{p.category}]   ({p.module})")

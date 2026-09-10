@@ -150,6 +150,27 @@ what you know about Mathlib's API, and let the error messages correct you.
 is beyond you, say so plainly instead of submitting a proof you know is broken."""
 
 
+def _natura_della_verifica(rapporto: str, accettato: bool) -> tuple[str, str]:
+    """Ritorna (controllo fallito, natura), leggendo il rapporto di verify.py."""
+    if accettato:
+        return "", "accettato"
+    fallito = ""
+    for riga in rapporto.split("\n"):
+        if riga.strip().startswith("[FALLITO]"):
+            fallito = riga.split("]", 1)[1].split("—")[0].strip()
+            break
+    testo = rapporto.lower()
+    if "non dichiara" in testo or "not found in solution" in testo:
+        return fallito, "esplorazione"
+    if "non compila" in testo or "compila senza errori" in fallito:
+        return fallito, "errore_tecnico"
+    if "assiom" in fallito:
+        return fallito, "buco_o_assioma"
+    if "tipo identico" in fallito or "definizioni dell" in fallito:
+        return fallito, "enunciato_sbagliato"
+    return fallito, "errore_tecnico"
+
+
 def messaggio_problema(problema: Problem, testo_file: str) -> str:
     descrizione = (problema.docstring or "").strip()
     return f"""# The problem
@@ -178,6 +199,40 @@ Produce a complete Lean file proving `{problema.theorem}`, and check it with
 # ---------------------------------------------------------------------------
 
 @dataclass
+class VerificaLean:
+    """Una singola chiamata a lean_check, con il suo esito misurato."""
+    caratteri: int
+    esito: str                  # ACCETTATO / RIFIUTATO / ERRORE / TIMEOUT
+    controllo_fallito: str      # quale controllo non e' passato
+    secondi: float              # tempo di calcolo LOCALE (Lean), non dell'API
+    #: come classifichiamo il tentativo. Regola dichiarata:
+    #:   esplorazione        -> il file non dichiarava il teorema richiesto
+    #:                          (il modello stava ispezionando, non tentando)
+    #:   errore_tecnico      -> il file non compila
+    #:   buco_o_assioma      -> compila ma la dimostrazione ha un buco
+    #:   enunciato_sbagliato -> compila ma dimostra un'altra cosa
+    #:   accettato           -> superato
+    natura: str
+
+
+@dataclass
+class Iterazione:
+    """Una passata del ciclo: una chiamata all'API piu' gli strumenti usati."""
+    numero: int
+    token_input: int = 0
+    token_output: int = 0
+    cache_scritta: int = 0
+    cache_letta: int = 0
+    costo: float = 0.0
+    secondi_api: float = 0.0
+    secondi_lean: float = 0.0
+    secondi_python: float = 0.0
+    verifiche: list = field(default_factory=list)     # list[VerificaLean]
+    esecuzioni_python: int = 0
+    ragionamento: str = ""
+
+
+@dataclass
 class Tentativo:
     problema: str
     risolto: bool = False
@@ -189,6 +244,45 @@ class Tentativo:
     consumo: Consumo = field(default_factory=Consumo)
     soluzione: str = ""
     trascrizione: list = field(default_factory=list)
+    #: misurazioni per iterazione
+    dettaglio: list = field(default_factory=list)      # list[Iterazione]
+    secondi_api: float = 0.0
+    secondi_lean: float = 0.0
+    secondi_python: float = 0.0
+    #: classificazione del fallimento, secondo la regola dichiarata sotto
+    causa: str = ""
+
+    @property
+    def verifiche_per_natura(self) -> dict:
+        conta: dict = {}
+        for it in self.dettaglio:
+            for v in it.verifiche:
+                conta[v.natura] = conta.get(v.natura, 0) + 1
+        return conta
+
+    def classifica_fallimento(self) -> str:
+        """Distingue un fallimento MATEMATICO da uno di SISTEMA.
+
+        Regola dichiarata, non a sensazione:
+          * se non c'e' stato nessun tentativo vero (tutte le verifiche erano
+            esplorazioni), il fallimento e' di SISTEMA: l'agente non e' arrivato
+            a provarci, ha speso tutto a capire gli strumenti e l'API di Mathlib;
+          * se i tentativi veri sono finiti solo con errori di compilazione, e'
+            TECNICO: sapeva cosa fare ma non come scriverlo in Lean;
+          * se almeno un tentativo e' arrivato a compilare e ha fallito per un
+            buco o per l'enunciato sbagliato, e' MATEMATICO: la dimostrazione
+            non c'era.
+        """
+        if self.risolto:
+            return "risolto"
+        n = self.verifiche_per_natura
+        veri = n.get("errore_tecnico", 0) + n.get("buco_o_assioma", 0) + \
+            n.get("enunciato_sbagliato", 0)
+        if veri == 0:
+            return "sistema: nessun tentativo vero, tutto speso in esplorazione"
+        if n.get("buco_o_assioma", 0) or n.get("enunciato_sbagliato", 0):
+            return "matematico: ha compilato ma la dimostrazione non c'era"
+        return "tecnico: sapeva cosa dimostrare ma non e' riuscito a scriverlo in Lean"
 
 
 # ---------------------------------------------------------------------------
@@ -252,6 +346,8 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
                f"[{token_input:,} token in ingresso, fino a {max_tokens:,} in uscita, "
                f"al massimo ${budget.costo_massimo_possibile(token_input, max_tokens):.4f}]")
 
+        it = Iterazione(numero=iterazione)
+        t0_api = time.time()
         with client.messages.stream(
             model=modello,
             max_tokens=max_tokens,
@@ -263,9 +359,17 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
             cache_control={"type": "ephemeral"},   # mette in cache anche la conversazione
         ) as flusso:
             risposta = flusso.get_final_message()
+        it.secondi_api = time.time() - t0_api
 
+        prima = budget.speso
         budget.registra(risposta.usage, problema.theorem)
         t.consumo.aggiungi(risposta.usage)
+        u = risposta.usage
+        it.token_input = getattr(u, "input_tokens", 0) or 0
+        it.token_output = getattr(u, "output_tokens", 0) or 0
+        it.cache_letta = getattr(u, "cache_read_input_tokens", 0) or 0
+        it.cache_scritta = getattr(u, "cache_creation_input_tokens", 0) or 0
+        it.costo = budget.speso - prima
 
         if risposta.stop_reason == "refusal":
             t.motivo = "il modello ha rifiutato la richiesta"
@@ -277,6 +381,9 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
                 stampa(f"     [ragionamento] {blocco.thinking.strip()[:400]}")
             elif blocco.type == "text" and blocco.text.strip():
                 stampa(f"     {blocco.text.strip()[:600]}")
+        it.ragionamento = " ".join(
+            b.thinking for b in risposta.content
+            if b.type == "thinking" and getattr(b, "thinking", ""))[:4000]
 
         chiamate = [b for b in risposta.content if b.type == "tool_use"]
         messaggi.append({"role": "assistant", "content": risposta.content})
@@ -285,6 +392,8 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
             t.motivo = "il modello ha smesso di usare gli strumenti senza una prova accettata"
             testo = " ".join(b.text for b in risposta.content if b.type == "text")
             t.trascrizione.append({"tipo": "fine", "testo": testo})
+            t.dettaglio.append(it)
+            t.secondi_api += it.secondi_api
             break
 
         risultati = []
@@ -294,10 +403,17 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
                 t.verifiche += 1
                 codice = chiamata.input.get("codice_lean", "")
                 stampa(f"     -> lean_check ({len(codice)} caratteri)...")
+                t0 = time.time()
                 rapporto, ok = strumenti.esegui_lean_check(
                     problema.theorem, codice, timeout=timeout_lean)
+                durata = time.time() - t0
+                it.secondi_lean += durata
+                fallito, natura = _natura_della_verifica(rapporto, ok)
+                it.verifiche.append(VerificaLean(
+                    caratteri=len(codice), esito=rapporto.split("\n")[0].replace("ESITO: ", ""),
+                    controllo_fallito=fallito, secondi=durata, natura=natura))
                 prima_riga = rapporto.split("\n")[0]
-                stampa(f"        {prima_riga}")
+                stampa(f"        {prima_riga}  [{natura}, {durata:.0f}s]")
                 if ok:
                     accettata = True
                     t.soluzione = codice
@@ -307,7 +423,10 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
                 t.esecuzioni_python += 1
                 codice = chiamata.input.get("codice", "")
                 stampa(f"     -> run_python ({len(codice)} caratteri)...")
+                t0 = time.time()
                 uscita = strumenti.esegui_run_python(codice)
+                it.secondi_python += time.time() - t0
+                it.esecuzioni_python += 1
                 stampa(f"        {uscita.strip()[:200]}")
                 risultati.append({"type": "tool_result", "tool_use_id": chiamata.id,
                                   "content": uscita})
@@ -317,6 +436,10 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
                                   "is_error": True})
 
         messaggi.append({"role": "user", "content": risultati})
+        t.dettaglio.append(it)
+        t.secondi_api += it.secondi_api
+        t.secondi_lean += it.secondi_lean
+        t.secondi_python += it.secondi_python
 
         if accettata:
             t.risolto = True
@@ -326,6 +449,7 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
         t.motivo = f"esaurite le {max_iterazioni} iterazioni disponibili"
 
     t.secondi = time.time() - avvio
+    t.causa = t.classifica_fallimento()
     return t
 
 
@@ -404,6 +528,11 @@ def main() -> int:
         print(f"     {t.iterazioni} iterazioni, {t.verifiche} verifiche Lean, "
               f"{t.esecuzioni_python} esecuzioni Python, {t.secondi:.0f}s, "
               f"${t.consumo.costo(args.modello):.4f}")
+        print(f"     tempo: {t.secondi_api:.0f}s in attesa dell'API, "
+              f"{t.secondi_lean:.0f}s di Lean in locale, "
+              f"{t.secondi_python:.0f}s di Python in locale")
+        print(f"     natura delle verifiche: {t.verifiche_per_natura or 'nessuna'}")
+        print(f"     causa: {t.causa}")
 
     # --- resoconto
     print(f"\n{'='*78}\nRESOCONTO\n{'='*78}")
@@ -422,9 +551,29 @@ def main() -> int:
             "consumo_totale": budget.consumo.__dict__,
             "tentativi": [{
                 "problema": t.problema, "risolto": t.risolto, "motivo": t.motivo,
+                "causa": t.causa,
                 "iterazioni": t.iterazioni, "verifiche": t.verifiche,
-                "esecuzioni_python": t.esecuzioni_python, "secondi": t.secondi,
+                "esecuzioni_python": t.esecuzioni_python,
+                "secondi_totali": t.secondi,
+                "secondi_api": t.secondi_api,
+                "secondi_lean": t.secondi_lean,
+                "secondi_python": t.secondi_python,
                 "costo": t.consumo.costo(args.modello), "consumo": t.consumo.__dict__,
+                "verifiche_per_natura": t.verifiche_per_natura,
+                "iterazioni_dettaglio": [{
+                    "numero": it.numero, "costo": it.costo,
+                    "token_input": it.token_input, "token_output": it.token_output,
+                    "cache_scritta": it.cache_scritta, "cache_letta": it.cache_letta,
+                    "secondi_api": it.secondi_api, "secondi_lean": it.secondi_lean,
+                    "secondi_python": it.secondi_python,
+                    "esecuzioni_python": it.esecuzioni_python,
+                    "verifiche": [{
+                        "caratteri": v.caratteri, "esito": v.esito,
+                        "controllo_fallito": v.controllo_fallito,
+                        "secondi": v.secondi, "natura": v.natura,
+                    } for v in it.verifiche],
+                    "ragionamento": it.ragionamento,
+                } for it in t.dettaglio],
                 "soluzione": t.soluzione,
             } for t in tentativi],
         }, ensure_ascii=False, indent=2), encoding="utf-8")

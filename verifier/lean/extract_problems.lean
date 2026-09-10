@@ -9,6 +9,12 @@ campi che servono al verificatore e che quello non produce:
     che non e' una proposizione (un numero, un insieme...). Un enunciato del
     genere non e' dimostrabile onestamente: qualunque prova dipenderebbe
     dall'assioma `sorryAx`.
+  * `archiveProofAxioms` : da quali assiomi dipende la dimostrazione che
+    l'archivio stesso fornisce. Serve per scegliere i problemi di collaudo: 87
+    dimostrazioni dell'archivio usano `decide +native`, che lascia l'assioma
+    `Lean.ofReduceBool`, e il verificatore le rifiuta a ragione. Un problema
+    "gia' risolto nell'archivio" non e' quindi detto sia risolvibile sotto le
+    nostre regole, e senza questo campo non c'e' modo di saperlo in anticipo.
   * `range` : la posizione del teorema nel file sorgente, per poter ritagliare
     il testo esatto dell'enunciato e per nascondere la dimostrazione quando si
     collauda un agente.
@@ -111,6 +117,7 @@ unsafe def main : IO Unit := do
           let some category := categoryMap.get? name | continue
           let statement := toString (← Meta.MetaM.run' (Meta.ppExpr info.type))
           let docstring ← findDocString? env name
+          let assiomi ← collectAxioms name
           let ranges ← findDeclarationRanges? name
           let rangeJson : Json := match ranges with
             | some r => Json.mkObj [
@@ -133,6 +140,8 @@ unsafe def main : IO Unit := do
             ("proofIsSorryFree", Json.bool (info.value?.any (!·.hasSorry))),
             -- l'ENUNCIATO contiene un sorry (buco answer( ) non proposizionale)
             ("statementHasSorry", Json.bool info.type.hasSorry),
+            -- gli assiomi da cui dipende la dimostrazione dell'archivio
+            ("archiveProofAxioms", toJson (assiomi.map Name.toString)),
             ("range", rangeJson)]
         | _ => pure ()
 
