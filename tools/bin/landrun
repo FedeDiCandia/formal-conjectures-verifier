@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# ---------------------------------------------------------------------------
+# SHIM di landrun per macOS.
+#
+# `landrun` (https://github.com/Zouuup/landrun) usa Landlock, una funzionalita'
+# del kernel Linux: su macOS NON esiste. comparator lo invoca per mettere in
+# sandbox la compilazione del file candidato.
+#
+# Questo shim accetta e IGNORA tutte le opzioni di landrun ed esegue il comando
+# senza sandbox. E' la stessa strategia dello script `scripts/fake-landrun.sh`
+# fornito da comparator stesso per lo sviluppo su sistemi non-Linux.
+#
+# CONSEGUENZA DI SICUREZZA: su macOS perdiamo l'isolamento del processo di
+# compilazione. Le garanzie logiche di comparator (stesso enunciato, assiomi
+# permessi, accettazione da parte del kernel) restano valide; quello che si
+# perde e' la protezione contro un file candidato che esegua codice arbitrario
+# durante la compilazione. Per questo verify.py applica in aggiunta un
+# controllo sintattico preventivo (vedi verifier/verify.py).
+# ---------------------------------------------------------------------------
+set -euo pipefail
+
+flags_with_value=( --ro --rox --rw --rwx --bind-tcp --connect-tcp --log-level --env )
+
+is_value_flag() {
+  local f="$1"
+  for vf in "${flags_with_value[@]}"; do
+    [[ "$f" == "$vf" ]] && return 0
+  done
+  return 1
+}
+
+case "${1:-}" in
+  -h|--help)   echo "landrun shim (macOS): accetta e ignora i flag, esegue il comando"; exit 0 ;;
+  -V|--version) echo "SHIM NON-SANDBOXANTE (macOS)" >&2; exit 0 ;;
+esac
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --) shift; break ;;
+    -*) is_value_flag "$1" && shift; shift ;;
+    *) break ;;
+  esac
+done
+
+if [[ $# -eq 0 ]]; then
+  echo "landrun shim: nessun comando fornito" >&2
+  exit 2
+fi
+
+exec "$@"
