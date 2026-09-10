@@ -57,6 +57,8 @@ from typing import Optional
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import config
 import guard
+import impronta as modulo_impronta
+import sandbox
 from index import ProblemIndex, Problem
 
 
@@ -152,13 +154,16 @@ def get_pool(size: Optional[int] = None) -> SlotPool:
 # Esecuzione di comparator
 # ---------------------------------------------------------------------------
 
-def _run_with_timeout(cmd: list[str], cwd: Path, env: dict, timeout: int) -> tuple[int, str]:
+def _run_with_timeout(cmd: list[str], cwd: Path, env: dict, timeout: int,
+                      profilo_sandbox: Optional[Path] = None) -> tuple[int, str]:
     """Esegue un comando con timeout, uccidendo l'INTERO albero di processi.
 
     Serve perche' comparator lancia `lake`, che lancia `lean`: uccidere solo il
     padre lascerebbe i figli a consumare CPU per sempre. `start_new_session`
     mette tutto in un gruppo di processi che possiamo terminare in blocco.
     """
+    if profilo_sandbox is not None:
+        cmd = sandbox.avvolgi(cmd, profilo_sandbox)
     proc = subprocess.Popen(
         cmd, cwd=str(cwd), env=env,
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
@@ -396,13 +401,70 @@ def verify(problem_id: str, candidate: Path | str, *,
             "permitted_axioms": config.PERMITTED_AXIOMS,
         }
         with tempfile.TemporaryDirectory() as tmp:
-            cfg_path = Path(tmp) / "config.json"
+            tmp_dir = Path(tmp)
+            cfg_path = tmp_dir / "config.json"
             cfg_path.write_text(json.dumps(cfg), encoding="utf-8")
+
+            # --- isolamento della compilazione
+            profilo = None
+            if config.USA_SANDBOX and sandbox.disponibile():
+                # le cartelle devono esistere PRIMA: dentro la sandbox non si
+                # puo' scrivere nella cartella genitore per crearle
+                for d in sandbox.cartelle_scrivibili(
+                        config.ARCHIVE, config.SANDBOX_SUBDIR, tmp_dir):
+                    d.mkdir(parents=True, exist_ok=True)
+                profilo = sandbox.scrivi_profilo(
+                    tmp_dir / "verifica.sb",
+                    sandbox.cartelle_scrivibili(config.ARCHIVE, config.SANDBOX_SUBDIR, tmp_dir),
+                    config.ROOT)
+                checks.append(Check("compilazione isolata", True,
+                                    "sandbox-exec: niente rete, scrittura solo nella "
+                                    "cartella del modulo temporaneo"))
+            elif config.USA_SANDBOX:
+                checks.append(Check("compilazione isolata", False,
+                                    "sandbox-exec non disponibile su questo sistema: la "
+                                    "compilazione del candidato NON e' isolata"))
+
+            # --- impronta dell'archivio PRIMA della verifica
+            impronta_prima = None
+            if config.CONTROLLA_IMPRONTA:
+                impronta_prima = modulo_impronta.calcola(
+                    config.ARCHIVE, escludi=Path(config.SANDBOX_SUBDIR).name)
+
+            ambiente = config.lean_env()
+            ambiente["TMPDIR"] = str(tmp_dir)
 
             code, output = _run_with_timeout(
                 [str(config.ELAN_BIN / "lake"), "env", str(config.COMPARATOR), str(cfg_path)],
-                cwd=config.ARCHIVE, env=config.lean_env(), timeout=timeout,
+                cwd=config.ARCHIVE, env=ambiente, timeout=timeout,
+                profilo_sandbox=profilo,
             )
+
+            # --- impronta DOPO: l'archivio deve essere intatto
+            if impronta_prima is not None:
+                differenze = modulo_impronta.confronta(
+                    impronta_prima,
+                    modulo_impronta.calcola(config.ARCHIVE,
+                                            escludi=Path(config.SANDBOX_SUBDIR).name))
+                if differenze:
+                    checks.append(Check("archivio intatto dopo la verifica", False,
+                                        "; ".join(differenze)))
+                    return done(ERROR,
+                                "LA VERIFICA NON E' ATTENDIBILE: compilare il file "
+                                "candidato ha modificato l'archivio.\n\n"
+                                + "\n".join("  - " + d for d in differenze) +
+                                "\n\nComparator confronta la soluzione con l'enunciato "
+                                "che legge dai file compilati dell'archivio. Se quei file "
+                                "cambiano, il confronto avviene contro un problema alterato "
+                                "e l'esito non vuol dire niente (assunto 2 del README di "
+                                "comparator). Ripristina l'archivio con:\n"
+                                f"  cd {config.ARCHIVE} && git checkout . && lake build",
+                                errors=_lean_errors(output), raw=output)
+                checks.append(Check("archivio intatto dopo la verifica", True,
+                                    f"{impronta_prima.n_file_contenuto} file dell'archivio "
+                                    f"invariati (hash del contenuto) e "
+                                    f"{impronta_prima.n_file_metadati} file delle dipendenze "
+                                    f"invariati (dimensione e data)"))
     finally:
         if not keep_workspace:
             try:

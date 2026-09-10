@@ -247,3 +247,70 @@ def test_13_i_messaggi_ripetuti_compaiono_una_volta_sola():
     from verify import _lean_errors
     doppio = RUMORE_COPYRIGHT + RUMORE_COPYRIGHT
     assert _lean_errors(doppio).count("@Nat.floor") == 1
+
+
+# --- Extra: un candidato che tenta di sabotare l'archivio -------------------
+
+def test_14_un_candidato_non_riesce_a_riscrivere_un_file_dell_archivio(tmp_path):
+    """Il test di sicurezza piu' importante.
+
+    comparator esporta il Challenge PRIMA di compilare la Solution, quindi un
+    sabotaggio dei file compilati dell'archivio non altera la verifica in corso:
+    altera tutte quelle SUCCESSIVE, facendole confrontare la soluzione con un
+    enunciato diverso da quello vero. E' l'assunto 2 del README di comparator,
+    e per noi che facciamo verifiche a ripetizione non e' un assunto ma un
+    rischio concreto.
+
+    Il candidato qui usa `#eval` per riscrivere `JugglerConjecture.olean`.
+    Verifichiamo tre cose: il guard lo rifiuta; con il guard disattivato la
+    sandbox lo blocca comunque; e il file resta byte per byte identico.
+    """
+    import hashlib
+    import guard
+
+    bersaglio = (config.ARCHIVE / ".lake" / "build" / "lib" / "lean"
+                 / "FormalConjectures" / "Wikipedia" / "JugglerConjecture.olean")
+    if not bersaglio.is_file():
+        pytest.skip("archivio non compilato")
+
+    def hash_bersaglio() -> str:
+        return hashlib.sha256(bersaglio.read_bytes()).hexdigest()
+
+    prima = hash_bersaglio()
+
+    sabotatore = tmp_path / "sabotatore.lean"
+    sabotatore.write_text(f'''import FormalConjectures.Util.ProblemImports
+
+#eval show IO Unit from do
+  try
+    IO.FS.writeFile "{bersaglio}" "ARCHIVIO ROVINATO"
+    IO.println "SABOTAGGIO RIUSCITO"
+  catch e =>
+    IO.println s!"sabotaggio impedito: {{e}}"
+
+namespace JugglerConjecture
+noncomputable def jugglerStep (n : ℕ) : ℕ :=
+  if Even n then ⌊(n : ℝ) ^ (1/2 : ℝ)⌋₊ else ⌊(n : ℝ) ^ (3/2 : ℝ)⌋₊
+@[category test, AMS 11]
+theorem jugglerStep_36 : jugglerStep 36 = 6 := by
+  unfold jugglerStep
+  norm_num [←Real.sqrt_eq_rpow]
+end JugglerConjecture
+''', encoding="utf-8")
+
+    # 1. in uso normale il guard lo ferma prima di compilarlo
+    rapporto = guard.check_file(sabotatore)
+    assert not rapporto.ok, "il guard deve rifiutare un file che usa #eval e IO"
+    regole = {f.rule for f in rapporto.findings}
+    assert "comando:#eval" in regole
+    assert "metaprogrammazione:IO" in regole
+
+    # 2. col guard disattivato, la sandbox deve bloccarlo comunque
+    r = verify(PROBLEMA, sabotatore, run_guard=False)
+    assert "sabotaggio impedito" in r.raw_output or "SABOTAGGIO RIUSCITO" not in r.raw_output, \
+        f"il sabotaggio non e' stato impedito:\n{r.raw_output[:2000]}"
+
+    # 3. il file dell'archivio deve essere byte per byte identico
+    assert hash_bersaglio() == prima, \
+        "il file compilato dell'archivio E' STATO MODIFICATO: tutte le verifiche " \
+        "successive confronterebbero le soluzioni con un enunciato alterato"

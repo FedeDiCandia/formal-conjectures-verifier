@@ -1,92 +1,129 @@
 """
 Calcolo dei costi e limite di spesa.
 
-I prezzi vengono dai campi `usage` che l'API restituisce in OGNI risposta:
+I numeri vengono dai campi `usage` che l'API restituisce in OGNI risposta:
 non sono stime, sono i token effettivamente fatturati.
+
+Il limite viene fatto rispettare in DUE momenti:
+
+  * a posteriori, sommando quanto e' stato speso;
+  * a priori, PRIMA di ogni chiamata: si conta esattamente quanti token
+    entreranno nella richiesta (con l'endpoint di conteggio, che e' gratuito) e
+    si calcola il costo MASSIMO possibile di quella chiamata. Se non ci sta nel
+    residuo, la chiamata non parte.
+
+Il secondo controllo e' quello che rende il limite davvero rigido: senza, una
+singola risposta lunga potrebbe sforare di parecchio prima che ce ne accorgiamo.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 
 
-#: Prezzi in dollari per MILIONE di token (fonte: documentazione API, giugno 2026).
-#: - `input`  : token nuovi, non in cache
-#: - `output` : token generati (ragionamento compreso)
-#: - la SCRITTURA in cache costa 1,25 volte l'input
-#: - la LETTURA da cache costa 0,1 volte l'input (uno sconto del 90%)
-PREZZI_PER_MILIONE: dict[str, dict[str, float]] = {
-    "claude-opus-5":   {"input": 5.00, "output": 25.00},
-    "claude-opus-4-8": {"input": 5.00, "output": 25.00},
-    "claude-sonnet-5": {"input": 2.00, "output": 10.00},
-    "claude-haiku-4-5": {"input": 1.00, "output": 5.00},
-    "claude-fable-5-1": {"input": 10.00, "output": 50.00},
+@dataclass(frozen=True)
+class Prezzi:
+    """Dollari per MILIONE di token."""
+    input: float
+    output: float
+    scrittura_cache_5m: float
+    scrittura_cache_1h: float
+    lettura_cache: float
+
+
+#: Listino ufficiale (platform.claude.com/docs — Prompt caching, tabella prezzi;
+#: verificato il 2026-09-10).
+#:
+#: I moltiplicatori NON sono uguali per tutti i modelli, quindi qui sono scritti
+#: i prezzi assoluti invece di calcolarli:
+#:   - scrittura in cache a 5 minuti: 1,25 volte l'input;
+#:   - scrittura in cache a 1 ora:    2 volte l'input  (non 1,25!);
+#:   - lettura da cache:              0,1 volte l'input,
+#:     TRANNE Fable 5.1 e Mythos 5.1, che usano 0,025 volte.
+LISTINO: dict[str, Prezzi] = {
+    "claude-opus-5":    Prezzi(input=5.00,  output=25.00, scrittura_cache_5m=6.25,
+                               scrittura_cache_1h=10.00, lettura_cache=0.50),
+    "claude-opus-4-8":  Prezzi(input=5.00,  output=25.00, scrittura_cache_5m=6.25,
+                               scrittura_cache_1h=10.00, lettura_cache=0.50),
+    "claude-sonnet-5":  Prezzi(input=2.00,  output=10.00, scrittura_cache_5m=2.50,
+                               scrittura_cache_1h=4.00,  lettura_cache=0.20),
+    "claude-haiku-4-5": Prezzi(input=1.00,  output=5.00,  scrittura_cache_5m=1.25,
+                               scrittura_cache_1h=2.00,  lettura_cache=0.10),
+    "claude-fable-5-1": Prezzi(input=10.00, output=50.00, scrittura_cache_5m=12.50,
+                               scrittura_cache_1h=20.00, lettura_cache=0.25),
+    "claude-fable-5":   Prezzi(input=10.00, output=50.00, scrittura_cache_5m=12.50,
+                               scrittura_cache_1h=20.00, lettura_cache=1.00),
 }
 
-MOLTIPLICATORE_SCRITTURA_CACHE = 1.25
-MOLTIPLICATORE_LETTURA_CACHE = 0.10
 
-
-def prezzi(modello: str) -> dict[str, float]:
-    if modello in PREZZI_PER_MILIONE:
-        return PREZZI_PER_MILIONE[modello]
+def prezzi(modello: str) -> Prezzi:
+    if modello in LISTINO:
+        return LISTINO[modello]
     raise KeyError(
-        f"Prezzi sconosciuti per il modello '{modello}'. "
-        f"Aggiungili in agent/costi.py prima di usarlo, altrimenti il limite di "
-        f"spesa non puo' essere fatto rispettare. Modelli noti: "
-        f"{', '.join(PREZZI_PER_MILIONE)}")
+        f"Prezzi sconosciuti per il modello '{modello}'. Aggiungili in agent/costi.py "
+        f"prima di usarlo: senza prezzi il limite di spesa non puo' essere fatto "
+        f"rispettare, ed e' meglio fermarsi che far finta. "
+        f"Modelli noti: {', '.join(LISTINO)}")
 
 
 @dataclass
 class Consumo:
-    """I token consumati, sommati su piu' chiamate."""
+    """Token consumati, sommati su piu' chiamate."""
     input_tokens: int = 0
     output_tokens: int = 0
-    cache_creation_input_tokens: int = 0
-    cache_read_input_tokens: int = 0
+    scrittura_cache_5m: int = 0
+    scrittura_cache_1h: int = 0
+    lettura_cache: int = 0
     chiamate: int = 0
 
     def aggiungi(self, usage) -> None:
         self.input_tokens += getattr(usage, "input_tokens", 0) or 0
         self.output_tokens += getattr(usage, "output_tokens", 0) or 0
-        self.cache_creation_input_tokens += getattr(usage, "cache_creation_input_tokens", 0) or 0
-        self.cache_read_input_tokens += getattr(usage, "cache_read_input_tokens", 0) or 0
+        self.lettura_cache += getattr(usage, "cache_read_input_tokens", 0) or 0
+
+        # L'API distingue le scritture in cache a 5 minuti da quelle a 1 ora,
+        # che costano il doppio. Se il dettaglio non c'e' (risposte vecchie o
+        # altri fornitori), si usa il totale e lo si conta come 5 minuti — e'
+        # la tariffa piu' bassa, quindi il campo dettagliato va preferito
+        # quando c'e', per non SOTTOstimare.
+        dettaglio = getattr(usage, "cache_creation", None)
+        if dettaglio is not None:
+            self.scrittura_cache_5m += getattr(dettaglio, "ephemeral_5m_input_tokens", 0) or 0
+            self.scrittura_cache_1h += getattr(dettaglio, "ephemeral_1h_input_tokens", 0) or 0
+        else:
+            self.scrittura_cache_5m += getattr(usage, "cache_creation_input_tokens", 0) or 0
         self.chiamate += 1
 
     def costo(self, modello: str) -> float:
         p = prezzi(modello)
-        return (
-            self.input_tokens * p["input"]
-            + self.cache_creation_input_tokens * p["input"] * MOLTIPLICATORE_SCRITTURA_CACHE
-            + self.cache_read_input_tokens * p["input"] * MOLTIPLICATORE_LETTURA_CACHE
-            + self.output_tokens * p["output"]
-        ) / 1_000_000
+        return (self.input_tokens * p.input
+                + self.output_tokens * p.output
+                + self.scrittura_cache_5m * p.scrittura_cache_5m
+                + self.scrittura_cache_1h * p.scrittura_cache_1h
+                + self.lettura_cache * p.lettura_cache) / 1_000_000
 
     def riassunto(self, modello: str) -> str:
-        return (f"{self.chiamate} chiamate | "
-                f"input {self.input_tokens:,} | "
-                f"cache scritta {self.cache_creation_input_tokens:,} | "
-                f"cache letta {self.cache_read_input_tokens:,} | "
-                f"output {self.output_tokens:,} | "
+        cache = f"cache scritta {self.scrittura_cache_5m:,}"
+        if self.scrittura_cache_1h:
+            cache += f" (+{self.scrittura_cache_1h:,} a 1h)"
+        return (f"{self.chiamate} chiamate | input {self.input_tokens:,} | {cache} | "
+                f"cache letta {self.lettura_cache:,} | output {self.output_tokens:,} | "
                 f"costo ${self.costo(modello):.4f}")
 
 
 class LimiteSpesaSuperato(RuntimeError):
-    """Sollevata quando il budget e' esaurito. Ferma tutto."""
+    """Sollevata quando il budget non basta piu'. Ferma tutto."""
 
 
 @dataclass
 class Budget:
-    """Il salvadanaio. Tiene il conto e blocca quando e' finito.
-
-    Il controllo avviene DOPO ogni risposta (prima non si puo' sapere quanto
-    costera'). Per non sforare, si ferma appena la soglia e' raggiunta: la
-    chiamata successiva non parte.
-    """
     limite_dollari: float
     modello: str
     consumo: Consumo = field(default_factory=Consumo)
-    #: consumo separato per problema, per il resoconto finale
     per_problema: dict[str, Consumo] = field(default_factory=dict)
+
+    @property
+    def prezzi(self) -> Prezzi:
+        return prezzi(self.modello)
 
     @property
     def speso(self) -> float:
@@ -105,12 +142,51 @@ class Budget:
         if problema:
             self.per_problema.setdefault(problema, Consumo()).aggiungi(usage)
 
-    def controlla(self) -> None:
-        """Da chiamare PRIMA di ogni richiesta all'API."""
+    # --- il controllo a priori, quello che rende rigido il limite -----------
+
+    def costo_massimo_possibile(self, token_input: int, max_tokens: int) -> float:
+        """Il costo peggiore che una chiamata puo' avere.
+
+        Peggiore davvero:
+          * ogni token di ingresso viene contato alla tariffa di SCRITTURA in
+            cache, che e' la piu' cara delle tre possibilita' (1,25 volte
+            l'input). In pratica una parte sara' letta dalla cache e costera'
+            dieci volte meno, ma qui non si scommette;
+          * l'uscita viene contata come se il modello riempisse tutto lo spazio
+            concessogli da `max_tokens`.
+        """
+        p = self.prezzi
+        return (token_input * p.scrittura_cache_5m + max_tokens * p.output) / 1_000_000
+
+    def verifica_prima_di_chiamare(self, token_input: int, max_tokens: int) -> None:
+        """Da chiamare PRIMA di ogni richiesta. Solleva se non ci sta."""
         if self.esaurito:
             raise LimiteSpesaSuperato(
-                f"Limite di spesa raggiunto: ${self.speso:.4f} su ${self.limite_dollari:.2f}. "
-                f"Mi fermo qui.")
+                f"Limite di spesa raggiunto: ${self.speso:.4f} su "
+                f"${self.limite_dollari:.2f}. Mi fermo.")
+        peggiore = self.costo_massimo_possibile(token_input, max_tokens)
+        if peggiore > self.residuo:
+            raise LimiteSpesaSuperato(
+                f"Non parto: questa chiamata puo' costare fino a ${peggiore:.4f} "
+                f"({token_input:,} token in ingresso, fino a {max_tokens:,} in uscita) "
+                f"ma restano solo ${self.residuo:.4f} "
+                f"(spesi ${self.speso:.4f} su ${self.limite_dollari:.2f}).")
+
+    def max_tokens_sostenibile(self, token_input: int, tetto: int,
+                               residuo: float | None = None) -> int:
+        """Quanti token di uscita ci si possono ancora permettere.
+
+        Serve per ridurre `max_tokens` invece di fermarsi, quando il residuo e'
+        poco ma non nullo. `residuo` permette di passare un limite piu' stretto
+        di quello globale, per esempio il tetto di spesa di un singolo problema.
+        """
+        p = self.prezzi
+        disponibile = self.residuo if residuo is None else min(self.residuo, residuo)
+        costo_ingresso = token_input * p.scrittura_cache_5m / 1_000_000
+        avanzo = disponibile - costo_ingresso
+        if avanzo <= 0:
+            return 0
+        return min(tetto, int(avanzo * 1_000_000 / p.output))
 
     def riga_stato(self) -> str:
         pct = 100 * self.speso / self.limite_dollari if self.limite_dollari else 0

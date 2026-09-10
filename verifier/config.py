@@ -54,6 +54,15 @@ MAX_PARALLEL = int(os.environ.get("FCS_MAX_PARALLEL", "4"))
 #: Tempo massimo per una singola verifica, in secondi.
 TIMEOUT_SECONDS = int(os.environ.get("FCS_TIMEOUT", "900"))
 
+#: Se eseguire la verifica dentro sandbox-exec (macOS).
+#: Metti FCS_SANDBOX=0 per disattivarla — ma allora il codice del candidato
+#: gira senza isolamento durante la compilazione.
+USA_SANDBOX = os.environ.get("FCS_SANDBOX", "1") not in ("0", "false", "no")
+
+#: Se confrontare l'impronta dei file compilati dell'archivio prima e dopo ogni
+#: verifica. Vedi verifier/impronta.py.
+CONTROLLA_IMPRONTA = os.environ.get("FCS_IMPRONTA", "1") not in ("0", "false", "no")
+
 #: Gli unici assiomi ammessi. Sono i tre della logica di Lean/Mathlib:
 #:   propext         - due proposizioni equivalenti sono uguali
 #:   Classical.choice- assioma della scelta

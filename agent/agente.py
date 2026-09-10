@@ -42,6 +42,14 @@ sys.path.insert(0, str(ROOT / "agent"))
 import config as config_verificatore          # noqa: E402
 from index import ProblemIndex, Problem       # noqa: E402
 from costi import Budget, LimiteSpesaSuperato, Consumo   # noqa: E402
+
+#: Spazio massimo concesso a una risposta. Serve alto perche' il ragionamento
+#: esteso ci rientra dentro; il controllo del budget lo riduce se serve.
+MAX_TOKENS = 32_000
+
+#: Sotto questa soglia una risposta non puo' essere utile: meglio fermarsi che
+#: pagare per un ragionamento troncato a metа.
+MIN_TOKENS_UTILI = 6_000
 from nascondi import file_senza_dimostrazioni, controlla_che_sia_nascosta  # noqa: E402
 import strumenti                              # noqa: E402
 
@@ -210,20 +218,44 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
     for iterazione in range(1, max_iterazioni + 1):
         t.iterazioni = iterazione
 
-        # --- controllo del portafoglio PRIMA di spendere
-        budget.controlla()
+        # --- il controllo del portafoglio, PRIMA di spendere -------------
+        # Non basta guardare quanto si e' speso: bisogna sapere quanto puo'
+        # costare la prossima chiamata. Il conteggio dei token e' esatto e
+        # gratuito, quindi il costo massimo lo sappiamo in anticipo.
+        sistema = [{"type": "text", "text": ISTRUZIONI,
+                    "cache_control": {"type": "ephemeral"}}]
+        conteggio = client.messages.count_tokens(
+            model=modello, system=sistema, tools=strumenti_api, messages=messaggi)
+        token_input = conteggio.input_tokens
+
         speso_qui = budget.speso - speso_all_inizio
-        if speso_qui >= tetto_problema:
-            t.motivo = (f"raggiunto il tetto di spesa per questo problema "
-                        f"(${speso_qui:.4f} su ${tetto_problema:.2f})")
+        residuo_problema = tetto_problema - speso_qui
+        max_tokens = budget.max_tokens_sostenibile(
+            token_input, MAX_TOKENS, residuo=residuo_problema)
+
+        if max_tokens < MIN_TOKENS_UTILI:
+            peggiore = budget.costo_massimo_possibile(token_input, MIN_TOKENS_UTILI)
+            motivo = (f"budget insufficiente per continuare: {token_input:,} token in "
+                      f"ingresso, la prossima chiamata costerebbe fino a "
+                      f"${peggiore:.4f} ma restano ${min(budget.residuo, residuo_problema):.4f} "
+                      f"(${budget.residuo:.4f} sul totale, ${residuo_problema:.4f} su "
+                      f"questo problema)")
+            if budget.residuo <= peggiore:
+                raise LimiteSpesaSuperato(motivo)   # ferma tutta l'esecuzione
+            t.motivo = motivo                        # solo questo problema si ferma
             break
 
-        stampa(f"\n  ── iterazione {iterazione}  {budget.riga_stato()}")
+        # doppia sicurezza: se anche cosi' non ci sta, non parte
+        budget.verifica_prima_di_chiamare(token_input, max_tokens)
+
+        stampa(f"\n  ── iterazione {iterazione}  {budget.riga_stato()}  "
+               f"[{token_input:,} token in ingresso, fino a {max_tokens:,} in uscita, "
+               f"al massimo ${budget.costo_massimo_possibile(token_input, max_tokens):.4f}]")
 
         with client.messages.stream(
             model=modello,
-            max_tokens=32000,
-            system=[{"type": "text", "text": ISTRUZIONI, "cache_control": {"type": "ephemeral"}}],
+            max_tokens=max_tokens,
+            system=sistema,
             thinking={"type": "adaptive", "display": "summarized"},
             output_config={"effort": effort},
             tools=strumenti_api,
