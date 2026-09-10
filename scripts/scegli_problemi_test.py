@@ -25,7 +25,7 @@ for p in idx.find(solved_here=True, has_answer_hole=False):
     # definizioni dichiarate nel file stesso
     defs = re.findall(r"^\s*(?:noncomputable\s+)?(?:def|abbrev)\s+([\w'.]+)", testo, re.M)
     # quali di queste compaiono nell'enunciato?
-    usate = [d for d in defs if re.search(rf"(?<![\w.]){re.escape(d)}(?![\w])", p.statement)]
+    usate = [d for d in defs if d in p.statement]
     candidati.append({
         "teorema": p.theorem,
         "modulo": p.module,
