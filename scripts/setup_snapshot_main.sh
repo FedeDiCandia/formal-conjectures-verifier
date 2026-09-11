@@ -61,7 +61,9 @@ step "3/6  Cache di Mathlib (LUNGO)"
 
 step "4/6  Compilazione dell'archivio (MOLTO LUNGO)"
 # Si lasciano 2 core liberi su 12, come chiesto.
-( cd "$SNAP" && lake build -j10 2>&1 | tail -25 )
+# `lake` di Lean 4.33 non accetta `-j`: si usa la variabile d'ambiente, che
+# funziona su entrambe le versioni. Si lasciano 2 core liberi su 12.
+( cd "$SNAP" && LEAN_NUM_THREADS=10 lake build 2>&1 | tail -25 )
 
 step "5/6  lean4export compilato con Lean $LEAN_MAIN"
 if [ ! -d "$EXPORT_MAIN" ]; then
