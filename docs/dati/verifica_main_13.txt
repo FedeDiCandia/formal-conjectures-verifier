@@ -1,0 +1,24 @@
+Problemi da verificare: 13
+
+Porto in pari i moduli degli enunciati...
+  fatto
+
+  [OK ] VizingConjecture.vizing_conjecture.variants.dominationNumber_eq_one ACCETTATO           89s
+  [OK ] SidorenkoConjecture.sidorenko_K2                           ACCETTATO           96s
+  [OK ] SidorenkoConjecture.sidorenko_tree_subsingleton            ACCETTATO           97s
+  [OK ] JacobianConjecture.jacobian_conjecture                     ACCETTATO           97s
+  [OK ] AgohGiuga.squarefree_of_isCarmichael                       ACCETTATO           74s
+  [OK ] Bloch.univalentBlochConstant_upper_bound                   ACCETTATO           75s
+  [OK ] DeGiorgi.DeGiorgi_one                                      ACCETTATO          101s
+  [OK ] WrittenOnTheWallII.GraphConjecture65.conjecture65          ACCETTATO          114s
+  [OK ] UnionClosed.union_closed.variants.singleton_mem            ACCETTATO           50s
+  [OK ] SidorenkoConjecture.sidorenko_conjecture.variants.non_bipartite_necessary ACCETTATO           47s
+  [OK ] Mersenne.new_mersenne_conjecture_of_prime                  ACCETTATO           38s
+  [OK ] WrittenOnTheWallII.GraphConjecture322.conjecture322        ACCETTATO           48s
+  [OK ] SidorenkoConjecture.sidorenko_conjecture.variants.star     ACCETTATO           59s
+
+==============================================================================
+ACCETTATE: 13 su 13   (tempo totale 270s)
+==============================================================================
+
+salvato in /Users/fededicandia/Documents/Math/runs/prove_archivio.json

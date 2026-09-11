@@ -1,0 +1,49 @@
+Problemi da verificare: 23
+
+  [NO ] Kurepa.kurepa_conjecture.gcd_reduction                     RIFIUTATO           43s
+  [NO ] Kurepa.kurepa_conjecture.prime_reduction                   RIFIUTATO           43s
+  [OK ] CarmichaelTotient.carmichealTotientFor_odd                 ACCETTATO           46s
+  [OK ] SumOfThreeCubes.isSumOfThreeCubesRat_any                   ACCETTATO           55s
+  [OK ] UnionClosed.union_closed.variants.univ_card_two            ACCETTATO           37s
+  [OK ] UnionClosed.union_closed.variants.singleton_mem            ACCETTATO           49s
+  [OK ] UnionClosed.union_closed.variants.sharpness                ACCETTATO           50s
+  [OK ] InvariantSubspaceProblem.Invariant_subspace_problem_non_separable ACCETTATO           50s
+  [OK ] DedekindNumber.exists_minimal_true_subset                  ACCETTATO           39s
+  [OK ] DedekindNumber.fromSperner_toSperner                       ACCETTATO           42s
+  [OK ] DedekindNumber.toSperner_fromSperner                       ACCETTATO           44s
+  [OK ] BealConjecture.flt_of_beal_conjecture                      ACCETTATO           34s
+  [OK ] EulerSumOfPowers.eulers_sum_of_powers_conjecture.false_for_k4 ACCETTATO           33s
+  [OK ] EulerSumOfPowers.eulers_sum_of_powers_conjecture.false_for_k5 ACCETTATO           38s
+  [OK ] AgohGiuga.squarefree_of_isCarmichael                       ACCETTATO           37s
+  [OK ] Conway99Graph.completeGraph_cliqueSet                      ACCETTATO           35s
+  [OK ] AgohGiuga.korselts_criterion                               ACCETTATO           57s
+  [NO ] Oppermann.oppermann_implies_legendre                       RIFIUTATO           26s
+  [NO ] CategoryDocstringLinter.flagged_solved_missing_docstring   RIFIUTATO           15s
+  [NO ] CategoryDocstringLinter.flagged_textbook_missing_docstring RIFIUTATO           14s
+  [OK ] Conway99Graph.completeGraphIsClique                        ACCETTATO           37s
+  [NO ] EquationalTheories_677_255.Finite.Equation255_not_implies_Equation677 RIFIUTATO           65s
+  [OK ] EquationalTheories_677_255.Equation255_not_implies_Equation677 ACCETTATO           70s
+
+==============================================================================
+ACCETTATE: 17 su 23   (tempo totale 272s)
+==============================================================================
+  RIFIUTATA  Kurepa.kurepa_conjecture.gcd_reduction
+             RIFIUTATO  ['compila senza errori']
+             PANIC at dumpConstant Export:237:48: Constant Kurepa.kurepa_conjecture.gcd_reduction not found in environment.
+  RIFIUTATA  Kurepa.kurepa_conjecture.prime_reduction
+             RIFIUTATO  ['compila senza errori']
+             PANIC at dumpConstant Export:237:48: Constant Kurepa.kurepa_conjecture.prime_reduction not found in environmen
+  RIFIUTATA  Oppermann.oppermann_implies_legendre
+             RIFIUTATO  ['compila senza errori']
+             error: FormalConjectures/_Judge/S2.lean:46:70: Unknown identifier `oppermann_conjecture`
+  RIFIUTATA  CategoryDocstringLinter.flagged_solved_missing_docstring
+             RIFIUTATO  ['compila senza errori']
+             error: FormalConjectures/_Judge/S3.lean:47:0: ❌️ Docstring on `#guard_msgs` does not match generated message:
+  RIFIUTATA  CategoryDocstringLinter.flagged_textbook_missing_docstring
+             RIFIUTATO  ['compila senza errori']
+             error: FormalConjectures/_Judge/S0.lean:47:0: ❌️ Docstring on `#guard_msgs` does not match generated message:
+  RIFIUTATA  EquationalTheories_677_255.Finite.Equation255_not_implies_Equation677
+             RIFIUTATO  ['compila senza errori']
+             PANIC at dumpConstant Export:237:48: Constant EquationalTheories_677_255.Finite.Equation255_not_implies_Equati
+
+salvato in /Users/fededicandia/Documents/Math/runs/prove_archivio.json

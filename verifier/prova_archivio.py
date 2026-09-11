@@ -57,9 +57,22 @@ _MODIFICATORI = ("private", "protected", "noncomputable", "partial", "unsafe",
                  "scoped", "local", "nonrec", "public", "meta", "mutual")
 
 #: Comandi di struttura: aprono un blocco ma non dichiarano nulla.
+#: Si confrontano come PAROLE INTERE. Confrontarli come prefissi e' stato un
+#: difetto vero: la riga di un docstring che cominciava con "endomorphism of a
+#: finite set is surjective. -/" veniva letta come un `end`, il blocco del
+#: teorema precedente si fermava una riga troppo presto e la coda del docstring
+#: restava penzolante, con "unexpected identifier; expected command". Succedeva
+#: su GottschalkSurjunctivity.isSurjunctive_of_finite.
 _STRUTTURALI = ("namespace", "end", "section", "import", "open", "variable",
-                "universe", "set_option", "attribute", "notation", "deriving",
-                "macro", "syntax", "elab", "run_cmd", "#", "/-!")
+                "variables", "universe", "set_option", "attribute", "notation",
+                "notation3", "deriving", "macro", "macro_rules", "syntax",
+                "elab", "elab_rules", "run_cmd")
+
+#: Questi due invece si attaccano al loro argomento (`#check`, `/-!# Titolo`).
+_STRUTTURALI_PREFISSO = ("#", "/-!")
+
+_RE_STRUTTURALI = re.compile(
+    "^(?:" + "|".join(re.escape(p) for p in _STRUTTURALI) + r")(?![A-Za-z0-9_'])")
 # NB: `/-` NON e' qui. Ci era finito, e siccome `/--` comincia con `/-` i
 # docstring tornavano a essere inizi di blocco: rimuovendo un teorema il suo
 # docstring restava penzolante, con l'errore
@@ -80,8 +93,9 @@ def _apre_dichiarazione(riga: str) -> bool:
 def _apre_struttura(riga: str) -> bool:
     if not riga or riga[0].isspace():
         return False
-    prima = riga.split()[0] if riga.split() else ""
-    return prima.startswith(_STRUTTURALI) or riga.startswith("#")
+    if riga.startswith(_STRUTTURALI_PREFISSO):
+        return True
+    return bool(_RE_STRUTTURALI.match(riga))
 
 
 def _blocchi(righe: list[str]) -> list[tuple[int, int]]:
