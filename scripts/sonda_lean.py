@@ -32,6 +32,7 @@ from pathlib import Path
 RADICE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RADICE / "verifier"))
 
+import config as config_verificatore
 import esplora
 from index import ProblemIndex
 
@@ -43,7 +44,7 @@ TATTICHE = [
     ("simp_arith", "simp_arith"),
 ]
 
-MODELLO = """import FormalConjectures.Util.ProblemImports
+MODELLO = """import {utilita}
 import {modulo}
 
 set_option maxHeartbeats {heartbeats} in
@@ -57,7 +58,8 @@ def prova(problema, tattica_nome, tattica, negato: bool, heartbeats: int,
     """Prova una tattica sull'enunciato (o sulla sua negazione)."""
     tipo = f"type_of% {problema.theorem}"
     enunciato = f"¬ ({tipo})" if negato else tipo
-    codice = MODELLO.format(modulo=problema.module, enunciato=enunciato,
+    codice = MODELLO.format(utilita=config_verificatore.modulo_utilita(),
+                            modulo=problema.module, enunciato=enunciato,
                             tattica=tattica, heartbeats=heartbeats)
     t0 = time.time()
     r = esplora.esplora(codice, timeout=timeout)
