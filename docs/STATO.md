@@ -89,38 +89,41 @@ I rapporti per problema sono in [docs/dati/caccia/](dati/caccia/).
 
 ---
 
-## Domande per Federico
+## Decisioni prese (11 settembre 2026)
 
-**1. Quanto si spende, e su cosa?**
-Il modello dice che con $53 si dà un colpo solo a tutti i 1241 problemi aperti
-verificabili, e che il punto di equilibrio della strategia mista (setaccio
-completo + affondo sul 10% migliore) costa $174. Sopra quella cifra il conto
-diventa una scommessa sul valore di `p`, che nessuno conosce. Dimmi tu il
-limite e imposto il setaccio.
-*Non ho proceduto: qualunque scelta qui spende soldi.*
+**Il setaccio è annullato.** Presupposto da abbandonare: *non* esistono problemi
+aperti facili da trovare con una passata a basso costo. Sono aperti perché
+matematici forti non li hanno risolti. Lo scenario ottimistico del modello dei
+costi si appoggiava a un limite superiore misurato (0 enunciati su 30 cadono da
+soli, tetto al 9,5%), ma un tetto su «quanti cedono a una tattica» non è una
+prova che esistano aperti facili: sopra ci stava un'ipotesi, e quell'ipotesi
+ignorava che l'archivio è curato per raccogliere problemi difficili.
 
-**2. Vale la pena puntare sui problemi "risolti ma non formalizzati"?**
-Sono **1550** su `main`: la matematica è nota, in archivio manca la
-dimostrazione Lean. Su quelli il tasso di successo è *misurabile* (si sa se
-l'esito è giusto), il risultato è utile all'archivio, e il rischio di spendere
-per niente è molto più basso che sugli aperti. Se l'obiettivo è «fare lavoro
-matematico utile» invece di «risolvere un problema aperto», è la strada
-migliore. Se l'obiettivo è il secondo, lo dico chiaramente: il modello non
-promette niente.
+**Dove va il lavoro, in ordine:**
 
-**3. `run_python` deve avere `numpy` e `sympy`?**
-Oggi no, per scelta: l'agente riceve un interprete nudo, isolato, senza
-pacchetti. L'ambiente di calcolo con `numpy`/`sympy`/`numba` esiste ma lo usano
-solo le ricerche lunghe che scrivo io. Dare le librerie all'agente lo
-renderebbe più capace sui problemi da controesempio — i due fallimenti della
-calibrazione erano proprio di quel tipo — ma allarga la superficie di quello
-che può eseguire.
-*Ho proceduto con la scelta prudente (nessun pacchetto).*
+1. *Lettura della letteratura, gratis.* Per ogni problema aperto esplorabile con
+   un programma: fonte originale, fin dove è già stato verificato, se esiste una
+   ricerca sistematica pubblicata, quanti casi al secondo servirebbero per
+   superare quella frontiera su questo Mac. Si scartano le frontiere fuori
+   portata (10¹⁸ e oltre). Stanotte questo lavoro è stato fatto per 3 problemi
+   su 30: è il pezzo che manca.
+2. *Ricerche solo per i problemi con un vantaggio reale*, con checkpoint e
+   ripresa. L'API serve a scrivere i programmi, non a tentare dimostrazioni.
+3. *Sonda Lean su tutti e 455 gli enunciati aperti discreti*, non 30, per
+   cercare **formalizzazioni sbagliate**. Per ogni sospetto confermato: bozza di
+   segnalazione per gli autori dell'archivio, con il confronto fra enunciato
+   Lean e fonte originale. Niente viene pubblicato senza approvazione.
+4. Solo dopo, una proposta su come usare i ~$195 residui — e su quale parte
+   conviene **non** spendere.
 
-**4. Le ricerche sui problemi con limiti noti enormi vanno tentate comunque?**
-Per Erdős 366 la letteratura è a 10²², per Goldbach e Legendre a 4×10¹⁸: il
-calcolo locale non può avvicinarsi. Le ho lasciate fuori dalla coda.
-*Ho proceduto escludendole.*
+**`run_python` avrà `numpy` e `sympy`.** L'isolamento viene da `sandbox-exec`
+(niente rete, scrittura solo nella cartella di lavoro) e dall'interprete lanciato
+con `-I`, non dalla povertà dell'ambiente. Nel nuovo piano il modello scrive
+programmi di ricerca: senza quelle librerie non può nemmeno provarli.
+
+**Frontiere enormi: si scartano, per regola.** Con 84 candidati al secondo
+misurati, arrivare a 10¹⁸ richiederebbe dell'ordine di 10¹⁴ anni-core. Erdős 366
+(verificato a 10²²), Goldbach e Legendre (4×10¹⁸) restano fuori.
 
 ---
 
