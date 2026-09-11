@@ -178,10 +178,16 @@ def test_in_modalita_confutazione_il_candidato_con_False_combacia(tmp_path):
     assert "assiomi ammessi" in _motivo(r), \
         f"atteso rifiuto per gli assiomi (enunciati combacianti), ottenuto {_motivo(r)}"
     assert "sorryAx" in r.errors
-    # la sfida negata deve essere stata generata e compilata
+    # la sfida negata deve essere stata generata, e deve aver compilato
     superati = {c.name for c in r.checks if c.passed}
+    falliti = {c.name for c in r.checks if not c.passed}
     assert "il problema ammette una confutazione" in superati
-    assert "la sfida negata compila" in superati
+    assert "la sfida negata e' stata generata" in superati
+    # La compilazione della sfida non e' un controllo a se': la fa
+    # `prepara_sfida`, che lascia un controllo FALLITO se non ce la fa. E se la
+    # sfida non avesse compilato, comparator non avrebbe potuto confrontare i
+    # tipi, quindi il rifiuto sarebbe su un altro controllo, non sugli assiomi.
+    assert "modulo della sfida pronto" not in falliti
 
 
 def test_in_modalita_confutazione_il_candidato_con_True_non_combacia(tmp_path):
