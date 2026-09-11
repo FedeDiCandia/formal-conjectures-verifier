@@ -162,6 +162,28 @@ def _senza_commenti(testo: str) -> str:
     return guard.strip_comments_and_strings(testo)
 
 
+def _squilibrio_commenti(testo: str) -> int:
+    """Quante chiusure `-/` in piu' rispetto alle aperture `/-`.
+
+    Serve quando si rimuove un blocco: se conteneva la chiusura di un commento
+    cominciato piu' sopra, va rimessa, altrimenti il commento resta aperto e si
+    mangia tutto il resto del file.
+    """
+    apre = chiude = 0
+    i, n = 0, len(testo)
+    while i < n - 1:
+        if testo[i] == "-" and testo[i + 1] == "-" and apre == chiude:
+            while i < n and testo[i] != "\n":
+                i += 1
+            continue
+        if testo[i] == "/" and testo[i + 1] == "-":
+            apre += 1; i += 2; continue
+        if testo[i] == "-" and testo[i + 1] == "/":
+            chiude += 1; i += 2; continue
+        i += 1
+    return chiude - apre
+
+
 def _taglia_commento_aperto(testo: str) -> str:
     """Toglie un commento a blocco rimasto aperto.
 
@@ -273,6 +295,13 @@ def estrai(problema: Problem, indice: ProblemIndex) -> ProvaArchivio:
             if ("sorry" in pulito or "native_decide" in pulito
                     or re.search(r"\+\s*native", pulito)):
                 rimossi += 1
+                # Se il blocco rimosso CHIUDEVA un commento aperto piu' sopra,
+                # togliendolo si lascia il commento aperto e tutto il resto del
+                # file — bersaglio compreso — finisce dentro il commento. Si
+                # rimette la chiusura al posto suo.
+                deficit = _squilibrio_commenti(blocco)
+                if deficit > 0:
+                    tenuti.append("-/" * deficit)
                 continue
         tenuti.append(blocco)
 
@@ -281,8 +310,23 @@ def estrai(problema: Problem, indice: ProblemIndex) -> ProvaArchivio:
             f"{problema.theorem}: non sono riuscito a individuare la dichiarazione "
             f"nel file (nome atteso `{corto}`)")
 
-    corpo = _taglia_commento_aperto("\n".join(tenuti))
+    corpo = "\n".join(tenuti)
+    # Rimettere a posto la chiusura di un commento puo' lasciare un docstring
+    # VUOTO (`/--` seguito subito da `-/`): Lean lo rifiuta, perche' un
+    # docstring deve documentare qualcosa. Si toglie.
+    corpo = re.sub(r"/--\s*-/\s*\n", "", corpo)
+    corpo = _taglia_commento_aperto(corpo)
     corpo += _chiusure_mancanti(corpo)
+
+    # Controllo di sicurezza: dopo tutte queste manipolazioni il teorema
+    # bersaglio deve essere ancora li'. Se non c'e', il file compilerebbe
+    # benissimo e comparator fallirebbe con un PANIC oscuro
+    # ("Constant not found"): meglio un errore chiaro adesso.
+    if not re.search(rf"(?:theorem|lemma)\s+{re.escape(corto)}(?![\w'])", corpo) and \
+       not re.search(rf"(?:theorem|lemma)\s+\S*{re.escape(corto)}(?![\w'])", corpo):
+        raise NonEstraibile(
+            f"{problema.theorem}: dopo l'estrazione il teorema bersaglio non e' "
+            f"piu' nel file. E' un difetto dell'estrattore, non dell'archivio.")
 
     intestazione = (
         "/-\n"
