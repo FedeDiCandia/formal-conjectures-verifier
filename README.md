@@ -32,7 +32,13 @@ cp .env.esempio .env
 Verifica che tutto funzioni:
 
 ```bash
-./.venv/bin/python -m pytest tests/ -v     # circa 4 minuti
+./.venv/bin/python -m pytest tests/ -v     # circa 5 minuti, 83 test
+
+# gli stessi test sullo snapshot post-cutoff da `main`
+env FCS_ARCHIVE=$PWD/external/fc-main \
+    FCS_LEAN4EXPORT=$PWD/external/lean4export-433/.lake/build/bin/lean4export \
+    FCS_INDEX=$PWD/verifier/problem_index_main.json \
+    ./.venv/bin/python -m pytest tests/ -q
 ```
 
 ---
@@ -102,7 +108,7 @@ fatturati. Quando e' esaurito l'agente si ferma.
 | Cartella | Contenuto |
 |---|---|
 | `verifier/` | Il verificatore: `verify.py`, `guard.py`, `index.py`, `config.py` |
-| `tests/` | Test automatici (16, tutti passanti) |
+| `tests/` | Test automatici (83) |
 | `agent/` | L'agente e i suoi strumenti |
 | `docs/` | Spiegazioni dettagliate, in italiano |
 | `scripts/` | Installazione e utilita' |
@@ -121,6 +127,14 @@ fatturati. Quando e' esaurito l'agente si ferma.
    **cio' che il verificatore NON garantisce**.
 3. [L'agente](docs/03-agente.md) — i due strumenti, il nascondimento delle
    dimostrazioni, il controllo della spesa.
+4. [Protocollo per i ritrovamenti](docs/04-protocollo-ritrovamenti.md) — cosa
+   fare se sembra di aver trovato un controesempio, prima di crederci.
+5. [Selezione per la calibrazione](docs/05-selezione-calibrazione.md) — come si
+   sceglie un problema onesto su cui misurare l'agente.
+6. [Modello dei costi](docs/06-modello-costi.md) — quanto costa un tentativo,
+   quanti bersagli ci sono, e cosa non si puo' stimare.
+7. [Misurazioni](docs/dati/misurazioni.md) — il registro di tutto quello che e'
+   stato osservato, con la provenienza di ogni numero.
 
 ---
 
@@ -135,6 +149,20 @@ Il tag di benchmark decide tutto il resto:
 | lean4export | sorgente recente, **compilato con Lean 4.27.0** | deve leggere gli `.olean` dell'archivio, che sono legati alla versione |
 | comparator | `2312244` (Lean 4.34.0-rc2) | NON deve corrispondere: invoca `lake` e `lean4export` come processi esterni e lavora solo sul testo esportato |
 
+Accanto a `bench-v1` c'e' un **secondo snapshot**, necessario perche' il tag di
+benchmark e' del 6 maggio 2026 e il taglio di addestramento dichiarato di
+`claude-opus-5` e' maggio 2026: misurare l'agente su `bench-v1` misura anche
+quanto ricorda.
+
+| Componente | Versione |
+|---|---|
+| formal-conjectures, ramo `main` | commit `0a8b856c` (10 settembre 2026), fisso |
+| Lean | `v4.33.1` |
+| lean4export | sorgente recente, compilato con Lean 4.33.1 |
+
+Si seleziona con tre variabili d'ambiente: `FCS_ARCHIVE`, `FCS_LEAN4EXPORT`,
+`FCS_INDEX` (vedi sopra, nella sezione dei test).
+
 ---
 
 ## Limiti noti
@@ -142,9 +170,12 @@ Il tag di benchmark decide tutto il resto:
 Elencati per esteso in [docs/02-verificatore.md](docs/02-verificatore.md).
 In breve:
 
-- **Su macOS non c'e' sandbox per la compilazione Lean.** `landrun` e' solo per
-  Linux; qui viene sostituito da uno shim che non isola. Il controllo
-  sintattico preventivo riduce il rischio ma non lo elimina.
+- **La sandbox su macOS e' `sandbox-exec`, che Apple dichiara deprecata.**
+  Funziona e il collaudo lo dimostra (un candidato che prova a riscrivere un
+  `.olean` dell'archivio viene fermato dalla sandbox, non dal guard), ma
+  `landrun` — la soluzione prevista da comparator — e' solo per Linux, e qui c'e'
+  al suo posto uno shim che non isola: l'isolamento vero e' quello di
+  `sandbox-exec`.
 - **La correttezza del kernel di Lean e' un assunto**, come per chiunque usi
   Lean.
 - **La cache di Mathlib viene da internet.**
