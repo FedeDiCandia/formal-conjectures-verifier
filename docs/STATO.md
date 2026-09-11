@@ -65,7 +65,7 @@ risultato che non c'è.
 |---|---|---|
 | un primo `p` con `p²` che divide un numero di Euclide | **tutti** i primi sotto 3 milioni (216 815), e per ognuno tutti i primoriali con fattori minori | nessuno. È l'unica delle tre **conclusiva**: un solo `p` chiuderebbe il problema. Per quei primi il controllo è completo, non parziale |
 | orbite di `n → σ(n)−1` che non toccano mai un primo | `n` fino a 200 000, 200 passi ciascuna | nessuna orbita anomala |
-| Erdős 396: il minimo `n` per ogni `k` | in corso; `k` fino a 60, `n` fino a 20 000 | minimo `n` per `k` = 0, 1, 2, 3: **1, 2, 2480, 8178**. Niente per `k ≥ 4` sotto `n` = 20 000, che è un **indizio**, non un controesempio: la forma «per ogni k esiste n» non si confuta con un calcolo |
+| Erdős 396: il minimo `n` per ogni `k` | conclusa: `k` da 0 a 60, `n` fino a 20 000 (1h 45m) | minimo `n` per `k` = 0, 1, 2, 3: **1, 2, 2480, 8178**. Per `k ≥ 4` nessun `n` sotto 20 000. È un **indizio** sulla velocità con cui cresce il testimone, non un controesempio: la forma «per ogni k esiste n» non si confuta con un calcolo |
 | sonda automatica: `decide`, `plausible`, `norm_num`, `simp_arith`, forma diritta e negata | 30 enunciati aperti discreti, 240 prove | nessuno cade da solo. Limite superiore misurato al 90% sulla frazione di aperti che cadono da soli: **9,5%** |
 
 I rapporti per problema sono in [docs/dati/caccia/](dati/caccia/).
@@ -202,28 +202,26 @@ distrazione» da raccogliere.
 
 ---
 
-## Ricerche ancora in corso
+## Le ricerche sono tutte concluse
 
-| lavoro | stato |
-|---|---|
-| Erdős 396: il minimo `n` per ogni `k` | **in corso**, arrivata a `k` = 31 su 60. Si ferma da sola dopo due ore, salvando il checkpoint |
+| lavoro | durata | esito |
+|---|---|---|
+| numeri di Euclide | 43 min | conclusa, tutto l'intervallo previsto |
+| iterazione di σ | 5 s | conclusa |
+| Erdős 396 | 1h 45m | conclusa |
+| sonda automatica su 30 enunciati | 30 min | conclusa |
 
-Quando finisce, il rapporto lo riscrive il processo stesso — ma con la versione
-del codice che aveva in memoria quando è partito. Per rifarlo con le regole
-attuali:
+Nessuna è stata interrotta, nessuna ha prodotto ritrovamenti. I rapporti per
+problema sono in [docs/dati/caccia/](dati/caccia/).
 
-```bash
-./.venv/bin/python scripts/rigenera_rapporti.py
-```
-
-Non riesegue niente: rilegge `esito.json`. Poi conviene ricopiare i rapporti in
-`docs/dati/caccia/`, perché `runs/` non è sotto controllo di versione.
-
-Per riprendere una ricerca interrotta, dal punto in cui era:
+Per rilanciarne una più in là del punto raggiunto, si alza il limite in
+`scripts/caccia_programmi.py` (`LIMITE_P`, `FINO_A`, `N_MAX`) e si riparte:
 
 ```bash
-./avvia.sh riprendi caccia
+./avvia.sh lancia caccia
 ```
+
+Il checkpoint fa riprendere dal punto in cui era, non da capo.
 
 ---
 

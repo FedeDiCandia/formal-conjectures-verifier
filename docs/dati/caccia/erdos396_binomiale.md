@@ -13,10 +13,10 @@
 | | |
 |---|---|
 | conclusa | sì |
-| durata | 19 s |
+| durata | 6329 s |
 | posizione raggiunta | 61 |
 | casi esaminati | 61 |
-| voci nella lista dei risultati | 61 |
+| voci nella lista dei risultati | 57 |
 | natura di quelle voci | risultati calcolati |
 
 ## Risultati (risultati calcolati)
@@ -25,44 +25,44 @@
 controesempio: quello che segue e' materiale da leggere, non una
 confutazione.
 
-- `{"k": 2, "n_minimo": null}`
-- `{"k": 3, "n_minimo": null}`
-- `{"k": 4, "n_minimo": null}`
-- `{"k": 5, "n_minimo": null}`
-- `{"k": 6, "n_minimo": null}`
-- `{"k": 7, "n_minimo": null}`
-- `{"k": 8, "n_minimo": null}`
-- `{"k": 9, "n_minimo": null}`
-- `{"k": 10, "n_minimo": null}`
-- `{"k": 11, "n_minimo": null}`
-- `{"k": 12, "n_minimo": null}`
-- `{"k": 13, "n_minimo": null}`
-- `{"k": 14, "n_minimo": null}`
-- `{"k": 15, "n_minimo": null}`
-- `{"k": 16, "n_minimo": null}`
-- `{"k": 17, "n_minimo": null}`
-- `{"k": 18, "n_minimo": null}`
-- `{"k": 19, "n_minimo": null}`
-- `{"k": 20, "n_minimo": null}`
-- `{"k": 21, "n_minimo": null}`
-- `{"k": 22, "n_minimo": null}`
-- `{"k": 23, "n_minimo": null}`
-- `{"k": 24, "n_minimo": null}`
-- `{"k": 25, "n_minimo": null}`
-- `{"k": 26, "n_minimo": null}`
-- `{"k": 27, "n_minimo": null}`
-- `{"k": 28, "n_minimo": null}`
-- `{"k": 29, "n_minimo": null}`
-- `{"k": 30, "n_minimo": null}`
-- `{"k": 31, "n_minimo": null}`
-- `{"k": 32, "n_minimo": null}`
-- `{"k": 33, "n_minimo": null}`
-- `{"k": 34, "n_minimo": null}`
-- `{"k": 35, "n_minimo": null}`
-- `{"k": 36, "n_minimo": null}`
-- `{"k": 37, "n_minimo": null}`
-- `{"k": 38, "n_minimo": null}`
-- `{"k": 39, "n_minimo": null}`
-- `{"k": 40, "n_minimo": null}`
-- `{"k": 41, "n_minimo": null}`
-- ... e altri 21
+- `{"k": 4, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 5, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 6, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 7, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 8, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 9, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 10, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 11, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 12, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 13, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 14, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 15, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 16, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 17, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 18, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 19, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 20, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 21, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 22, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 23, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 24, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 25, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 26, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 27, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 28, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 29, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 30, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 31, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 32, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 33, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 34, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 35, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 36, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 37, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 38, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 39, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 40, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 41, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 42, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- `{"k": 43, "nessun_n_fino_a": 20000, "avvertenza": "indizio, non controesempio"}`
+- ... e altri 17

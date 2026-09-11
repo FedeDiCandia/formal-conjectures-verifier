@@ -35,6 +35,7 @@ class EsitoSalvato:
 
 def main() -> int:
     rifatti = 0
+    riepilogo = []
     for nome, definizione in RICERCHE.items():
         cartella = RADICE / "runs" / "caccia" / nome
         f = cartella / "esito.json"
@@ -51,8 +52,21 @@ def main() -> int:
         natura = definizione.get("natura_trovati", "da interpretare")
         print(f"  {nome}: rapporto riscritto "
               f"({len(esito.trovati)} voci, natura: {natura})")
+        riepilogo.append({
+            "nome": nome, "conclusa": esito.conclusa, "posizione": esito.posizione,
+            "esaminati": esito.esaminati, "trovati": len(esito.trovati),
+            "secondi": round(esito.secondi), "natura_trovati": natura})
         rifatti += 1
-    print(f"\n{rifatti} rapporti riscritti.")
+
+    if riepilogo:
+        dest = RADICE / "runs" / "caccia" / "riepilogo.json"
+        dest.write_text(json.dumps(riepilogo, ensure_ascii=False, indent=2),
+                        encoding="utf-8")
+        print(f"  riepilogo riscritto in {dest}")
+    veri = [r for r in riepilogo
+            if r["trovati"] and r["natura_trovati"] == "controesempi"]
+    print(f"\n{rifatti} rapporti riscritti. "
+          f"Ritrovamenti veri (controesempi): {len(veri)}.")
     return 0
 
 

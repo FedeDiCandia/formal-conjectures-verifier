@@ -2,253 +2,294 @@
   "nome": "erdos396_binomiale",
   "conclusa": true,
   "interrotta": false,
-  "secondi": 18.561662912368774,
+  "secondi": 6329.461094856262,
   "posizione": 61,
   "esaminati": 61,
   "trovati": [
     {
-      "k": 2,
-      "n_minimo": null
-    },
-    {
-      "k": 3,
-      "n_minimo": null
-    },
-    {
       "k": 4,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 5,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 6,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 7,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 8,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 9,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 10,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 11,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 12,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 13,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 14,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 15,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 16,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 17,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 18,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 19,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 20,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 21,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 22,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 23,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 24,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 25,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 26,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 27,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 28,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 29,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 30,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 31,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 32,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 33,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 34,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 35,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 36,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 37,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 38,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 39,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 40,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 41,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 42,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 43,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 44,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 45,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 46,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 47,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 48,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 49,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 50,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 51,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 52,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 53,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 54,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 55,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 56,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 57,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 58,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 59,
-      "n_minimo": null
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     },
     {
       "k": 60,
-      "n_minimo": null
-    },
-    {
-      "k": 0,
-      "n_minimo": 1
-    },
-    {
-      "k": 1,
-      "n_minimo": 2
+      "nessun_n_fino_a": 20000,
+      "avvertenza": "indizio, non controesempio"
     }
   ],
   "codice_uscita": 0,
