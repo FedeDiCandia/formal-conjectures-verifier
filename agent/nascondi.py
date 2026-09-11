@@ -29,11 +29,44 @@ def _posizione_separatore(testo: str) -> int | None:
 
     Va cercato al livello esterno: in `theorem f (n : ℕ := 3) : P := prova` il
     primo `:=` sta dentro le parentesi e non c'entra.
+
+    E vanno saltati i COMMENTI. Le posizioni che Lean riporta per una
+    dichiarazione partono dal docstring, non dalla parola `theorem`, e un
+    docstring puo' contenere codice di esempio con dentro un `:=`. Senza questo
+    accorgimento il taglio finirebbe dentro la documentazione.
     """
     profondita = 0
     i, n = 0, len(testo)
     while i < n - 1:
         c = testo[i]
+        # commento di riga
+        if c == "-" and testo[i + 1] == "-":
+            while i < n and testo[i] != "\n":
+                i += 1
+            continue
+        # commento a blocco, annidabile; comprende i docstring /-- ... -/
+        if c == "/" and testo[i + 1] == "-":
+            livello = 0
+            while i < n - 1:
+                if testo[i] == "/" and testo[i + 1] == "-":
+                    livello += 1; i += 2; continue
+                if testo[i] == "-" and testo[i + 1] == "/":
+                    livello -= 1; i += 2
+                    if livello == 0:
+                        break
+                    continue
+                i += 1
+            continue
+        # stringa
+        if c == '"':
+            i += 1
+            while i < n:
+                if testo[i] == "\\":
+                    i += 2; continue
+                if testo[i] == '"':
+                    i += 1; break
+                i += 1
+            continue
         if c in _APERTURE:
             profondita += 1
         elif c in _CHIUSURE:
