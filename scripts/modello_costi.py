@@ -179,7 +179,7 @@ SCENARI = {
             "provati (240 prove): il limite superiore misurato al 90% e' 9,5%. "
             "Prendo circa un quinto di quel tetto, perche' la sonda prova "
             "tattiche mentre l'agente ragiona — quindi puo' fare meglio — ma "
-            "9,5%% e' il tetto di un campione di 30, non una stima"),
+            "9,5% e' il tetto di un campione di 30, non una stima"),
         "realistico": (0.003,
             "un successo ogni ~300 tentativi: la calibrazione misura 5/7 su "
             "varianti GIA' dimostrate in archivio (prove di 10-34 righe), ma "

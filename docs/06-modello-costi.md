@@ -90,7 +90,7 @@ Un affondo per problema, scelti a caso tra i 1241 aperti verificabili. Saturazio
 | $1000 | 1 032 | 21 | 3.1 | 0.206 |
 | $5000 | 1 241 *(saturo)* | 25 | 3.7 | 0.248 |
 
-- **ottimistico: p = 2.00%** — STIMATO. la sonda automatica non ha chiuso nessuno dei 30 enunciati aperti provati (240 prove): il limite superiore misurato al 90% e' 9,5%. Prendo circa un quinto di quel tetto, perche' la sonda prova tattiche mentre l'agente ragiona — quindi puo' fare meglio — ma 9,5%% e' il tetto di un campione di 30, non una stima.
+- **ottimistico: p = 2.00%** — STIMATO. la sonda automatica non ha chiuso nessuno dei 30 enunciati aperti provati (240 prove): il limite superiore misurato al 90% e' 9,5%. Prendo circa un quinto di quel tetto, perche' la sonda prova tattiche mentre l'agente ragiona — quindi puo' fare meglio — ma 9,5% e' il tetto di un campione di 30, non una stima.
 - **realistico: p = 0.30%** — STIMATO. un successo ogni ~300 tentativi: la calibrazione misura 5/7 su varianti GIA' dimostrate in archivio (prove di 10-34 righe), ma nessun aperto ha una prova corta nota, per definizione di aperto.
 - **pessimistico: p = 0.02%** — STIMATO. un successo ogni 5000: l'archivio e' curato da DeepMind per raccogliere problemi su cui gli esperti si sono fermati.
 
