@@ -58,7 +58,7 @@ risultato che non c'è.
 |---|---|
 | Ambiente Lean 4.27.0 + archivio `bench-v1` + comparator | ✅ |
 | Snapshot post-cutoff: `main` a commit fisso `0a8b856c`, Lean 4.33.1 | ✅ 1268 moduli, indice di 5271 teoremi |
-| Verificatore `verify.py` | ✅ 83 test |
+| Verificatore `verify.py` | ✅ 88 test |
 | Sandbox della compilazione (`sandbox-exec`) + impronta dell'archivio | ✅ con controprova: è la sandbox, non il guard, a fermare la scrittura |
 | Strumenti dell'agente (`lean_explore`, `lean_check`, `run_python`) | ✅ |
 | Sfide negate (`--confutazione`) | ✅ 107 problemi aperti su `bench-v1`, 94 su `main` |

@@ -32,7 +32,7 @@ cp .env.esempio .env
 Verifica che tutto funzioni:
 
 ```bash
-./.venv/bin/python -m pytest tests/ -v     # circa 5 minuti, 83 test
+./.venv/bin/python -m pytest tests/ -v     # circa 5 minuti, 88 test
 
 # gli stessi test sullo snapshot post-cutoff da `main`
 env FCS_ARCHIVE=$PWD/external/fc-main \
@@ -108,7 +108,7 @@ fatturati. Quando e' esaurito l'agente si ferma.
 | Cartella | Contenuto |
 |---|---|
 | `verifier/` | Il verificatore: `verify.py`, `guard.py`, `index.py`, `config.py` |
-| `tests/` | Test automatici (83) |
+| `tests/` | Test automatici (88) |
 | `agent/` | L'agente e i suoi strumenti |
 | `docs/` | Spiegazioni dettagliate, in italiano |
 | `scripts/` | Installazione e utilita' |
