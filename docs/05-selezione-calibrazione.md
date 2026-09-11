@@ -12,7 +12,32 @@ Un problema entra in questa lista solo se soddisfa **tutte** queste condizioni:
    sono necessari ma non sufficienti;
 4. l'enunciato non ha buchi `answer( )`.
 
-Verificate 20 dimostrazioni, **18 accettate**.
+### Quante dimostrazioni d'archivio passano davvero
+
+Tre passate, ognuna con il suo registro:
+
+| passata | snapshot | candidati | accettate |
+|---|---|---|---|
+| 1 | `bench-v1` | 23 | 17 ([registro](dati/verifica_bench_v1_23.txt)) |
+| 2 | `main` | 6 di livello facile | 5 ([registro](dati/prove_archivio_test_tier.json)) |
+| 3 | `main` | i 13 candidati medi e difficili | **13** ([registro](dati/verifica_main_13.txt)) |
+
+Sullo snapshot `main`: **19 candidati, 18 accettati**. L'unico rifiutato,
+`DiophantineTuple.gibbs_6_tuple`, ha un `sorry` in una dichiarazione che il
+bersaglio usa: giusto che venga rifiutato.
+
+`GottschalkSurjunctivity.isSurjunctive_of_finite` era stato scartato come «non
+estraibile»: era un difetto dell'estrattore (una riga di docstring che comincia
+con «endomorphism» veniva letta come un `end`). Corretto; ora viene **accettato**.
+
+Una nota operativa che vale la pena scrivere: in una passata precedente,
+lanciata mentre altri lavori toccavano lo stesso archivio,
+`SidorenkoConjecture.sidorenko_conjecture.variants.star` risultava RIFIUTATO;
+nella passata pulita e' ACCETTATO. Il verificatore, se qualcuno modifica
+l'archivio mentre lui lavora, se ne accorge e rifiuta — fallisce dalla parte
+giusta — ma questo vuol dire che **una verifica non va lanciata in parallelo ad
+altri lavori sullo stesso archivio**, altrimenti si leggono rifiuti che non
+riguardano la dimostrazione.
 
 ---
 
