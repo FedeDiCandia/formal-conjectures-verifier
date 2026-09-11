@@ -16,7 +16,7 @@ Verificate 20 dimostrazioni, **18 accettate**.
 
 ---
 
-## I dodici problemi scelti
+## Gli undici problemi scelti
 
 ### Livello facile (1-3 righe di dimostrazione)
 
@@ -83,3 +83,29 @@ caso di `UnionClosed` — ma è una misura, non una supposizione.
 |---|---|
 | `GottschalkSurjunctivity.isSurjunctive_of_finite` | l'estrattore non riesce a isolare la dichiarazione (`unexpected identifier; expected command`) |
 | `DiophantineTuple.gibbs_6_tuple` | nel file resta un `sorry` in una dichiarazione che il bersaglio usa |
+
+---
+
+## Esito della calibrazione (eseguita)
+
+Spesa totale **$2.9834** su un limite rigido di $15. Modello `claude-opus-5`, effort `medium`, al massimo 20 iterazioni per problema.
+
+| livello | problema | esito | iterazioni | verifiche | costo |
+|---|---|---|---|---|---|
+| facile | `WieferichMirimanoffPrime.isMirimanoffPrime_and_not_isWieferichPrime_1006003` | **risolto** | 8 | 1 | $0.1485 |
+| facile | `WilsonPrime.not_isWilsonPrime_seven` | **risolto** | 1 | 1 | $0.0148 |
+| facile | `DiophantineTuple.fermat_4_tuple` | **risolto** | 2 | 1 | $0.0497 |
+| facile | `ClaudesCycles.not_hasHamiltonianArcDecomposition_one` | **risolto** | 1 | 1 | $0.0565 |
+| medio | `JacobianConjecture.jacobian_conjecture` | non risolto | 20 | 1 | $0.6886 |
+| medio | `VizingConjecture.vizing_conjecture.variants.dominationNumber_eq_one` | **risolto** | 3 | 1 | $0.0662 |
+| medio | `SidorenkoConjecture.sidorenko_tree_subsingleton` | **risolto** | 3 | 1 | $0.1639 |
+| difficile | `DeGiorgi.DeGiorgi_one` | **risolto** | 6 | 1 | $0.2572 |
+| difficile | `WrittenOnTheWallII.GraphConjecture65.conjecture65` | non risolto | 13 | 0 | $1.2486 |
+| difficile | `UnionClosed.union_closed.variants.singleton_mem` | **risolto** | 4 | 3 | $0.1524 |
+| difficile | `SidorenkoConjecture.sidorenko_conjecture.variants.non_bipartite_necessary` | **risolto** | 3 | 1 | $0.1370 |
+
+**9 su 11**: 4 su 4 fra i problemi di categoria `test`, 5 su 7 fra le varianti di congetture (`research solved`). Il numero che conta e' il secondo.
+
+I due fallimenti non sono di sistema. Su `JacobianConjecture.jacobian_conjecture` il modello aveva la strategia giusta — un controesempio noto — e si e' fermato sull'ingegneria Lean (`MvPolynomial`, `pderiv`) dopo 20 iterazioni. Su `WrittenOnTheWallII.GraphConjecture65.conjecture65` stava costruendo il grafo su 17 vertici del controesempio noto ed e' finito il tetto di spesa del problema, con 12 esplorazioni e zero verifiche consegnate.
+
+Il modello dei costi costruito su questi numeri sta in [docs/06-modello-costi.md](06-modello-costi.md); i dati grezzi in [docs/dati/calibrazione_completa.json](dati/calibrazione_completa.json).
