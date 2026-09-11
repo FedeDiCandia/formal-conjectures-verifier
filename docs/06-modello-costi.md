@@ -65,6 +65,8 @@ Formula: (costo se risolto x p + costo se fallito x (1-p)) / p, cioe' quanto cos
 
 Tutti **MISURATI** sull'indice costruito da Lean.
 
+I conteggi di `main` valgono con la semantica `google.answer = always_true`, quella predefinita, in cui `answer(sorry) ↔ P` diventa `True ↔ P` e il problema e' davvero dimostrabile. Fino a questa sessione lo snapshot dichiarava anche una seconda libreria che compilava gli stessi file con `postpone`, e i due insiemi di `.olean` si sovrascrivevano a vicenda: con quella semantica gli stessi 94 problemi non sono attaccabili affatto. La libreria in eccesso e' stata disattivata — vedi `docs/01` — e i numeri qui sopra sono quelli della semantica giusta.
+
 Due osservazioni che cambiano la strategia. Primo: **nessuno** dei 1495 problemi marcati `research open` ha una dimostrazione completa in archivio — l'archivio e' coerente con se stesso, non ci sono aperti 'per distrazione' da raccogliere. Secondo: 1550 problemi sono marcati `research solved` ma non hanno alcuna dimostrazione Lean in archivio: la matematica e' nota, la formalizzazione manca. Quella e' una terza classe di bersagli, piu' facile degli aperti e piu' difficile di quelli su cui ho calibrato.
 
 ## 4. Proiezione sui problemi aperti
@@ -150,7 +152,7 @@ La strategia B non si paga in dollari ma in tempo di macchina, quindi il numero 
 |---|---|---|---|---|
 | `euclide_squarefree` | un primo p con p^2 che divide un numero di Euclide | conclusiva: un solo ritrovamento confuterebbe la congettura | 216815 | **0** |
 | `erdos409_sigma` | orbite di n -> sigma(n)-1 che non toccano mai un primo | trova sospetti da esaminare a mano, non confutazioni | 199999 | **0** |
-| `erdos396_binomiale` | il minimo n con descFactorial(n,k+1) che divide centralBinom(n) | raccoglie indizi: la forma 'per ogni k esiste n' non e' confutabile da un calcolo | 18 | **0** |
+| `erdos396_binomiale` | il minimo n con descFactorial(n,k+1) che divide centralBinom(n) | raccoglie indizi: la forma 'per ogni k esiste n' non e' confutabile da un calcolo | 31 | **0** |
 
 **MISURATO** — la ricerca sui numeri di Euclide ha esaminato 216 038 primi in 2 581 secondi, cioe' **84 candidati al secondo** su un core, ed e' arrivata al primo 2 988 497 senza trovare niente: per ognuno di quei primi sono stati controllati TUTTI i primoriali con fattori minori, quindi il controllo e' completo, non parziale. Con 8 ricerche in parallelo e 8 ore di notte sono circa 2.4 milioni di candidati per ricerca per notte (**STIMATO**: velocita' misurata per il tempo).
 

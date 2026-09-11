@@ -371,6 +371,15 @@ def relazione_seconda_parte(dati: dict, r: list[str]) -> list[str]:
     p()
     p("Tutti **MISURATI** sull'indice costruito da Lean.")
     p()
+    p("I conteggi di `main` valgono con la semantica `google.answer = "
+      "always_true`, quella predefinita, in cui `answer(sorry) ↔ P` diventa "
+      "`True ↔ P` e il problema e' davvero dimostrabile. Fino a questa sessione "
+      "lo snapshot dichiarava anche una seconda libreria che compilava gli "
+      "stessi file con `postpone`, e i due insiemi di `.olean` si sovrascrivevano "
+      "a vicenda: con quella semantica gli stessi 94 problemi non sono "
+      "attaccabili affatto. La libreria in eccesso e' stata disattivata — vedi "
+      "`docs/01` — e i numeri qui sopra sono quelli della semantica giusta.")
+    p()
     p(f"Due osservazioni che cambiano la strategia. Primo: **nessuno** dei "
       f"{idx['main']['aperti']} problemi marcati `research open` ha una "
       f"dimostrazione completa in archivio — l'archivio e' coerente con se stesso, "

@@ -29,6 +29,18 @@ l'archivio, poi affondo solo dove il setaccio mostra un piano sensato. Il conto
 completo, con tre scenari e sei livelli di spesa, è in
 [docs/06-modello-costi.md](06-modello-costi.md).
 
+**Il difetto più serio l'ho trovato alla fine, e non riguarda l'agente: riguarda
+il giudice.** Sul ramo `main` l'archivio dichiara due librerie Lean che
+compilano gli stessi file nella stessa cartella di build, con opzioni diverse.
+Gli `.olean` si sovrascrivono a vicenda, quindi l'enunciato elaborato di un
+problema con `answer(sorry)` cambiava secondo l'ultimo comando eseguito:
+`True ↔ P` dopo un build della libreria, `sorry ↔ P` dopo un build del singolo
+modulo — che è quello che fa il giudice. Con la seconda semantica nessun
+candidato può combaciare, e i 94 problemi aperti che l'indice dava per
+attaccabili erano in realtà irraggiungibili. Corretto disattivando la libreria
+in eccesso nello snapshot; `bench-v1` non è toccato. Dettagli in
+[docs/01](01-archivio-formal-conjectures.md#la-modalita-non-dipende-solo-dallopzione-dipende-da-chi-compila).
+
 **Due allarmi falsi trovati e corretti, che valgono più di un ritrovamento.**
 La sonda automatica ha segnalato un enunciato aperto come «chiuso da
 `plausible`»: non lo era — `plausible`, quando non trova controesempi, lascia un
@@ -60,7 +72,7 @@ I rapporti per problema sono in [docs/dati/caccia/](dati/caccia/).
 |---|---|
 | Ambiente Lean 4.27.0 + archivio `bench-v1` + comparator | ✅ |
 | Snapshot post-cutoff: `main` a commit fisso `0a8b856c`, Lean 4.33.1 | ✅ 1268 moduli, indice di 5271 teoremi |
-| Verificatore `verify.py` | ✅ 88 test |
+| Verificatore `verify.py` | ✅ 88 test, passati su **tutti e due** gli snapshot |
 | Sandbox della compilazione (`sandbox-exec`) + impronta dell'archivio | ✅ con controprova: è la sandbox, non il guard, a fermare la scrittura |
 | Strumenti dell'agente (`lean_explore`, `lean_check`, `run_python`) | ✅ |
 | Sfide negate (`--confutazione`) | ✅ 107 problemi aperti su `bench-v1`, 94 su `main` |
@@ -133,7 +145,7 @@ calcolo locale non può avvicinarsi. Le ho lasciate fuori dalla coda.
 
 ---
 
-## Le tre cose più importanti da sapere
+## Le quattro cose più importanti da sapere
 
 **Il benchmark è anteriore all'addestramento del modello.** Il tag
 `bench-v1-lean4.27.0` è del 6 maggio 2026; il taglio dichiarato di
@@ -146,6 +158,15 @@ opzionale, era la condizione per misurare qualcosa.
 con `decide +native`, 17 che dipendono da `sorryAx` attraverso un lemma). Fra
 queste c'erano due dei tre problemi scelti per il primo test dell'agente: quel
 test misurava qualcosa che non poteva riuscire.
+
+**Un giudice vale quanto il determinismo della compilazione.** Il difetto delle
+due librerie non ha prodotto un risultato sbagliato — il verificatore ha
+rifiutato, cioè ha fallito dalla parte giusta — ma ha prodotto rifiuti che non
+riguardavano il candidato, e avrebbe fatto sprecare l'intero setaccio sui
+problemi con `answer(sorry)`. Si legge in
+`.lake/build/ir/<modulo>.setup.json`, che riporta le opzioni con cui ogni
+modulo è stato compilato davvero: se un giorno upstream aggiunge un'altra
+libreria, quel file è il posto dove guardare.
 
 **Il collo di bottiglia non è l'API, è il verificatore.** Nella calibrazione il
 46% del tempo di calendario è stato Lean in locale, non attesa del modello. Una
