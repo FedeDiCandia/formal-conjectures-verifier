@@ -20,6 +20,7 @@ import pytest
 RADICE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RADICE / "verifier"))
 
+import comune
 import config
 import esplora as modulo_esplora
 import guard
@@ -53,8 +54,8 @@ def test_in_esplorazione_il_codice_eseguibile_resta_vietato():
 
 
 def test_un_file_vietato_non_viene_nemmeno_compilato():
-    r = modulo_esplora.esplora('import FormalConjectures.Util.ProblemImports\n'
-                               '#eval IO.println "x"\n')
+    r = modulo_esplora.esplora(comune.adatta(
+        'import FormalConjectures.Util.ProblemImports\n#eval IO.println "x"\n'))
     assert not r.ok
     assert r.rifiutato_dal_guard
     assert r.secondi < 1.0, "non deve nemmeno far partire Lean"
@@ -66,7 +67,7 @@ def test_un_file_vietato_non_viene_nemmeno_compilato():
 @pytest.fixture(scope="module")
 def ispezione():
     """Una sola compilazione, riusata da piu' test: dura circa 10 secondi."""
-    return modulo_esplora.esplora("""import FormalConjectures.Util.ProblemImports
+    return modulo_esplora.esplora(comune.adatta("""import FormalConjectures.Util.ProblemImports
 import FormalConjectures.Wikipedia.Selfridge
 
 #print Selfridge.IsPseudoSelfridge
@@ -77,7 +78,7 @@ example : (2:ℕ) + 3 = 5 := by exact?
 
 example (n : ℕ) (h : 3 < n) : n = 7 := by
   omega
-""")
+"""))
 
 
 def test_print_di_una_struttura_dell_archivio_arriva_completo(ispezione):
@@ -129,12 +130,12 @@ def test_l_esplorazione_e_piu_rapida_di_una_verifica(ispezione):
 
 
 def test_il_timeout_interrompe_una_tattica_che_non_termina():
-    r = modulo_esplora.esplora("""import FormalConjectures.Util.ProblemImports
+    r = modulo_esplora.esplora(comune.adatta("""import FormalConjectures.Util.ProblemImports
 set_option maxRecDepth 100000 in
 example : True := by
   have : ∀ n : ℕ, n = n := fun n => rfl
   trivial
-""", timeout=5)
+"""), timeout=5)
     # non ci aspettiamo che questo specifico file scada: verifichiamo solo che
     # il parametro sia rispettato e non faccia saltare la funzione
     assert r.secondi < 60

@@ -40,6 +40,7 @@ import pytest
 RADICE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RADICE / "verifier"))
 
+import comune
 import config
 import negazione
 from index import ProblemIndex
@@ -80,7 +81,8 @@ def indice():
 
 def _candidato(tmp_path, risposta: str) -> Path:
     f = tmp_path / f"candidato_{risposta}.lean"
-    f.write_text(_CANDIDATO.format(risposta=risposta), encoding="utf-8")
+    f.write_text(comune.adatta(_CANDIDATO.format(risposta=risposta)),
+                 encoding="utf-8")
     return f
 
 

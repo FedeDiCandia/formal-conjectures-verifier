@@ -29,11 +29,13 @@ qualcuno aggirasse il filtro testuale, questi test dimostrano che il sistema
 regge lo stesso.
 """
 import sys
+import tempfile
 from pathlib import Path
 
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "verifier"))
+import comune
 import config
 from index import ProblemIndex
 from verify import verify, ACCEPTED, REJECTED, TIMEOUT, UNVERIFIABLE, verify_many
@@ -55,8 +57,35 @@ def setup_module(module):
                     allow_module_level=True)
 
 
-def _verifica(fixture: str, **kw):
-    return verify(PROBLEMA, FIXTURES / fixture, **kw)
+#: Le fixture adattate allo snapshot in uso, una volta sola per sessione.
+_ADATTATE: dict[str, Path] = {}
+
+
+def fixture(nome: str) -> Path:
+    """Percorso della fixture, adattata allo snapshot in uso.
+
+    Le fixture importano il modulo di utilita' dell'archivio: su `bench-v1` si
+    chiama `FormalConjectures.Util.ProblemImports`, su `main`
+    `FormalConjecturesUtil`. Invece di tenere due copie di ogni file, qui si
+    riscrive la riga di import al volo, cosi' la stessa suite gira su tutti e
+    due gli snapshot.
+    """
+    if nome in _ADATTATE:
+        return _ADATTATE[nome]
+    utilita = config.modulo_utilita()
+    origine = FIXTURES / nome
+    if utilita == "FormalConjectures.Util.ProblemImports":
+        _ADATTATE[nome] = origine
+        return origine
+    testo = comune.adatta(origine.read_text(encoding="utf-8"))
+    dest = Path(tempfile.mkdtemp(prefix="fixture_adattata_")) / nome
+    dest.write_text(testo, encoding="utf-8")
+    _ADATTATE[nome] = dest
+    return dest
+
+
+def _verifica(nome: str, **kw):
+    return verify(PROBLEMA, fixture(nome), **kw)
 
 
 def _regola_fallita(risultato) -> set[str]:
@@ -157,7 +186,7 @@ def test_7_segnala_i_problemi_con_buco_answer():
     idx = ProblemIndex.load()
     con_buco = idx.find(has_answer_hole=True)
     assert con_buco, "l'indice dovrebbe contenere problemi con buchi answer( )"
-    r = verify(con_buco[0].theorem, FIXTURES / "1_corretta.lean", index=idx)
+    r = verify(con_buco[0].theorem, fixture("1_corretta.lean"), index=idx)
     assert r.status == UNVERIFIABLE, f"atteso NON_VERIFICABILE, ottenuto {r.status}"
     assert "risposta" in r.message.lower()
 
@@ -177,8 +206,8 @@ def test_9_verifiche_in_parallelo():
     """Due verifiche insieme devono dare gli stessi esiti di due verifiche
     separate, senza pestarsi i piedi sui file temporanei."""
     risultati = verify_many(
-        [(PROBLEMA, FIXTURES / "1_corretta.lean"),
-         (PROBLEMA, FIXTURES / "5_piu_debole.lean")],
+        [(PROBLEMA, fixture("1_corretta.lean")),
+         (PROBLEMA, fixture("5_piu_debole.lean"))],
         jobs_parallel=2,
     )
     assert len(risultati) == 2
@@ -279,7 +308,7 @@ def test_14_un_candidato_non_riesce_a_riscrivere_un_file_dell_archivio(tmp_path)
     prima = hash_bersaglio()
 
     sabotatore = tmp_path / "sabotatore.lean"
-    sabotatore.write_text(f'''import FormalConjectures.Util.ProblemImports
+    sabotatore.write_text(comune.adatta(f'''import FormalConjectures.Util.ProblemImports
 
 #eval show IO Unit from do
   try
@@ -296,7 +325,7 @@ theorem jugglerStep_36 : jugglerStep 36 = 6 := by
   unfold jugglerStep
   norm_num [←Real.sqrt_eq_rpow]
 end JugglerConjecture
-''', encoding="utf-8")
+'''), encoding="utf-8")
 
     # 1. in uso normale il guard lo ferma prima di compilarlo
     rapporto = guard.check_file(sabotatore)
