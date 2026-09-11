@@ -202,6 +202,31 @@ distrazione» da raccogliere.
 
 ---
 
+## Ricerche ancora in corso
+
+| lavoro | stato |
+|---|---|
+| Erdős 396: il minimo `n` per ogni `k` | **in corso**, arrivata a `k` = 31 su 60. Si ferma da sola dopo due ore, salvando il checkpoint |
+
+Quando finisce, il rapporto lo riscrive il processo stesso — ma con la versione
+del codice che aveva in memoria quando è partito. Per rifarlo con le regole
+attuali:
+
+```bash
+./.venv/bin/python scripts/rigenera_rapporti.py
+```
+
+Non riesegue niente: rilegge `esito.json`. Poi conviene ricopiare i rapporti in
+`docs/dati/caccia/`, perché `runs/` non è sotto controllo di versione.
+
+Per riprendere una ricerca interrotta, dal punto in cui era:
+
+```bash
+./avvia.sh riprendi caccia
+```
+
+---
+
 ## Cosa manca
 
 - Il setaccio vero (tentativo a basso costo su tutti gli aperti): aspetta una
@@ -211,3 +236,12 @@ distrazione» da raccogliere.
 - `plausible` e `decide` sono le due tattiche più utili della sonda; le altre
   due (`norm_num`, `simp_arith`) non hanno mai prodotto niente e potrebbero
   essere sostituite da `omega` e `bound`.
+- Dei trenta problemi scelti per la caccia ne ho strumentati tre. Non è una
+  svista: per gli altri non ho controllato in rete fin dove è arrivata la
+  letteratura, e senza quel controllo una ricerca rischia di ripercorrere
+  terreno già battuto. Il modello dei costi stima in una quindicina i problemi
+  con una frontiera davvero raggiungibile.
+- L'indice di `main` è stato costruito con la semantica `always_true`, che ora
+  è anche quella del giudice: i due sono allineati. Se si rigenera lo snapshot,
+  l'indice va ricostruito **dopo** il passo che disattiva la libreria in
+  eccesso.
