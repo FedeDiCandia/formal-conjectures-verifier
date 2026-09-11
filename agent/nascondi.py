@@ -12,6 +12,7 @@ lasciarli sarebbe come lasciare mezzo compito svolto.
 """
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
@@ -72,9 +73,46 @@ def _posizione_separatore(testo: str) -> int | None:
         elif c in _CHIUSURE:
             profondita -= 1
         elif c == ":" and testo[i + 1] == "=" and profondita == 0:
-            return i
+            if not _e_legatura(testo, i):
+                return i
         i += 1
     return None
+
+
+#: Parole che introducono una LEGATURA, non la dimostrazione. Un `:=` che le
+#: segue appartiene a loro.
+_LEGATURE = ("let", "have", "set", "obtain", "suffices", "calc", "fun", "where",
+             "if", "then", "else", "with", "do", "match")
+
+
+def _e_legatura(testo: str, pos: int) -> bool:
+    """Dice se il `:=` a `pos` appartiene a un `let`, un `have` e simili.
+
+    Serve perche' un enunciato puo' contenere un `let A : Set α := ...` al
+    livello esterno delle parentesi, e prenderlo per l'inizio della
+    dimostrazione TRONCA l'enunciato. E' successo davvero, su
+    WrittenOnTheWallII.GraphConjecture65.conjecture65, e il controllo di
+    onesta' l'ha intercettato.
+    """
+    inizio_riga = testo.rfind("\n", 0, pos) + 1
+    segmento = testo[inizio_riga:pos]
+    parole = segmento.replace("(", " ").replace(")", " ").split()
+    if not parole:
+        # il `:=` sta a inizio riga: si guarda la riga precedente
+        prec = testo.rfind("\n", 0, max(0, inizio_riga - 1)) + 1
+        parole = testo[prec:inizio_riga].replace("(", " ").replace(")", " ").split()
+    # Si guarda a ritroso la prima parola significativa. Un punto e virgola
+    # CHIUDE la legatura (`let a := 1; resto`), quindi la scansione si ferma li':
+    # senza, il `:=` finale di `theorem t : (let a := 1; a = 1) := by rfl`
+    # veniva scambiato per quello del `let`.
+    for parola in reversed(parole):
+        if ";" in parola:
+            return False
+        if parola in _LEGATURE:
+            return True
+        if parola in ("theorem", "lemma", "def", "abbrev", "instance", "example"):
+            return False
+    return False
 
 
 def sostituisci_dimostrazione(dichiarazione: str) -> str:
@@ -114,20 +152,40 @@ def file_senza_dimostrazioni(problema: Problem, indice: ProblemIndex) -> str:
 
 
 def controlla_che_sia_nascosta(problema: Problem, testo_nascosto: str) -> None:
-    """Verifica che la dimostrazione originale non sia rimasta nel testo.
+    """Verifica che la dimostrazione del teorema BERSAGLIO sia stata sostituita.
 
-    Un collaudo in cui la risposta trapela non misura niente.
+    Un collaudo in cui la risposta trapela non misura niente, quindi questo
+    controllo deve esserci. Ma va fatto sulla DICHIARAZIONE GIUSTA: la prima
+    versione cercava il testo della dimostrazione in tutto il file, e dava
+    falso allarme quando un altro teorema dello stesso file aveva la stessa
+    dimostrazione di una riga. E' successo con
+    DiophantineTuple.fermat_4_tuple, dove tre teoremi condividono
+    `by norm_num [IsDiophantineTuple]`: il collaudo si e' interrotto pur
+    essendo tutto in ordine.
     """
-    originale = problema.source_text()
-    pos = _posizione_separatore(originale)
-    if pos is None:
-        return
-    prova = originale[pos + 2:].strip()
-    # normalizza gli spazi per confrontare in modo robusto
-    def compatta(s: str) -> str:
-        return " ".join(s.split())
-    prova_compatta = compatta(prova)
-    if len(prova_compatta) > 30 and prova_compatta in compatta(testo_nascosto):
+    corto = problema.theorem.split(".")[-1]
+    # la dichiarazione del bersaglio dentro il testo nascosto
+    m = re.search(rf"(?:theorem|lemma)\s+[\w'.«»]*{re.escape(corto)}(?![\w']) ?[\s\S]*?"
+                  rf"(?=\n(?:@\[|/--|theorem |lemma |def |abbrev |instance |end |namespace |"
+                  rf"variable |open |section )|\Z)",
+                  testo_nascosto)
+    if m is None:
         raise AssertionError(
-            f"La dimostrazione di {problema.theorem} e' ancora presente nel testo "
-            f"consegnato all'agente: il collaudo non sarebbe valido.")
+            f"Nel testo consegnato all'agente non trovo la dichiarazione di "
+            f"{problema.theorem}: il problema non sarebbe proponibile.")
+    dichiarazione = m.group(0)
+    pos = _posizione_separatore(dichiarazione)
+    if pos is None:
+        raise AssertionError(
+            f"Non riesco a individuare la dimostrazione di {problema.theorem} "
+            f"nel testo nascosto.")
+    # Si togliono i commenti: la dichiarazione estratta puo' portarsi dietro
+    # una riga di commento che segue (per esempio "-- Sanity checks"), e
+    # confrontarla come se fosse dimostrazione dava un falso allarme.
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "verifier"))
+    from guard import strip_comments_and_strings
+    prova = " ".join(strip_comments_and_strings(dichiarazione[pos + 2:]).split())
+    if prova not in ("by sorry", "sorry"):
+        raise AssertionError(
+            f"La dimostrazione di {problema.theorem} NON e' stata nascosta: al "
+            f"suo posto c'e' ancora {prova[:120]!r}. Il collaudo non sarebbe valido.")

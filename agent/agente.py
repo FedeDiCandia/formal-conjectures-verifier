@@ -335,7 +335,16 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
     t = Tentativo(problema=problema.theorem)
 
     testo_file = file_senza_dimostrazioni(problema, indice)
-    controlla_che_sia_nascosta(problema, testo_file)   # il collaudo dev'essere onesto
+    try:
+        # Il collaudo dev'essere onesto: se la dimostrazione non e' stata
+        # nascosta, il problema si SALTA. Prima interrompeva tutta l'esecuzione,
+        # e una calibrazione da undici problemi si fermava al terzo.
+        controlla_che_sia_nascosta(problema, testo_file)
+    except AssertionError as e:
+        t.motivo = f"saltato: {e}"
+        t.causa = "sistema: la dimostrazione dell'archivio non si riesce a nascondere"
+        t.secondi = time.time() - avvio
+        return t
 
     strumenti_api = [strumenti.SCHEMA_LEAN_EXPLORE, strumenti.SCHEMA_LEAN_CHECK,
                      strumenti.SCHEMA_RUN_PYTHON]
