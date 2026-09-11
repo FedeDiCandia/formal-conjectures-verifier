@@ -326,3 +326,208 @@ scoperta), un'etichetta scaduta (il problema era già risolto in letteratura), e
 `plausible` che lascia un `sorry` e fa compilare il file. Il verificatore ferma
 il terzo. Per i primi due serve il protocollo, e serve applicarlo **prima** di
 dire a qualcuno che abbiamo risolto qualcosa.
+
+---
+
+## 5. Il loro repository, esaminato (aggiunta dell'11 settembre)
+
+Ho clonato e letto `epoch-research/LeanOpenProblems` (il benchmark) e
+`LeanOpenProblems-results` (1,6 GB di esiti per campione). Tutto quello che
+segue è **MISURATO** contando i loro file, non riportato dall'articolo.
+
+### 5.1 Quanti dei nostri 1241 aperti sono nel loro benchmark
+
+| | |
+|---|---|
+| nostri aperti verificabili | 1241 |
+| coperti dal loro benchmark | **276** |
+| — per corrispondenza di nome esatto del teorema | 134 |
+| — per corrispondenza di sequenza OEIS | 144 |
+| **non coperti** | **965** |
+
+Il loro benchmark è costruito su due commit dell'archivio più vecchi del
+nostro: `67338a15` (20 maggio 2026) per l'insieme OEIS e `488aade2`
+(22 agosto 2026) per gli Erdős. Il nostro snapshot è del 10 settembre.
+
+Gli insiemi che hanno pubblicato:
+
+| insieme | campioni | tentati | risolti |
+|---|---|---|---|
+| `oeis` | 492 | 492 | **170** |
+| `erdos` | 147 | 47 | 3 |
+| `erdos_autoformalized` | 20 | 20 | 2 |
+| **`fc100open`** | **100** | **3** | **0** |
+| `personal_corresp` | 3 | 0 | 0 |
+
+**`fc100open` è la scoperta operativa più utile:** sono 100 problemi aperti
+presi dal nostro stesso archivio, con i nostri nomi di teorema, isolati e
+pronti — e li hanno **quasi mai eseguiti** (3 tentativi, 0 risolti). Di quei
+100, 91 sono ancora `research open` nel nostro snapshot e 9 sono stati risolti
+dall'archivio nel frattempo.
+
+Attenzione alla composizione, che ne abbassa il valore: 48 sono problemi di
+Erdős e 23 da Wikipedia, cioè la classe *famosa*, quella dove il loro tasso di
+successo è del 3–8% anche spendendo **$1000 per problema** (il loro run
+`erdos-ultima-alpha-1000usd`: 3 risolti su 59). Non è la classe OEIS al 30%.
+
+### 5.2 Quali escludere perché già risolti
+
+**Certi, corrispondenza per nome esatto — 5 problemi che Epoch ha risolto e che
+il nostro archivio marca ancora `research open`:**
+
+`Erdos1.erdos_1`, `Erdos74.erdos_74`, `Erdos126.erdos_126`,
+`Erdos548.erdos_548`, `Erdos571.erdos_571`.
+
+**Da verificare uno per uno — 48 altri**, dove combacia la *sequenza OEIS* ma
+non necessariamente la congettura: le loro formalizzazioni sono indipendenti
+dalle nostre e spesso riguardano un'altra affermazione sulla stessa sequenza
+(hanno id come `oeis_1359_conjecture_6`, cioè la sesta congettura su A001359).
+La corrispondenza per numero di sequenza è un filtro grezzo: serve a decidere
+cosa leggere, non cosa escludere.
+
+### 5.3 Il loro verificatore conviene adottarlo?
+
+**No: è lo stesso.** Il loro `scores.json` dichiara
+`"checker": "SandboxComparator"`, e il testo della verifica mostra il
+medesimo flusso che usiamo noi — costruzione di `Challenge`, costruzione di
+`Solution`, esportazione, confronto degli enunciati, controllo degli assiomi.
+È **comparator**, lo stesso strumento.
+
+| | loro | noi |
+|---|---|---|
+| confronto strutturale degli enunciati | comparator | comparator |
+| controllo degli assiomi | sì | sì |
+| isolamento | tre container Docker (agente, compilazione, punteggio) | `sandbox-exec` + impronta dell'archivio |
+| controllo sintattico preventivo | non documentato | sì (guard, 19 costrutti) |
+| modalità confutazione con sfida negata | non presente | sì |
+| controllo che l'archivio non venga toccato | non documentato | sì, hash prima e dopo |
+
+Conclusione: sul **giudizio matematico** siamo equivalenti, perché è lo stesso
+comparator. Sull'**isolamento** loro sono più forti (Docker separa l'agente dal
+punteggio; noi abbiamo `sandbox-exec`, che Apple dichiara deprecato). Non c'è
+motivo di adottare il loro codice; c'è motivo di prendere in prestito l'idea
+del container separato, se un giorno il sistema girasse su Linux.
+
+### 5.4 Gli strumenti che davano al modello, in ordine di importanza
+
+1. **Budget per problema alto e 72 ore di orologio.** È la leva con effetto
+   misurato: 30% a $50, 44–57% a $200. Noi avevamo $1,64 e 20 iterazioni.
+2. **Un terminale libero e un filesystem persistente.** Il modello scriveva
+   file, invocava `lake` da sé, teneva i risultati fra un passo e l'altro. Il
+   nostro `run_python` gira in una cartella temporanea **distrutta a ogni
+   chiamata**: un programma di ricerca non può conservare niente.
+3. **SageMath.** Un sistema di algebra computazionale completo. Noi non l'abbiamo,
+   e `sympy` non è un sostituto per teoria dei numeri seria.
+4. **`sympy`, `mpmath`, `numpy`.** Noi: niente.
+5. **`pantograph`** — interazione programmatica con Lean (stato degli obiettivi)
+   invece della sola compilazione di file interi.
+6. **Uno strumento che riporta tempo e budget residui**, così il modello si
+   regola da sé. Noi il budget lo conosciamo ma non lo diciamo al modello.
+
+E i due risultati **negativi**, che valgono quanto quelli positivi: dare al
+modello 476 000 articoli di arXiv **non ha migliorato** il punteggio, e nemmeno
+usare cicli di agente più sofisticati. Quindi l'elenco qui sopra va preso
+dall'alto: capienza e strumenti di calcolo sì, intelligenza dello scaffold no.
+
+### 5.5 Il numero che cambia la scelta del modello
+
+Sul sottoinsieme `lite` (100 problemi), 63 hanno resistito a **tutti e tre** i
+run da $50 dei tre laboratori. Su quei 63, ecco quanti ne ha risolti ciascun run
+successivo — **MISURATO**:
+
+| run | risolti dei 63 | tasso marginale |
+|---|---|---|
+| `oeis-open-lite-gpt6astra` | 20 | **31,7%** |
+| `oeis-open-lite-fable51` | 16 | **25,4%** |
+| `oeis-lite-200usd-fable` | 7 | 11,1% |
+| `oeis-lite-200usd-sol` | 6 | 9,5% |
+| `oeis-lite-200usd-deep-oai` | 4 | 6,3% |
+| `oeis-lite-200usd-grok46` | 3 | 4,8% |
+| tre run Anthropic/Google più vecchi | 0–2 | 0–3,2% |
+| `oeis-open-lite-gemini31pro` | 0 | 0% |
+
+Due letture, entrambe importanti:
+
+- **la generazione del modello conta più del budget.** Un modello attuale
+  risolve un quarto dei problemi su cui tre modelli di frontiera precedenti
+  avevano fallito spendendo $50 ciascuno;
+- a parità di dollari spesi ($200 per problema), **Fable 5.1 fa 53% e Fable 5
+  44% contro il 29% di Opus 4.8** sullo stesso insieme. Fable costa il doppio
+  per token, e quel confronto è già al netto del prezzo.
+
+**Conseguenza operativa: il tentativo da $50 va fatto con `claude-fable-5-1`,
+non con `claude-opus-5`.** Non perché Opus 5 sia scarso — non è stato misurato
+su questo benchmark — ma perché su Fable 5.1 il dato c'è ed è il migliore fra i
+modelli Anthropic, a parità di spesa.
+
+---
+
+## 6. Le tre correzioni chieste
+
+### 6.1 Che cosa aspettarsi da un eventuale successo
+
+L'articolo lo dice di sé: «*The conjectures covered in this work are of
+uncertain mathematical significance, and most have likely received little
+previous attention.*» Sta ora in cima a `docs/STATO.md`, perché è la cosa che
+va capita prima di spendere: un successo qui vuol dire **una congettura vera,
+aperta e verificata, che interessava al suo proponente e forse a nessun altro**.
+Non è un risultato che cambia la matematica. È un risultato vero.
+
+### 6.2 Probabilità ricalcolate sul residuo
+
+Il 30% valeva su problemi mai attaccati. A noi conviene mirare a due insiemi:
+
+- i **57 problemi OEIS discreti su sequenze che Epoch non ha mai messo nel
+  benchmark** (mai attaccati da loro, stessa classe di quelli al 30%);
+- il **residuo** dei 492, che ha già resistito a tre tentativi da $50.
+
+Per il residuo il tasso marginale misurato con un modello attuale è **25–32%**.
+Per i mai attaccati l'ancora è il 22–30% dei run completi. Su entrambi applico
+uno sconto per la nostra infrastruttura più povera (niente SageMath, niente
+terminale libero, niente filesystem persistente, contesto limitato): **STIMO
+10–20% per tentativo**, che è la forchetta che mi hai chiesto di usare.
+
+| | probabilità |
+|---|---|
+| un tentativo da $50 risolve il problema | **10–20%** (STIMATA, ancora misurata 25–32%) |
+| almeno uno su tre tentativi | **27–49%** |
+| almeno uno, se prima sistemiamo la capienza e usiamo Fable 5.1 | verso l'alto della forchetta |
+| un problema *celebre* (Erdős, Wikipedia) | **3–8%** anche a $1000 per problema — **misurato da loro** |
+
+L'ultima riga è la ragione per cui non spenderemo un dollaro sui problemi
+famosi: non è una mia stima prudente, è il loro risultato su 59 problemi di
+Erdős a mille dollari l'uno.
+
+### 6.3 Quanto tempo di Mac serve, e se la nostra infrastruttura regge
+
+**Conto, da dati MISURATI.** Il costo per iterazione cresce col contesto: nella
+calibrazione andava da $0,02 a $0,46, con mediana $0,043 sulla prima iterazione
+e punte di $0,71 a contesto grande. Prendendo $0,25 medi, **$50 sono ~200
+iterazioni**. Ogni iterazione: ~20–40 s di attesa API più 30–50 s di Lean.
+Quindi:
+
+| | |
+|---|---|
+| un tentativo da $50 | **3,5–5 ore** di orologio |
+| tre tentativi, in sequenza | 11–15 ore, cioè una notte e mezza |
+| tre tentativi, due in parallelo | ~8 ore, ma le verifiche Lean si mettono in coda (4 processi al massimo) |
+
+**La nostra infrastruttura NON regge**, e lo dico prima di spendere. Tre cose
+mancano, in ordine:
+
+1. **Il contesto.** A 200 iterazioni la conversazione supera la finestra del
+   modello. Serve un riassunto periodico: senza, il tentativo muore per
+   esaurimento di contesto e i $50 sono buttati. **È il blocco vero.**
+2. **La persistenza.** `run_python` lavora in una cartella temporanea distrutta
+   a ogni chiamata: il modello non può costruire nulla che duri, e una ricerca
+   in più passi è impossibile. Serve una cartella di lavoro per problema.
+3. **I tetti.** `--max-iterazioni` a 20 e il tetto per problema a $1,64 vanno
+   alzati a ~300 e $50, con il controllo preventivo che già abbiamo.
+
+Più `numpy`/`sympy` (già deciso) e — se si vuole avvicinarsi al loro
+ambiente — `sage`, che su macOS si installa con Homebrew ma è grosso: lo
+metterei solo se il primo tentativo mostra che serve.
+
+**Quindi la capienza viene prima di tutto**, come avevi previsto: sono modifiche
+gratuite, mezza giornata di lavoro mio, e senza di esse i $50 non sono
+spendibili in modo sensato.

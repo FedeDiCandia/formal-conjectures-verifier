@@ -89,6 +89,27 @@ I rapporti per problema sono in [docs/dati/caccia/](dati/caccia/).
 
 ---
 
+## Che cosa vorrebbe dire «risolvere un problema aperto», qui
+
+Da mettere in chiaro prima di spendere. La strada che ha una probabilità reale
+di riuscita porta a congetture che l'articolo di Epoch AI descrive così, di sé:
+
+> «*The conjectures covered in this work are of uncertain mathematical
+> significance, and most have likely received little previous attention.*»
+> — [arXiv:2608.11941](https://arxiv.org/abs/2608.11941)
+
+Tradotto: un successo sarebbe **una congettura vera, genuinamente aperta,
+dimostrata e verificata dal kernel di Lean — e di importanza matematica
+incerta**, del tipo proposto da una persona sola su OEIS e mai più guardato da
+nessuno. Non è un risultato che cambia la matematica. È un risultato vero, e
+l'obiettivo dichiarato («uno qualsiasi, non mi interessa che sia famoso») è
+esattamente questo.
+
+Sui problemi **famosi** il dato è brutale e non è una mia stima: Epoch ha
+speso **$1000 per problema** su 59 problemi di Erdős e ne ha risolti **3**.
+
+---
+
 ## Da leggere prima di decidere
 
 [docs/07-strategia.md](07-strategia.md) — analisi delle strade possibili verso
