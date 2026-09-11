@@ -58,6 +58,33 @@ Piu' file insieme, al massimo N processi Lean in parallelo:
 ./.venv/bin/python verifier/index.py --stats
 ```
 
+### Come usarlo per i lavori lunghi
+
+`avvia.sh` è il comando unico per tutto ciò che dura più di qualche minuto.
+
+```bash
+./avvia.sh                          # elenco dei lavori disponibili
+./avvia.sh stima agente --problemi "NOME" --budget 2
+./avvia.sh lancia agente --problemi "NOME" --budget 2
+./avvia.sh stato
+./avvia.sh segui
+./avvia.sh ferma agente
+./avvia.sh riprendi caccia
+```
+
+| comando | cosa fa |
+|---|---|
+| `stima` | dice quanto costerebbe e quanto durerebbe. **Non spende e non lancia niente.** |
+| `lancia` | avvia in background. Chiede conferma prima di spendere crediti e usa `caffeinate`, così un lavoro di otto ore non si interrompe quando il computer va in sospensione. |
+| `stato` | elenco dei lavori, con quelli attivi in cima e le ultime righe di log. |
+| `segui` | mostra il log mentre scorre. `Ctrl-C` smette di guardare, **il lavoro continua**. |
+| `ferma` | interrompe con garbo: le ricerche salvano il checkpoint prima di chiudere. |
+| `riprendi` | riparte dall'ultimo checkpoint, non da capo. |
+
+I lavori disponibili sono `agente` (spende crediti), `caccia` (ricerca di
+controesempi, non spende), `snapshot` (prepara l'archivio da `main`, non spende)
+e `test`.
+
 ### Far lavorare l'agente
 
 ```bash
