@@ -279,7 +279,20 @@ Onesta' intellettuale, elencata esplicitamente:
    controllo strutturale sui tipi di metaprogrammazione alza molto l'asticella,
    ma la difesa vera contro l'esecuzione di codice e' la sandbox, e contro le
    scorciatoie logiche e' comparator.
-7. **Una confutazione verificata non e' una confutazione accettata.** La
+7. **L'enunciato di riferimento dipende da come e' stato compilato
+   l'archivio.** Su `main` esistevano due librerie che compilavano gli stessi
+   file nella stessa cartella con opzioni diverse: l'enunciato elaborato di un
+   problema con `answer(sorry)` cambiava secondo l'ultimo comando di build. Lo
+   snapshot ora disattiva la libreria in eccesso, ma il principio resta: **il
+   giudice e' affidabile quanto lo e' il determinismo con cui l'archivio
+   viene compilato.** Se un giorno upstream ne aggiunge un'altra, va rifatto lo
+   stesso controllo — si legge in `.lake/build/ir/<modulo>.setup.json`, che
+   riporta le opzioni con cui il modulo e' stato compilato davvero.
+8. **Una verifica lanciata insieme ad altri lavori sullo stesso archivio puo'
+   fallire per ragioni che non riguardano il candidato.** L'impronta se ne
+   accorge e rifiuta — fallisce dalla parte giusta — ma il rifiuto non e'
+   informativo. Le verifiche vanno lanciate da sole.
+9. **Una confutazione verificata non e' una confutazione accettata.** La
    modalita' `confutazione` garantisce che `¬P` sia dimostrato correttamente,
    non che la formalizzazione di `P` sia fedele alla congettura originale. Un
    risultato del genere va sottoposto a revisione umana prima di crederci.

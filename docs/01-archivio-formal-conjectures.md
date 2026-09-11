@@ -159,6 +159,37 @@ Un enunciato che contiene `sorry` non e' dimostrabile onestamente (qualunque
 prova dipenderebbe dall'assioma `sorryAx`). Il verificatore deve accorgersene e
 dirlo chiaramente, invece di far finta di niente.
 
+### La modalita' non dipende solo dall'opzione: dipende da chi compila
+
+*Questo vale sul ramo `main`, non sul tag `bench-v1`.*
+
+Il `lakefile.toml` di `main` dichiara **due librerie che compilano gli stessi
+file nella stessa cartella di build**:
+
+| libreria | glob | `google.answer` |
+|---|---|---|
+| `FormalConjectures` | `FormalConjectures.+` | predefinito (`always_true`) |
+| `FormalConjecturesAnswerPostpone` | `FormalConjectures.+` | `postpone` |
+
+Gli `.olean` finiscono nello stesso posto, quindi **l'ultimo comando di build
+vince**, e l'enunciato elaborato di un problema con `answer(sorry)` cambia di
+conseguenza:
+
+```
+lake build FormalConjectures       ->  True ↔ P       (nessun sorry)
+lake build <un singolo modulo>     ->  sorryAx ↔ P    (hasSorry: true)
+```
+
+Non e' una supposizione: si legge in
+`.lake/build/ir/<modulo>.setup.json`, che riporta le opzioni con cui quel
+modulo e' stato compilato davvero.
+
+Per un giudice questo e' inaccettabile: lo stesso candidato viene accettato o
+rifiutato secondo come e' stato costruito l'archivio poco prima. Nel nostro
+snapshot la seconda libreria e' **disattivata** (`scripts/setup_snapshot_main.sh`
+lo rifa' se lo snapshot viene rigenerato), cosi' la semantica e' sempre
+`always_true` — quella che rende i problemi si'/no davvero dimostrabili.
+
 ### L'avvertimento da tenere a mente
 
 Sia il README dell'archivio sia la documentazione di `comparator` avvisano della
