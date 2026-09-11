@@ -89,6 +89,18 @@ I rapporti per problema sono in [docs/dati/caccia/](dati/caccia/).
 
 ---
 
+## Da leggere prima di decidere
+
+[docs/07-strategia.md](07-strategia.md) — analisi delle strade possibili verso
+«risolvere un problema aperto», scritta prima di spendere il budget residuo.
+Il punto: esiste una misura esterna (Epoch AI, agosto 2026, sugli **stessi**
+problemi di questo archivio) che dice che un modello con $50 per problema ne
+risolve il 30%. Noi ne spendevamo $0,97. Il presupposto «non esistono problemi
+aperti facili» regge per i problemi celebri e cade per le congetture OEIS poco
+guardate.
+
+---
+
 ## Decisioni prese (11 settembre 2026)
 
 **Il setaccio è annullato.** Presupposto da abbandonare: *non* esistono problemi
