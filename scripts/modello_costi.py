@@ -485,9 +485,9 @@ def relazione_seconda_parte(dati: dict, r: list[str]) -> list[str]:
     p("| spesa | setacciati | affondi | ottimistico | realistico | pessimistico |")
     p("|---|---|---|---|---|---|")
     for b in LIVELLI_SPESA:
-        n_scr = min(n_bersagli, b / c_s)
-        resto = max(0.0, b - n_scr * c_s)
-        n_dive = min(n_scr, resto / c_a)
+        n_scr = min(n_bersagli, b / c_it1)
+        resto = max(0.0, b - n_scr * c_it1)
+        n_dive = min(n_scr, resto / c_fall)
         celle = []
         for sc in ("ottimistico", "realistico", "pessimistico"):
             p_a = SCENARI["A"][sc][0]
@@ -675,13 +675,18 @@ def relazione_terza_parte(dati: dict, r: list[str]) -> list[str]:
       f"e dove no. Nessuna altra spesa in questo progetto ha un rapporto "
       f"informazione/prezzo simile.")
     p()
+    # vantaggio della strategia mista, scenario realistico
+    m = AMPLIFICAZIONE["realistico"]
+    resa_a = 1.0 / c_fall
+    resa_c = (QUOTA_PRIMO_COLPO + QUOTA_AFFONDO * m) / (c_it1 + QUOTA_AFFONDO * c_fall)
     p(f"2. *L'affondo va comprato dopo, non prima.* Un affondo costa "
-      f"${c_fall:.2f} **MISURATO** e finisce non risolto quasi sempre; comprarne "
-      f"1200 alla cieca (${n_bersagli*c_fall:,.0f}) e' il modo peggiore di "
-      f"spendere. Comprarne 120 scelti dal setaccio costa "
-      f"${0.1*n_bersagli*c_fall:,.0f} e, nello scenario realistico, rende "
-      f"{(QUOTA_PRIMO_COLPO + QUOTA_AFFONDO*AMPLIFICAZIONE['realistico'])/1:.2f} "
-      f"volte i successi per dollaro della strategia A.")
+      f"${c_fall:.2f} **MISURATO** e finisce non risolto quasi sempre. "
+      f"Comprarne uno per ognuno dei {n_bersagli} aperti costa "
+      f"${fmt(n_bersagli*c_fall)} ed e' il modo peggiore di spendere. Setacciare "
+      f"tutti e affondare sui {int(QUOTA_AFFONDO*n_bersagli)} migliori costa "
+      f"${fmt(n_bersagli*(c_it1 + QUOTA_AFFONDO*c_fall))} e, nello scenario "
+      f"realistico, rende **{resa_c/resa_a:.1f} volte** i successi per dollaro "
+      f"della strategia A.")
     p()
     p("3. *Il calcolo locale e' gratis: va saturato sempre.* La caccia ai "
       "controesempi non consuma budget API, solo notti di macchina. Va tenuta "
@@ -692,18 +697,44 @@ def relazione_terza_parte(dati: dict, r: list[str]) -> list[str]:
     p()
     p("**Da quale livello di spesa ha senso tentare gli aperti.**")
     p()
-    p(f"- **fino a $50** — setaccio completo dell'archivio. Ha senso subito: "
-      f"e' informazione, non scommessa.")
-    p(f"- **$100–$200** — setaccio piu' affondo sui casi migliori. E' la soglia "
-      f"minima per avere qualche probabilita' concreta di un successo su un "
-      f"aperto: nello scenario realistico ci si aspetta "
-      f"{fmt(200/c_c*(QUOTA_PRIMO_COLPO*0.003 + QUOTA_AFFONDO*2*0.003))} successi, "
-      f"cioe' probabilmente zero. Si compra la copertura, non il risultato.")
-    p(f"- **$500–$1000** — qui il conto diventa interessante solo se prima il "
-      f"setaccio ha trovato bersagli promettenti. Speso alla cieca, e' spreco.")
-    p(f"- **$5000** — oltre la saturazione: comprerebbe secondi e terzi tentativi "
-      f"sugli stessi problemi. Non lo consiglio senza aver prima visto i dati "
-      f"del setaccio.")
+    def attesi_c(b: float, scen: str) -> float:
+        """Successi attesi dalla strategia C, con i tetti del punto 4."""
+        p_a = SCENARI["A"][scen][0]
+        m = AMPLIFICAZIONE[scen]
+        n_scr = min(n_bersagli, b / c_it1)
+        resto = max(0.0, b - n_scr * c_it1)
+        n_dive = min(n_scr, resto / c_fall)
+        testa = min(n_dive, QUOTA_AFFONDO * n_scr)
+        return (n_scr * QUOTA_PRIMO_COLPO * p_a + testa * m * p_a
+                + (n_dive - testa) * p_a)
+
+    def terna(b: float) -> str:
+        return " / ".join(fmt(attesi_c(b, sc)) for sc in
+                          ("ottimistico", "realistico", "pessimistico"))
+
+    p(f"- **$53** — il setaccio completo: un colpo solo su tutti i "
+      f"{n_bersagli} aperti verificabili. Successi attesi {terna(53)} "
+      f"(ottimistico / realistico / pessimistico). Ha senso comunque, anche "
+      f"aspettandosi zero successi: quello che si compra e' la mappa di dove "
+      f"il modello ha un piano.")
+    p(f"- **$174** — setaccio completo piu' affondo sul {QUOTA_AFFONDO:.0%} "
+      f"migliore. Successi attesi {terna(174)}. E' il punto in cui, se "
+      f"lo scenario realistico e' giusto, un successo diventa probabile piu' "
+      f"che no. Sotto questa cifra non c'e' motivo di fare altro; sopra, si "
+      f"sta scommettendo su un numero che nessuno conosce.")
+    p(f"- **$500** — successi attesi {terna(500)}. Vale la pena solo se il "
+      f"setaccio da $53 ha mostrato bersagli promettenti: speso alla cieca, "
+      f"paga affondi su problemi dove il modello non aveva nemmeno un piano.")
+    p(f"- **$1000–$5000** — successi attesi {terna(1000)} e {terna(5000)}. "
+      f"Oltre la saturazione il conto perde significato: comprerebbe secondi e "
+      f"terzi tentativi sugli stessi problemi, e il modello li tratta come "
+      f"indipendenti dai primi, cosa che non sono. Non lo consiglio senza aver "
+      f"prima letto i dati del setaccio.")
+    p()
+    p("Si noti l'ampiezza: a ogni livello di spesa i tre scenari stanno in un "
+      "intervallo di due ordini di grandezza. **L'incertezza non e' nel conto: "
+      "e' tutta nel valore di p**, che il punto 6 dichiara non stimabile. "
+      "Chiunque dia un numero solo, qui, sta indovinando.")
     p()
     p("**Una raccomandazione sui bersagli, non solo sulla spesa.** I "
       f"{idx['main']['risolti_senza_prova']} problemi marcati `research solved` "

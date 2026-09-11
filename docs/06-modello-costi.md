@@ -150,7 +150,7 @@ La strategia B non si paga in dollari ma in tempo di macchina, quindi il numero 
 |---|---|---|---|---|
 | `euclide_squarefree` | un primo p con p^2 che divide un numero di Euclide | conclusiva: un solo ritrovamento confuterebbe la congettura | 216815 | **0** |
 | `erdos409_sigma` | orbite di n -> sigma(n)-1 che non toccano mai un primo | trova sospetti da esaminare a mano, non confutazioni | 199999 | **0** |
-| `erdos396_binomiale` | il minimo n con descFactorial(n,k+1) che divide centralBinom(n) | raccoglie indizi: la forma 'per ogni k esiste n' non e' confutabile da un calcolo | 12 | **0** |
+| `erdos396_binomiale` | il minimo n con descFactorial(n,k+1) che divide centralBinom(n) | raccoglie indizi: la forma 'per ogni k esiste n' non e' confutabile da un calcolo | 13 | **0** |
 
 **MISURATO** — la ricerca sui numeri di Euclide ha esaminato 216 038 primi in 2 581 secondi  cioe' **84 candidati al secondo** su un core  ed e' arrivata al primo 2 988 497 senza trovare niente. Con 8 ricerche in parallelo e 8 ore di notte sono circa 2.4 milioni di candidati per ricerca per notte (**STIMATO**: velocita' misurata per il tempo).
 
@@ -177,16 +177,18 @@ La strategia B non si paga in dollari ma in tempo di macchina, quindi il numero 
 
 1. *Il setaccio costa quasi niente e copre tutto.* Un colpo solo su un problema costa $0.0430 **MISURATO**. Con **$50** si danno 1163 colpi singoli: piu' dei 1241 aperti verificabili dell'archivio. Cioe' con cinquanta dollari si prova una volta OGNI problema aperto della raccolta, e si scopre dove il modello ha un piano e dove no. Nessuna altra spesa in questo progetto ha un rapporto informazione/prezzo simile.
 
-2. *L'affondo va comprato dopo, non prima.* Un affondo costa $0.97 **MISURATO** e finisce non risolto quasi sempre; comprarne 1200 alla cieca ($1,202) e' il modo peggiore di spendere. Comprarne 120 scelti dal setaccio costa $120 e, nello scenario realistico, rende 0.42 volte i successi per dollaro della strategia A.
+2. *L'affondo va comprato dopo, non prima.* Un affondo costa $0.97 **MISURATO** e finisce non risolto quasi sempre. Comprarne uno per ognuno dei 1241 aperti costa $1 202 ed e' il modo peggiore di spendere. Setacciare tutti e affondare sui 124 migliori costa $174 e, nello scenario realistico, rende **2.9 volte** i successi per dollaro della strategia A.
 
 3. *Il calcolo locale e' gratis: va saturato sempre.* La caccia ai controesempi non consuma budget API, solo notti di macchina. Va tenuta accesa in parallelo a qualunque strategia, perche' il suo costo marginale in dollari e' zero. Ma va puntata sui pochi problemi dove i limiti pubblicati sono bassi: dove la letteratura e' arrivata a 10^22, nessuna notte di calcolo cambia niente.
 
 **Da quale livello di spesa ha senso tentare gli aperti.**
 
-- **fino a $50** — setaccio completo dell'archivio. Ha senso subito: e' informazione, non scommessa.
-- **$100–$200** — setaccio piu' affondo sui casi migliori. E' la soglia minima per avere qualche probabilita' concreta di un successo su un aperto: nello scenario realistico ci si aspetta 1.8 successi, cioe' probabilmente zero. Si compra la copertura, non il risultato.
-- **$500–$1000** — qui il conto diventa interessante solo se prima il setaccio ha trovato bersagli promettenti. Speso alla cieca, e' spreco.
-- **$5000** — oltre la saturazione: comprerebbe secondi e terzi tentativi sugli stessi problemi. Non lo consiglio senza aver prima visto i dati del setaccio.
+- **$53** — il setaccio completo: un colpo solo su tutti i 1241 aperti verificabili. Successi attesi 5.4 / 0.813 / 0.054 (ottimistico / realistico / pessimistico). Ha senso comunque, anche aspettandosi zero successi: quello che si compra e' la mappa di dove il modello ha un piano.
+- **$174** — setaccio completo piu' affondo sul 10% migliore. Successi attesi 13 / 1.6 / 0.080. E' il punto in cui, se lo scenario realistico e' giusto, un successo diventa probabile piu' che no. Sotto questa cifra non c'e' motivo di fare altro; sopra, si sta scommettendo su un numero che nessuno conosce.
+- **$500** — successi attesi 20 / 2.6 / 0.147. Vale la pena solo se il setaccio da $53 ha mostrato bersagli promettenti: speso alla cieca, paga affondi su problemi dove il modello non aveva nemmeno un piano.
+- **$1000–$5000** — successi attesi 30 / 4.1 / 0.250 e 35 / 4.9 / 0.303. Oltre la saturazione il conto perde significato: comprerebbe secondi e terzi tentativi sugli stessi problemi, e il modello li tratta come indipendenti dai primi, cosa che non sono. Non lo consiglio senza aver prima letto i dati del setaccio.
+
+Si noti l'ampiezza: a ogni livello di spesa i tre scenari stanno in un intervallo di due ordini di grandezza. **L'incertezza non e' nel conto: e' tutta nel valore di p**, che il punto 6 dichiara non stimabile. Chiunque dia un numero solo, qui, sta indovinando.
 
 **Una raccomandazione sui bersagli, non solo sulla spesa.** I 1550 problemi marcati `research solved` ma privi di dimostrazione in archivio sono una classe intermedia: la matematica e' nota, manca la formalizzazione. Su quelli il tasso di successo misurabile sarebbe VERO (si puo' controllare l'esito), il risultato e' utile all'archivio, e il rischio di spendere per niente e' molto piu' basso. Se l'obiettivo e' 'fare lavoro matematico utile con questo sistema' invece di 'risolvere un problema aperto', quella e' la strada con il miglior rapporto tra costo e risultato — e la calibrazione che ho in mano la descrive meglio di quanto descriva gli aperti.
 
