@@ -75,7 +75,8 @@ SCHEMA_LEAN_EXPLORE = {
 }
 
 
-def esegui_lean_explore(codice_lean: str, timeout: int = 240, slot: int = 0) -> str:
+def esegui_lean_explore(codice_lean: str, timeout: int = 240,
+                        slot: int | None = None) -> str:
     r = esploratore.esplora(codice_lean, timeout=timeout, slot=slot)
     return r.render()
 

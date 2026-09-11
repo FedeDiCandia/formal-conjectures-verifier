@@ -358,6 +358,93 @@ print(json.dumps({"evento": "fine", "posizione": k, "esaminati": esaminati,
 '''
 
 
+
+MURTHY = r'''
+import json, os, signal, sys, time
+
+from sympy import isprime
+
+def esiste_k(n):
+    """Il piu' piccolo k con k(n-k)-1 primo, o None se non esiste."""
+    for k in range(1, n // 2 + 1):
+        if isprime(k * (n - k) - 1):
+            return k
+    return None
+
+# --- COLLAUDO su valori noti ------------------------------------------------
+# I teoremi di prova dell'archivio (OEIS/109909.lean) fissano:
+#   a(1)=0, a(2)=0, a(3)=0, a(4)=2  (numero di primi distinti k(n-k)-1)
+# Qui basta la parte che serve alla ricerca: esiste k per n=4..8 e NON esiste
+# per n=1,2,3.
+attesi_senza = [1, 2, 3]
+attesi_con = [4, 5, 6, 7, 8]
+for n in attesi_senza:
+    if esiste_k(n) is not None:
+        print(json.dumps({"evento": "collaudo_fallito", "n": n,
+                          "dettaglio": "trovato k dove l'archivio dice a(n)=0"}), flush=True)
+        sys.exit(1)
+for n in attesi_con:
+    if esiste_k(n) is None:
+        print(json.dumps({"evento": "collaudo_fallito", "n": n,
+                          "dettaglio": "nessun k dove l'archivio dice a(n)>0"}), flush=True)
+        sys.exit(1)
+print(json.dumps({"evento": "collaudo", "esito": "superato",
+                  "controllati": "n=1,2,3 senza k; n=4..8 con k, come i teoremi "
+                                 "di prova dell'archivio"}), flush=True)
+
+# --- ricerca ----------------------------------------------------------------
+checkpoint = os.environ["RICERCA_CHECKPOINT"]
+stato = os.environ["RICERCA_STATO"]
+DA = int(os.environ.get("DA", "4"))
+FINO_A = int(os.environ.get("FINO_A", "1000000000"))
+
+inizio = DA
+trovati = []
+esaminati = 0
+if os.path.exists(checkpoint):
+    d = json.load(open(checkpoint))
+    inizio = d.get("posizione", DA)
+    trovati = d.get("trovati", [])
+    esaminati = d.get("esaminati", 0)
+
+fermati = False
+def arresto(s, f):
+    global fermati
+    fermati = True
+signal.signal(signal.SIGTERM, arresto)
+signal.signal(signal.SIGINT, arresto)
+
+def salva(n):
+    tmp = stato + ".tmp"
+    with open(tmp, "w") as fh:
+        json.dump({"posizione": n, "esaminati": esaminati, "trovati": trovati,
+                   "ultimo_n": n - 1}, fh)
+    os.replace(tmp, stato)
+
+print(json.dumps({"evento": "avvio", "da": inizio, "fino_a": FINO_A}), flush=True)
+t0 = time.time()
+ultimo_avviso = t0
+n = inizio
+while n < FINO_A and not fermati:
+    if esiste_k(n) is None:
+        trovati.append({"n": n, "nota": "nessun k con k(n-k)-1 primo: CONTROESEMPIO"})
+        print(json.dumps({"evento": "trovato", "dettaglio": trovati[-1]}), flush=True)
+    esaminati += 1
+    n += 1
+    ora = time.time()
+    if ora - ultimo_avviso > 30:
+        salva(n)
+        print(json.dumps({"evento": "progresso", "posizione": n,
+                          "esaminati": esaminati, "n_corrente": n,
+                          "secondi": round(ora - t0)}), flush=True)
+        ultimo_avviso = ora
+
+salva(n)
+print(json.dumps({"evento": "fine", "posizione": n, "esaminati": esaminati,
+                  "trovati": len(trovati), "secondi": round(time.time() - t0)}),
+      flush=True)
+'''
+
 RICERCHE = {
     "euclide_squarefree": {
         "problema": "EuclidNumbers.euclid_numbers_are_square_free",
@@ -393,6 +480,26 @@ RICERCHE = {
         "esito_in_parole":
             "nessun n fino a {FINO_A} genera un'orbita di n -> sigma(n)-1 che "
             "eviti i numeri primi per {MAX_PASSI} passi.",
+    },
+    "murthy_kn_k": {
+        "problema": "OeisA109909.conjecture",
+        "programma": MURTHY,
+        # MISURATO: 157 000 n/s a n circa 10^6 su un core (sympy.isprime, e il
+        # primo k funziona quasi sempre). Un miliardo sono ~1,8 ore.
+        "variabili": {"DA": 4, "FINO_A": 1000000000},
+        "descrizione": "per ogni n > 3 cerca k con k(n-k)-1 primo; un n senza "
+                       "k confuta la congettura di A. Murthy (2005)",
+        "stato_noto": "aperta; citata nella raccolta di Zhi-Wei Sun "
+                      "(arXiv:1211.1588) e in Niu-Zhang 2024. La frontiera "
+                      "pubblicata non e' nota con precisione: questa ricerca "
+                      "stabilisce almeno la nostra",
+        "conclusivo": "si: un solo n senza k confuta la congettura, e per un n "
+                      "moderato la confutazione si verifica anche in Lean",
+        "natura_trovati": "controesempi",
+        "esito_in_parole":
+            "ogni n da 4 a {n_corrente} ha almeno un k con k(n-k)-1 primo: "
+            "la congettura di Murthy regge fino a la'. Esaminati {esaminati} "
+            "valori di n.",
     },
     "erdos396_binomiale": {
         "problema": "Erdos396.erdos_396",

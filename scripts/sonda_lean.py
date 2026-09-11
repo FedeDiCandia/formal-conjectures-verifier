@@ -41,7 +41,7 @@ TATTICHE = [
     ("decide", "decide"),
     ("plausible", "plausible"),
     ("norm_num", "norm_num"),
-    ("simp_arith", "simp_arith"),
+    ("simp_arith", "simp +arith"),
 ]
 
 MODELLO = """import {utilita}

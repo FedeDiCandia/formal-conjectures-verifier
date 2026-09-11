@@ -31,6 +31,8 @@ pulito perche' `lean` invocato direttamente non applica i linter di stile che
 """
 from __future__ import annotations
 
+import contextlib
+import fcntl
 import os
 import signal
 import subprocess
@@ -70,8 +72,56 @@ class Esplorazione:
 MAX_CARATTERI = 40_000
 
 
-def esplora(codice: str, *, timeout: int = 240, slot: int = 0) -> Esplorazione:
-    """Compila `codice` e riporta tutto quello che Lean ha da dire."""
+#: Quanti file di ispezione possono coesistere. Ogni chiamata ne prende uno in
+#: esclusiva: sono nomi di MODULO Lean, quindi devono essere fissi e pochi.
+SLOT_DISPONIBILI = 8
+
+
+@contextlib.contextmanager
+def _slot_esclusivo(slot: int | None):
+    """Prende uno slot di ispezione in esclusiva, con un lucchetto sul file.
+
+    Serve perche' il file di ispezione vive nell'albero dell'archivio e il suo
+    nome e' il nome del modulo Lean: due esplorazioni che usano lo stesso slot
+    si sovrascrivono il file a vicenda e ognuna legge i messaggi dell'altra.
+    E' un errore silenzioso e della specie peggiore — ha fatto sembrare che una
+    tattica avesse chiuso un problema aperto, quando i messaggi che leggevo
+    erano di un altro problema compilato da un altro processo.
+
+    Il lucchetto e' un file con `flock`, quindi vale anche fra processi diversi
+    e viene rilasciato dal sistema operativo se il processo muore.
+    """
+    cartella = config.ARCHIVE / config.SANDBOX_SUBDIR
+    cartella.mkdir(parents=True, exist_ok=True)
+    candidati = [slot] if slot is not None else list(range(SLOT_DISPONIBILI))
+    attesa = 0.0
+    while True:
+        for n in candidati:
+            lucchetto = open(cartella / f"E{n}.lock", "a+")
+            try:
+                fcntl.flock(lucchetto, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except OSError:
+                lucchetto.close()
+                continue
+            try:
+                yield n
+            finally:
+                fcntl.flock(lucchetto, fcntl.LOCK_UN)
+                lucchetto.close()
+            return
+        if slot is not None and attesa > 600:
+            raise TimeoutError(f"slot di ispezione {slot} occupato da oltre 10 minuti")
+        time.sleep(0.5)
+        attesa += 0.5
+
+
+def esplora(codice: str, *, timeout: int = 240, slot: int | None = None) -> Esplorazione:
+    """Compila `codice` e riporta tutto quello che Lean ha da dire.
+
+    `slot=None` (predefinito) prende il primo slot libero: e' quello che serve
+    quando piu' esplorazioni girano insieme. Uno slot esplicito si aspetta se e'
+    occupato.
+    """
     problemi = config.check_installation()
     if problemi:
         return Esplorazione(False, "Ambiente non pronto:\n  - " + "\n  - ".join(problemi),
@@ -88,6 +138,11 @@ def esplora(codice: str, *, timeout: int = 240, slot: int = 0) -> Esplorazione:
             + "\n".join(str(f) for f in rapporto.findings),
             0.0, False, rifiutato_dal_guard=[f.rule for f in rapporto.findings])
 
+    with _slot_esclusivo(slot) as slot_preso:
+        return _esplora_nello_slot(codice, timeout=timeout, slot=slot_preso)
+
+
+def _esplora_nello_slot(codice: str, *, timeout: int, slot: int) -> Esplorazione:
     cartella = config.ARCHIVE / config.SANDBOX_SUBDIR
     cartella.mkdir(parents=True, exist_ok=True)
     percorso = cartella / f"E{slot}.lean"

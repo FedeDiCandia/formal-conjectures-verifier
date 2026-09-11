@@ -165,3 +165,41 @@ example : True := by
     # non ci aspettiamo che questo specifico file scada: verifichiamo solo che
     # il parametro sia rispettato e non faccia saltare la funzione
     assert r.secondi < 60
+
+
+# --- gli slot: due esplorazioni insieme non devono mescolarsi ----------------
+
+def test_due_esplorazioni_insieme_non_si_mescolano():
+    """Il difetto che questo test fissa era della specie peggiore.
+
+    Il file di ispezione vive nell'albero dell'archivio e il suo nome E' il nome
+    del modulo Lean, quindi era fisso: `E0.lean`. Due esplorazioni insieme si
+    sovrascrivevano il file e ognuna leggeva i messaggi dell'altra. Nella caccia
+    agli artefatti questo ha fatto sembrare che una tattica banale avesse chiuso
+    un problema aperto di topologia: i messaggi che arrivavano erano di un altro
+    problema, compilato da un altro processo.
+    """
+    import threading
+    esiti = {}
+
+    def lavora(nome, codice):
+        esiti[nome] = modulo_esplora.esplora(codice, timeout=200)
+
+    a = comune.adatta("import FormalConjectures.Util.ProblemImports\n"
+                      "theorem prova_A : (2:ℕ) + 2 = 5 := by norm_num\n")
+    b = comune.adatta("import FormalConjectures.Util.ProblemImports\n"
+                      "theorem prova_B : (3:ℕ) + 3 = 7 := by norm_num\n")
+    fili = [threading.Thread(target=lavora, args=("A", a)),
+            threading.Thread(target=lavora, args=("B", b))]
+    for f in fili:
+        f.start()
+    for f in fili:
+        f.join()
+    # ognuna deve parlare del PROPRIO file, e i due file devono essere diversi
+    import re
+    file_a = set(re.findall(r"E(\d+)\.lean", esiti["A"].messaggi))
+    file_b = set(re.findall(r"E(\d+)\.lean", esiti["B"].messaggi))
+    assert file_a and file_b, (esiti["A"].messaggi, esiti["B"].messaggi)
+    assert file_a.isdisjoint(file_b), f"stesso slot: {file_a} e {file_b}"
+    for nome in ("A", "B"):
+        assert "unsolved goals" in esiti[nome].messaggi

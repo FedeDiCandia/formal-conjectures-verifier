@@ -51,7 +51,7 @@ TATTICHE = [
     ("testimone_zero_d", "exact ⟨0, by decide⟩",          False),
     ("testimone_vuoto",  "exact ⟨∅, by simp⟩",            False),
     ("simp",             "simp",                          True),
-    ("simp_arith",       "simp_arith",                    True),
+    ("simp_arith",       "simp +arith",                   True),
     ("decide",           "decide",                        True),
     ("norm_num",         "norm_num",                      True),
     ("omega",            "omega",                         True),

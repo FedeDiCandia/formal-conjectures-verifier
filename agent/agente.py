@@ -543,7 +543,7 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
                 stampa(f"     -> lean_explore ({len(codice)} caratteri)...")
                 t0 = time.time()
                 uscita = strumenti.esegui_lean_explore(
-                    codice, timeout=timeout_lean or 240, slot=0)
+                    codice, timeout=timeout_lean or 240)
                 durata = time.time() - t0
                 it.secondi_esplorazione += durata
                 prima = uscita.splitlines()[0] if uscita else "(vuoto)"
