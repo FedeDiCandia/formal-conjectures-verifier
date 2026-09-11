@@ -45,10 +45,12 @@ risultato che non c'è.
 
 | ricerca | fino a dove ha guardato | esito |
 |---|---|---|
-| numeri di Euclide: un `p` con `p²` che divide `E(n)` | oltre il primo 2 900 000 | nessuno — **è una confutazione mancata, non un indizio**: un solo `p` chiuderebbe il problema |
-| iterazione `n → σ(n)−1` senza primi | `n` fino a 200 000, 200 passi | nessuna orbita anomala |
-| Erdős 396 (minimo `n` per ogni `k`) | `k` fino a 60, `n` fino a 20 000 | nessun `n` per `k ≥ 2`: è un **indizio**, non un controesempio, perché la forma «per ogni k esiste n» non si confuta con un calcolo |
-| sonda automatica (`decide`, `plausible`, `norm_num`, `simp_arith`, forma diritta e negata) | enunciati aperti discreti più corti | nessuno cade da solo |
+| un primo `p` con `p²` che divide un numero di Euclide | **tutti** i primi sotto 3 milioni (216 815), e per ognuno tutti i primoriali con fattori minori | nessuno. È l'unica delle tre **conclusiva**: un solo `p` chiuderebbe il problema. Per quei primi il controllo è completo, non parziale |
+| orbite di `n → σ(n)−1` che non toccano mai un primo | `n` fino a 200 000, 200 passi ciascuna | nessuna orbita anomala |
+| Erdős 396: il minimo `n` per ogni `k` | in corso; `k` fino a 60, `n` fino a 20 000 | minimo `n` per `k` = 0, 1, 2, 3: **1, 2, 2480, 8178**. Niente per `k ≥ 4` sotto `n` = 20 000, che è un **indizio**, non un controesempio: la forma «per ogni k esiste n» non si confuta con un calcolo |
+| sonda automatica: `decide`, `plausible`, `norm_num`, `simp_arith`, forma diritta e negata | 30 enunciati aperti discreti, 240 prove | nessuno cade da solo. Limite superiore misurato al 90% sulla frazione di aperti che cadono da soli: **9,5%** |
+
+I rapporti per problema sono in [docs/dati/caccia/](dati/caccia/).
 
 ---
 
