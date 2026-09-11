@@ -23,10 +23,7 @@ Uso, dalla cartella dell'archivio:
     lake env lean --run <percorso>/extract_problems.lean > indice.json
 -/
 import Lean
--- Le utilita' dell'archivio hanno cambiato posto fra le versioni: nel tag
--- bench-v1 stanno in FormalConjectures/Util/, nel ramo main sono la libreria
--- FormalConjecturesUtil. Si importa quella che esiste.
-import FormalConjecturesUtil
+import FormalConjectures.Util.Attributes.Basic
 
 open Lean ProblemAttributes
 

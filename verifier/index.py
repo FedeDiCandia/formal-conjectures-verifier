@@ -167,7 +167,12 @@ class ProblemIndex:
 def build_index(output: Path | None = None) -> Path:
     """Esegue lo script Lean che estrae i metadati e salva il JSON."""
     output = output or config.INDEX_FILE
-    script = Path(__file__).resolve().parent / "lean" / "extract_problems.lean"
+    # lo script giusto per questo archivio: le utilita' hanno cambiato posto
+    # fra il tag bench-v1 e il ramo main
+    cartella = Path(__file__).resolve().parent / "lean"
+    script = (cartella / "extract_problems.lean"
+              if config.modulo_utilita() == "FormalConjecturesUtil"
+              else cartella / "extract_problems_bench.lean")
     print(f"Estraggo i metadati dall'archivio (richiede qualche minuto)...", file=sys.stderr)
     proc = subprocess.run(
         [str(config.ELAN_BIN / "lake"), "env", "lean", "--run", str(script)],

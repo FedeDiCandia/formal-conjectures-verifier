@@ -42,6 +42,21 @@ SANDBOX_SUBDIR = "FormalConjectures/_Judge"
 #: Il nome del modulo Lean corrispondente.
 SANDBOX_MODULE_PREFIX = "FormalConjectures._Judge"
 
+def modulo_utilita() -> str:
+    """Il modulo che i file di problemi devono importare.
+
+    E' cambiato fra le versioni dell'archivio: nel tag `bench-v1-lean4.27.0` le
+    utilita' stanno in `FormalConjectures/Util/` e si importa
+    `FormalConjectures.Util.ProblemImports`; nel ramo `main` sono diventate una
+    libreria a se', `FormalConjecturesUtil`, e i file di problemi importano
+    quella. Rilevarlo invece di scriverlo fisso evita di dover ricordare quale
+    snapshot si sta usando.
+    """
+    if (ARCHIVE / "FormalConjecturesUtil.lean").is_file():
+        return "FormalConjecturesUtil"
+    return "FormalConjectures.Util.ProblemImports"
+
+
 #: Dove viene salvato l'indice dei problemi (generato una volta sola).
 INDEX_FILE = _path("FCS_INDEX", ROOT / "verifier" / "problem_index.json")
 

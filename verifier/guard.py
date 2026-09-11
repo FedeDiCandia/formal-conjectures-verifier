@@ -264,6 +264,8 @@ BANNED_PATTERNS: dict[str, tuple[str, str]] = {
 #: Moduli che il file candidato puo' importare.
 ALLOWED_IMPORT_PREFIXES: tuple[str, ...] = (
     "FormalConjectures.Util.",
+    # nel ramo `main` le utilita' sono diventate una libreria a se'
+    "FormalConjecturesUtil",
     "FormalConjecturesForMathlib",
     "Mathlib",
     "Batteries",
