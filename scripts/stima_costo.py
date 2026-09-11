@@ -25,7 +25,7 @@ from index import ProblemIndex
 
 #: MISURATO sull'unico problema portato a termine nel test da 5 dollari
 #: (ComplexityTheory.P_subset_coNP, 9 chiamate, effort high).
-#: Vedi runs/misurazioni.md e runs/test_5_dollari_interrotto.log
+#: Vedi docs/dati/misurazioni.md e runs/test_5_dollari_interrotto.log
 MISURA = {
     "costo_medio_chiamata": 0.2015,
     "costo_mediano_chiamata": 0.0796,
