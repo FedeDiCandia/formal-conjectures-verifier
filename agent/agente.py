@@ -94,8 +94,8 @@ by a person, so the rules below are absolute.
 
 A single, self-contained Lean 4 file that:
 
-1. Starts with `import FormalConjectures.Util.ProblemImports` (you may add \
-`import Mathlib...` lines if you need something specific).
+1. Starts with `import {MODULO_UTILITA}` (you may add `import Mathlib...` \
+lines if you need something specific).
 2. **Does NOT import the module of the problem itself** — that module already \
 declares the theorem, and importing it makes the file fail to compile.
 3. Re-declares, verbatim, every auxiliary definition the statement depends on \
@@ -193,6 +193,16 @@ def _natura_della_verifica(rapporto: str, accettato: bool) -> tuple[str, str]:
     if "tipo identico" in fallito or "definizioni dell" in fallito:
         return fallito, "enunciato_sbagliato"
     return fallito, "errore_tecnico"
+
+
+def istruzioni() -> str:
+    """Le istruzioni, con il nome del modulo di utilita' di QUESTO snapshot.
+
+    Cambia fra le versioni dell'archivio: `FormalConjectures.Util.ProblemImports`
+    nel tag bench-v1, `FormalConjecturesUtil` nel ramo main. Scriverlo fisso
+    faceva fallire ogni tentativo sul secondo snapshot.
+    """
+    return ISTRUZIONI.replace("{MODULO_UTILITA}", config_verificatore.modulo_utilita())
 
 
 def messaggio_problema(problema: Problem, testo_file: str) -> str:
@@ -344,7 +354,7 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
         # Non basta guardare quanto si e' speso: bisogna sapere quanto puo'
         # costare la prossima chiamata. Il conteggio dei token e' esatto e
         # gratuito, quindi il costo massimo lo sappiamo in anticipo.
-        sistema = [{"type": "text", "text": ISTRUZIONI,
+        sistema = [{"type": "text", "text": istruzioni(),
                     "cache_control": {"type": "ephemeral"}}]
         conteggio = client.messages.count_tokens(
             model=modello, system=sistema, tools=strumenti_api, messages=messaggi)

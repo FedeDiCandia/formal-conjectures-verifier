@@ -90,8 +90,11 @@ I collaudi brevi delle tre ricerche non hanno prodotto nulla, come atteso:
 
 | lavoro | stato |
 |---|---|
-| snapshot da `main` (Lean 4.33.1, cache, compilazione) | in corso, log in `runs/snapshot_main.log` |
-| caccia ai controesempi | preparata, **non ancora lanciata**: il computer è occupato dallo snapshot |
+| snapshot da `main` | ✅ **pronto**: 1268 moduli, Lean 4.33.1, 16 GB |
+| indice di `main` | ✅ **pronto**: 5271 teoremi, 1565 con dimostrazione pulita |
+| verifica delle prove d'archivio post-cutoff | ✅ **18 su 20 accettate** |
+| calibrazione dell'agente | 🔄 in corso, 11 problemi, limite rigido $15 |
+| caccia ai controesempi | 🔄 in corso, tre ricerche |
 
 ---
 
