@@ -1,9 +1,19 @@
 """
 I due strumenti che l'agente puo' usare.
 
-  * `lean_check`  — sottopone un file Lean al verificatore e riporta l'esito.
-  * `run_python`  — esegue codice Python in un ambiente isolato (niente rete,
-                    niente scritture fuori dalla sua cartella, con timeout).
+  * `lean_explore` — compila un file Lean di prova e restituisce TUTTI i
+                     messaggi. Serve a ispezionare: `#print`, `#check`,
+                     `exact?`, errori completi. Non e' un giudizio.
+  * `lean_check`   — sottopone un file Lean al verificatore e riporta l'esito.
+                     E' l'unico giudizio che conta.
+  * `run_python`   — esegue codice Python in un ambiente isolato (niente rete,
+                     niente scritture fuori dalla sua cartella, con timeout).
+
+Perche' `lean_explore` esiste separato: nel primo collaudo l'agente ha usato
+NOVE verifiche su nove per ispezionare l'API di Mathlib, non per consegnare una
+dimostrazione. Usare il giudice per quello costa 33 secondi invece di 8 e
+restituisce un verdetto ("rifiutato: il teorema non c'e'") che non e'
+l'informazione cercata.
 
 Perche' `run_python`: cercare una dimostrazione spesso richiede di fare conti
 (controllare un'ipotesi su piccoli casi, cercare un controesempio, calcolare una
@@ -21,7 +31,52 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "verifier"))
 
+import esplora as esploratore   # noqa: E402
 import verify as verificatore   # noqa: E402
+
+
+# ---------------------------------------------------------------------------
+# Strumento 0: lean_explore
+# ---------------------------------------------------------------------------
+
+SCHEMA_LEAN_EXPLORE = {
+    "name": "lean_explore",
+    "description": (
+        "Compila un file Lean 4 di prova e restituisce TUTTI i messaggi di Lean, "
+        "non troncati. Serve a ISPEZIONARE, non a consegnare una dimostrazione: "
+        "non e' un giudizio e non conta come tentativo.\n\n"
+        "Funziona tutto quello che stampa qualcosa:\n"
+        "  #print NomeDefinizione     - il corpo di una definizione o i campi di "
+        "una struttura\n"
+        "  #check @nomeLemma          - il tipo, con tutti gli argomenti impliciti\n"
+        "  example ... := by exact?   - cerca un lemma che chiuda l'obiettivo\n"
+        "  example ... := by apply?   - idem, per applicazione\n"
+        "  #reduce e                  - riduce un termine (attenzione ai tempi)\n"
+        "e gli errori arrivano completi, con lo stato degli obiettivi.\n\n"
+        "A differenza di lean_check, qui PUOI importare il modulo del problema "
+        "(per esempio `import FormalConjectures.Wikipedia.Selfridge`) e ispezionare "
+        "le sue definizioni.\n\n"
+        "Circa 8-10 secondi, contro i 30 di lean_check. Usa questo per capire, "
+        "quello per consegnare."
+    ),
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "codice_lean": {
+                "type": "string",
+                "description": "Il file Lean di prova. Non serve che contenga il "
+                               "teorema del problema.",
+            }
+        },
+        "required": ["codice_lean"],
+        "additionalProperties": False,
+    },
+}
+
+
+def esegui_lean_explore(codice_lean: str, timeout: int = 240, slot: int = 0) -> str:
+    r = esploratore.esplora(codice_lean, timeout=timeout, slot=slot)
+    return r.render()
 
 
 # ---------------------------------------------------------------------------
@@ -82,7 +137,11 @@ def esegui_lean_check(problema: str, codice_lean: str, timeout: int | None = Non
     if r.errors:
         righe.append("")
         righe.append("Messaggi di Lean / comparator:")
-        righe.append(r.errors[:6000])
+        # NON si tronca qui: il messaggio di Lean e' l'informazione piu' utile
+        # che questo strumento restituisce, e un `unsolved goals` con lo stato
+        # degli obiettivi puo' essere lungo. Il limite vero e' in
+        # verify._lean_errors, dichiarato e ampio.
+        righe.append(r.errors)
     return "\n".join(righe), r.accepted
 
 

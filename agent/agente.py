@@ -136,16 +136,40 @@ fresh names, and prove them properly.
 
 # How to work
 
-- Call `lean_check` early and often. It is the only judgment that counts, and \
-guessing is expensive. A check takes about 30 seconds.
-- Read the Lean error messages carefully; they tell you exactly what failed.
-- Use `run_python` for anything computational: searching for a witness or a \
-counterexample, checking a hypothesis on small cases, computing a constant. \
-Do not do arithmetic in your head when you can compute it.
+You have three tools. Using the right one matters:
+
+**`lean_explore` — to understand.** Compiles a scratch file and returns every \
+Lean message, untruncated. Use it to look things up instead of guessing:
+
+    #print Nat.Perfect              -- the actual definition
+    #print Selfridge.IsSelfridge    -- a structure's fields and constructor
+    #check @Finset.sum_congr        -- the exact type, implicits included
+    example : GOAL := by exact?     -- search Mathlib for a closing lemma
+    example : GOAL := by apply?     -- same, by application
+
+You may `import` the problem's own module here (you may not in `lean_check`), \
+so you can inspect its definitions directly. Errors come back complete, with \
+the goal state. About 8-10 seconds. This is not a judgment and costs you \
+nothing but time.
+
+**`lean_check` — to submit.** The only judgment that counts. About 30 seconds. \
+Use it when you believe you have a proof, not to look something up: it will \
+just tell you the theorem is missing.
+
+**`run_python` — to compute.** Searching for a witness or a counterexample, \
+checking a hypothesis on small cases, computing a constant. Do not do \
+arithmetic in your head when you can compute it.
+
+Practical advice:
+
+- Look it up before you guess. One `lean_explore` with `#check` and `exact?` is \
+cheaper than three failed proof attempts, in both time and money.
+- Read the error messages carefully; they tell you exactly what failed, and you \
+now get them in full.
 - If a proof strategy fails twice in a row, change strategy rather than \
 patching it.
-- You do not have internet access and cannot read Mathlib's source. Rely on \
-what you know about Mathlib's API, and let the error messages correct you.
+- You have no internet access. Rely on what you know about Mathlib, and use \
+`lean_explore` to correct yourself.
 - Stop when `lean_check` reports ACCETTATO. If you become convinced the problem \
 is beyond you, say so plainly instead of submitting a proof you know is broken."""
 
@@ -229,6 +253,8 @@ class Iterazione:
     secondi_python: float = 0.0
     verifiche: list = field(default_factory=list)     # list[VerificaLean]
     esecuzioni_python: int = 0
+    esplorazioni: int = 0
+    secondi_esplorazione: float = 0.0
     ragionamento: str = ""
 
 
@@ -239,6 +265,7 @@ class Tentativo:
     motivo: str = ""
     iterazioni: int = 0
     verifiche: int = 0
+    esplorazioni: int = 0
     esecuzioni_python: int = 0
     secondi: float = 0.0
     consumo: Consumo = field(default_factory=Consumo)
@@ -300,7 +327,8 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
     testo_file = file_senza_dimostrazioni(problema, indice)
     controlla_che_sia_nascosta(problema, testo_file)   # il collaudo dev'essere onesto
 
-    strumenti_api = [strumenti.SCHEMA_LEAN_CHECK, strumenti.SCHEMA_RUN_PYTHON]
+    strumenti_api = [strumenti.SCHEMA_LEAN_EXPLORE, strumenti.SCHEMA_LEAN_CHECK,
+                     strumenti.SCHEMA_RUN_PYTHON]
     messaggi = [{"role": "user", "content": messaggio_problema(problema, testo_file)}]
 
     speso_all_inizio = budget.speso
@@ -399,7 +427,21 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
         risultati = []
         accettata = False
         for chiamata in chiamate:
-            if chiamata.name == "lean_check":
+            if chiamata.name == "lean_explore":
+                t.esplorazioni += 1
+                it.esplorazioni += 1
+                codice = chiamata.input.get("codice_lean", "")
+                stampa(f"     -> lean_explore ({len(codice)} caratteri)...")
+                t0 = time.time()
+                uscita = strumenti.esegui_lean_explore(
+                    codice, timeout=timeout_lean or 240, slot=0)
+                durata = time.time() - t0
+                it.secondi_esplorazione += durata
+                prima = uscita.splitlines()[0] if uscita else "(vuoto)"
+                stampa(f"        {prima}  [{durata:.0f}s]")
+                risultati.append({"type": "tool_result", "tool_use_id": chiamata.id,
+                                  "content": uscita})
+            elif chiamata.name == "lean_check":
                 t.verifiche += 1
                 codice = chiamata.input.get("codice_lean", "")
                 stampa(f"     -> lean_check ({len(codice)} caratteri)...")
@@ -438,7 +480,7 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
         messaggi.append({"role": "user", "content": risultati})
         t.dettaglio.append(it)
         t.secondi_api += it.secondi_api
-        t.secondi_lean += it.secondi_lean
+        t.secondi_lean += it.secondi_lean + it.secondi_esplorazione
         t.secondi_python += it.secondi_python
 
         if accettata:
@@ -525,7 +567,8 @@ def main() -> int:
         tentativi.append(t)
         esito = "RISOLTO" if t.risolto else "non risolto"
         print(f"\n  => {esito}: {t.motivo}")
-        print(f"     {t.iterazioni} iterazioni, {t.verifiche} verifiche Lean, "
+        print(f"     {t.iterazioni} iterazioni, {t.esplorazioni} esplorazioni, "
+              f"{t.verifiche} verifiche Lean, "
               f"{t.esecuzioni_python} esecuzioni Python, {t.secondi:.0f}s, "
               f"${t.consumo.costo(args.modello):.4f}")
         print(f"     tempo: {t.secondi_api:.0f}s in attesa dell'API, "
@@ -553,6 +596,7 @@ def main() -> int:
                 "problema": t.problema, "risolto": t.risolto, "motivo": t.motivo,
                 "causa": t.causa,
                 "iterazioni": t.iterazioni, "verifiche": t.verifiche,
+                "esplorazioni": t.esplorazioni,
                 "esecuzioni_python": t.esecuzioni_python,
                 "secondi_totali": t.secondi,
                 "secondi_api": t.secondi_api,
@@ -567,6 +611,8 @@ def main() -> int:
                     "secondi_api": it.secondi_api, "secondi_lean": it.secondi_lean,
                     "secondi_python": it.secondi_python,
                     "esecuzioni_python": it.esecuzioni_python,
+                    "esplorazioni": it.esplorazioni,
+                    "secondi_esplorazione": it.secondi_esplorazione,
                     "verifiche": [{
                         "caratteri": v.caratteri, "esito": v.esito,
                         "controllo_fallito": v.controllo_fallito,

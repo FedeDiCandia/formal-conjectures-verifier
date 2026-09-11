@@ -275,8 +275,17 @@ ALLOWED_IMPORT_PREFIXES: tuple[str, ...] = (
 )
 
 
-def check_source(src: str) -> GuardReport:
-    """Analizza il testo di un file Lean candidato."""
+def check_source(src: str, *, esplorazione: bool = False) -> GuardReport:
+    """Analizza il testo di un file Lean candidato.
+
+    `esplorazione=True` allenta UNA sola regola: gli import. In un file di
+    ispezione importare il modulo del problema e' legittimo e utile — serve per
+    fare `#print` sulle sue definizioni — mentre in una soluzione e' vietato,
+    perche' dichiarerebbe un nome che esiste gia'. Tutto il resto (niente
+    codice eseguibile, niente metaprogrammazione, niente opzioni pericolose)
+    resta identico: un file di ispezione viene compilato come qualunque altro,
+    quindi i rischi di esecuzione sono gli stessi.
+    """
     report = GuardReport(stripped=strip_comments_and_strings(src))
     lines = report.stripped.split("\n")
     raw_lines = src.split("\n")
@@ -298,7 +307,9 @@ def check_source(src: str) -> GuardReport:
             module = stripped[len("import "):].strip()
             # `import all Foo` / `public import Foo` ecc.
             module = re.sub(r"^(all|public|meta|private)\s+", "", module).strip()
-            if module and not module.startswith(ALLOWED_IMPORT_PREFIXES):
+            consentiti = (ALLOWED_IMPORT_PREFIXES + ("FormalConjectures",)
+                          if esplorazione else ALLOWED_IMPORT_PREFIXES)
+            if module and not module.startswith(consentiti):
                 add(idx, "import", f"import non consentito: `{module}`. Sono ammessi solo "
                                    f"i moduli di Mathlib e le utilita' dell'archivio "
                                    f"({', '.join(ALLOWED_IMPORT_PREFIXES[:3])}...). In particolare "
@@ -351,6 +362,6 @@ def check_source(src: str) -> GuardReport:
     return report
 
 
-def check_file(path) -> GuardReport:
+def check_file(path, *, esplorazione: bool = False) -> GuardReport:
     with open(path, "r", encoding="utf-8") as f:
-        return check_source(f.read())
+        return check_source(f.read(), esplorazione=esplorazione)

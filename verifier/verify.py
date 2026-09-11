@@ -287,7 +287,7 @@ def _blocchi_messaggi(output: str) -> list[str]:
     return blocchi
 
 
-def _lean_errors(output: str, max_caratteri: int = 12_000) -> str:
+def _lean_errors(output: str, max_caratteri: int = 40_000) -> str:
     """I messaggi di Lean e di comparator, da rimandare a chi ha scritto il file.
 
     Include DELIBERATAMENTE anche i messaggi `info:`, cioe' l'output di
