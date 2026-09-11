@@ -21,6 +21,8 @@
 
 ## Ritrovamenti
 
-Nessuno. **Non è un fallimento:** significa che fino al punto
-raggiunto (200001) non esistono controesempi, che è
-un'informazione.
+Nessuno. **Non è un fallimento:** un esito negativo dice fin
+dove si è guardato, e quella è un'informazione.
+
+**Che cosa si sa adesso:** nessun n fino a 200000 genera un'orbita di n -> sigma(n)-1 che eviti i numeri primi per 200 passi.
+

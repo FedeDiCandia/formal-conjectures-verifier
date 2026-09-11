@@ -372,6 +372,14 @@ RICERCHE = {
         # Che cosa finisce nella lista `trovati` del programma: veri
         # controesempi, oppure valori calcolati che vanno interpretati?
         "natura_trovati": "controesempi",
+        # Come si legge un esito senza ritrovamenti, in termini matematici.
+        # Si formatta con i campi dell'esito, le variabili della ricerca e
+        # l'ultimo evento del registro.
+        "esito_in_parole":
+            "nessun primo p fino a {primo_corrente} ha p^2 che divide un numero "
+            "di Euclide. Sono stati esaminati {esaminati} primi, e per ognuno "
+            "TUTTI i primoriali con fattori minori di p: per quei p il "
+            "controllo e' completo, non parziale.",
     },
     "erdos409_sigma": {
         "problema": "Erdos409.erdos_409.variants.sigma_prime_termination",
@@ -382,6 +390,9 @@ RICERCHE = {
         "conclusivo": "no: trova SOSPETTI, non controesempi. Un'orbita che non "
                       "raggiunge un primo in 200 passi va esaminata a mano",
         "natura_trovati": "sospetti",
+        "esito_in_parole":
+            "nessun n fino a {FINO_A} genera un'orbita di n -> sigma(n)-1 che "
+            "eviti i numeri primi per {MAX_PASSI} passi.",
     },
     "erdos396_binomiale": {
         "problema": "Erdos396.erdos_396",
@@ -392,5 +403,8 @@ RICERCHE = {
         "conclusivo": "no: la forma e' 'per ogni k esiste n', che un calcolo non "
                       "puo' confutare. Serve a raccogliere indizi",
         "natura_trovati": "risultati calcolati",
+        "esito_in_parole":
+            "per ogni k fino a {K_MAX} si e' cercato il minimo n fino a {N_MAX} "
+            "con descFactorial(n, k+1) che divide centralBinom(n).",
     },
 }

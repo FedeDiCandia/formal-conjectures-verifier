@@ -150,9 +150,9 @@ La strategia B non si paga in dollari ma in tempo di macchina, quindi il numero 
 |---|---|---|---|---|
 | `euclide_squarefree` | un primo p con p^2 che divide un numero di Euclide | conclusiva: un solo ritrovamento confuterebbe la congettura | 216815 | **0** |
 | `erdos409_sigma` | orbite di n -> sigma(n)-1 che non toccano mai un primo | trova sospetti da esaminare a mano, non confutazioni | 199999 | **0** |
-| `erdos396_binomiale` | il minimo n con descFactorial(n,k+1) che divide centralBinom(n) | raccoglie indizi: la forma 'per ogni k esiste n' non e' confutabile da un calcolo | 13 | **0** |
+| `erdos396_binomiale` | il minimo n con descFactorial(n,k+1) che divide centralBinom(n) | raccoglie indizi: la forma 'per ogni k esiste n' non e' confutabile da un calcolo | 18 | **0** |
 
-**MISURATO** — la ricerca sui numeri di Euclide ha esaminato 216 038 primi in 2 581 secondi  cioe' **84 candidati al secondo** su un core  ed e' arrivata al primo 2 988 497 senza trovare niente. Con 8 ricerche in parallelo e 8 ore di notte sono circa 2.4 milioni di candidati per ricerca per notte (**STIMATO**: velocita' misurata per il tempo).
+**MISURATO** — la ricerca sui numeri di Euclide ha esaminato 216 038 primi in 2 581 secondi, cioe' **84 candidati al secondo** su un core, ed e' arrivata al primo 2 988 497 senza trovare niente: per ognuno di quei primi sono stati controllati TUTTI i primoriali con fattori minori, quindi il controllo e' completo, non parziale. Con 8 ricerche in parallelo e 8 ore di notte sono circa 2.4 milioni di candidati per ricerca per notte (**STIMATO**: velocita' misurata per il tempo).
 
 **MISURATO** — una verifica Lean completa costa 32,9 s con sandbox e impronta, 25,0 s senza. Con 4 verifiche in parallelo sono circa 440 verifiche all'ora: e' questo, non l'API, il limite di quante prove si possono controllare in un giorno.
 

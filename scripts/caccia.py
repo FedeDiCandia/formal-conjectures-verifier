@@ -21,6 +21,34 @@ import ricerca as modulo_ricerca
 from caccia_programmi import RICERCHE
 
 
+def _in_parole(nome: str, definizione: dict, esito) -> str:
+    """La frase che dice il risultato in matematica, non in numeri d'indice.
+
+    "posizione raggiunta 216816" non dice niente a chi legge: quello che conta
+    e' "nessun primo fino a 3 milioni". I campi disponibili sono quelli
+    dell'esito, le variabili della ricerca e l'ultimo evento del registro.
+    """
+    modello = definizione.get("esito_in_parole")
+    if not modello:
+        return ""
+    campi = {"posizione": esito.posizione, "esaminati": esito.esaminati,
+             "secondi": round(esito.secondi)}
+    campi.update(definizione.get("variabili", {}))
+    registro = RADICE / "runs" / "caccia" / nome / "ricerca.log"
+    if registro.is_file():
+        for riga in registro.read_text(encoding="utf-8").splitlines():
+            riga = riga.strip()
+            if riga.startswith("{"):
+                try:
+                    campi.update(json.loads(riga))
+                except ValueError:
+                    pass
+    try:
+        return modello.format(**campi)
+    except KeyError:
+        return ""
+
+
 def rapporto(nome: str, definizione: dict, esito) -> str:
     natura = definizione.get("natura_trovati", "da interpretare")
     righe = [
@@ -53,10 +81,14 @@ def rapporto(nome: str, definizione: dict, esito) -> str:
         if len(esito.trovati) > 40:
             righe.append(f"- ... e altri {len(esito.trovati) - 40}")
     else:
+        parole = _in_parole(nome, definizione, esito)
         righe += ["## Ritrovamenti", "",
-                  "Nessuno. **Non è un fallimento:** significa che fino al punto",
-                  f"raggiunto ({esito.posizione}) non esistono controesempi, che è",
-                  "un'informazione."]
+                  "Nessuno. **Non è un fallimento:** un esito negativo dice fin",
+                  "dove si è guardato, e quella è un'informazione.", ""]
+        if parole:
+            righe += [f"**Che cosa si sa adesso:** {parole}", ""]
+        else:
+            righe += [f"Punto raggiunto: {esito.posizione}.", ""]
     righe.append("")
     return "\n".join(righe)
 

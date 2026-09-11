@@ -575,14 +575,17 @@ def relazione_terza_parte(dati: dict, r: list[str]) -> list[str]:
                     pass
         if ultimo and ultimo.get("secondi"):
             v = ultimo["esaminati"] / ultimo["secondi"]
+            def sp(x) -> str:
+                return f"{x:,}".replace(",", " ")
             p(f"**MISURATO** — la ricerca sui numeri di Euclide ha esaminato "
-              f"{ultimo['esaminati']:,} primi in {ultimo['secondi']:,} secondi, "
-              f"cioe' **{v:.0f} candidati al secondo** su un core, ed e' arrivata "
-              f"al primo {ultimo.get('primo_corrente', 0):,} senza trovare niente. "
-              f"Con 8 ricerche in parallelo e 8 ore di notte sono circa "
-              f"{v*8*3600/1e6:.1f} milioni di candidati per ricerca per notte "
-              f"(**STIMATO**: velocita' misurata per il tempo)."
-              .replace(",", " "))
+              f"{sp(ultimo['esaminati'])} primi in {sp(ultimo['secondi'])} "
+              f"secondi, cioe' **{v:.0f} candidati al secondo** su un core, ed "
+              f"e' arrivata al primo {sp(ultimo.get('primo_corrente', 0))} senza "
+              f"trovare niente: per ognuno di quei primi sono stati controllati "
+              f"TUTTI i primoriali con fattori minori, quindi il controllo e' "
+              f"completo, non parziale. Con 8 ricerche in parallelo e 8 ore di "
+              f"notte sono circa {v*8*3600/1e6:.1f} milioni di candidati per "
+              f"ricerca per notte (**STIMATO**: velocita' misurata per il tempo).")
     p()
     p("**MISURATO** — una verifica Lean completa costa 32,9 s con sandbox e "
       "impronta, 25,0 s senza. Con 4 verifiche in parallelo sono circa 440 "

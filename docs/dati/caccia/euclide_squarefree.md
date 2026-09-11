@@ -21,6 +21,8 @@
 
 ## Ritrovamenti
 
-Nessuno. **Non è un fallimento:** significa che fino al punto
-raggiunto (216816) non esistono controesempi, che è
-un'informazione.
+Nessuno. **Non è un fallimento:** un esito negativo dice fin
+dove si è guardato, e quella è un'informazione.
+
+**Che cosa si sa adesso:** nessun primo p fino a 2988497 ha p^2 che divide un numero di Euclide. Sono stati esaminati 216815 primi, e per ognuno TUTTI i primoriali con fattori minori di p: per quei p il controllo e' completo, non parziale.
+
