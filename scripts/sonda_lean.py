@@ -53,6 +53,61 @@ example : {enunciato} := by
 """
 
 
+#: `plausible` non dimostra niente: se non trova un controesempio lascia il
+#: teorema con un `sorry` e il file compila comunque. Senza questo controllo
+#: un "Unable to find a counter-example" verrebbe letto come enunciato CHIUSO,
+#: che e' l'errore opposto a quello da evitare in un progetto come questo.
+SEGNI_DI_NON_CHIUSURA = (
+    "declaration uses 'sorry'",
+    "Unable to find a counter-example",
+    "Gave up",
+)
+
+
+def classifica(messaggi: str, ok: bool) -> tuple[str, str | None]:
+    """Da' un verdetto ai messaggi di Lean. Ritorna (esito, controesempio)."""
+    if "Found a counter-example" in messaggi or "counterexample" in messaggi.lower():
+        righe = [l for l in messaggi.split("\n") if l.strip()]
+        return "controesempio", "\n".join(righe[:25])
+    if "TEMPO SCADUTO" in messaggi:
+        return "tempo scaduto", None
+    if "maximum number of heartbeats" in messaggi:
+        return "heartbeat esauriti", None
+    if any(segno in messaggi for segno in SEGNI_DI_NON_CHIUSURA):
+        return "aperta", None
+    return ("chiusa" if ok else "aperta"), None
+
+
+def riclassifica(percorso: Path) -> int:
+    """Riapplica `classifica` a un file di risultati gia' raccolto.
+
+    Serve quando la regola di classificazione cambia: i messaggi di Lean sono
+    conservati per gli esiti notevoli, quindi un verdetto si puo' solo
+    declassare, mai inventare.
+    """
+    dati = json.loads(percorso.read_text(encoding="utf-8"))
+    cambiati = 0
+    for voce in dati:
+        for pr in voce["prove"]:
+            if pr["esito"] not in ("chiusa", "controesempio"):
+                continue
+            nuovo, contro = classifica(pr.get("messaggi") or "", True)
+            if nuovo != pr["esito"]:
+                pr["esito"], pr["controesempio"] = nuovo, contro
+                cambiati += 1
+        notevoli = [pr for pr in voce["prove"]
+                    if pr["esito"] in ("chiusa", "controesempio")]
+        if notevoli:
+            pr = notevoli[0]
+            voce["ATTENZIONE"] = (f"la tattica {pr['tattica']} ha {pr['esito']} la "
+                                 f"forma {'negata' if pr['negato'] else 'diritta'}")
+        else:
+            voce.pop("ATTENZIONE", None)
+    percorso.write_text(json.dumps(dati, ensure_ascii=False, indent=2),
+                        encoding="utf-8")
+    return cambiati
+
+
 def prova(problema, tattica_nome, tattica, negato: bool, heartbeats: int,
           timeout: int) -> dict:
     """Prova una tattica sull'enunciato (o sulla sua negazione)."""
@@ -65,16 +120,7 @@ def prova(problema, tattica_nome, tattica, negato: bool, heartbeats: int,
     r = esplora.esplora(codice, timeout=timeout)
     durata = time.time() - t0
     messaggi = r.messaggi
-    esito = "chiusa" if r.ok else "aperta"
-    controesempio = None
-    if "Found a counter-example" in messaggi or "counterexample" in messaggi.lower():
-        esito = "controesempio"
-        righe = [l for l in messaggi.split("\n") if l.strip()]
-        controesempio = "\n".join(righe[:25])
-    elif "TEMPO SCADUTO" in messaggi:
-        esito = "tempo scaduto"
-    elif "maximum number of heartbeats" in messaggi:
-        esito = "heartbeat esauriti"
+    esito, controesempio = classifica(messaggi, r.ok)
     return {
         "tattica": tattica_nome, "negato": negato, "esito": esito,
         "secondi": round(durata, 1),
@@ -90,7 +136,14 @@ def main() -> int:
     ap.add_argument("--heartbeats", type=int, default=400000)
     ap.add_argument("--uscita", default=str(RADICE / "runs" / "caccia" / "sonda_lean.json"))
     ap.add_argument("--problemi", default="")
+    ap.add_argument("--riclassifica", action="store_true",
+                    help="riapplica il verdetto a un file gia' raccolto")
     args = ap.parse_args()
+
+    if args.riclassifica:
+        n = riclassifica(Path(args.uscita))
+        print(f"verdetti corretti: {n}")
+        return 0
 
     idx = ProblemIndex.load()
     if args.problemi:
