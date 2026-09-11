@@ -193,6 +193,20 @@ def _run_with_timeout(cmd: list[str], cwd: Path, env: dict, timeout: int,
         return -signal.SIGKILL, out or ""
 
 
+def _ripulisci_avanzi(cartella: Path, tieni: int) -> None:
+    """Toglie i moduli temporanei di altri slot rimasti da esecuzioni finite male."""
+    costruito = (config.ARCHIVE / ".lake" / "build")
+    for f in cartella.glob("*.lean"):
+        nome = f.stem
+        if nome in (f"S{tieni}", f"Sfida{tieni}", f"E{tieni}"):
+            continue
+        f.unlink(missing_ok=True)
+        for ramo in ("lib/lean", "ir"):
+            base = costruito / ramo / config.SANDBOX_SUBDIR / nome
+            for ext in (".olean", ".ilean", ".trace", ".hash", ".c", ".o"):
+                Path(str(base) + ext).unlink(missing_ok=True)
+
+
 def _classify(output: str) -> tuple[str, str]:
     """Traduce l'output di comparator in (nome del controllo fallito, spiegazione)."""
     m = re.search(r"Illegal axiom detected: '([^']+)'", output)
@@ -423,6 +437,14 @@ def verify(problem_id: str, candidate: Path | str, *,
     try:
         sandbox_dir = config.ARCHIVE / config.SANDBOX_SUBDIR
         sandbox_dir.mkdir(parents=True, exist_ok=True)
+
+        # Ripulisce gli avanzi di esecuzioni interrotte. Se un processo viene
+        # ucciso a meta', lascia il sorgente del modulo temporaneo senza i suoi
+        # artefatti (o viceversa), e al giro dopo `lake` si ferma con
+        # "no such file or directory". Costa niente e toglie di mezzo una
+        # classe intera di guasti misteriosi.
+        _ripulisci_avanzi(sandbox_dir, tieni=slot)
+
         sol_name = f"S{slot}"
         sol_path = sandbox_dir / f"{sol_name}.lean"
         sol_module = f"{config.SANDBOX_MODULE_PREFIX}.{sol_name}"

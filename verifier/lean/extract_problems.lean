@@ -28,6 +28,8 @@ import Lean
 -- FormalConjecturesUtil. Si importa quella che esiste.
 import FormalConjecturesUtil
 
+set_option linter.style.moduleDocstring false
+
 open Lean ProblemAttributes
 
 def categoryToString : Category → String

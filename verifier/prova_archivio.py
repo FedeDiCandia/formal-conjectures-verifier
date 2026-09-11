@@ -255,7 +255,7 @@ def _nome_dichiarato(blocco: str) -> str | None:
 
 def estrai(problema: Problem, indice: ProblemIndex) -> ProvaArchivio:
     """Il file dell'archivio senza tutti gli altri teoremi."""
-    if not problema.proof_is_sorry_free:
+    if not problema.proof_is_complete:
         raise NonEstraibile(
             f"{problema.theorem}: l'archivio non ne fornisce una dimostrazione "
             f"(il termine di prova contiene `sorry`)")

@@ -47,18 +47,31 @@ class Problem:
     ASSIOMI_AMMESSI = frozenset({"propext", "Classical.choice", "Quot.sound"})
 
     @property
+    def proof_is_complete(self) -> bool:
+        """True se l'archivio fornisce una dimostrazione senza buchi.
+
+        Si guardano gli ASSIOMI, non il campo `proofIsSorryFree` riportato da
+        Lean. Due ragioni:
+          * gli assiomi sono TRANSITIVI: un teorema il cui termine di prova non
+            contiene `sorry` ma che usa un lemma bucato risulta comunque
+            dipendente da `sorryAx` (nel tag bench-v1 sono 17 casi);
+          * da Lean 4.33 il corpo delle dimostrazioni importate non viene
+            caricato subito, quindi `proofIsSorryFree` risulta sempre falso.
+            Fidarsi di quel campo faceva contare ZERO problemi risolti su 5271.
+        """
+        return "sorryAx" not in self.archive_proof_axioms
+
+    @property
     def archive_proof_is_clean(self) -> bool:
         """True se la dimostrazione fornita dall'archivio passerebbe il nostro
         verificatore.
 
-        Non basta che la dimostrazione esista e sia senza `sorry`: 87
-        dimostrazioni dell'archivio usano `decide +native`, che lascia
-        l'assioma `Lean.ofReduceBool`, e noi lo rifiutiamo. Sono quindi
-        problemi "risolti" che il nostro verificatore non accetta.
+        Non basta che esista: 95 dimostrazioni dell'archivio usano
+        `decide +native`, che lascia l'assioma `Lean.ofReduceBool`, e noi lo
+        rifiutiamo. Sono problemi "risolti" che il verificatore non accetta.
         """
-        if not self.proof_is_sorry_free:
-            return False
-        return set(self.archive_proof_axioms) <= self.ASSIOMI_AMMESSI
+        return bool(self.archive_proof_axioms) and \
+            set(self.archive_proof_axioms) <= self.ASSIOMI_AMMESSI
 
     @property
     def archive_proof_forbidden_axioms(self) -> list[str]:
@@ -93,7 +106,7 @@ class Problem:
     def is_already_solved_here(self) -> bool:
         """True se l'archivio contiene gia' una dimostrazione completa.
         Sono questi i problemi su cui ha senso collaudare il sistema."""
-        return self.proof_is_sorry_free
+        return self.proof_is_complete
 
     def source_text(self) -> str:
         """Il testo sorgente esatto della dichiarazione (attributi e docstring
@@ -181,7 +194,16 @@ def build_index(output: Path | None = None) -> Path:
     )
     if proc.returncode != 0:
         raise RuntimeError(f"estrazione fallita (codice {proc.returncode}):\n{proc.stderr[-4000:]}")
-    data = json.loads(proc.stdout)
+    # Lean puo' stampare avvisi del linter PRIMA del JSON (nel ramo main il
+    # linter dei docstring di modulo si lamenta anche degli script eseguiti con
+    # `lean --run`). Si parte dalla prima parentesi quadra.
+    uscita = proc.stdout
+    inizio = uscita.find("[")
+    if inizio < 0:
+        raise RuntimeError(
+            f"l'estrattore non ha prodotto JSON.\nstdout:\n{uscita[:2000]}\n"
+            f"stderr:\n{proc.stderr[-2000:]}")
+    data = json.loads(uscita[inizio:])
     output.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"Indice scritto in {output}: {len(data)} teoremi.", file=sys.stderr)
     return output

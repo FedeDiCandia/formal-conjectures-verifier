@@ -25,6 +25,8 @@ Uso, dalla cartella dell'archivio:
 import Lean
 import FormalConjectures.Util.Attributes.Basic
 
+set_option linter.style.moduleDocstring false
+
 open Lean ProblemAttributes
 
 def categoryToString : Category → String
