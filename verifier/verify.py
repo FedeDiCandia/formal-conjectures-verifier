@@ -426,18 +426,30 @@ def verify(problem_id: str, candidate: Path | str, *,
         return done(ERROR, f"modalita' sconosciuta: {modalita!r} "
                            f"(sono {STRETTA!r} e {CONFUTAZIONE!r})")
     sfida_negata = None
+    bersaglio = problem.theorem      # il teorema che comparator deve confrontare
+    modulo_permesso = None           # un import in piu', solo per la via type_of%
     if modalita == CONFUTAZIONE:
-        ok, perche = negazione.puo_essere_negato(problem)
-        if not ok:
-            checks.append(Check("il problema ammette una confutazione", False, perche))
-            return done(ERROR,
-                        f"Non si puo' costruire la sfida negata per {problem.theorem}: "
-                        f"{perche}")
-        sfida_negata = negazione.genera(problem)
-        checks.append(Check("il problema ammette una confutazione", True,
-                            "sfida negata generata dal sorgente dell'archivio: "
-                            "`answer(sorry)` sostituito da `answer(False)`, quindi "
-                            "l'enunciato passa da `True ↔ P` a `False ↔ P`, cioe' `¬P`"))
+        ok, _perche = negazione.puo_essere_negato(problem)
+        try:
+            sfida_negata = (negazione.genera(problem) if ok
+                            else negazione.genera_per_tipo(problem))
+        except negazione.NonNegabile as e:
+            checks.append(Check("il problema ammette una confutazione", False, str(e)))
+            return done(ERROR, f"Non si puo' costruire la sfida negata: {e}")
+        bersaglio = sfida_negata.bersaglio or problem.theorem
+        if sfida_negata.via == "answer":
+            dettaglio = ("sfida negata generata dal sorgente dell'archivio: "
+                         "`answer(sorry)` sostituito da `answer(False)`, quindi "
+                         "l'enunciato passa da `True ↔ P` a `False ↔ P`, cioe' `¬P`")
+        else:
+            modulo_permesso = problem.module
+            dettaglio = (f"sfida negata generata con `type_of%`: il bersaglio e' "
+                         f"`{bersaglio}`, cioe' `¬ (type_of% @{problem.theorem})`. "
+                         f"Al candidato e' permesso importare `{problem.module}` per "
+                         f"leggere l'enunciato; appoggiarsi alla dimostrazione "
+                         f"dell'archivio, che e' un `sorry`, viene rifiutato dal "
+                         f"controllo degli assiomi")
+        checks.append(Check("il problema ammette una confutazione", True, dettaglio))
 
     # --- 2. l'enunciato originale e' verificabile?
     # Se l'enunciato stesso contiene un `sorry` (buco answer( ) non
@@ -460,7 +472,8 @@ def verify(problem_id: str, candidate: Path | str, *,
     checks.append(Check("enunciato completo", True, "nessun buco `answer( )` da riempire"))
 
     # --- 3. controllo sintattico preventivo
-    report = guard.check_file(candidate) if run_guard else guard.GuardReport()
+    report = (guard.check_file(candidate, modulo_permesso=modulo_permesso)
+              if run_guard else guard.GuardReport())
     if not report.ok:
         dettagli = "\n".join(str(f) for f in report.findings)
         checks.append(Check("controllo sintattico preventivo", False,
@@ -506,7 +519,7 @@ def verify(problem_id: str, candidate: Path | str, *,
         cfg = {
             "challenge_module": modulo_sfida,
             "solution_module": sol_module,
-            "theorem_names": [problem.theorem],
+            "theorem_names": [bersaglio],
             "permitted_axioms": config.PERMITTED_AXIOMS,
         }
         with tempfile.TemporaryDirectory() as tmp:
@@ -619,15 +632,28 @@ def verify(problem_id: str, candidate: Path | str, *,
         ]:
             checks.append(Check(nome, True, dettaglio))
         if sfida_negata is not None:
+            if sfida_negata.via == "answer":
+                spiegazione = (
+                    f"E' stato dimostrato `False ↔ P`, cioe' `¬P`: la risposta alla "
+                    f"domanda posta da {problem.theorem} e' NO.\n\n"
+                    "Questo CONTRADDICE l'enunciato dell'archivio, che con "
+                    "`answer(sorry)` afferma che la risposta e' si'. Se la "
+                    "confutazione e' corretta, la formalizzazione dell'archivio va "
+                    "aggiornata a `answer(False)`.")
+            else:
+                spiegazione = (
+                    f"E' stato dimostrato `{bersaglio}`, cioe' "
+                    f"`¬ (type_of% @{problem.theorem})`: l'enunciato dell'archivio, "
+                    f"come e' formalizzato, e' FALSO.\n\n"
+                    "Due letture possibili, e vanno distinte prima di annunciare "
+                    "qualcosa: o la congettura e' falsa, o la formalizzazione non e' "
+                    "fedele alla fonte originale. Il secondo caso e' il piu' frequente.")
             return done(ACCEPTED,
-                        "CONFUTAZIONE VALIDA.\n\n"
-                        f"E' stato dimostrato `False ↔ P`, cioe' `¬P`: la risposta alla "
-                        f"domanda posta da {problem.theorem} e' NO.\n\n"
-                        "Attenzione: questo CONTRADDICE l'enunciato dell'archivio, che "
-                        "con `answer(sorry)` afferma che la risposta e' si'. Se la "
-                        "confutazione e' corretta, la formalizzazione dell'archivio va "
-                        "aggiornata a `answer(False)` (e il risultato va sottoposto a "
-                        "revisione umana prima di crederci).", raw=output)
+                        "CONFUTAZIONE VALIDA.\n\n" + spiegazione + "\n\n"
+                        "Applicare il protocollo di docs/04-protocollo-ritrovamenti.md "
+                        "prima di crederci: ricontrollo con un programma indipendente, "
+                        "confronto con la fonte originale, ricerca dello stato noto in "
+                        "letteratura.", raw=output)
         nota = "La dimostrazione e' valida."
         if problem.answer_placeholder_in_source:
             nota += (

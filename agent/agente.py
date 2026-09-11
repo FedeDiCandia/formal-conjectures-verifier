@@ -28,6 +28,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 import time
 from dataclasses import dataclass, field
@@ -158,7 +159,27 @@ just tell you the theorem is missing.
 
 **`run_python` — to compute.** Searching for a witness or a counterexample, \
 checking a hypothesis on small cases, computing a constant. Do not do \
-arithmetic in your head when you can compute it.
+arithmetic in your head when you can compute it. `numpy`, `sympy` and `numba` \
+are installed: `sympy.isprime`, `factorint`, `nextprime`, `divisors`, `totient` \
+are there, so use them rather than writing your own. **The working directory \
+persists between calls**: write a checkpoint file and a later call can resume \
+it. Each call has a time limit, so for a long search proceed in blocks, saving \
+the position reached — this is how you can search far further than a single \
+call allows.
+
+# How much room you have
+
+This is a long attempt, not a quick one: you may use **many dozens of \
+iterations**. Every tool result tells you how much of the per-problem budget \
+is left and which iteration you are on. Spend the early iterations \
+understanding the problem and the definitions, and do not rush a submission. \
+If the conversation gets long, older tool results are shortened automatically \
+to make room; ask again for anything you still need.
+
+A disproof counts as much as a proof. If the statement is of the form \
+`True ↔ P` (the archive asserting the answer is yes), and your computation \
+finds a counterexample to `P`, say so clearly and explain what you found: that \
+is a result, and it is checked separately.
 
 Practical advice:
 
@@ -286,6 +307,8 @@ class Tentativo:
     secondi_api: float = 0.0
     secondi_lean: float = 0.0
     secondi_python: float = 0.0
+    #: quante volte la conversazione e' stata accorciata per far spazio
+    compattazioni: int = 0
     #: classificazione del fallimento, secondo la regola dichiarata sotto
     causa: str = ""
 
@@ -322,6 +345,54 @@ class Tentativo:
         return "tecnico: sapeva cosa dimostrare ma non e' riuscito a scriverlo in Lean"
 
 
+#: Oltre questa soglia di token in ingresso la conversazione viene compattata.
+#: Serve per i tentativi lunghi: chi ha misurato il benchmark OEIS Open spendeva
+#: $50 per problema, cioe' dell'ordine di 200 iterazioni. Senza compattazione la
+#: conversazione supera la finestra del modello e il tentativo muore per
+#: esaurimento di contesto invece che di idee.
+SOGLIA_COMPATTAZIONE = 120_000
+
+#: Quanti messaggi in coda restano intatti quando si compatta. Il modello deve
+#: vedere per intero il suo lavoro recente; quello vecchio gli serve come traccia.
+MESSAGGI_INTATTI = 8
+
+#: A quanti caratteri si riducono i risultati degli strumenti piu' vecchi.
+CODA_RISULTATI_VECCHI = 600
+
+_SEGNO_TAGLIO = "\n… [risultato accorciato per far spazio nel contesto; "\
+                "se ti serve di nuovo, richiedilo]"
+
+
+def compatta_conversazione(messaggi: list, *, intatti: int = MESSAGGI_INTATTI,
+                           coda: int = CODA_RISULTATI_VECCHI) -> int:
+    """Accorcia i risultati degli strumenti piu' vecchi. Ritorna quanti ne accorcia.
+
+    Il primo messaggio (l'enunciato del problema) e gli ultimi `intatti` non si
+    toccano mai. Si accorciano solo i `tool_result`, perche' sono il grosso: un
+    errore di Lean arriva a 40 000 caratteri, e in duecento iterazioni sono
+    milioni. Il codice che il modello ha scritto (i `tool_use`) resta intero: e'
+    il suo lavoro, e ricostruirlo costerebbe piu' di quanto occupa.
+    """
+    if len(messaggi) <= intatti + 1:
+        return 0
+    tagliati = 0
+    for msg in messaggi[1:len(messaggi) - intatti]:
+        contenuto = msg.get("content")
+        if not isinstance(contenuto, list):
+            continue
+        for blocco in contenuto:
+            if not isinstance(blocco, dict) or blocco.get("type") != "tool_result":
+                continue
+            testo = blocco.get("content")
+            if not isinstance(testo, str) or len(testo) <= coda:
+                continue
+            if testo.endswith(_SEGNO_TAGLIO):
+                continue
+            blocco["content"] = testo[:coda] + _SEGNO_TAGLIO
+            tagliati += 1
+    return tagliati
+
+
 # ---------------------------------------------------------------------------
 # Il ciclo
 # ---------------------------------------------------------------------------
@@ -348,6 +419,13 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
 
     strumenti_api = [strumenti.SCHEMA_LEAN_EXPLORE, strumenti.SCHEMA_LEAN_CHECK,
                      strumenti.SCHEMA_RUN_PYTHON]
+
+    # Una cartella di lavoro per problema, che sopravvive alle chiamate: serve
+    # perche' una ricerca in piu' passi possa salvare un checkpoint. Il nome e'
+    # ripulito perche' i nomi dei teoremi contengono punti e caratteri strani.
+    nome_pulito = re.sub(r"[^A-Za-z0-9_.-]", "_", problema.theorem)[:80]
+    cartella_lavoro = config_verificatore.ROOT / "runs" / "lavoro" / nome_pulito
+    cartella_lavoro.mkdir(parents=True, exist_ok=True)
     messaggi = [{"role": "user", "content": messaggio_problema(problema, testo_file)}]
 
     speso_all_inizio = budget.speso
@@ -368,6 +446,18 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
         conteggio = client.messages.count_tokens(
             model=modello, system=sistema, tools=strumenti_api, messages=messaggi)
         token_input = conteggio.input_tokens
+
+        # --- se il contesto e' troppo grande, si accorcia il passato
+        if token_input > SOGLIA_COMPATTAZIONE:
+            tagliati = compatta_conversazione(messaggi)
+            if tagliati:
+                conteggio = client.messages.count_tokens(
+                    model=modello, system=sistema, tools=strumenti_api,
+                    messages=messaggi)
+                stampa(f"     [contesto compattato: {tagliati} risultati accorciati, "
+                       f"{token_input:,} -> {conteggio.input_tokens:,} token]")
+                token_input = conteggio.input_tokens
+                t.compattazioni += 1
 
         speso_qui = budget.speso - speso_all_inizio
         residuo_problema = tetto_problema - speso_qui
@@ -485,7 +575,8 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
                 codice = chiamata.input.get("codice", "")
                 stampa(f"     -> run_python ({len(codice)} caratteri)...")
                 t0 = time.time()
-                uscita = strumenti.esegui_run_python(codice)
+                uscita = strumenti.esegui_run_python(
+                    codice, cartella=cartella_lavoro)
                 it.secondi_python += time.time() - t0
                 it.esecuzioni_python += 1
                 stampa(f"        {uscita.strip()[:200]}")
@@ -496,6 +587,14 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
                                   "content": f"Strumento sconosciuto: {chiamata.name}",
                                   "is_error": True})
 
+        # Il modello si regola meglio se sa quanto gli resta: chi ha misurato
+        # OEIS Open dava al modello uno strumento apposta per questo.
+        speso_qui = budget.speso - speso_all_inizio
+        risultati.append({
+            "type": "text",
+            "text": (f"[budget: spesi ${speso_qui:.2f} dei ${tetto_problema:.2f} "
+                     f"disponibili per questo problema; iterazione {iterazione} "
+                     f"di {max_iterazioni}]")})
         messaggi.append({"role": "user", "content": risultati})
         t.dettaglio.append(it)
         t.secondi_api += it.secondi_api

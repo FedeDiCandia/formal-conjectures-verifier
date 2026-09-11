@@ -277,8 +277,15 @@ ALLOWED_IMPORT_PREFIXES: tuple[str, ...] = (
 )
 
 
-def check_source(src: str, *, esplorazione: bool = False) -> GuardReport:
+def check_source(src: str, *, esplorazione: bool = False,
+                 modulo_permesso: str | None = None) -> GuardReport:
     """Analizza il testo di un file Lean candidato.
+
+    `modulo_permesso` consente UN singolo modulo in piu'. Serve alla modalita'
+    confutazione via `type_of%`: il candidato deve poter importare il modulo del
+    problema per scrivere `¬ (type_of% @X)`, e non e' una scappatoia perche' in
+    un problema aperto `X` e' dimostrato con `sorry`, quindi appoggiarsi alla sua
+    dimostrazione introduce `sorryAx` e il controllo degli assiomi lo rifiuta.
 
     `esplorazione=True` allenta UNA sola regola: gli import. In un file di
     ispezione importare il modulo del problema e' legittimo e utile — serve per
@@ -311,6 +318,8 @@ def check_source(src: str, *, esplorazione: bool = False) -> GuardReport:
             module = re.sub(r"^(all|public|meta|private)\s+", "", module).strip()
             consentiti = (ALLOWED_IMPORT_PREFIXES + ("FormalConjectures",)
                           if esplorazione else ALLOWED_IMPORT_PREFIXES)
+            if modulo_permesso:
+                consentiti = consentiti + (modulo_permesso,)
             if module and not module.startswith(consentiti):
                 add(idx, "import", f"import non consentito: `{module}`. Sono ammessi solo "
                                    f"i moduli di Mathlib e le utilita' dell'archivio "
@@ -364,6 +373,8 @@ def check_source(src: str, *, esplorazione: bool = False) -> GuardReport:
     return report
 
 
-def check_file(path, *, esplorazione: bool = False) -> GuardReport:
+def check_file(path, *, esplorazione: bool = False,
+               modulo_permesso: str | None = None) -> GuardReport:
     with open(path, "r", encoding="utf-8") as f:
-        return check_source(f.read(), esplorazione=esplorazione)
+        return check_source(f.read(), esplorazione=esplorazione,
+                            modulo_permesso=modulo_permesso)

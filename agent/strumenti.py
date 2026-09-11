@@ -21,6 +21,7 @@ costante). Farli "a mente" e' il modo piu' rapido per sbagliare.
 """
 from __future__ import annotations
 
+import contextlib
 import os
 import shutil
 import subprocess
@@ -155,11 +156,17 @@ SCHEMA_RUN_PYTHON = {
         "Esegue codice Python 3 in un ambiente isolato e restituisce quello che "
         "il codice stampa. Utile per fare conti, cercare controesempi, "
         "verificare un'ipotesi su casi piccoli.\n\n"
-        "Limiti: nessun accesso alla rete; puoi scrivere file solo nella "
-        "cartella di lavoro temporanea; la libreria standard e' disponibile ma "
-        "non ci sono pacchetti esterni; ogni esecuzione riparte da zero (le "
-        "variabili non sopravvivono tra una chiamata e l'altra); c'e' un tempo "
-        "massimo. Stampa i risultati con print()."
+        "Librerie disponibili: la libreria standard piu' `numpy`, `sympy` e "
+        "`numba`. Per la teoria dei numeri `sympy` ha `isprime`, `factorint`, "
+        "`nextprime`, `divisors`, `totient`.\n\n"
+        "La CARTELLA DI LAVORO SOPRAVVIVE fra le chiamate: i file che scrivi "
+        "restano, quindi una ricerca lunga puo' salvare un checkpoint in un "
+        "file JSON e la chiamata successiva puo' riprenderlo. Le variabili in "
+        "memoria invece no: ogni esecuzione e' un processo nuovo.\n\n"
+        "Limiti: nessun accesso alla rete; puoi scrivere solo nella cartella di "
+        "lavoro; c'e' un tempo massimo per ogni esecuzione, quindi per una "
+        "ricerca lunga conviene procedere a blocchi salvando il punto "
+        "raggiunto. Stampa i risultati con print()."
     ),
     "input_schema": {
         "type": "object",
@@ -203,23 +210,49 @@ _PROFILO_SANDBOX = """(version 1)
 def _interprete_python() -> str:
     """Il Python da usare dentro la sandbox.
 
-    Usiamo l'interprete di base (non quello del venv) per non dare al codice
-    generato l'accesso ai pacchetti del progetto, e per evitare il wrapper
-    `xcrun` di /usr/bin/python3, che dentro la sandbox stampa errori spuri.
+    Si usa l'ambiente di CALCOLO (`.venv-calcolo`), che ha `numpy`, `sympy` e
+    `numba`, non quello del progetto: il codice generato non deve vedere le
+    librerie dell'agente ne' la sua chiave. L'isolamento non viene dalla
+    poverta' dell'ambiente — viene da `sandbox-exec` (niente rete, scrittura
+    solo nella cartella di lavoro), dall'ambiente ridotto senza chiave API e
+    dall'opzione `-I`. Chi ha misurato il benchmark OEIS Open dava al modello
+    perfino SageMath: senza librerie di calcolo un problema da confutare non si
+    affronta.
+
+    Si evita `/usr/bin/python3` perche' e' il wrapper `xcrun`, che dentro la
+    sandbox stampa errori spuri.
     """
+    calcolo = ROOT / ".venv-calcolo" / "bin" / "python"
+    if calcolo.is_file():
+        return str(calcolo)
     base = Path(sys.base_prefix) / "bin" / "python3"
     if base.is_file():
         return str(base)
     return shutil.which("python3") or sys.executable
 
 
-def esegui_run_python(codice: str, timeout: int = 30, max_output: int = 20_000) -> str:
+def esegui_run_python(codice: str, timeout: int = 30, max_output: int = 20_000,
+                      cartella: Path | str | None = None) -> str:
+    """Esegue il codice dentro la sandbox e ne restituisce l'output.
+
+    Se `cartella` e' data, quella cartella NON viene distrutta all'uscita: i
+    file scritti dal programma restano disponibili alla chiamata successiva.
+    Serve per le ricerche in piu' passi — senza persistenza un programma non
+    puo' salvare un checkpoint, e ogni chiamata ricomincia da zero.
+    """
     if not shutil.which("sandbox-exec"):
         return ("ERRORE: `sandbox-exec` non e' disponibile su questo sistema, "
                 "quindi non posso eseguire il codice in isolamento. "
                 "Lo strumento run_python e' disattivato.")
 
-    with tempfile.TemporaryDirectory(prefix="fcs_py_") as lavoro:
+    if cartella is not None:
+        fissa = Path(cartella).resolve()
+        fissa.mkdir(parents=True, exist_ok=True)
+        contesto = contextlib.nullcontext(str(fissa))
+    else:
+        contesto = tempfile.TemporaryDirectory(prefix="fcs_py_")
+
+    with contesto as lavoro:
         lavoro_reale = str(Path(lavoro).resolve())
         script = Path(lavoro_reale) / "programma.py"
         script.write_text(codice, encoding="utf-8")
@@ -253,6 +286,13 @@ def esegui_run_python(codice: str, timeout: int = 30, max_output: int = 20_000) 
         if p.returncode != 0:
             parti.append(f"--- il programma e' terminato con codice {p.returncode} ---")
         risultato = "\n".join(parti) if parti else "(il codice non ha stampato nulla)"
+        if cartella is not None:
+            resti = sorted(p.name for p in Path(lavoro_reale).iterdir()
+                           if p.name not in ("programma.py", "sandbox.sb"))
+            if resti:
+                risultato += ("\n--- file nella cartella di lavoro (restano "
+                              "disponibili alla prossima chiamata) ---\n"
+                              + ", ".join(resti[:40]))
         if len(risultato) > max_output:
             risultato = risultato[:max_output] + f"\n... [output troncato a {max_output} caratteri]"
         return risultato

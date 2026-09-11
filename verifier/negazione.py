@@ -64,6 +64,12 @@ class SfidaNegata:
     testo: str
     #: quante sostituzioni sono state fatte
     sostituzioni: int
+    #: il nome del teorema da dimostrare nella sfida. Per la via `answer( )` e'
+    #: lo stesso del problema (cambia l'enunciato, non il nome); per la via
+    #: `type_of%` e' un nome derivato.
+    bersaglio: str = ""
+    #: quale delle due vie e' stata usata, per il rapporto
+    via: str = "answer"
 
 
 def puo_essere_negato(problema: Problem) -> tuple[bool, str]:
@@ -78,6 +84,51 @@ def puo_essere_negato(problema: Problem) -> tuple[bool, str]:
                        "oggetto (un numero, un insieme), non un si'/no. Non c'e' un "
                        "verso da invertire, c'e' un valore da fornire")
     return True, ""
+
+
+#: Suffisso del teorema generato dalla via `type_of%`.
+SUFFISSO = "_confutazione"
+
+
+def genera_per_tipo(problema: Problem) -> SfidaNegata:
+    """La sfida negata per un enunciato QUALUNQUE, via `type_of%`.
+
+    Serve per i problemi che non hanno un `answer(sorry)` da invertire, cioe'
+    la maggioranza. Invece di riscrivere l'enunciato — operazione fragile su un
+    enunciato con quantificatori e binder su piu' righe — si chiede a Lean il
+    tipo del teorema originale e si dichiara la sua negazione:
+
+        import <modulo del problema>
+        theorem <nome>_confutazione : ¬ (type_of% @<nome>) := sorry
+
+    Il candidato deve dichiarare lo stesso teorema e dimostrarlo. Gli e'
+    permesso importare il modulo del problema — cosa vietata in modalita'
+    stretta — e la ragione per cui questo NON e' una scappatoia e' che il
+    teorema originale, in un problema aperto, e' dimostrato con `sorry`:
+    usarlo introduce `sorryAx` e il controllo degli assiomi lo rifiuta. Cioe'
+    puo' leggere l'enunciato ma non puo' appoggiarsi alla sua finta
+    dimostrazione.
+
+    E' la stessa costruzione usata dal benchmark OEIS Open di Epoch AI, dove il
+    43% delle soluzioni accettate sono confutazioni: senza questa via, quella
+    meta' dei risultati possibili non sarebbe nemmeno verificabile.
+    """
+    if problema.statement_has_sorry:
+        raise NonNegabile(
+            f"{problema.theorem}: l'enunciato contiene un `sorry` (buco "
+            f"`answer( )` non proposizionale), quindi la sua negazione non e' "
+            f"un'affermazione ben posta")
+    nome = f"{problema.theorem}{SUFFISSO}"
+    testo = (
+        "-- Sfida negata generata automaticamente da verifier/negazione.py.\n"
+        "-- Non e' un file dell'archivio: e' il bersaglio di una confutazione.\n"
+        f"import {problema.module}\n"
+        "\n"
+        f"/-- La negazione di `{problema.theorem}`. Chi dimostra questo teorema\n"
+        f"confuta il problema come e' formalizzato nell'archivio. -/\n"
+        f"theorem {nome} : ¬ (type_of% @{problema.theorem}) := sorry\n")
+    return SfidaNegata(problema=problema.theorem, testo=testo, sostituzioni=0,
+                       bersaglio=nome, via="type_of%")
 
 
 def genera(problema: Problem) -> SfidaNegata:
@@ -125,4 +176,5 @@ def genera(problema: Problem) -> SfidaNegata:
         "-/\n")
     return SfidaNegata(problema=problema.theorem,
                        testo=intestazione + "\n".join(righe),
-                       sostituzioni=n)
+                       sostituzioni=n,
+                       bersaglio=problema.theorem, via="answer")

@@ -127,8 +127,31 @@ def test_un_buco_answer_non_proposizionale_non_si_puo_negare(indice):
     pytest.skip("nessun problema con buco non proposizionale e answer(sorry) nel sorgente")
 
 
-def test_verify_rifiuta_la_modalita_confutazione_dove_non_ha_senso(tmp_path):
+def test_la_confutazione_di_un_enunciato_senza_answer_e_possibile(tmp_path):
+    """Prima questa combinazione dava ERRORE, e sbagliava.
+
+    La modalita' confutazione serviva solo ai problemi con `answer(sorry)`, cioe'
+    una minoranza. Ora esiste la via `type_of%`, che vale per qualunque
+    enunciato completo: qui la sfida si genera, e il candidato viene RIFIUTATO
+    perche' non dimostra la negazione — non perche' la modalita' non si applichi.
+    """
     r = verify("JugglerConjecture.jugglerStep_36", _candidato(tmp_path, "False"),
+               modalita=CONFUTAZIONE, run_guard=False, timeout=900)
+    assert r.status == REJECTED, r.render()
+    superati = {c.name for c in r.checks if c.passed}
+    assert "il problema ammette una confutazione" in superati
+    dettagli = " ".join(c.detail or "" for c in r.checks)
+    assert "type_of%" in dettagli
+
+
+def test_un_enunciato_con_un_buco_non_si_puo_confutare(tmp_path):
+    """Se l'enunciato stesso contiene un `sorry`, la sua negazione non e'
+    un'affermazione ben posta: nessuna delle due vie si applica."""
+    idx = ProblemIndex.load()
+    con_buco = [q for q in idx.find(category="research open") if q.statement_has_sorry]
+    if not con_buco:
+        pytest.skip("nessun problema con buco non proposizionale nell'indice")
+    r = verify(con_buco[0].theorem, _candidato(tmp_path, "False"),
                modalita=CONFUTAZIONE, run_guard=False)
     assert r.status == ERROR
     assert "sfida negata" in r.message.lower()
@@ -198,3 +221,44 @@ def test_in_modalita_confutazione_il_candidato_con_True_non_combacia(tmp_path):
                run_guard=False, timeout=900)
     assert r.status == REJECTED
     assert "tipo identico all'originale" in _motivo(r)
+
+
+# --- la via generale: `type_of%`, per gli enunciati senza `answer( )` --------
+#
+# È la via che serve davvero: nel benchmark OEIS Open di Epoch AI il 43% delle
+# soluzioni accettate sono confutazioni, e la maggioranza dei problemi aperti
+# non ha un `answer(sorry)` da invertire. Senza questa via metà dei risultati
+# possibili non sarebbe nemmeno verificabile.
+
+PROBLEMA_SENZA_ANSWER = "PerfectNumbers.infinitely_many_even_perfect"
+
+
+def test_la_via_per_tipo_genera_un_bersaglio_derivato():
+    idx = ProblemIndex.load()
+    p = idx.get(PROBLEMA)          # questo ha `answer( )`
+    s = negazione.genera_per_tipo(p)
+    assert s.via == "type_of%"
+    assert s.bersaglio == PROBLEMA + negazione.SUFFISSO
+    assert f"import {p.module}" in s.testo
+    assert f"¬ (type_of% @{PROBLEMA})" in s.testo
+    assert "sorry" in s.testo      # la sfida è un bersaglio, non una prova
+
+
+def test_la_via_per_tipo_rifiuta_un_enunciato_con_un_buco():
+    idx = ProblemIndex.load()
+    con_buco = [q for q in idx.find(category="research open") if q.statement_has_sorry]
+    if not con_buco:
+        pytest.skip("nessun problema con buco non proposizionale nell'indice")
+    with pytest.raises(negazione.NonNegabile):
+        negazione.genera_per_tipo(con_buco[0])
+
+
+def test_il_guard_permette_un_solo_modulo_in_piu():
+    import guard
+    src = "import FormalConjectures.Wikipedia.PerfectNumbers\ntheorem t : True := trivial\n"
+    assert not guard.check_source(src).ok          # vietato di norma
+    ok = guard.check_source(src, modulo_permesso="FormalConjectures.Wikipedia.PerfectNumbers")
+    assert ok.ok                                   # permesso se dichiarato
+    altro = "import FormalConjectures.Wikipedia.JugglerConjecture\ntheorem t : True := trivial\n"
+    assert not guard.check_source(
+        altro, modulo_permesso="FormalConjectures.Wikipedia.PerfectNumbers").ok
