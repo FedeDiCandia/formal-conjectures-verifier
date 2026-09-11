@@ -369,6 +369,9 @@ RICERCHE = {
         "descrizione": "cerca un primo p con p² che divide un numero di Euclide",
         "stato_noto": "aperto; non risulta una ricerca sistematica pubblicata",
         "conclusivo": "si: un solo p trovato confuta la congettura",
+        # Che cosa finisce nella lista `trovati` del programma: veri
+        # controesempi, oppure valori calcolati che vanno interpretati?
+        "natura_trovati": "controesempi",
     },
     "erdos409_sigma": {
         "problema": "Erdos409.erdos_409.variants.sigma_prime_termination",
@@ -378,6 +381,7 @@ RICERCHE = {
         "stato_noto": "aperto",
         "conclusivo": "no: trova SOSPETTI, non controesempi. Un'orbita che non "
                       "raggiunge un primo in 200 passi va esaminata a mano",
+        "natura_trovati": "sospetti",
     },
     "erdos396_binomiale": {
         "problema": "Erdos396.erdos_396",
@@ -387,5 +391,6 @@ RICERCHE = {
         "stato_noto": "aperto",
         "conclusivo": "no: la forma e' 'per ogni k esiste n', che un calcolo non "
                       "puo' confutare. Serve a raccogliere indizi",
+        "natura_trovati": "risultati calcolati",
     },
 }

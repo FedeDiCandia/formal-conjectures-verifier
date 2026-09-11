@@ -22,6 +22,7 @@ from caccia_programmi import RICERCHE
 
 
 def rapporto(nome: str, definizione: dict, esito) -> str:
+    natura = definizione.get("natura_trovati", "da interpretare")
     righe = [
         f"# Ricerca: {nome}", "",
         f"**Problema:** `{definizione['problema']}`", "",
@@ -34,12 +35,19 @@ def rapporto(nome: str, definizione: dict, esito) -> str:
         f"| durata | {esito.secondi:.0f} s |",
         f"| posizione raggiunta | {esito.posizione} |",
         f"| casi esaminati | {esito.esaminati} |",
-        f"| ritrovamenti | {len(esito.trovati)} |",
+        f"| voci nella lista dei risultati | {len(esito.trovati)} |",
+        f"| natura di quelle voci | {natura} |",
         "",
     ]
-    if esito.trovati:
+    if esito.trovati and natura == "controesempi":
         righe += ["## Ritrovamenti", "",
                   "⚠️ Da sottoporre al protocollo della fase 7 prima di crederci.", ""]
+    elif esito.trovati:
+        righe += [f"## Risultati ({natura})", "",
+                  "**Non sono ritrovamenti.** Questa ricerca non puo' produrre un",
+                  "controesempio: quello che segue e' materiale da leggere, non una",
+                  "confutazione.", ""]
+    if esito.trovati:
         for t in esito.trovati[:40]:
             righe.append(f"- `{json.dumps(t, ensure_ascii=False)}`")
         if len(esito.trovati) > 40:
@@ -90,14 +98,20 @@ def main() -> int:
         (r.cartella / "rapporto.md").write_text(rapporto(nome, d, esito), encoding="utf-8")
         riepilogo.append({"nome": nome, "conclusa": esito.conclusa,
                           "posizione": esito.posizione, "esaminati": esito.esaminati,
-                          "trovati": len(esito.trovati), "secondi": round(esito.secondi)})
+                          "trovati": len(esito.trovati), "secondi": round(esito.secondi),
+                          "natura_trovati": d.get("natura_trovati",
+                                                  "da interpretare")})
+        etichetta = ("ritrovamenti" if d.get("natura_trovati") == "controesempi"
+                     else "risultati (non ritrovamenti)")
         print(f"  -> {'conclusa' if esito.conclusa else 'interrotta'}, "
-              f"posizione {esito.posizione}, ritrovamenti {len(esito.trovati)}", flush=True)
+              f"posizione {esito.posizione}, {etichetta} {len(esito.trovati)}",
+              flush=True)
 
     dest = RADICE / "runs" / "caccia" / "riepilogo.json"
     dest.write_text(json.dumps(riepilogo, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"\nRiepilogo in {dest}")
-    con_ritrovamenti = [r for r in riepilogo if r["trovati"]]
+    con_ritrovamenti = [r for r in riepilogo if r["trovati"]
+                        and r.get("natura_trovati") == "controesempi"]
     if con_ritrovamenti:
         print("\n*** RITROVAMENTI DA ESAMINARE ***")
         for r in con_ritrovamenti:
