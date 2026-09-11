@@ -110,6 +110,19 @@ speso **$1000 per problema** su 59 problemi di Erdős e ne ha risolti **3**.
 
 ---
 
+## Lavori in corso in questo momento
+
+| lavoro | costo | cosa aspettarsi |
+|---|---|---|
+| sonda degli artefatti su tutti i 1188 candidati | $0 | ~2 ore. Cerca enunciati che cedono a una tattica banale, cioè formalizzazioni sbagliate |
+| ricerca sulla congettura di Murthy fino a n = 10⁹ | $0 | ~2 ore. Un solo n senza k la confuterebbe |
+
+Il tentativo da $50 **non è stato lanciato**: le due cose qui sopra stanno per
+dire gratis quale bersaglio scegliere. Dettagli e criteri in
+[docs/08-lettura-candidati.md](08-lettura-candidati.md).
+
+---
+
 ## Da leggere prima di decidere
 
 [docs/07-strategia.md](07-strategia.md) — analisi delle strade possibili verso
