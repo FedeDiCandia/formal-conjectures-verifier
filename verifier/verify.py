@@ -150,6 +150,39 @@ class SlotPool:
 _default_pool: Optional[SlotPool] = None
 _pool_lock = threading.Lock()
 
+#: Moduli di sfida gia' portati in pari, e il lucchetto che serializza l'operazione.
+#: Serve perche' portare in pari un modulo MODIFICA l'archivio, e se lo facesse
+#: una verifica mentre un'altra ne sta prendendo l'impronta la seconda
+#: segnalerebbe (giustamente) che l'archivio e' cambiato. Succedeva davvero.
+_sfide_pronte: set[str] = set()
+_lucchetto_sfide = threading.Lock()
+
+
+def prepara_sfida(modulo: str, timeout: int) -> tuple[bool, str]:
+    """Compila il modulo dell'enunciato originale, FUORI dalla sandbox.
+
+    E' legittimo: la sfida e' un file dell'archivio, o generato da noi dal suo
+    sorgente, quindi fidato. Lo dice anche il README di comparator ("as
+    Challenge is trusted, both the sandbox and lean4export step for Challenge
+    are not necessary").
+
+    E serve: dentro la sandbox `lake` non puo' rimuovere gli artefatti
+    dell'archivio, quindi se il modulo non e' gia' in pari la compilazione si
+    ferma con "failed to remove output artifacts".
+
+    Si fa una volta per modulo, sotto lucchetto.
+    """
+    with _lucchetto_sfide:
+        if modulo in _sfide_pronte:
+            return True, ""
+        esito, uscita = _run_with_timeout(
+            [str(config.ELAN_BIN / "lake"), "build", modulo],
+            cwd=config.ARCHIVE, env=config.lean_env(), timeout=timeout)
+        if esito == 0:
+            _sfide_pronte.add(modulo)
+            return True, uscita
+        return False, uscita
+
 
 def get_pool(size: Optional[int] = None) -> SlotPool:
     global _default_pool
@@ -193,18 +226,27 @@ def _run_with_timeout(cmd: list[str], cwd: Path, env: dict, timeout: int,
         return -signal.SIGKILL, out or ""
 
 
-def _ripulisci_avanzi(cartella: Path, tieni: int) -> None:
-    """Toglie i moduli temporanei di altri slot rimasti da esecuzioni finite male."""
-    costruito = (config.ARCHIVE / ".lake" / "build")
-    for f in cartella.glob("*.lean"):
-        nome = f.stem
-        if nome in (f"S{tieni}", f"Sfida{tieni}", f"E{tieni}"):
-            continue
-        f.unlink(missing_ok=True)
-        for ramo in ("lib/lean", "ir"):
-            base = costruito / ramo / config.SANDBOX_SUBDIR / nome
-            for ext in (".olean", ".ilean", ".trace", ".hash", ".c", ".o"):
-                Path(str(base) + ext).unlink(missing_ok=True)
+def _ripulisci_avanzi(cartella: Path, slot: int) -> None:
+    """Toglie gli artefatti rimasti dal PROPRIO slot in esecuzioni finite male.
+
+    Solo il proprio: gli altri slot possono essere in uso da verifiche che
+    girano in parallelo, e cancellarne i file mentre lavorano fa fallire la
+    compilazione con "failed to remove output artifacts". E' successo davvero,
+    su tutte e dodici le verifiche di un'esecuzione.
+    """
+    costruito = config.ARCHIVE / ".lake" / "build"
+    for nome in (f"S{slot}", f"Sfida{slot}", f"E{slot}"):
+        sorgente = cartella / f"{nome}.lean"
+        artefatti = [Path(str(costruito / ramo / config.SANDBOX_SUBDIR / nome) + ext)
+                     for ramo in ("lib/lean", "ir")
+                     for ext in (".olean", ".ilean", ".trace", ".hash", ".c",
+                                 ".o", ".c.hash", ".setup.json", ".olean.hash",
+                                 ".ilean.hash")]
+        # Se il sorgente non c'e' ma gli artefatti si', lake si confonde:
+        # si toglie tutto e si riparte pulito.
+        if not sorgente.is_file():
+            for a in artefatti:
+                a.unlink(missing_ok=True)
 
 
 def _classify(output: str) -> tuple[str, str]:
@@ -443,7 +485,7 @@ def verify(problem_id: str, candidate: Path | str, *,
         # artefatti (o viceversa), e al giro dopo `lake` si ferma con
         # "no such file or directory". Costa niente e toglie di mezzo una
         # classe intera di guasti misteriosi.
-        _ripulisci_avanzi(sandbox_dir, tieni=slot)
+        _ripulisci_avanzi(sandbox_dir, slot)
 
         sol_name = f"S{slot}"
         sol_path = sandbox_dir / f"{sol_name}.lean"
@@ -459,20 +501,7 @@ def verify(problem_id: str, candidate: Path | str, *,
             sfida_path = sandbox_dir / f"{sfida_nome}.lean"
             sfida_path.write_text(sfida_negata.testo, encoding="utf-8")
             modulo_sfida = f"{config.SANDBOX_MODULE_PREFIX}.{sfida_nome}"
-            # La sfida la compiliamo NOI, fuori dalla sandbox: e' un file fidato,
-            # generato meccanicamente dal sorgente dell'archivio. Dentro la
-            # sandbox la scrittura dei suoi artefatti sarebbe vietata.
-            esito_sfida, uscita_sfida = _run_with_timeout(
-                [str(config.ELAN_BIN / "lake"), "build", modulo_sfida],
-                cwd=config.ARCHIVE, env=config.lean_env(), timeout=timeout)
-            if esito_sfida != 0:
-                checks.append(Check("la sfida negata compila", False,
-                                    "il file generato non compila"))
-                return done(ERROR,
-                            "La sfida negata non compila. E' un problema del "
-                            "generatore, non del candidato.",
-                            errors=_lean_errors(uscita_sfida), raw=uscita_sfida)
-            checks.append(Check("la sfida negata compila", True, modulo_sfida))
+            checks.append(Check("la sfida negata e' stata generata", True, modulo_sfida))
 
         cfg = {
             "challenge_module": modulo_sfida,
@@ -504,6 +533,17 @@ def verify(problem_id: str, candidate: Path | str, *,
                 checks.append(Check("compilazione isolata", False,
                                     "sandbox-exec non disponibile su questo sistema: la "
                                     "compilazione del candidato NON e' isolata"))
+
+            # --- si porta in pari il modulo della SFIDA (vedi prepara_sfida)
+            pronto, uscita_prep = prepara_sfida(modulo_sfida, timeout)
+            if not pronto:
+                checks.append(Check("modulo della sfida pronto", False,
+                                    "non si riesce a compilare l'enunciato originale"))
+                return done(ERROR,
+                            "Non riesco a portare in pari il modulo dell'enunciato "
+                            "originale. E' un problema dell'archivio o della sua "
+                            "compilazione, non del candidato.",
+                            errors=_lean_errors(uscita_prep), raw=uscita_prep)
 
             # --- impronta dell'archivio PRIMA della verifica
             impronta_prima = None
@@ -614,6 +654,15 @@ def verify_many(jobs: list[tuple[str, Path]], *, jobs_parallel: Optional[int] = 
     n = jobs_parallel or config.MAX_PARALLEL
     pool = SlotPool(n)
     index = ProblemIndex.load()
+
+    # Tutte le sfide si portano in pari PRIMA di cominciare: e' l'unico passo
+    # che modifica l'archivio, e farlo mentre le verifiche girano in parallelo
+    # falsa il controllo dell'impronta.
+    for problema_id, _ in jobs:
+        try:
+            prepara_sfida(index.get(problema_id).module, timeout or config.TIMEOUT_SECONDS)
+        except KeyError:
+            pass
     results: list[Optional[Result]] = [None] * len(jobs)
 
     def worker(i: int, problem_id: str, path: Path) -> None:

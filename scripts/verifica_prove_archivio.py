@@ -46,6 +46,17 @@ else:
 
 print(f"Problemi da verificare: {len(scelti)}\n", flush=True)
 
+# Si portano in pari tutti i moduli PRIMA di cominciare: e' l'unico passo che
+# modifica l'archivio, e farlo durante le verifiche parallele falsa il
+# controllo dell'impronta.
+from verify import prepara_sfida
+print("Porto in pari i moduli degli enunciati...", flush=True)
+for p in scelti:
+    ok, _ = prepara_sfida(p.module, 900)
+    if not ok:
+        print(f"  ATTENZIONE: {p.module} non compila", flush=True)
+print("  fatto\n", flush=True)
+
 pool = SlotPool(4)
 risultati = [None] * len(scelti)
 avvio_globale = time.time()
