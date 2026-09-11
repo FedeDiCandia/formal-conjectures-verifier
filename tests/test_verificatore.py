@@ -151,7 +151,14 @@ def test_4b_rifiuta_native_decide_anche_senza_controllo_sintattico():
     r = _verifica("4_native_decide.lean", run_guard=False)
     assert r.status == REJECTED
     assert "assiomi ammessi" in _regola_fallita(r)
-    assert "ofReduceBool" in r.errors
+    # Su Lean 4.27 l'assioma lasciato e' `Lean.ofReduceBool`; su Lean 4.33 e' un
+    # assioma con un nome PER DICHIARAZIONE, del tipo
+    # `JugglerConjecture.jugglerStep_36._native.native_decide.ax_1_1`. E' la
+    # ragione per cui il verificatore lavora con una lista di assiomi AMMESSI e
+    # non con una lista di assiomi vietati: un elenco di nomi da vietare
+    # avrebbe mancato la forma nuova senza dire niente.
+    assert ("ofReduceBool" in r.errors
+            or "native_decide" in r.errors), r.errors[:300]
 
 
 # --- 5. RIFIUTA un enunciato indebolito -------------------------------------

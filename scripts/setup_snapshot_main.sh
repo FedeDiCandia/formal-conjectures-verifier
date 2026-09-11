@@ -59,6 +59,34 @@ elan toolchain install "leanprover/lean4:$LEAN_MAIN" 2>&1 | tail -2
 step "3/6  Cache di Mathlib (LUNGO)"
 ( cd "$SNAP" && lake exe cache get 2>&1 | tail -3 )
 
+step "3b/6  Disattivazione della libreria a doppio glob"
+# Il ramo `main` dichiara DUE librerie che compilano gli stessi file nella
+# stessa cartella di build: `FormalConjectures` (con `google.answer` al valore
+# predefinito `alwaysTrue`) e `FormalConjecturesAnswerPostpone` (con
+# `postpone`). Gli .olean si sovrascrivono a vicenda, quindi l'enunciato
+# elaborato di un problema con `answer(sorry)` cambia secondo l'ULTIMO comando
+# di build eseguito: `lake build FormalConjectures` da' `True ↔ P`,
+# `lake build <singolo modulo>` da' `sorryAx ↔ P`. Un giudice non puo' lavorare
+# su un bersaglio che si muove, quindi la seconda libreria viene commentata.
+# Serve alla CI di upstream per un controllo secondario, non alla verifica.
+if grep -q '^name = "FormalConjecturesAnswerPostpone"' "$SNAP/lakefile.toml"; then
+  python3 - "$SNAP/lakefile.toml" <<'PYEOF'
+import sys
+from pathlib import Path
+f = Path(sys.argv[1])
+righe = f.read_text(encoding="utf-8").split("\n")
+i_nome = next(i for i, r in enumerate(righe) if "FormalConjecturesAnswerPostpone" in r)
+i_inizio = max(i for i in range(i_nome) if righe[i].strip() == "[[lean_lib]]")
+i_fine = next(i for i in range(i_nome, len(righe)) if righe[i].startswith("weak.google.answer"))
+righe[i_inizio:i_fine + 1] = ["# disattivata dallo snapshot: vedi scripts/setup_snapshot_main.sh"] + \
+    ["# " + r if r.strip() else "#" for r in righe[i_inizio:i_fine + 1]]
+f.write_text("\n".join(righe), encoding="utf-8")
+print("  libreria a doppio glob disattivata")
+PYEOF
+else
+  echo "  gia' disattivata (o upstream l'ha rimossa)"
+fi
+
 step "4/6  Compilazione dell'archivio (MOLTO LUNGO)"
 # Si lasciano 2 core liberi su 12, come chiesto.
 # `lake` di Lean 4.33 non accetta `-j`: si usa la variabile d'ambiente, che

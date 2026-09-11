@@ -123,10 +123,23 @@ def test_l_esplorazione_gira_isolata(ispezione):
     assert ispezione.isolato, "deve girare dentro sandbox-exec"
 
 
+#: Quanto dura una verifica COMPLETA, misurata su ciascuno snapshot. Serve a
+#: dare un senso alla soglia qui sotto: l'esplorazione ha ragione di esistere
+#: solo se costa una frazione di una verifica.
+#:   bench-v1 (Lean 4.27):  32,9 s  — misurato con `time`
+#:   main     (Lean 4.33):  47-114 s — misurato su 13 verifiche d'archivio
+VERIFICA_COMPLETA = {"FormalConjectures.Util.ProblemImports": 33.0,
+                     "FormalConjecturesUtil": 47.0}
+
+
 def test_l_esplorazione_e_piu_rapida_di_una_verifica(ispezione):
-    """Il motivo per cui esiste: una verifica completa misura circa 33 secondi.
-    Se l'esplorazione non fosse sensibilmente piu' rapida non servirebbe."""
-    assert ispezione.secondi < 20, f"troppo lenta: {ispezione.secondi:.1f}s"
+    """Il motivo per cui esiste: se l'esplorazione non fosse sensibilmente piu'
+    rapida di una verifica completa, non servirebbe a niente."""
+    import config
+    piena = VERIFICA_COMPLETA.get(config.modulo_utilita(), 33.0)
+    assert ispezione.secondi < piena * 0.7, (
+        f"troppo lenta: {ispezione.secondi:.1f}s contro i {piena:.0f}s di una "
+        f"verifica completa su questo snapshot")
 
 
 def test_il_timeout_interrompe_una_tattica_che_non_termina():
