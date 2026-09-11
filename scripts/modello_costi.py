@@ -94,8 +94,12 @@ def carica() -> dict:
         }
     dati["indice"] = idx
 
-    sonda = RADICE / "runs/caccia/sonda_lean.json"
-    dati["sonda"] = json.loads(sonda.read_text(encoding="utf-8")) if sonda.is_file() else None
+    # prima la copia versionata in docs/dati, cosi' la relazione si rigenera
+    # anche su un computer dove runs/ non c'e' (runs/ non e' sotto git)
+    sonda = next((p for p in (RADICE / "docs/dati/sonda_lean.json",
+                              RADICE / "runs/caccia/sonda_lean.json") if p.is_file()),
+                 None)
+    dati["sonda"] = json.loads(sonda.read_text(encoding="utf-8")) if sonda else None
 
     caccia = []
     for cart in sorted((RADICE / "runs/caccia").glob("*/")):
@@ -171,10 +175,11 @@ SCENARI = {
     "A": {
         "nome": "dimostrazioni Lean dirette su enunciati aperti",
         "ottimistico": (0.02,
-            "limite superiore misurato dalla sonda automatica (nessun enunciato "
-            "aperto cade da solo su 30 provati: Clopper-Pearson al 90% da un "
-            "tetto del 7%), scontato di un fattore 3 perche' la sonda prova "
-            "tattiche, non ragionamento"),
+            "la sonda automatica non ha chiuso nessuno dei 30 enunciati aperti "
+            "provati (240 prove): il limite superiore misurato al 90% e' 9,5%. "
+            "Prendo circa un quinto di quel tetto, perche' la sonda prova "
+            "tattiche mentre l'agente ragiona — quindi puo' fare meglio — ma "
+            "9,5%% e' il tetto di un campione di 30, non una stima"),
         "realistico": (0.003,
             "un successo ogni ~300 tentativi: la calibrazione misura 5/7 su "
             "varianti GIA' dimostrate in archivio (prove di 10-34 righe), ma "

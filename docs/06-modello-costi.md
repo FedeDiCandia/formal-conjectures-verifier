@@ -90,7 +90,7 @@ Un affondo per problema, scelti a caso tra i 1241 aperti verificabili. Saturazio
 | $1000 | 1 032 | 21 | 3.1 | 0.206 |
 | $5000 | 1 241 *(saturo)* | 25 | 3.7 | 0.248 |
 
-- **ottimistico: p = 2.00%** — STIMATO. limite superiore misurato dalla sonda automatica (nessun enunciato aperto cade da solo su 30 provati: Clopper-Pearson al 90% da un tetto del 7%), scontato di un fattore 3 perche' la sonda prova tattiche, non ragionamento.
+- **ottimistico: p = 2.00%** — STIMATO. la sonda automatica non ha chiuso nessuno dei 30 enunciati aperti provati (240 prove): il limite superiore misurato al 90% e' 9,5%. Prendo circa un quinto di quel tetto, perche' la sonda prova tattiche mentre l'agente ragiona — quindi puo' fare meglio — ma 9,5%% e' il tetto di un campione di 30, non una stima.
 - **realistico: p = 0.30%** — STIMATO. un successo ogni ~300 tentativi: la calibrazione misura 5/7 su varianti GIA' dimostrate in archivio (prove di 10-34 righe), ma nessun aperto ha una prova corta nota, per definizione di aperto.
 - **pessimistico: p = 0.02%** — STIMATO. un successo ogni 5000: l'archivio e' curato da DeepMind per raccogliere problemi su cui gli esperti si sono fermati.
 
@@ -148,15 +148,15 @@ La strategia B non si paga in dollari ma in tempo di macchina, quindi il numero 
 
 | ricerca | che cosa cerca | conclusiva? | candidati esaminati | ritrovamenti |
 |---|---|---|---|---|
-| `euclide_squarefree` | un primo p con p^2 che divide un numero di Euclide | conclusiva: un solo ritrovamento confuterebbe la congettura | 214787 | **0** |
+| `euclide_squarefree` | un primo p con p^2 che divide un numero di Euclide | conclusiva: un solo ritrovamento confuterebbe la congettura | 216815 | **0** |
 | `erdos409_sigma` | orbite di n -> sigma(n)-1 che non toccano mai un primo | trova sospetti da esaminare a mano, non confutazioni | 199999 | **0** |
-| `erdos396_binomiale` | il minimo n con descFactorial(n,k+1) che divide centralBinom(n) | raccoglie indizi: la forma 'per ogni k esiste n' non e' confutabile da un calcolo | 61 | **0** |
+| `erdos396_binomiale` | il minimo n con descFactorial(n,k+1) che divide centralBinom(n) | raccoglie indizi: la forma 'per ogni k esiste n' non e' confutabile da un calcolo | 12 | **0** |
 
-**MISURATO** — la ricerca sui numeri di Euclide ha esaminato 214 787 primi in 2 551 secondi  cioe' **84 candidati al secondo** su un core  ed e' arrivata al primo 2 969 867 senza trovare niente. Con 8 ricerche in parallelo e 8 ore di notte sono circa 2.4 milioni di candidati per ricerca per notte (**STIMATO**: velocita' misurata per il tempo).
+**MISURATO** — la ricerca sui numeri di Euclide ha esaminato 216 038 primi in 2 581 secondi  cioe' **84 candidati al secondo** su un core  ed e' arrivata al primo 2 988 497 senza trovare niente. Con 8 ricerche in parallelo e 8 ore di notte sono circa 2.4 milioni di candidati per ricerca per notte (**STIMATO**: velocita' misurata per il tempo).
 
 **MISURATO** — una verifica Lean completa costa 32,9 s con sandbox e impronta, 25,0 s senza. Con 4 verifiche in parallelo sono circa 440 verifiche all'ora: e' questo, non l'API, il limite di quante prove si possono controllare in un giorno.
 
-**MISURATO** — sonda automatica su 16 enunciati aperti discreti (`decide`, `plausible`, `norm_num`, `simp_arith`, forma diritta e negata, 128 prove in tutto): **0** hanno prodotto qualcosa di notevole. Intervallo di Clopper-Pearson al 90% sulla frazione di aperti che cadono da soli: 0.0% – 17.1%.
+**MISURATO** — sonda automatica su 30 enunciati aperti discreti (`decide`, `plausible`, `norm_num`, `simp_arith`, forma diritta e negata, 240 prove in tutto): **0** hanno prodotto qualcosa di notevole. Intervallo di Clopper-Pearson al 90% sulla frazione di aperti che cadono da soli: 0.0% – 9.5%.
   Nessuno. Un caso apparente — `Arxiv.«2107.12475».CollatzLike` — era `plausible` che scriveva "Unable to find a counter-example" e lasciava un `sorry`: il file compilava, ma non dimostrava niente. La regola di verdetto e' stata corretta (`scripts/sonda_lean.py`).
 
 ## 6. Che cosa NON si puo' stimare
