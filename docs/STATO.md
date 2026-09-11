@@ -41,6 +41,12 @@ attaccabili erano in realtà irraggiungibili. Corretto disattivando la libreria
 in eccesso nello snapshot; `bench-v1` non è toccato. Dettagli in
 [docs/01](01-archivio-formal-conjectures.md#la-modalita-non-dipende-solo-dallopzione-dipende-da-chi-compila).
 
+**La calibrazione non è contaminata da quel difetto, e l'ho verificato invece
+di supporlo.** Dei 17 problemi toccati fra calibrazione e verifiche d'archivio,
+uno solo (`Mersenne.new_mersenne_conjecture_of_prime`) ha un `answer( )` nel
+sorgente, quindi uno solo era sensibile all'opzione — e non è fra gli undici
+della calibrazione. Gli altri hanno enunciati che non cambiano con la modalità.
+
 **Due allarmi falsi trovati e corretti, che valgono più di un ritrovamento.**
 La sonda automatica ha segnalato un enunciato aperto come «chiuso da
 `plausible`»: non lo era — `plausible`, quando non trova controesempi, lascia un
