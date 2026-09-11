@@ -162,6 +162,39 @@ def _senza_commenti(testo: str) -> str:
     return guard.strip_comments_and_strings(testo)
 
 
+def _taglia_commento_aperto(testo: str) -> str:
+    """Toglie un commento a blocco rimasto aperto.
+
+    Troncare il file dopo il teorema bersaglio puo' cadere dentro un commento
+    `/- ... -/` il cui `-/` stava piu' in basso. Lean si ferma con
+    "unterminated comment". Qui si trova il `/-` rimasto senza chiusura e si
+    taglia da li' in poi: e' solo un commento, non si perde nulla di
+    matematico.
+    """
+    profondita = 0
+    ultima_apertura = None
+    i, n = 0, len(testo)
+    while i < n - 1:
+        if testo[i] == "-" and testo[i + 1] == "-" and profondita == 0:
+            while i < n and testo[i] != "\n":
+                i += 1
+            continue
+        if testo[i] == "/" and testo[i + 1] == "-":
+            if profondita == 0:
+                ultima_apertura = i
+            profondita += 1
+            i += 2
+            continue
+        if testo[i] == "-" and testo[i + 1] == "/":
+            profondita = max(0, profondita - 1)
+            i += 2
+            continue
+        i += 1
+    if profondita > 0 and ultima_apertura is not None:
+        return testo[:ultima_apertura].rstrip() + "\n"
+    return testo
+
+
 def _chiusure_mancanti(testo: str) -> str:
     """Le righe `end` che servono a richiudere namespace e sezioni.
 
@@ -231,7 +264,14 @@ def estrai(problema: Problem, indice: ProblemIndex) -> ProvaArchivio:
                 # Tenerlo causava soltanto errori, perche' quei teoremi usavano
                 # a loro volta lemmi che avevamo dovuto rimuovere.
                 break
-            if "sorry" in _senza_commenti(blocco):
+            pulito = _senza_commenti(blocco)
+            # Si rimuovono anche i lemmi vicini che usano `native_decide` o
+            # `decide +native`: il verificatore rifiuta l'intero file se li
+            # trova, e il teorema bersaglio non ne ha bisogno (se ne avesse
+            # bisogno, i suoi assiomi non sarebbero puliti e il problema non
+            # sarebbe fra i candidati).
+            if ("sorry" in pulito or "native_decide" in pulito
+                    or re.search(r"\+\s*native", pulito)):
                 rimossi += 1
                 continue
         tenuti.append(blocco)
@@ -241,7 +281,7 @@ def estrai(problema: Problem, indice: ProblemIndex) -> ProvaArchivio:
             f"{problema.theorem}: non sono riuscito a individuare la dichiarazione "
             f"nel file (nome atteso `{corto}`)")
 
-    corpo = "\n".join(tenuti)
+    corpo = _taglia_commento_aperto("\n".join(tenuti))
     corpo += _chiusure_mancanti(corpo)
 
     intestazione = (
