@@ -362,7 +362,10 @@ RICERCHE = {
     "euclide_squarefree": {
         "problema": "EuclidNumbers.euclid_numbers_are_square_free",
         "programma": EUCLIDE,
-        "variabili": {"LIMITE_P": 200000},
+        # MISURATO: 17984 primi (tutti sotto 200000) esaminati in 17 secondi,
+        # nessun ritrovamento. Il costo cresce come il quadrato del limite,
+        # quindi 2 milioni sono circa cento volte tanto: una mezz'ora.
+        "variabili": {"LIMITE_P": 3000000},
         "descrizione": "cerca un primo p con p² che divide un numero di Euclide",
         "stato_noto": "aperto; non risulta una ricerca sistematica pubblicata",
         "conclusivo": "si: un solo p trovato confuta la congettura",

@@ -160,10 +160,11 @@ cmd_lancia() {
 
   # `caffeinate -i` impedisce al computer di addormentarsi mentre lavora.
   # Senza, un lavoro di otto ore si interrompe al primo coperchio chiuso.
-  nohup caffeinate -i "${comando[@]}" >> "$log" 2>&1 &
-  echo $! > "$(file_pid "$lavoro")"
+  # Il distacco passa da scripts/distacca.py: `nohup ... &` da una shell che poi
+  # esce non basta su macOS, il gruppo di processi viene terminato comunque.
+  "$PY" "$ROOT/scripts/distacca.py" "$lavoro" -- caffeinate -i "${comando[@]}"
 
-  verde "Avviato '$lavoro' (PID $!)."
+  verde "Avviato '$lavoro'."
   echo "  log:     $log"
   echo "  guarda:  ./avvia.sh segui $lavoro"
   echo "  ferma:   ./avvia.sh ferma $lavoro"
