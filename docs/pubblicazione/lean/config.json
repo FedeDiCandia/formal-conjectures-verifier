@@ -1,0 +1,16 @@
+{
+  "challenge_module": "FormalConjectures.A105020Goldbach.Challenge",
+  "solution_module": "FormalConjectures.A105020Goldbach.Solution",
+  "theorem_names": [
+    "A105020Goldbach.exists_index_decomposition",
+    "A105020Goldbach.index_decomposition_unique",
+    "A105020Goldbach.a_eq_d_mul",
+    "A105020Goldbach.hypotheses_force_canonical_indices",
+    "A105020Goldbach.conjecture_iff_goldbach"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ]
+}
