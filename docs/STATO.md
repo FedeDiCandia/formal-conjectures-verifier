@@ -64,6 +64,43 @@ che abbiamo trovato: **l'agente non consegnava niente perché non c'era niente d
 consegnare.** Quei problemi sono aperti perché si riducono ad altri problemi
 aperti.
 
+### LA LEZIONE PIÙ IMPORTANTE DEL PROGETTO: il criterio di selezione era rovesciato
+
+Se di tutto questo repository resta una sola frase, è questa.
+
+**Il criterio con cui ho scelto i problemi — «enunciato breve, elementare, discreto,
+nessun nome celebre» — seleziona *anche* le riformulazioni dei problemi famosi.** E
+le seleziona bene, perché un problema diventa famoso proprio quando si enuncia in
+una riga. Cercare enunciati brevi ed elementari non è cercare problemi facili: è
+cercare Goldbach.
+
+La prova, misurata: su 19 problemi della «famiglia giusta», **sette** si riducono a
+un problema famoso, e in quattro casi la riduzione **era già scritta nella voce
+OEIS** che non avevo letto.
+
+| il nostro «oscuro problema OEIS» | che cos'è |
+|---|---|
+| `OeisA103151` | la congettura di **Lemoine** |
+| `OeisA110835` | la congettura di **Sierpiński** del 1958 |
+| `OeisA231201` | una congettura di **Zhi-Wei Sun**, con premio di $1000 |
+| `OeisA105020` | **Goldbach** |
+| `OeisA108569` | implica il problema del totiente di **Lehmer**, aperto dal 1932 |
+| `OeisA101779` | un'istanza della congettura di **Dickson** |
+| `OeisA109909` | famiglia Goldbach |
+
+**Il costo di non averlo saputo:** tre giri, 139 chiamate, circa venti dollari, e uno
+zero che ho attribuito prima al budget, poi alle istruzioni, poi al modello — e non
+era nessuno dei tre.
+
+**Il rimedio, che ora è il [passo 0 del protocollo](04-protocollo-ritrovamenti.md):**
+prima di tentare un problema si chiede al modello *a quale problema noto si riduce*,
+non di dimostrarlo. Costa **cinquanta centesimi**, e poi si leggono tutti i commenti
+della voce d'origine, che è gratis. Se compare un nome famoso, o «now proved», o un
+premio in denaro, il problema si scarta senza tentarlo.
+
+Cinquanta centesimi al posto di venti dollari, e la differenza fra un tentativo
+difficile e un tentativo impossibile.
+
 ### Due conclusioni ferme, da non riaprire
 
 **1. La strada C è chiusa. Non si spendono $200 sul residuo di Epoch AI.**

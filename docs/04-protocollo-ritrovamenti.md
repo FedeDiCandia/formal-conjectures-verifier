@@ -15,6 +15,49 @@ prima le ipotesi più probabili.
 
 ---
 
+## Passo 0 — PRIMA di tentare: cercare la riduzione a problemi noti
+
+*Aggiunto il 12 settembre 2026, dopo averlo imparato nel modo costoso.*
+
+Questo passo viene **prima** di tutto il resto, e prima di spendere un centesimo su
+un tentativo. Costa circa **cinquanta centesimi** e una chiamata.
+
+**Che cosa si chiede.** Si manda il problema a un modello, effort basso, senza
+strumenti, con questa richiesta: *non dimostrarlo — dimmi a quale problema noto si
+riduce, o quale problema noto lo implica.* Il prompt della fase D
+(`scripts/informale.py`) fa già esattamente questo come effetto collaterale, perché
+chiede una dimostrazione e accetta come risposta onesta «non si può, ed ecco
+perché».
+
+**Che cosa si guarda nella risposta.** Se il modello **nomina** un problema famoso —
+Goldbach, Lemoine, Legendre, Sierpiński, Dickson, Lehmer, Collatz, una congettura di
+Sun — il tentativo **non si fa**. Non perché il modello abbia ragione, ma perché il
+costo di controllarlo è un minuto di lettura della voce OEIS, contro decine di
+dollari di tentativo.
+
+**Il controllo successivo, gratuito, è nella fonte.** Le voci OEIS dicono molto
+spesso da sé di che cosa si tratta, in un commento che nessuno legge:
+
+| problema | la riga che c'era già nella voce |
+|---|---|
+| A103151 | *«This is a stronger conjecture than the Goldbach conjecture»* |
+| A110835 | *«Sierpinski's conjecture (1958) is precisely that a(n) >= n for all n»* |
+| A105020 | *«A "Goldbach Conjecture" for this sequence»* |
+| A357513 | *«This conjecture is now proved; see Links»* (e l'archivio la marcava ancora aperta) |
+
+**Quanto è costato non averlo fatto.** Tre giri di tentativi, 139 chiamate, circa
+venti dollari, e uno zero che abbiamo attribuito prima al budget, poi alle
+istruzioni, poi al modello. Nessuna delle tre. Stavamo chiedendo Goldbach.
+
+**Quindi, in pratica, per ogni problema, in quest'ordine:**
+
+1. chiedi la riduzione (mezzo dollaro);
+2. leggi *tutti* i commenti della voce OEIS o della fonte originale (gratis);
+3. se compare un nome famoso, o «now proved», o un premio in denaro — **scarta**;
+4. solo quello che sopravvive a questi tre passi merita un tentativo.
+
+---
+
 ## Il caso più frequente, e come si riconosce subito
 
 **Un enunciato aperto che cade a una tattica banale non è un problema risolto.

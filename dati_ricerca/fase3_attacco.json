@@ -129,5 +129,39 @@
   "valido": true,
   "gradini_riusciti": 0,
   "secondi": 572.8
+ },
+ {
+  "cella": "A(17,6,7)",
+  "pubblicato": 166,
+  "superiore": 206,
+  "fonte": "GPo",
+  "candidate": 19448,
+  "invariante": 119,
+  "gruppo": "Z17",
+  "raggiunto": 166,
+  "valido": true,
+  "gradini_riusciti": 47,
+  "secondi": 281.3
+ },
+ {
+  "cella": "A(20,6,5)",
+  "pubblicato": 90,
+  "superiore": 100,
+  "fonte": "BSSS",
+  "candidate": 15504,
+  "invariante": 84,
+  "gruppo": "Z20",
+  "raggiunto": 84,
+  "valido": true,
+  "gradini_riusciti": 0,
+  "secondi": 1817.2
+ },
+ {
+  "cella": "A(29,6,5)",
+  "pubblicato": 315,
+  "superiore": 364,
+  "fonte": "BSSS",
+  "candidate": 118755,
+  "saltata": "matrice da 1.8 GB"
  }
 ]

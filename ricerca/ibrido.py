@@ -45,8 +45,15 @@ def indice_parole(tutte: np.ndarray) -> dict[int, int]:
 
 
 def miglior_invariante(n: int, d: int, w: int, *, riavvii: int = 300,
-                       massimo_orbite: int = 40_000) -> tuple[list[int], str]:
-    """Il miglior codice invariante sotto uno dei gruppi del repertorio."""
+                       massimo_orbite: int = 4_000) -> tuple[list[int], str]:
+    """Il miglior codice invariante sotto uno dei gruppi del repertorio.
+
+    Il tetto sulle orbite e' 4.000 e non 40.000 per una ragione misurata: la
+    ricerca di clique costa circa m^2 per completamento, quindi con 27.000 orbite
+    (il caso di `blocchi9x3` su A(27,8,5), gruppo di ordine 3) un solo riavvio e'
+    mezzo miliardo di operazioni e la funzione non ritorna piu'. E i gruppi piccoli
+    non servono: tutto il vantaggio del metodo sta nell'avere POCHE orbite grandi.
+    """
     from math import comb
     from cerca import clique_pesata
     migliore: list[int] = []
