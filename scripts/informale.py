@@ -238,6 +238,7 @@ def main() -> int:
             if fiducia.startswith(("PARTIAL", "NO-PROOF", "NO PROOF")):
                 voce["recensione"] = None
                 voce["verdetto"] = "(non arbitrato: l'autore non rivendica una prova)"
+                voce["difetto"] = ""
                 print("  revisore: salta, l'autore non rivendica una prova")
             else:
                 recensione, _ = una_chiamata(
@@ -246,9 +247,9 @@ def main() -> int:
                     args.effort)
                 voce["recensione"] = recensione
                 voce["verdetto"] = estrai(recensione, "VERDICT")
-            voce["difetto"] = estrai(recensione, "THE PROBLEM")
-            print(f"  revisore: {voce['verdetto'] or '(non dichiarato)'}")
-            print(f"            difetto: {voce['difetto'][:100]}")
+                voce["difetto"] = estrai(recensione, "THE PROBLEM")
+                print(f"  revisore: {voce['verdetto'] or '(non dichiarato)'}")
+                print(f"            difetto: {voce['difetto'][:100]}")
         except LimiteSpesaSuperato as e:
             voce["errore"] = str(e)
             print(f"  !! {e}")

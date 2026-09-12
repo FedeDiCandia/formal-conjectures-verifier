@@ -64,6 +64,49 @@ che abbiamo trovato: **l'agente non consegnava niente perché non c'era niente d
 consegnare.** Quei problemi sono aperti perché si riducono ad altri problemi
 aperti.
 
+### Due conclusioni ferme, da non riaprire
+
+**1. La strada C è chiusa. Non si spendono $200 sul residuo di Epoch AI.**
+
+L'idea era comprare quattro tentativi da $50 sulle 322 congetture OEIS che Epoch ha
+lasciato irrisolte, con Opus 5 che loro non hanno mai provato, contando sul loro
+dato misurato (un modello nuovo recupera il 27,7–33,8% dei fallimenti precedenti).
+
+La fase D ha chiuso la questione **prima** di spendere. Togliendo Lean di mezzo e
+chiedendo solo matematica, il modello ha mostrato che cosa sono davvero quei
+problemi: `OeisA108569` è aperto perché **implica un caso del problema del totiente
+di Lehmer**, che è aperto dal 1932. Non è un problema che aspetta un tentativo
+migliore: è un problema che aspetta una svolta in teoria dei numeri.
+
+Con $200 avremmo comprato **altri tentativi su problemi della stessa natura.** Il
+«due candidati su 139 chiamate» non misurava la nostra macchina: misurava quei
+problemi. Chiuso.
+
+**2. Sull'effort: su questo compito l'effort alto non funziona. Vale per tutte le
+strade, non solo per la fase D.**
+
+Misurato sullo stesso problema, con lo stesso ingresso:
+
+| effort | tetto | token in uscita | di cui ragionamento | risposta | costo |
+|---|---|---|---|---|---|
+| `high` | 32.000 | 32.000 | **32.000** | **nessuna** | $0,81 |
+| `medium` | 24.000 | 24.000 | **24.000** | **nessuna** | $0,61 |
+| **`low`** | 24.000 | 20.402 | 16.353 | **7.066 caratteri di matematica vera** | $0,52 |
+
+A effort alto il modello **esaurisce tutto lo spazio ragionando e non conclude**: si
+paga il massimo e si riceve una pagina bianca. A effort basso conclude, e conclude
+bene — la riduzione a Lehmer, cinque risultati parziali rigorosi, e la dichiarazione
+onesta di non poter dimostrare l'enunciato.
+
+Non è un risparmio: **è l'unico dei tre che produce qualcosa.** Non si può nemmeno
+aggirare fissando un bilancio di ragionamento: su questo modello l'API risponde che
+`thinking.type.enabled` non è supportato e che si deve usare `adaptive` con
+`output_config.effort`. Quindi l'unica leva è l'effort, e il valore giusto per
+questo tipo di compito è **`low`**.
+
+Da qui in avanti, qualunque strada: si parte da effort basso, e si sale solo se si
+è misurato che serve.
+
 ### La sonda degli artefatti: 1188 enunciati, zero ritrovamenti — ed è un risultato
 
 La caccia alle **formalizzazioni sbagliate** è finita, con la sonda corretta a
