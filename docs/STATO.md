@@ -64,6 +64,17 @@ che abbiamo trovato: **l'agente non consegnava niente perché non c'era niente d
 consegnare.** Quei problemi sono aperti perché si riducono ad altri problemi
 aperti.
 
+### In corso: D(27,5,2), cioè A(27,8,5) — 31 o 32?
+
+Il bersaglio più vicino a un risultato vero, e l'unico con un nome: il numero di
+pacchetto con λ = 1, elencato da Yin & Assaf (1998) fra le «possibili eccezioni» e
+ancora 31–32 nella tabella di Brouwer aggiornata ad agosto 2026. Il passo 0 applicato
+a questo bersaglio, la correzione di una citazione presa dal problema sbagliato (λ = 2)
+e la verifica del blocco fissato sono in [docs/11-bersaglio-D27.md](11-bersaglio-D27.md).
+Girano tre formulazioni — ILP minimo, ILP con acceleratore, SAT scritto da zero — con
+limite di quattro ore ciascuna. **Qualunque esito: niente annunci, docs/04 per intero,
+confronto fra le formulazioni.**
+
 ### LA LEZIONE PIÙ IMPORTANTE DEL PROGETTO: il criterio di selezione era rovesciato
 
 Se di tutto questo repository resta una sola frase, è questa.

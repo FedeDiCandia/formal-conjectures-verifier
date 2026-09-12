@@ -490,5 +490,173 @@
     "dimensione": 290
    }
   }
+ },
+ {
+  "cella": "A(18,6,6)",
+  "pubblicato": 133,
+  "superiore": 186,
+  "fonte": "R",
+  "nostro": 129,
+  "gruppo": "blocchi6x3",
+  "candidate": 18564,
+  "secondi": 24793.5,
+  "per_gruppo": {
+   "Z18": {
+    "orbite": 681,
+    "ordine": 18,
+    "dimensione": 117
+   },
+   "Z18:6": {
+    "orbite": 3,
+    "ordine": 108,
+    "dimensione": 15
+   },
+   "Z18:3": {
+    "orbite": 51,
+    "ordine": 54,
+    "dimensione": 69
+   },
+   "Z18:2": {
+    "orbite": 21,
+    "ordine": 36,
+    "dimensione": 60
+   },
+   "blocchi2x9": {
+    "orbite": 1805,
+    "ordine": 9,
+    "dimensione": 111
+   },
+   "blocchi3x6": {
+    "orbite": 2412,
+    "ordine": 6,
+    "dimensione": 116
+   },
+   "blocchi6x3": {
+    "orbite": 5838,
+    "ordine": 3,
+    "dimensione": 129
+   }
+  }
+ },
+ {
+  "cella": "A(19,6,6)",
+  "pubblicato": 172,
+  "superiore": 228,
+  "fonte": "BSSS",
+  "nostro": 171,
+  "gruppo": "Z19:18",
+  "candidate": 27132,
+  "secondi": 36.1,
+  "per_gruppo": {
+   "Z19": {
+    "orbite": 1176,
+    "ordine": 19,
+    "dimensione": 133
+   },
+   "Z19:18": {
+    "orbite": 2,
+    "ordine": 342,
+    "dimensione": 171
+   },
+   "Z19:9": {
+    "orbite": 5,
+    "ordine": 171,
+    "dimensione": 171
+   },
+   "Z19:3": {
+    "orbite": 60,
+    "ordine": 57,
+    "dimensione": 171
+   },
+   "Z19:6": {
+    "orbite": 9,
+    "ordine": 114,
+    "dimensione": 171
+   },
+   "Z19:2": {
+    "orbite": 33,
+    "ordine": 38,
+    "dimensione": 171
+   }
+  }
+ },
+ {
+  "cella": "A(21,6,5)",
+  "pubblicato": 110,
+  "superiore": 126,
+  "fonte": "Bo",
+  "nostro": 105,
+  "gruppo": "Z21",
+  "candidate": 20349,
+  "secondi": 32437.2,
+  "per_gruppo": {
+   "Z21": {
+    "orbite": 663,
+    "ordine": 21,
+    "dimensione": 105
+   },
+   "Z21:6": {
+    "orbite": 3,
+    "ordine": 126,
+    "dimensione": 63
+   },
+   "Z21:3": {
+    "orbite": 15,
+    "ordine": 63,
+    "dimensione": 84
+   },
+   "Z21:2": {
+    "orbite": 41,
+    "ordine": 42,
+    "dimensione": 84
+   },
+   "blocchi3x7": {
+    "orbite": 2646,
+    "ordine": 7,
+    "dimensione": 98
+   },
+   "blocchi7x3": {
+    "orbite": 6426,
+    "ordine": 3,
+    "dimensione": 93
+   }
+  }
+ },
+ {
+  "cella": "A(17,6,8)",
+  "pubblicato": 184,
+  "superiore": 259,
+  "fonte": "BSSS",
+  "nostro": 136,
+  "gruppo": "Z17",
+  "candidate": 24310,
+  "secondi": 47.7,
+  "per_gruppo": {
+   "Z17": {
+    "orbite": 1222,
+    "ordine": 17,
+    "dimensione": 136
+   },
+   "Z17:8": {
+    "orbite": 10,
+    "ordine": 136,
+    "dimensione": 136
+   },
+   "Z17:16": {
+    "orbite": 3,
+    "ordine": 272,
+    "dimensione": 136
+   },
+   "Z17:4": {
+    "orbite": 18,
+    "ordine": 68,
+    "dimensione": 136
+   },
+   "Z17:2": {
+    "orbite": 54,
+    "ordine": 34,
+    "dimensione": 136
+   }
+  }
  }
 ]

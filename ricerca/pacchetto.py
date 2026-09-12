@@ -10,9 +10,14 @@ in al massimo un blocco).
 
   * limite di Johnson/Schönheim: ⌊27/5 · ⌊26/4⌋⌋ = ⌊27·6/5⌋ = **32**
   * tabella di Brouwer: **31 ≤ D ≤ 32**
-  * letteratura dei disegni: per v ≡ 7, 11, 15 (mod 20) si ha P(5,v) = J(5,v), «con
-    possibili eccezioni v ∈ {27, 47, 51, 67, 87, 135, 187, 231, 251, 291}» — e
-    27 ≡ 7 (mod 20). **v = 27 è elencato per nome come caso non deciso.**
+  * letteratura dei disegni, λ = 1: Yin & Assaf, *Constructions of optimal packing
+    designs*, J. Combin. Designs 6 (1998) 245–260: il numero di pacchetto è
+    ⌊v⌊(v−1)/4⌋/5⌋ per v ≡ 7, 11, 15 (mod 20), tranne v = 11, 15 e **forse**
+    v ∈ {27, 47, 51, 67, 87, 135, 187, 231, 251, 291}. Letto **di seconda mano**,
+    nella trascrizione che Brouwer tiene nei commenti della sua pagina.
+    ATTENZIONE: v = 27 è «possibile eccezione» anche in due problemi DIVERSI — i
+    packing con λ = 2 e i packing *diretti* con λ = 1 — e il primo risultato di
+    ricerca era proprio quello con λ = 2. Vedi docs/11-bersaglio-D27.md.
 
 Quindi la domanda «32 o 31?» è una domanda aperta con un nome, e **una risposta
 qualunque delle due la chiude.**
@@ -95,8 +100,19 @@ def coppie_usate() -> set[tuple[int, int]]:
     return usate
 
 
-def risolvi(*, blocchi_da_trovare: int = 26, secondi: float = 3600.0,
-            silenzio: bool = False) -> dict:
+def risolvi(*, blocchi_da_trovare: int | None = 26, secondi: float = 3600.0,
+            silenzio: bool = False, vincoli_da_32: bool = True) -> dict:
+    """`blocchi_da_trovare=None` massimizza invece di chiedere una soglia.
+
+    Massimizzare e' la formulazione che chiude la cella in entrambi i sensi: se il
+    massimo e' 26 allora D(27,5,2) = 32, se e' 25 allora nessun pacchetto di 32 esiste
+    in forma canonica -- e poiche' ogni pacchetto di 32 si porta in forma canonica,
+    non esiste affatto, e D(27,5,2) = 31.
+
+    `vincoli_da_32=False` toglie i due vincoli dedotti dal conteggio per 32 blocchi
+    (grado(25)+grado(26) >= 10 e il blocco fissato), che **non valgono** per pacchetti
+    piu' piccoli: serve per collaudare il modello su un pacchetto di 31.
+    """
     cand = candidati()
     usate = coppie_usate()
     # nessun candidato puo' contenere una coppia gia' usata: per costruzione
@@ -149,33 +165,33 @@ def risolvi(*, blocchi_da_trovare: int = 26, secondi: float = 3600.0,
     #     grado(25) + grado(26) = B + 2C >= 10
     #
     # (e <= 12 per i limiti di grado). E' un vincolo che l'LP non deduce da sola.
-    liberi_in = np.array([sum(1 for x in LIBERI if x in B) for B in cand],
-                         dtype=np.float64)
-    nz = np.flatnonzero(liberi_in)
-    h.addRow(10.0, 12.0, len(nz), nz.astype(np.int32), liberi_in[nz])
+    if vincoli_da_32:
+        liberi_in = np.array([sum(1 for x in LIBERI if x in B) for B in cand],
+                             dtype=np.float64)
+        nz = np.flatnonzero(liberi_in)
+        h.addRow(10.0, 12.0, len(nz), nz.astype(np.int32), liberi_in[nz])
 
     # Il blocco che contiene entrambi i punti liberi e' al massimo uno, ed e' gia'
     # imposto dal vincolo sulla coppia (25,26). Quindi C <= 1 e B >= 8: il punto 25 sta
     # in almeno 4 blocchi, e almeno 3 di essi hanno quattro punti di gruppo. A meno di
     # permutare i sei gruppi e i punti dentro ciascuno, uno di quei tre e'
     # {25, 1, 5, 9, 13}: lo si puo' fissare senza perdere generalita'.
-    fissabile = (1, 5, 9, 13, 25)
-    try:
-        jf = cand.index(tuple(sorted(fissabile)))
-    except ValueError:
-        jf = None
-    if jf is not None:
-        h.changeColBounds(jf, 1.0, 1.0)
+    if vincoli_da_32:
+        fissabile = tuple(sorted((1, 5, 9, 13, 25)))
+        if fissabile in cand:
+            h.changeColBounds(cand.index(fissabile), 1.0, 1.0)
 
     # chiediamo esattamente quanti ne mancano: "esiste?" e' molto piu' facile di
     # "qual e' il massimo?"
-    h.addRow(float(blocchi_da_trovare), inf, len(idx), idx, np.ones(len(idx)))
+    if blocchi_da_trovare is not None:
+        h.addRow(float(blocchi_da_trovare), inf, len(idx), idx, np.ones(len(idx)))
     h.run()
     stato = h.modelStatusToString(h.getModelStatus())
     z = np.array(h.getSolution().col_value)
     scelti = [cand[j] for j in range(len(cand)) if z[j] > 0.5]
     return {"candidati": len(cand), "vincoli_coppia": len(righe),
             "stato": stato, "trovati": len(scelti),
+            "limite_superiore": round(-h.getInfo().mip_dual_bound, 3),
             "blocchi": FISSI + scelti if scelti else [],
             "totale": len(FISSI) + len(scelti)}
 

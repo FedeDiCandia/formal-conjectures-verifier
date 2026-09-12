@@ -145,6 +145,15 @@ da segnalare all'archivio — ma non è la soluzione di un problema aperto.
 
 ## Passo 3 — Ricerca dello stato del problema
 
+> **Prima di usare un risultato citato, controlla che riguardi IL NOSTRO parametro.**
+> *Aggiunto il 12 settembre 2026.* Su D(27,5,2) il valore v = 27 compare come
+> «possibile eccezione» in tre problemi diversi — packing con λ = 2, packing diretti
+> con λ = 1, packing ordinari con λ = 1 — e solo l'ultimo è il nostro. Il primo
+> risultato di ricerca era quello con λ = 2. Una citazione senza fonte primaria
+> identificata, con i suoi parametri controllati uno per uno (λ, t, diretto o no,
+> k), non vale come prova di niente.
+
+
 **Cosa fare:** cercare online (solo lettura) il problema per nome e per numero,
 e stabilire:
 

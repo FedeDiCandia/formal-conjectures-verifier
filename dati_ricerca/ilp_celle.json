@@ -1,0 +1,62 @@
+[
+ {
+  "cella": "A(18,6,5)",
+  "soglia": 69,
+  "che": "pareggio",
+  "stato": "Time limit reached",
+  "dimensione": 0,
+  "limite_lp": 81.0,
+  "valido": false,
+  "parole": []
+ },
+ {
+  "cella": "A(18,6,5)",
+  "soglia": 70,
+  "che": "RECORD",
+  "stato": "Time limit reached",
+  "dimensione": 0,
+  "limite_lp": 81.0,
+  "valido": false,
+  "parole": []
+ },
+ {
+  "cella": "A(19,6,5)",
+  "soglia": 76,
+  "che": "pareggio",
+  "stato": "Time limit reached",
+  "dimensione": 0,
+  "limite_lp": 96.0,
+  "valido": false,
+  "parole": []
+ },
+ {
+  "cella": "A(19,6,5)",
+  "soglia": 77,
+  "che": "RECORD",
+  "stato": "Time limit reached",
+  "dimensione": 0,
+  "limite_lp": 96.0,
+  "valido": false,
+  "parole": []
+ },
+ {
+  "cella": "A(17,6,6)",
+  "soglia": 113,
+  "che": "pareggio",
+  "stato": "Time limit reached",
+  "dimensione": 0,
+  "limite_lp": 689.0,
+  "valido": false,
+  "parole": []
+ },
+ {
+  "cella": "A(17,6,6)",
+  "soglia": 114,
+  "che": "RECORD",
+  "stato": "Time limit reached",
+  "dimensione": 0,
+  "limite_lp": 689.0,
+  "valido": false,
+  "parole": []
+ }
+]
