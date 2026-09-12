@@ -7,6 +7,39 @@ risolto**, verificato da qualcosa che non sia il nostro giudizio. Tutto il resto
 
 ---
 
+## 0. Che cosa vuol dire «risolvere», per la strada A
+
+**Va messo per scritto e resta scritto, perché è la differenza fra un risultato
+vero e un risultato malinteso.**
+
+La strada scelta non chiude una congettura. Non produce un teorema, non dimostra
+che qualcosa è vero per ogni *n*, non risponde a una domanda che qualcuno ha posto
+come domanda. Produce **un oggetto che batte un record pubblicato**: un codice con
+più parole di quelle che si sapevano costruire, una matrice con determinante più
+grande, un cammino più lungo. Il valore esatto resta ignoto anche dopo: si è solo
+spostato in alto il limite inferiore, e il limite superiore resta dov'era.
+
+In pratica, la differenza fra le due cose:
+
+|  | chiudere una congettura | migliorare un limite (strada A) |
+|---|---|---|
+| che cosa si produce | una dimostrazione | un oggetto finito |
+| che cosa resta dopo | la domanda è chiusa per sempre | la domanda è ancora aperta, il divario è più stretto |
+| chi verifica | un referee, o un dimostratore formale | un programma di venti righe, e chiunque può rifarlo |
+| come si chiama | teorema | record |
+| si può sbagliare in silenzio | sì, ed è la norma | no: l'oggetto c'è o non c'è |
+
+**È un risultato vero.** Le tabelle di questi limiti sono mantenute, citate e
+usate; un miglioramento è pubblicabile, e a volte è stato pubblicato da
+dilettanti. Ma se l'obiettivo è «risolvere un problema aperto» nel senso in cui lo
+intenderebbe un matematico — *questa congettura è vera* — **la strada A non ci
+arriva, e nessuna delle strade disponibili ci arriva con questi mezzi.** La strada
+A è la cosa migliore raggiungibile, non la cosa chiesta. Tenerlo presente evita
+l'errore che ho già visto in questo progetto cinque volte: chiamare «trovato»
+qualcosa che era un'altra cosa.
+
+---
+
 ## 1. Diagnosi: perché non ci siamo riusciti
 
 ### Il fatto da spiegare
@@ -91,26 +124,74 @@ su un oggetto finito: mezz'ora di programma, nessuna formalizzazione.
   riproducono quelli **noti**. Se in due settimane non riusciamo a ritrovare i
   record pubblicati per 5–10 quantità, la strada è chiusa e lo sappiamo gratis.
 
-### B. Istanze aperte di uno sforzo collettivo: bbchallenge
+### B. Istanze aperte di uno sforzo collettivo: bbchallenge *(approfondita)*
 
-Il Busy Beaver Challenge ha determinato **BB(5) nel 2024** con una dimostrazione
-in Rocq, in gran parte per mano di dilettanti. BB(6) è aperto e restano
-**~1100 macchine di Turing «holdout»**: per ognuna, «questa macchina si ferma?» è
-una domanda aperta, concreta e verificabile formalmente.
+Il Busy Beaver Challenge ha determinato **BB(5) = 47.176.870 nel 2024**, con una
+dimostrazione in Rocq (ex Coq), in gran parte per mano di dilettanti coordinati su
+un forum. BB(6) è aperto. Lì ci sono **i due pezzi che a noi mancano**: una
+comunità che sa valutare, e una verifica meccanica di terza parte.
 
-- **Sfrutta:** un'offerta enorme di problemi aperti *indipendenti*, una comunità
-  che aiuta, e una verifica di terza parte (Rocq) che non richiede il nostro
-  giudizio né il nostro verificatore.
-- **Costo:** zero dollari. Molto tempo mio e di macchina.
-- **Probabilità: 10–20%** di decidere almeno un holdout con prova accettata.
-  Bassa perché quelle rimaste sono il residuo duro dopo anni di lavoro di persone
-  competenti con strumenti migliori dei nostri; alcune (i «Cryptid» come
-  Antihydra) sono equivalenti a problemi tipo Collatz.
-- **Come sappiamo presto:** si prende un decider noto, lo si reimplementa e si
-  controlla che decida le macchine che dovrebbe. Se non riusciamo a riprodurre
-  risultati già ottenuti, non decideremo un holdout.
-- **Richiede:** partecipare a Discord/GitHub, cioè uscire dal silenzio. È una
-  decisione tua.
+**Lo stato, ad agosto 2026.** La lista informale di «holdout» di @mxdys conta
+**1003 macchine a meno di equivalenza** (2190 senza quozientare), per un conteggio
+informale di **1101**. Tutte simulate fino a 10¹³ passi; ne restano ~150 da portare
+a 10¹⁴ e ~230 a 10¹⁵. Per ognuna, «questa macchina si ferma?» è una domanda aperta,
+concreta, indipendente dalle altre, e verificabile formalmente.
+
+**Che cosa serve concretamente per contribuire.** Il sito lo dice in quattro passi,
+e nessuno dei quattro richiede di essere matematico:
+
+1. leggere la loro dichiarazione su riproducibilità e verificabilità;
+2. scrivere un **decider** — un programma che decide se una classe di macchine si
+   ferma — e **testarlo contro macchine di esempio e di controesempio**, cioè con
+   una suite di regressione (esattamente la disciplina che abbiamo già);
+3. aprire un post sul forum (`discuss.bbchallenge.org`, sezione deciders) con gli
+   **indici nel seed database** delle macchine decise;
+4. per una singola macchina difficile, un post dedicato nella sezione
+   `individual-machines` con l'ID nel titolo.
+
+Il codice può essere in **qualunque linguaggio** — ci sono oltre venti repository
+indipendenti di deciders in C, C++, Go, Rust, Haskell, Coq, Dafny, Lean e Python.
+Una **dimostrazione formale in Lean o Coq è incoraggiata ma non obbligatoria**;
+loro stessi la definiscono «un'impresa estremamente esigente».
+
+**Si può cominciare senza pubblicare niente? Sì, completamente.** Lo sviluppo di un
+decider è lavoro offline: si scarica il seed database, si scrive il programma, si
+gira sulle macchine di test, si confronta il risultato con quello dei deciders già
+pubblicati. Si pubblica solo quando si ha qualcosa, e la pubblicazione è un post su
+un forum tecnico, non un annuncio. **Non c'è nessun passo che richieda la tua
+firma o la tua identità prima di avere un risultato.** E c'è una terza sezione del
+forum, `results-reproduction`, dove riprodurre risultati altrui è *esplicitamente*
+un contributo accettato: è il modo di entrare senza dover prima vincere niente.
+
+**Si può lavorare in parallelo ad A senza rallentarla? Sì, ed è il motivo per cui
+la tengo.** Le due strade non competono per nessuna risorsa:
+
+| risorsa | strada A | strada B |
+|---|---|---|
+| denaro API | $5–20 | **zero** |
+| CPU del Mac | notti, saturata | minuti per decider; la simulazione lunga è già fatta da loro |
+| il mio tempo di sessione | scrivere e mutare euristiche | scrivere un decider e la sua suite |
+| la tua attenzione | nessuna finché non cade un record | una decisione: se e quando pubblicare |
+
+L'unico conflitto reale è il **mio** tempo di sessione, ed è un conflitto vero: non
+posso fare bene due cose insieme. Quindi la metto in questa forma: **B parte solo
+quando A ha superato o mancato il suo primo punto di verifica.** Se A supera, B
+resta in panchina; se A fallisce, B è già istruita e pronta, e non abbiamo perso
+due settimane a decidere cosa fare.
+
+**Probabilità: 10–20%** di decidere almeno un holdout con prova accettata. Bassa e
+lo resta: quelle 1101 macchine sono il residuo duro dopo anni di lavoro di persone
+competenti, con strumenti migliori dei nostri e un database già simulato a 10¹³
+passi. Alcune — i «Cryptid», come Antihydra — sono equivalenti a problemi tipo
+Collatz, cioè fuori portata per principio. Ma il **valore per contributo** è alto
+anche quando non si decide niente: riprodurre un risultato è accettato, e la
+verifica è di terza parte, quindi per la prima volta in questo progetto **non
+saremmo noi a giudicare noi stessi.**
+
+**Come sappiamo presto che non funziona:** si prende un decider già pubblicato, si
+reimplementa da zero, e si controlla che decida esattamente le macchine che
+dovrebbe. Due settimane. Se non riusciamo a riprodurre un risultato già ottenuto,
+non decideremo un holdout — e lo sappiamo a costo zero.
 
 ### C. Il residuo irrisolto di Epoch AI, con un modello che loro non hanno provato
 
@@ -226,6 +307,47 @@ noi riproduciamo il record pubblicato.
   5 quantità su 8, la strada è chiusa. Costo del fallimento: $5 e due settimane
   di macchina.
 
+#### La lista di fase 1, con la provenienza di ogni record
+
+Questa è la parte più importante della fase 1, e viene dalla tua osservazione:
+AlphaEvolve girava sull'hardware di Google, noi abbiamo 12 core. Quindi la
+selezione non si fa per «quanto è bello il problema», si fa per **chi ha fatto il
+record attuale e con che cosa**. Ho cercato la provenienza di ognuno.
+
+**TENIAMO** — record ottenuti con euristiche semplici, su hardware alla nostra
+portata, e verificabili in modo esatto con aritmetica intera:
+
+| quantità | record attuale: metodo e hardware | verifica | perché è alla nostra portata |
+|---|---|---|---|
+| **codici binari a peso costante** A(n,d,w) — tabelle di Brouwer, n≤64, d=4…18 | i limiti del 1990 di Brouwer–Shearer–Sloane–Smith sono ancora in tabella, e **i listati dei codici sono andati perduti**; i miglioramenti recenti vengono da *tabu search a livello di scambi di bit* e da euristiche greedy (24 celle migliorate nel 2026 così); il 2019 di Braun–Humpich–Laaksonen–Östergård usa gruppi di automorfismi | banale ed esatta: distanza di Hamming a coppie, aritmetica intera | centinaia di celle con divario fra limite inferiore e superiore, molte ferme da decenni; nessun cluster dietro |
+| **codici binari generali** A(n,d) — stessa fonte, n=6…28, d=4…16 | attribuzioni dal **1978** al 2019; una trentina di celle con divario aperto (per es. A(17,4) fra 2816 e 3276) | identica alla precedente | frontiera vecchia, tabella piccola e precisa, ogni cella è un bersaglio nominato |
+| **codici di copertura** K(n,R) — tabelle di Kéri | tabelle **aggiornate per ultimo fra il 2008 e il 2011**; record storicamente da tabu search e annealing | esatta: ogni parola dista ≤ R da almeno un codeword (2ⁿ controlli, fattibile per n≲22) | otto anni di immobilità significano hardware di due generazioni fa |
+| **array di copertura** CAN(t,k,v) — tabelle di Colbourn | *simulated annealing*, tabu search, post-ottimizzazione randomizzata; un singolo lavoro ha prodotto **579 nuovi limiti superiori** con annealing a due stadi | esatta: si enumerano le t-uple di colonne e i vᵗ valori | tabella enorme, metodi semplici, nessuna barriera di compute |
+| **determinante massimo** di matrici ±1 | record di Orrick–Solomon del **2003–2005**, con ricerca euristica; restano aperti gli ordini 29, 33, 45, 49 (i soli con n≡1 mod 4 sotto 50) | esatta: determinante intero senza frazioni (Bareiss) | hardware di vent'anni fa. **Attenzione:** il sito `indiana.edu/~maxdet` non risponde più — bisogna recuperare la tabella dal survey del 2021 o da archive.org |
+| **snake-in-the-box / coil-in-the-box** | limiti inferiori da *algoritmi genetici* («Mitosis GA») e da una ricerca **Monte Carlo** che gli autori descrivono come «considerevolmente più rapida e senza taratura»; un censimento del 2026 ha rinfrescato le dimensioni 9–13 | esatta: si controlla che il cammino sia indotto nell'ipercubo | metodi che girano su una macchina sola. Rischio: la frontiera è stata appena toccata |
+
+**SCARTIAMO SUBITO**, con la ragione precisa:
+
+| quantità | perché la scartiamo |
+|---|---|
+| **numeri di van der Waerden**, limiti inferiori | il record di Monroe viene da **calcolo distribuito: 2 teraflops per 12 mesi**, primi esauriti fino a 950 milioni. Non è una gara che possiamo fare |
+| **no-three-in-line** | frontiera **in movimento adesso**: n=72 trovato da Marijn Heule il 25 giugno 2026, n=74 da Thomas Prellberg il 20 luglio 2026. Heule è l'autore delle dimostrazioni SAT più grandi mai fatte. Competere qui è la definizione di spreco |
+| **numeri di Schur** | S(5)=160 stabilito da Heule con SAT massivamente parallelo: **oltre 14 anni-CPU** e una dimostrazione di **2 petabyte** |
+| **righelli di Golomb ottimali** | OGR-28 chiuso da distributed.net dopo **otto anni e mezzo** di rete di volontari |
+| **cap set, e i numeri di Ramsey in cima alla tabella** | presi da AlphaEvolve e FunSearch, sull'infrastruttura di Google. I limiti inferiori di Ramsey *classici* restano invece da annealing e tabu su grafi circolanti (Exoo, Harborth–Krause): li teniamo **come osservazione, non come bersaglio**, perché cinque sono appena caduti e il resto è il residuo |
+| **triangolo di Heilbronn** | doppio problema: la frontiera attuale usa **MINLP con solutori industriali** (Gurobi), e la verifica richiede aritmetica reale certificata, non interi. Da notare però che i record per n=13…16 sono di **dilettanti** (Karpov, Beyleveld): il precedente esiste, è la verifica che non ci conviene |
+
+**Una precisazione onesta su «solutori industriali».** Il criterio che mi hai dato
+è «scarta dove la frontiera è stata spinta con cluster o con SAT industriale», e
+l'ho applicato. Ma va distinto un caso: il lavoro del 2026 che ha alzato
+A(23,6,10) e A(24,6,10) usa **CHILS**, un risolutore per insieme indipendente di
+peso massimo — che però gira **su una macchina sola ed è libero**. Quel tipo di
+strumento non è una barriera per noi: è un'arma che possiamo prendere anche noi, e
+sui nostri 12 core. La barriera vera è il **calcolo distribuito su anni** (van der
+Waerden, Golomb) e la **gara con chi ha già l'infrastruttura** (no-three-in-line,
+cap set). La distinzione è: scartiamo dove il record costa anni-CPU, non dove
+costa un buon algoritmo.
+
 **Fase 2 — scegliere i bersagli con la frontiera più vecchia (gratis).**
 Fra quelli riprodotti, si tengono quelli dove il record è vecchio, ottenuto con
 euristiche semplici, o dove la tabella pubblicata ha buchi. È lo stesso lavoro di
@@ -311,12 +433,37 @@ parte va tenuta accesa.
 
 ---
 
-## 6. La domanda per te
+## 6. La decisione presa
 
-Il piano ha un solo punto che dipende da te: **la strada D (dimostrazioni
-informali) e la strada C (il residuo di Epoch) richiedono di ricaricare**, per
-$8 la prima e $200 la seconda. La strada principale, A, no: costa $5–20 in tutto.
+Federico ha approvato l'11 settembre 2026: **strada A come principale, strada D in
+parallelo, ricarica di $20.** Con le tre aggiunte che ha chiesto e che sono
+incorporate qui sopra:
 
-La mia raccomandazione: **ricarica $20 e fai A + D**, non $200 per C. La ragione è
-che A è la strada con la probabilità più alta e D risponde, per meno di dieci
-dollari, alla domanda che deciderà se C valga mai la pena.
+1. la selezione di fase 1 si fa **per provenienza del record** — hardware e metodo
+   dietro il limite attuale — e non per interesse del problema;
+2. che cosa significa «risolvere» per la strada A resta scritto in cima
+   ([sezione 0](#0-che-cosa-vuol-dire-risolvere-per-la-strada-a));
+3. la strada B è istruita in dettaglio e messa in panchina, pronta a partire al
+   primo punto di verifica di A.
+
+Il residuo di Epoch (strada C, $200) **non si fa adesso**: prima la strada D deve
+dire se il collo di bottiglia è Lean o è la matematica.
+
+---
+
+## Fonti
+
+Provenienza dei record e stato degli sforzi collettivi, consultati l'11 settembre
+2026:
+
+- Codici a peso costante, tabelle e attribuzioni: [aeb.win.tue.nl/codes/Andw.html](https://aeb.win.tue.nl/codes/Andw.html) · codici generali: [binary-1.html](https://aeb.win.tue.nl/codes/binary-1.html)
+- Miglioramenti recenti con tabu search: [arXiv:2603.00174](https://arxiv.org/abs/2603.00174) · con solutore MWIS su macchina singola: [arXiv:2607.19550](https://arxiv.org/abs/2607.19550)
+- Codici di copertura, tabelle di Kéri: [old.sztaki.hu/~keri/codes](http://old.sztaki.hu/~keri/codes/)
+- Determinante massimo, survey 2021: [arXiv:2104.06756](https://arxiv.org/abs/2104.06756)
+- Snake-in-the-box, censimento 2026: [arXiv:2607.15270](https://arxiv.org/abs/2607.15270)
+- van der Waerden con calcolo distribuito: [Monroe, JCMCC 128](https://combinatorialpress.com/jcmcc-articles/volume-128/new-lower-bounds-for-van-der-waerden-numbers-using-distributed-computing/)
+- No-three-in-line, record di giugno–luglio 2026: [wwwhomes.uni-bielefeld.de/achim/no3in](https://wwwhomes.uni-bielefeld.de/achim/no3in/readme.html)
+- Schur number five: [arXiv:1711.08076](https://arxiv.org/abs/1711.08076) · Golomb OGR-28: [distributed.net/OGR](https://www.distributed.net/OGR)
+- Ramsey piccoli, survey dinamico: [Radziszowski, DS1](https://www.combinatorics.org/files/Surveys/ds1/ds1v16-2021.pdf)
+- Heilbronn, certificazione e coordinate esatte: [arXiv:2603.11107](https://arxiv.org/html/2603.11107)
+- bbchallenge: [come contribuire](https://bbchallenge.org/contribute) · [stato di BB(6)](https://wiki.bbchallenge.org/wiki/BB(6)) · [BB(5) in Rocq](https://arxiv.org/pdf/2509.12337)
