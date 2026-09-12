@@ -787,3 +787,72 @@ di tutti ($0,06, 17 righe) è l'artefatto `C = 0`. Quindi su ~6 successi attesi
 nel primo giro, **ne aspetto 1 che sia un difetto di formalizzazione e non un
 risultato**, e ognuno dei sei passa dal protocollo della fase 7 prima di essere
 chiamato in qualunque modo.
+
+---
+
+## 11. Il giro 2 non è «più budget»: è **un altro modello**
+
+*Domanda di Federico: la selezione dei promossi alza davvero il tasso? Risposta
+misurata: no, e per una ragione che ribalta il disegno della scala.*
+
+### 11.1 Il criterio di promozione non discrimina
+
+Nei loro dati, dei 345 fallimenti del run da $50, **322 (il 93%) avevano
+consegnato un file con un `sorry`**: il verificatore dice
+«`floor_g_le_f` used disallowed axioms. #[..., sorry...]», cioè l'enunciato
+combaciava e la prova era incompleta. È esattamente il mio criterio di
+promozione, e lo soddisfa quasi tutto: non separa niente.
+
+Verifica diretta, sui 65 problemi del sottoinsieme `lite` che il run da $50 non
+ha risolto:
+
+| gruppo dopo il tentativo da $50 | n | poi risolti | tasso |
+|---|---|---|---|
+| arrivato al tetto + ha consegnato un `sorry` | 61 | 21 | **34,4%** |
+| arrivato al tetto + niente consegnato | 4 | 1 | 25,0% |
+| **tutti** | 65 | 22 | **33,8%** |
+
+34,4% contro 33,8%: **il segnale non porta informazione.**
+
+### 11.2 Quello che invece funziona: cambiare modello
+
+Domanda più precisa: lo **stesso** modello, con **quattro volte** il budget,
+recupera i suoi fallimenti?
+
+| chi riprova, sui 65 falliti a $50 | recuperati | tasso |
+|---|---|---|
+| Opus 4.8 a $200 | 4 | **6,2%** |
+| Opus 4.8 a $200, agente più elaborato | 4 | 6,2% |
+| Opus 4.8 a $200, con 476 000 articoli di arXiv | 4 | 6,2% |
+| **Fable 5.1** a $200 (modello diverso) | 18 | **27,7%** |
+| **GPT-6 astra** a $200 (modello diverso) | 22 | **33,8%** |
+
+Tutti **MISURATI**. Tre colonne identiche al 6,2% per lo stesso modello — più
+soldi, agente migliore, letteratura: non cambia niente. Un modello **diverso**
+recupera quattro o cinque volte tanto.
+
+Nessuno dei modelli nuovi ha **perso** un problema che il vecchio aveva risolto,
+quindi i tentativi si sommano invece di sostituirsi.
+
+### 11.3 La scala corretta
+
+| giro | chi | tetto | problemi | spesa | successi attesi |
+|---|---|---|---|---|---|
+| **0** | Fable 5.1 | $2 | 10 (lotto di prova) | $17 | 1,1 |
+| **1** | Fable 5.1 | $2 | i restanti 44 | $75 | 4,8 |
+| **2** | **Opus 5** (modello diverso) | $2 | i ~48 non risolti | $82 | ~2,8 |
+| | | | | **$174** | **~8,7** |
+
+Restano **$21 di riserva**, e la spesa è minore della scala precedente ($191)
+con un'attesa più alta (8,7 contro 8,2).
+
+Il numero del giro 2 (2,8) è **STIMATO** così: il recupero misurato di un
+modello diverso è 27,7%, ma a $200 per problema; a tetto $2 vale in proporzione
+quanto Fable 5.1 rende a $2 rispetto a $200 (22% contro 53%, cioè 0,42), quindi
+27,7% × 0,42 ≈ 11,6%, e poi lo sconto di trasferimento 0,5 porta a ~5,8% su 48
+problemi.
+
+**E una conseguenza per il futuro:** il modo più economico di migliorare i
+risultati non è spendere di più, è **aspettare il modello successivo**. Costa
+zero e, secondo i loro dati, rende quattro volte più del quadruplicare il
+budget.
