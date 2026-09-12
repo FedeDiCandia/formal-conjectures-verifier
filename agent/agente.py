@@ -195,6 +195,51 @@ patching it.
 is beyond you, say so plainly instead of submitting a proof you know is broken."""
 
 
+#: La variante «insistente» delle istruzioni.
+#:
+#: PERCHE' ESISTE. Nel primo giro sui problemi aperti l'agente ha fallito dieci
+#: volte su dieci nello stesso modo: esplorava, calcolava, concludeva di non
+#: farcela e si fermava — spendendo in media $0,23 di un tetto da $2 e senza
+#: consegnare NEMMENO UNA volta un candidato a `lean_check`. Le istruzioni
+#: attuali gliela offrono, quella via d'uscita: «se ti convinci che il problema
+#: e' oltre le tue forze, dillo chiaramente». Chi ha misurato il benchmark OEIS
+#: Open aveva invece agenti che arrivavano al tetto nel 70% dei casi.
+#:
+#: Questa variante toglie l'invito ad arrendersi e dice che il budget e' li' per
+#: essere consumato. Serve a rispondere a una domanda precisa: lo zero su dieci
+#: viene dalla difficolta' dei problemi o dal modo in cui l'agente si arrende?
+ISTRUZIONI_INSISTENTI = ISTRUZIONI.replace(
+    """- Stop when `lean_check` reports ACCETTATO. If you become convinced the problem \
+is beyond you, say so plainly instead of submitting a proof you know is broken.""",
+    """- **Stop only when `lean_check` reports ACCETTATO, or when your budget is \
+gone.** The per-problem budget exists to be spent: every tool result tells you \
+how much is left.
+- **When a route fails, change route — do not stop.** Prove a weaker statement \
+first and build on it. Prove a special case (a fixed small parameter, one \
+congruence class, one family) and state it as a lemma. Search by computation for \
+a counterexample. Look up a different corner of Mathlib. Try the negation.
+- **Deciding that a problem is beyond reach is not your call while budget \
+remains.** A helper lemma that compiles, or a special case proved, is worth more \
+than an early stop — and by the time half the budget is spent you should already \
+have sent at least one candidate to `lean_check`, even an imperfect one, because \
+its error messages are the most informative thing you can buy.
+- Never submit a proof you know is broken, and never claim to have proved \
+something you have not. But do not stop while you still have room to try another \
+route.""")
+
+
+def istruzioni_scelte(variante: str) -> str:
+    """Il testo di sistema, secondo la variante chiesta."""
+    if variante == "insistenti":
+        base = ISTRUZIONI_INSISTENTI
+    elif variante == "attuali":
+        base = ISTRUZIONI
+    else:
+        raise SystemExit(f"variante di istruzioni sconosciuta: {variante!r} "
+                         f"(sono 'attuali' e 'insistenti')")
+    return base.replace("{MODULO_UTILITA}", config_verificatore.modulo_utilita())
+
+
 def _natura_della_verifica(rapporto: str, accettato: bool) -> tuple[str, str]:
     """Ritorna (controllo fallito, natura), leggendo il rapporto di verify.py."""
     if accettato:
@@ -430,7 +475,7 @@ class _Doppio:
 def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
             budget: Budget, tetto_problema: float, max_iterazioni: int = 30,
             effort: str = "high", timeout_lean: int | None = None,
-            verboso: bool = True) -> Tentativo:
+            verboso: bool = True, variante_istruzioni: str = "attuali") -> Tentativo:
 
     avvio = time.time()
     t = Tentativo(problema=problema.theorem)
@@ -471,7 +516,7 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
         # Non basta guardare quanto si e' speso: bisogna sapere quanto puo'
         # costare la prossima chiamata. Il conteggio dei token e' esatto e
         # gratuito, quindi il costo massimo lo sappiamo in anticipo.
-        sistema = [{"type": "text", "text": istruzioni(),
+        sistema = [{"type": "text", "text": istruzioni_scelte(variante_istruzioni),
                     "cache_control": {"type": "ephemeral"}}]
         conteggio = client.messages.count_tokens(
             model=modello, system=sistema, tools=strumenti_api, messages=messaggi)
@@ -661,6 +706,11 @@ def main() -> int:
     ap.add_argument("--effort", default="high", choices=["low", "medium", "high", "xhigh", "max"])
     ap.add_argument("--timeout-lean", type=int, default=None)
     ap.add_argument("--rapporto", default=None, help="dove salvare il resoconto JSON")
+    ap.add_argument("--istruzioni", default="attuali",
+                    choices=["attuali", "insistenti"],
+                    help="quale variante del prompt di sistema usare. "
+                         "'insistenti' toglie l'invito ad arrendersi e dice che "
+                         "il budget e' da consumare (vedi ISTRUZIONI_INSISTENTI)")
     ap.add_argument("--registro", default=None,
                     help="dove scrivere il registro riga per riga (predefinito: "
                          "runs/lavori/agente-<data>.log). Serve per seguire il "
@@ -704,7 +754,8 @@ def main() -> int:
     budget = Budget(limite_dollari=args.budget, modello=args.modello)
     tetto = args.tetto_problema or (args.budget / len(elenco))
 
-    print(f"Modello: {args.modello} | effort: {args.effort}")
+    print(f"Modello: {args.modello} | effort: {args.effort} | "
+          f"istruzioni: {args.istruzioni}")
     print(f"Budget totale: ${args.budget:.2f}  (tetto per problema: ${tetto:.2f})")
     print(f"Problemi: {len(elenco)}")
 
@@ -715,7 +766,8 @@ def main() -> int:
             t = risolvi(p, indice, client=client, modello=args.modello, budget=budget,
                         tetto_problema=tetto, max_iterazioni=args.max_iterazioni,
                         effort=args.effort, timeout_lean=args.timeout_lean,
-                        verboso=not args.silenzioso)
+                        verboso=not args.silenzioso,
+                        variante_istruzioni=args.istruzioni)
         except LimiteSpesaSuperato as e:
             print(f"\n!! {e}")
             tentativi.append(Tentativo(problema=p.theorem, motivo=str(e)))
@@ -750,6 +802,8 @@ def main() -> int:
     if args.rapporto:
         Path(args.rapporto).write_text(json.dumps({
             "modello": args.modello, "effort": args.effort,
+            "istruzioni": args.istruzioni,
+            "tetto_problema": tetto,
             "budget": args.budget, "speso": budget.speso,
             "consumo_totale": budget.consumo.__dict__,
             "tentativi": [{
