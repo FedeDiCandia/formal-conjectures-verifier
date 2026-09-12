@@ -681,3 +681,109 @@ volte Opus 5, perché non c'è nessuna cache da rileggere e il vantaggio di Fabl
 sta tutto là: il divario si chiude quando la conversazione si allunga.
 
 **Spesa di questa prova: $0,0792.** Residuo: ~$194,8.
+
+---
+
+## 10. La scala: passaggi successivi sugli stessi 54 problemi
+
+*Progettata sui costi misurati del run `oeis-open-lite-fable51` (100 problemi,
+53 risolti): per ogni tetto ho contato quanti successi arrivano entro quel tetto
+e quanto si spende in tutto.*
+
+### 10.1 I due numeri che determinano la forma della scala
+
+**MISURATO** — quanti dei successi arrivano presto:
+
+| tetto | problemi risolti entro quel tetto | quota di TUTTI i successi | spesa media per tentativo |
+|---|---|---|---|
+| $0,50 | 12% | 23% | $0,47 |
+| **$2** | **22%** | **42%** | **$1,71** |
+| $5 | 29% | 55% | $3,93 |
+| $10 | 33% | 62% | $7,39 |
+| $25 | 41% | 77% | $16,71 |
+| $50 | 48% | 91% | $30,89 |
+| $200 | 53% | 100% | $103,01 |
+
+**MISURATO** — e quanto rende insistere su chi non è caduto subito:
+
+| si passa da | a | nuovi successi | tasso condizionato |
+|---|---|---|---|
+| $0 | $1 | 15 su 100 | 15,0% |
+| $1 | $2 | 7 su 85 | 8,2% |
+| $2 | $5 | 7 su 78 | 9,0% |
+| $5 | $10 | 4 su 71 | 5,6% |
+| $10 | $25 | 8 su 67 | 11,9% |
+| $25 | $50 | 7 su 59 | 11,9% |
+| $50 | $200 | 5 su 52 | 9,6% |
+
+Il tasso condizionato resta intorno al 10% a ogni fascia: **insistere rende
+sempre un po', e mai molto.** Per questo la scala deve selezionare: il valore
+non sta nell'insistere, sta nell'insistere *solo dove serve*.
+
+### 10.2 Il criterio di promozione, meccanico
+
+> **Passa al giro successivo il problema su cui l'agente ha consegnato almeno un
+> candidato che COMBACIA con l'enunciato e ha fallito sulla dimostrazione.**
+
+Nel rapporto dell'agente: fra le nature delle verifiche compare
+`errore_tecnico` o `buco_o_assioma`. Vuol dire che il modello ha capito che cosa
+dimostrare, ha scritto un file che il verificatore riconosce come «lo stesso
+teorema», e si è fermato sulla prova.
+
+Non passa chi ha solo `esplorazione` (non è mai arrivato a consegnare) o
+`enunciato_sbagliato` (non ha riprodotto l'enunciato): là il problema non è il
+budget. Lo applica `scripts/promossi.py`, e sulla calibrazione dà la divisione
+giusta: passa `JacobianConjecture` (un candidato consegnato, fallito sulla
+prova), non passa `GraphConjecture65` (zero candidati consegnati).
+
+### 10.3 La scala consigliata
+
+Ipotesi dichiarate: **sconto di trasferimento 0,5** (il nostro tasso è la metà
+del loro, STIMATO); **un terzo dei falliti viene promosso** (STIMATO, dalla
+calibrazione: 1 su 2); **il terzo promosso vale il doppio** (STIMATO).
+
+| giro | tetto | problemi | spesa | successi attesi |
+|---|---|---|---|---|
+| **0. lotto di prova** | $2 | 10 | **$17** | 1,1 |
+| **1. resto del primo giro** | $2 | 44 | **$75** | 4,8 |
+| **2. affondo sui promossi** | $10 | ~16 | **$99** | 2,3 |
+| **totale** | | | **$191** | **8,2** |
+
+Il giro 0 non è un giro in più: è il primo giro fermato dopo dieci problemi, per
+misurare lo sconto di trasferimento **prima** di spendere il resto. Costa $17 e
+risponde alla domanda che nessun dato esterno può risolvere.
+
+**Punti di verifica, dichiarati adesso:**
+
+- dopo il **giro 0**: se i dieci problemi danno **zero** successi e **zero**
+  promossi, si ferma tutto. Con lo sconto 0,5 ne attendiamo 1,1: zero su dieci
+  non è impossibile (probabilità ~31% se il tasso vero è 11%), ma insieme a zero
+  promossi vuol dire che l'agente non arriva nemmeno a consegnare, e allora il
+  problema è l'infrastruttura, non il budget;
+- dopo il **giro 1**: si ricalcola lo sconto sui 54 e si decide il tetto del
+  giro 2 con i numeri veri invece delle mie stime;
+- **riserva intoccabile: $4**, perché verificare un eventuale ritrovamento con
+  `verify.py` costa zero dollari ma formalizzarlo può costarne qualcuno.
+
+### 10.4 Perché non più giri
+
+Ho provato tutte le scale da uno a quattro giri con i tetti fra $0,50 e $75. La
+migliore a tre giri rende 7,65 successi attesi, quella a due 8,20. La ragione è
+nella prima tabella: **il primo giro da $2 cattura il 42% di tutti i successi
+possibili a qualunque prezzo.** Aggiungere gradini sposta poco e costa molto,
+perché ogni giro ricomincia da zero.
+
+Se invece il giro nuovo potesse **riprendere il lavoro** del precedente —
+passargli il candidato migliore e gli errori di Lean invece di ripartire da
+capo — la scala a due giri passerebbe da 7,65 a 8,20 successi attesi. È un
+miglioramento reale ma modesto: **non è una precondizione**, e non lo costruisco
+prima di aver misurato il giro 0.
+
+### 10.5 Di quei successi, quanti sarebbero veri
+
+Domanda giusta da farsi prima di festeggiare. Dei 22 successi sotto $2 nei loro
+dati, la mediana è **52 righe di Lean utili** — lavoro vero. Ma il più economico
+di tutti ($0,06, 17 righe) è l'artefatto `C = 0`. Quindi su ~6 successi attesi
+nel primo giro, **ne aspetto 1 che sia un difetto di formalizzazione e non un
+risultato**, e ognuno dei sei passa dal protocollo della fase 7 prima di essere
+chiamato in qualunque modo.
