@@ -48,9 +48,26 @@ from costi import Budget, LimiteSpesaSuperato, Consumo   # noqa: E402
 #: esteso ci rientra dentro; il controllo del budget lo riduce se serve.
 MAX_TOKENS = 32_000
 
-#: Sotto questa soglia una risposta non puo' essere utile: meglio fermarsi che
-#: pagare per un ragionamento troncato a metа.
-MIN_TOKENS_UTILI = 6_000
+#: Sotto questa soglia una risposta non puo' essere utile nemmeno per dire
+#: qualcosa di breve: allora, e solo allora, il tentativo si ferma.
+#:
+#: PERCHE' 2000 E NON 6000. Il controllo del budget riduce `max_tokens` a quanto
+#: sta nel residuo, e si arrende quando quel numero scende sotto questa soglia.
+#: Con 6000 e i prezzi di Fable 5.1 ($50 per milione in uscita) servivano $0,30
+#: di margine per ogni chiamata, oltre al costo dell'ingresso: un tetto da $0,50
+#: per problema permetteva UNA chiamata, e due problemi su undici ne hanno avute
+#: ZERO. Non era il modello ad arrendersi, era il nostro contabile. Con 2000 la
+#: soglia costa $0,10 e un tetto basso resta utilizzabile.
+#:
+#: Il limite resta RIGIDO: nessuna chiamata parte se il suo costo massimo
+#: possibile supera il residuo. Cambia solo dove sta il confine fra «riduci la
+#: risposta» e «fermati».
+MIN_TOKENS_UTILI = 2_000
+
+#: Sotto questa soglia la risposta e' cosi' stretta che vale segnalarlo nel
+#: registro: serve a capire, leggendo un tentativo, se il modello ha smesso
+#: perche' non aveva piu' idee o perche' non aveva piu' spazio.
+TOKENS_STRETTI = 8_000
 from nascondi import file_senza_dimostrazioni, controlla_che_sia_nascosta  # noqa: E402
 import strumenti                              # noqa: E402
 
@@ -554,9 +571,12 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
         # doppia sicurezza: se anche cosi' non ci sta, non parte
         budget.verifica_prima_di_chiamare(token_input, max_tokens)
 
+        stretto = ("  ← SPAZIO STRETTO: la risposta e' limitata dal budget, non "
+                   "dal modello" if max_tokens < TOKENS_STRETTI else "")
         stampa(f"\n  ── iterazione {iterazione}  {budget.riga_stato()}  "
                f"[{token_input:,} token in ingresso, fino a {max_tokens:,} in uscita, "
-               f"al massimo ${budget.costo_massimo_possibile(token_input, max_tokens):.4f}]")
+               f"al massimo ${budget.costo_massimo_possibile(token_input, max_tokens):.4f}]"
+               f"{stretto}")
 
         it = Iterazione(numero=iterazione)
         t0_api = time.time()
