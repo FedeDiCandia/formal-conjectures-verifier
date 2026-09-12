@@ -1,0 +1,288 @@
+{
+  "modello": "claude-fable-5-1",
+  "effort": "medium",
+  "istruzioni": "attuali",
+  "tetto_problema": 1.4,
+  "budget": 4.2,
+  "speso": 0.9091155,
+  "consumo_totale": {
+    "input_tokens": 40,
+    "output_tokens": 10180,
+    "scrittura_cache_5m": 30103,
+    "scrittura_cache_1h": 0,
+    "lettura_cache": 93712,
+    "chiamate": 10
+  },
+  "tentativi": [
+    {
+      "problema": "DiophantineTuple.fermat_4_tuple",
+      "risolto": true,
+      "motivo": "dimostrazione accettata dal verificatore",
+      "causa": "risolto",
+      "iterazioni": 2,
+      "verifiche": 2,
+      "esplorazioni": 0,
+      "esecuzioni_python": 0,
+      "secondi_totali": 58.0095329284668,
+      "secondi_api": 17.743231058120728,
+      "secondi_lean": 39.84203886985779,
+      "secondi_python": 0.0,
+      "costo": 0.1353095,
+      "consumo": {
+        "input_tokens": 8,
+        "output_tokens": 1338,
+        "scrittura_cache_5m": 5250,
+        "scrittura_cache_1h": 0,
+        "lettura_cache": 10818,
+        "chiamate": 2
+      },
+      "verifiche_per_natura": {
+        "errore_tecnico": 1,
+        "accettato": 1
+      },
+      "iterazioni_dettaglio": [
+        {
+          "numero": 1,
+          "costo": 0.0848485,
+          "token_input": 4,
+          "token_output": 741,
+          "cache_scritta": 3750,
+          "cache_letta": 3534,
+          "secondi_api": 10.063329935073853,
+          "secondi_lean": 19.32617688179016,
+          "secondi_python": 0.0,
+          "esecuzioni_python": 0,
+          "esplorazioni": 0,
+          "secondi_esplorazione": 0.0,
+          "verifiche": [
+            {
+              "caratteri": 822,
+              "esito": "RIFIUTATO",
+              "controllo_fallito": "compila senza errori",
+              "secondi": 19.32617688179016,
+              "natura": "errore_tecnico"
+            }
+          ],
+          "ragionamento": "I need to verify that each pairwise product plus one forms a perfect square across the set {1, 3, 8, 120} — checking all six combinations confirms they're all squares (4, 9, 121, 25, 361, 961). I'm thinking about how to structure the proof, perhaps by unfolding the diophantine tuple definition and supplying explicit square-root witnesses for each case, or trying whether `decide` can handle it automatically."
+        },
+        {
+          "numero": 2,
+          "costo": 0.050461000000000006,
+          "token_input": 4,
+          "token_output": 597,
+          "cache_scritta": 1500,
+          "cache_letta": 7284,
+          "secondi_api": 7.679901123046875,
+          "secondi_lean": 20.515861988067627,
+          "secondi_python": 0.0,
+          "esecuzioni_python": 0,
+          "esplorazioni": 0,
+          "secondi_esplorazione": 0.0,
+          "verifiche": [
+            {
+              "caratteri": 774,
+              "esito": "ACCETTATO",
+              "controllo_fallito": "",
+              "secondi": 20.515861988067627,
+              "natura": "accettato"
+            }
+          ],
+          "ragionamento": ""
+        }
+      ],
+      "soluzione": "import FormalConjecturesUtil\n\nnamespace DiophantineTuple\n\nvariable {R : Type*} [Semiring R]\n\ndef IsDiophantineTuple (s : Finset R) : Prop :=\n  (∀ x ∈ s, x ≠ 0) ∧\n  ∀ x ∈ s, ∀ y ∈ s, x ≠ y → IsSquare (x * y + 1)\n\nabbrev IsIntegralDiophantineTuple (s : Finset ℕ) : Prop := IsDiophantineTuple (R := ℕ) s\n\ntheorem fermat_4_tuple : IsIntegralDiophantineTuple {1, 3, 8, 120} := by\n  refine ⟨?_, ?_⟩\n  · decide\n  · simp only [Finset.mem_insert, Finset.mem_singleton]\n    rintro x hx y hy hxy\n    rcases hx with rfl | rfl | rfl | rfl <;> rcases hy with rfl | rfl | rfl | rfl <;>\n      first\n      | exact absurd rfl hxy\n      | exact ⟨2, rfl⟩\n      | exact ⟨3, rfl⟩\n      | exact ⟨11, rfl⟩\n      | exact ⟨5, rfl⟩\n      | exact ⟨19, rfl⟩\n      | exact ⟨31, rfl⟩\n\nend DiophantineTuple"
+    },
+    {
+      "problema": "DeGiorgi.DeGiorgi_one",
+      "risolto": true,
+      "motivo": "dimostrazione accettata dal verificatore",
+      "causa": "risolto",
+      "iterazioni": 1,
+      "verifiche": 1,
+      "esplorazioni": 0,
+      "esecuzioni_python": 0,
+      "secondi_totali": 86.6910309791565,
+      "secondi_api": 32.26026391983032,
+      "secondi_lean": 54.227428674697876,
+      "secondi_python": 0.0,
+      "costo": 0.1963485,
+      "consumo": {
+        "input_tokens": 4,
+        "output_tokens": 3167,
+        "scrittura_cache_5m": 2966,
+        "scrittura_cache_1h": 0,
+        "lettura_cache": 3534,
+        "chiamate": 1
+      },
+      "verifiche_per_natura": {
+        "accettato": 1
+      },
+      "iterazioni_dettaglio": [
+        {
+          "numero": 1,
+          "costo": 0.1963485,
+          "token_input": 4,
+          "token_output": 3167,
+          "cache_scritta": 2966,
+          "cache_letta": 3534,
+          "secondi_api": 32.26026391983032,
+          "secondi_lean": 54.227428674697876,
+          "secondi_python": 0.0,
+          "esecuzioni_python": 0,
+          "esplorazioni": 0,
+          "secondi_esplorazione": 0.0,
+          "verifiche": [
+            {
+              "caratteri": 2052,
+              "esito": "ACCETTATO",
+              "controllo_fallito": "",
+              "secondi": 54.227428674697876,
+              "natura": "accettato"
+            }
+          ],
+          "ragionamento": "In the 1-dimensional case, since u has positive derivative everywhere it's strictly monotone and hence injective, so each level set collapses to a single point—an affine subspace of dimension 0, exactly matching the hyperplane condition trivially.\n\nTo formalize this, I want to identify ℝ^1 with ℝ via a linear equivalence φ(t) = single 0 t, then define f = u ∘ φ so that f'(t) equals lineDeriv u at φ(t) in direction single 0 1, which is positive by hypothesis, making f strictly increasing and therefore injective—this then transfers injectivity back to u itself.\n\nWriting the Lean proof...\n\nStill checking the derivative computation...\n\nLet me instead try parametrizing φ t = t • single 0 1, using scalar multiplication of the derivative of identity, which makes surjectivity and injectivity onto the line straightforward via coordinate extraction and injectivity of hf. For the main argument I need to handle the affine subspace generated by a single point, checking Mathlib's lemmas on singleton affine subspaces and their direction being the bottom submodule.\n\n"
+        }
+      ],
+      "soluzione": "import FormalConjecturesUtil\n\nopen ContDiff Set InnerProductSpace MeasureTheory EuclideanGeometry\nopen scoped Laplacian\n\nnamespace DeGiorgi\n\nvariable {n : ℕ} [NeZero n]\n\nstructure IsBoundedSolution (u : ℝ^n → ℝ) : Prop where\n  regular : ContDiff ℝ 2 u\n  bounded : ∃ C, ∀ x, |u x| ≤ C\n  solution : ∀ x, (Δ u x) + u x - (u x) ^ 3 = 0\n\ndef HasPositiveDeriv (u : ℝ^n → ℝ) : Prop :=\n  ∀ x, 0 < lineDeriv ℝ u x (EuclideanSpace.single 0 1)\n\ndef HasHyperplaneLevelSets (u : ℝ^n → ℝ) : Prop :=\n  ∀ y ∈ range u, ∃ S : AffineSubspace ℝ (ℝ^n),\n    u⁻¹' {y} = S ∧ Module.finrank ℝ S.direction = n - 1\n\ndef DeGiorgi_conclusion (n : ℕ) [NeZero n] : Prop :=\n  ∀ u : ℝ^n → ℝ, (IsBoundedSolution u ∧ HasPositiveDeriv u) → HasHyperplaneLevelSets u\n\ntheorem DeGiorgi_one : (DeGiorgi_conclusion 1) := by\n  intro u ⟨hu, hpos⟩\n  set φ : ℝ → ℝ^1 := fun t => t • EuclideanSpace.single 0 1 with hφ\n  have hφsurj : Function.Surjective φ := by\n    intro x\n    refine ⟨x 0, ?_⟩\n    ext i\n    have hi : i = 0 := Subsingleton.elim _ _\n    subst hi\n    simp [hφ]\n  have hdiff : Differentiable ℝ u := hu.regular.differentiable (by norm_num)\n  have hf : StrictMono (u ∘ φ) := by\n    apply strictMono_of_deriv_pos\n    intro t\n    have h1 : HasDerivAt φ (EuclideanSpace.single 0 1) t := by\n      simpa [hφ] using (hasDerivAt_id t).smul_const (EuclideanSpace.single (0 : Fin 1) (1:ℝ))\n    have h2 : HasDerivAt (u ∘ φ) (fderiv ℝ u (φ t) (EuclideanSpace.single 0 1)) t :=\n      (hdiff (φ t)).hasFDerivAt.comp_hasDerivAt t h1\n    rw [h2.deriv]\n    have := hpos (φ t)\n    rwa [(hdiff (φ t)).lineDeriv_eq_fderiv] at this\n  have hinj : Function.Injective u := by\n    intro a b hab\n    obtain ⟨s, rfl⟩ := hφsurj a\n    obtain ⟨t, rfl⟩ := hφsurj b\n    have : s = t := hf.injective hab\n    rw [this]\n  rintro y ⟨x₀, rfl⟩\n  refine ⟨AffineSubspace.mk' x₀ ⊥, ?_, ?_⟩\n  · ext p\n    simp only [Set.mem_preimage, Set.mem_singleton_iff, SetLike.mem_coe, AffineSubspace.mem_mk',\n      Submodule.mem_bot, vsub_eq_zero_iff_eq]\n    exact hinj.eq_iff\n  · rw [AffineSubspace.direction_mk']\n    simp\n\nend DeGiorgi"
+    },
+    {
+      "problema": "JacobianConjecture.jacobian_conjecture",
+      "risolto": false,
+      "motivo": "budget insufficiente per continuare: 47,593 token in ingresso, la prossima chiamata costerebbe fino a $0.8949 ma restano $0.8225 ($3.2909 sul totale, $0.8225 su questo problema)",
+      "causa": "sistema: nessun tentativo vero, tutto speso in esplorazione",
+      "iterazioni": 8,
+      "verifiche": 0,
+      "esplorazioni": 7,
+      "esecuzioni_python": 0,
+      "secondi_totali": 130.064759016037,
+      "secondi_api": 71.39729595184326,
+      "secondi_lean": 57.11809420585632,
+      "secondi_python": 0.0,
+      "costo": 0.5774575,
+      "consumo": {
+        "input_tokens": 28,
+        "output_tokens": 5675,
+        "scrittura_cache_5m": 21887,
+        "scrittura_cache_1h": 0,
+        "lettura_cache": 79360,
+        "chiamate": 7
+      },
+      "verifiche_per_natura": {},
+      "iterazioni_dettaglio": [
+        {
+          "numero": 1,
+          "costo": 0.06703599999999998,
+          "token_input": 4,
+          "token_output": 671,
+          "cache_scritta": 2605,
+          "cache_letta": 3534,
+          "secondi_api": 10.156179189682007,
+          "secondi_lean": 0.0,
+          "secondi_python": 0.0,
+          "esecuzioni_python": 0,
+          "esplorazioni": 1,
+          "secondi_esplorazione": 7.231338262557983,
+          "verifiche": [],
+          "ragionamento": "I'm examining the relevant definitions like RegularFunction, name_poly_vars, and answer, thinking through how the theorem reduces to showing the statement is false. To disprove it, I need to exhibit, for σ = Fin 3, a map G with unit Jacobian determinant that still fails to be invertible.\n\nIf G identifies two distinct points like (1,0,1) and (0,3,-71), then G having an inverse H would force applying aeval of the composition to give back the identity, so both points would map to the same value under G.comp F, contradicting their distinctness — assuming k is nontrivial so 1 ≠ 0. The tricky part is proving the Jacobian determinant equals 1, since -2 might not be a unit in a general commutative ring, so I need a computation over MvPolynomial in three variables, which could get heavy — worth digging into the definitions first before committing to that approach.\n\n"
+        },
+        {
+          "numero": 2,
+          "costo": 0.07737474999999999,
+          "token_input": 4,
+          "token_output": 843,
+          "cache_scritta": 2692,
+          "cache_letta": 6139,
+          "secondi_api": 10.021697044372559,
+          "secondi_lean": 0.0,
+          "secondi_python": 0.0,
+          "esecuzioni_python": 0,
+          "esplorazioni": 1,
+          "secondi_esplorazione": 11.690168857574463,
+          "verifiche": [],
+          "ragionamento": "I need to reproduce det_jacobian_G and aeval_G_eq without seeing the original proofs, so I'll try unfolding the Jacobian determinant formula, simplifying with the partial derivative lemmas, and closing with ring.\n\n"
+        },
+        {
+          "numero": 3,
+          "costo": 0.06867275,
+          "token_input": 4,
+          "token_output": 724,
+          "cache_scritta": 2418,
+          "cache_letta": 8831,
+          "secondi_api": 8.906511068344116,
+          "secondi_lean": 0.0,
+          "secondi_python": 0.0,
+          "esecuzioni_python": 0,
+          "esplorazioni": 1,
+          "secondi_esplorazione": 12.155607223510742,
+          "verifiche": [],
+          "ragionamento": "X, Y, Z seem to just be notation for X 0, X 1, X 2, so I should remove them and check what the goal looks like after the first simp only.\n\n"
+        },
+        {
+          "numero": 4,
+          "costo": 0.05717724999999996,
+          "token_input": 4,
+          "token_output": 732,
+          "cache_scritta": 1418,
+          "cache_letta": 11249,
+          "secondi_api": 9.813841104507446,
+          "secondi_lean": 0.0,
+          "secondi_python": 0.0,
+          "esecuzioni_python": 0,
+          "esplorazioni": 1,
+          "secondi_esplorazione": 0.0015528202056884766,
+          "verifiche": [],
+          "ragionamento": "The det goal hits max recursion in norm_num, so I want to inspect what the goal looks like after the second simp only — likely the issue is how numerals like 2 interact with pderiv, possibly needing map_ofNat treatment. Let me print the goal to check.\n\n"
+        },
+        {
+          "numero": 5,
+          "costo": 0.045669250000000106,
+          "token_input": 4,
+          "token_output": 630,
+          "cache_scritta": 877,
+          "cache_letta": 12667,
+          "secondi_api": 6.395010709762573,
+          "secondi_lean": 0.0,
+          "secondi_python": 0.0,
+          "esecuzioni_python": 0,
+          "esplorazioni": 1,
+          "secondi_esplorazione": 7.581033229827881,
+          "verifiche": [],
+          "ragionamento": ""
+        },
+        {
+          "numero": 6,
+          "costo": 0.18542599999999998,
+          "token_input": 4,
+          "token_output": 1177,
+          "cache_scritta": 9852,
+          "cache_letta": 13544,
+          "secondi_api": 13.568833827972412,
+          "secondi_lean": 0.0,
+          "secondi_python": 0.0,
+          "esecuzioni_python": 0,
+          "esplorazioni": 1,
+          "secondi_esplorazione": 11.21447491645813,
+          "verifiche": [],
+          "ragionamento": "I need to show that pderiv annihilates numeral literals in the polynomial ring, so I'm checking whether there's an existing lemma like Derivation.map_natCast, and if not, I'll prove it directly using the cast of the numeral and mapping properties.\n\n"
+        },
+        {
+          "numero": 7,
+          "costo": 0.07610149999999993,
+          "token_input": 4,
+          "token_output": 898,
+          "cache_scritta": 2025,
+          "cache_letta": 23396,
+          "secondi_api": 12.535223007202148,
+          "secondi_lean": 0.0,
+          "secondi_python": 0.0,
+          "esecuzioni_python": 0,
+          "esplorazioni": 1,
+          "secondi_esplorazione": 7.2439188957214355,
+          "verifiche": [],
+          "ragionamento": "I'm wondering if the numeral 2 in the goal is being elaborated with a different OfNat instance than expected, so I want to check what `pderiv 0 2` actually looks like with `set_option pp.all` enabled to see the full instance details.\n\nCounting through the file lines, I trace that the failing `ring` call is on line 20 — so ring itself is hitting maxRecDepth, likely because it calls simp internally and the pderiv terms remain stuck as atoms rather than reducing. That confirms the numeral literal handling is the real issue to dig into.\n\n"
+        }
+      ],
+      "soluzione": ""
+    }
+  ]
+}
