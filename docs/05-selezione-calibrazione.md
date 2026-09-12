@@ -131,6 +131,20 @@ Spesa totale **$2.9834** su un limite rigido di $15. Modello `claude-opus-5`, ef
 
 **9 su 11**: 4 su 4 fra i problemi di categoria `test`, 5 su 7 fra le varianti di congetture (`research solved`). Il numero che conta e' il secondo.
 
+**CORREZIONE (11 settembre).** Su uno dei due fallimenti mi ero spiegato male,
+e l'audit dei rapporti lo ha chiarito: `GraphConjecture65` **non** si è fermato
+per incapacità, si è fermato per il nostro controllo di budget, al 76% del suo
+tetto ($1,2486 su $1,6444). Il controllo riservava il costo del caso peggiore
+della chiamata successiva e quindi rifiutava di procedere anche con un terzo del
+tetto ancora disponibile. Corretto l'11 settembre (la soglia di arresto passa da
+6000 a 2000 token di uscita): con la correzione quel tentativo avrebbe avuto
+altre chiamate, e non sappiamo come sarebbe andato. Va contato come **esito
+indeterminato**, non come fallimento del modello.
+
+Quindi la lettura giusta della calibrazione è: 9 risolti su 11, **un fallimento
+vero** (`JacobianConjecture`, che ha esaurito le 20 iterazioni disponibili) e
+**uno indeterminato**.
+
 I due fallimenti non sono di sistema. Su `JacobianConjecture.jacobian_conjecture` il modello aveva la strategia giusta — un controesempio noto — e si e' fermato sull'ingegneria Lean (`MvPolynomial`, `pderiv`) dopo 20 iterazioni. Su `WrittenOnTheWallII.GraphConjecture65.conjecture65` stava costruendo il grafo su 17 vertici del controesempio noto ed e' finito il tetto di spesa del problema, con 12 esplorazioni e zero verifiche consegnate.
 
 Il modello dei costi costruito su questi numeri sta in [docs/06-modello-costi.md](06-modello-costi.md); i dati grezzi in [docs/dati/calibrazione_completa.json](dati/calibrazione_completa.json).
