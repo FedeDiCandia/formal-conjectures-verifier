@@ -408,5 +408,47 @@
     "dimensione": 85
    }
   }
+ },
+ {
+  "cella": "A(20,6,5)",
+  "pubblicato": 90,
+  "superiore": 100,
+  "fonte": "BSSS",
+  "nostro": 84,
+  "gruppo": "Z20",
+  "candidate": 15504,
+  "secondi": 850.6,
+  "per_gruppo": {
+   "Z20": {
+    "orbite": 539,
+    "ordine": 20,
+    "dimensione": 84
+   },
+   "Z20:4": {
+    "orbite": 5,
+    "ordine": 80,
+    "dimensione": 44
+   },
+   "Z20:2": {
+    "orbite": 23,
+    "ordine": 40,
+    "dimensione": 44
+   },
+   "blocchi2x10": {
+    "orbite": 1302,
+    "ordine": 10,
+    "dimensione": 84
+   },
+   "blocchi4x5": {
+    "orbite": 2924,
+    "ordine": 5,
+    "dimensione": 83
+   },
+   "blocchi5x4": {
+    "orbite": 3616,
+    "ordine": 4,
+    "dimensione": 80
+   }
+  }
  }
 ]

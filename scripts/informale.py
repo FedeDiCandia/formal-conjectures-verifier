@@ -266,6 +266,16 @@ def main() -> int:
         voce["costo"] = round(budget.speso - speso_prima, 4)
         print(f"  costo: ${voce['costo']:.4f}   (totale ${budget.speso:.4f})")
         esiti.append(voce)
+        # Il rapporto si scrive a OGNI problema, non alla fine. Misurato il 12
+        # settembre 2026: un errore mio (`recensione` non definita quando il
+        # revisore viene saltato) ha fatto morire il giro dopo il primo problema, e
+        # il testo del primo -- gia' pagato -- e' andato perso perche' il file
+        # veniva scritto solo in fondo. Un lavoro che paga deve salvare mentre va.
+        Path(args.rapporto).write_text(json.dumps(
+            {"modello": args.modello, "effort": args.effort,
+             "speso": budget.speso, "tetto_problema": args.tetto_problema,
+             "in_corso": True, "esiti": esiti},
+            ensure_ascii=False, indent=1), encoding="utf-8")
 
     sopravvissuti = [v for v in esiti if v.get("verdetto", "").upper().startswith("HOLDS")]
     print(f"\n{'='*78}\nRESOCONTO\n{'='*78}")

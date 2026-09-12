@@ -1,0 +1,106 @@
+[
+ {
+  "problema": "OeisA108569.conjecture",
+  "oeis": "A108569",
+  "righe": []
+ },
+ {
+  "problema": "OeisA108864.conjecture",
+  "oeis": "A108864",
+  "righe": []
+ },
+ {
+  "problema": "OeisA38552.odd_of_isA038552",
+  "oeis": "A038552",
+  "righe": []
+ },
+ {
+  "problema": "OeisA38552.mod_24_of_isA038552",
+  "oeis": "A038552",
+  "righe": []
+ },
+ {
+  "problema": "OeisA357513.general_supercongruence",
+  "oeis": "A357513",
+  "righe": [
+   "%C A357513 This conjecture is now proved; see Links. The exceptional primes are exactly the primes p for which p - 1 divides 2*m + 4 and p does not divide 2*m + 7. In particular, p = 2 is always exceptional, and for m = 1 the exceptions are p = 2 and p = 7 (only p = 7 when restricted to p >= 3). Every exceptional prime satisfies p <= 2*m + 5. - _Ondrej Kutal_, Jul 18 2026",
+   "%H A357513 Moritz Firsching, <a href=\"https://github.com/google-deepmind/formal-conjectures/blob/879bf00811ed2e504511fe6f78b59605fddcfa31/FormalConjectures/OEIS/357513.lean\">AlphaProof proof of a conjecture</a>, Jan 2026.",
+   "%H A357513 Ondrej Kutal, <a href=\"https://github.com/TheSil/A357513_conjecture\">A proof of the generalized conjecture, with Lean formalization</a>, Jul 2026."
+  ]
+ },
+ {
+  "problema": "OeisA109074.conjecture",
+  "oeis": "A109074",
+  "righe": []
+ },
+ {
+  "problema": "OeisA108081.count_words_in_x_is_a_shifted",
+  "oeis": "A108081",
+  "righe": []
+ },
+ {
+  "problema": "OeisA63880.unique_primitive_108",
+  "oeis": "A063880",
+  "righe": []
+ },
+ {
+  "problema": "OeisA110835.conjecture",
+  "oeis": "A110835",
+  "righe": []
+ },
+ {
+  "problema": "OeisA103151.conjecture",
+  "oeis": "A103151",
+  "righe": []
+ },
+ {
+  "problema": "OeisA109909.conjecture",
+  "oeis": "A109909",
+  "righe": []
+ },
+ {
+  "problema": "OeisA104320.conjecture",
+  "oeis": "A104320",
+  "righe": []
+ },
+ {
+  "problema": "OeisA105020.conjecture",
+  "oeis": "A105020",
+  "righe": []
+ },
+ {
+  "problema": "OeisA1146.conjecture",
+  "oeis": "A001146",
+  "righe": []
+ },
+ {
+  "problema": "OeisA239957.conjecture",
+  "oeis": "A239957",
+  "righe": []
+ },
+ {
+  "problema": "OeisA231201.conjecture",
+  "oeis": "A231201",
+  "righe": []
+ },
+ {
+  "problema": "OeisA101779.conjecture",
+  "oeis": "A101779",
+  "righe": []
+ },
+ {
+  "problema": "OeisA110566.conjecture",
+  "oeis": "A110566",
+  "righe": []
+ },
+ {
+  "problema": "OeisA114137.conjecture2",
+  "oeis": "A114137",
+  "righe": []
+ },
+ {
+  "problema": "OeisA105210.conjecture_disjoint_starting_values",
+  "oeis": "A105210",
+  "righe": []
+ }
+]
