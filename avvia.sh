@@ -6,6 +6,7 @@
 #   ./avvia.sh lancia    <lavoro> [opzioni]   avvia (chiede conferma)
 #   ./avvia.sh stato                          cosa sta girando
 #   ./avvia.sh segui     [nome]               guarda il log che scorre
+#   ./avvia.sh guarda                         che cosa sta facendo l'agente adesso
 #   ./avvia.sh ferma     [nome]               interrompe
 #   ./avvia.sh riprendi  <nome>               riparte dall'ultimo checkpoint
 #
@@ -171,6 +172,77 @@ cmd_lancia() {
 }
 
 # --------------------------------------------------------------------------
+# --- guarda: che cosa sta facendo l'agente, adesso -------------------------
+# Serve quando un lavoro e' stato lanciato senza log da seguire: invece
+# dell'output, guarda le TRACCE che l'agente lascia sul disco mentre lavora.
+cmd_guarda() {
+  echo "════════════════════════════════════════════════════════════════"
+  echo " CHE COSA STA FACENDO L'AGENTE"
+  echo "════════════════════════════════════════════════════════════════"
+
+  local righe
+  righe=$(ps -eo etime,args | grep "[a]gent/agente.py" | head -1)
+  if [ -z "$righe" ]; then
+    echo
+    echo "  Nessun agente in esecuzione."
+  else
+    echo
+    echo "  In esecuzione da: $(echo "$righe" | awk '{print $1}')"
+    echo "  Modello:          $(echo "$righe" | grep -o '\-\-modello [^ ]*' | cut -d' ' -f2)"
+    echo "  Budget:           $(echo "$righe" | grep -o '\-\-budget [^ ]*' | cut -d' ' -f2) dollari"
+  fi
+
+  echo
+  echo "  ── I PROBLEMI, in ordine di lavorazione ──────────────────────"
+  if [ -d "$ROOT/runs/lavoro" ]; then
+    # `tac` e' GNU e su macOS non esiste: `tail -r` fa la stessa cosa
+    ls -t "$ROOT/runs/lavoro" 2>/dev/null | tail -r | nl -w3 -s'. ' | sed 's/^/   /'
+    echo
+    echo "  L'ultimo della lista e' quello su cui sta lavorando adesso."
+  else
+    echo "   (nessuna cartella di lavoro ancora)"
+  fi
+
+  echo
+  echo "  ── LEAN sta verificando in questo istante? ───────────────────"
+  if pgrep -f "lean --" >/dev/null 2>&1 || pgrep -f "lake env" >/dev/null 2>&1; then
+    echo "   sì: una verifica e' in corso (dura dai 30 secondi ai 2 minuti)"
+  else
+    echo "   no: in questo istante l'agente sta pensando o scrivendo codice"
+  fi
+
+  echo
+  echo "  ── L'ULTIMO PROGRAMMA che il modello ha scritto da sé ────────"
+  local ultimo
+  ultimo=$(ls -t "$ROOT"/runs/lavoro/*/programma.py 2>/dev/null | head -1)
+  if [ -n "$ultimo" ]; then
+    echo "   da $(dirname "$ultimo" | xargs basename):"
+    sed 's/^/     /' "$ultimo" | head -20
+  else
+    echo "   (nessuno: non ha ancora usato run_python)"
+  fi
+
+  echo
+  echo "  ── SPESA ─────────────────────────────────────────────────────"
+  local rapporto
+  rapporto=$(ls -t "$ROOT"/runs/*.json 2>/dev/null | head -1)
+  if [ -n "$rapporto" ]; then
+    "$PY" - "$rapporto" <<'FINE'
+import json, sys
+from pathlib import Path
+d = json.loads(Path(sys.argv[1]).read_text())
+if "speso" in d:
+    print(f"   ultimo rapporto: {Path(sys.argv[1]).name}")
+    print(f"   speso ${d['speso']:.4f} su ${d['budget']:.2f}")
+    ris = sum(1 for t in d.get('tentativi', []) if t['risolto'])
+    print(f"   risolti {ris} su {len(d.get('tentativi', []))}")
+FINE
+  fi
+  echo "   (mentre un giro e' in corso la spesa si vede solo alla fine:"
+  echo "    il rapporto viene scritto quando l'ultimo problema e' finito)"
+  echo
+}
+
 cmd_stato() {
   local trovati=0
   echo "LAVORI ATTIVI"
@@ -263,6 +335,7 @@ case "${1:-}" in
   stima)    shift; cmd_stima "$@" ;;
   lancia)   shift; cmd_lancia "$@" ;;
   stato)    shift; cmd_stato ;;
+  guarda)   shift; cmd_guarda ;;
   segui)    shift; cmd_segui "$@" ;;
   ferma)    shift; cmd_ferma "$@" ;;
   riprendi) shift; cmd_riprendi "$@" ;;

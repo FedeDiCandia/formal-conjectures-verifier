@@ -83,6 +83,7 @@ Piu' file insieme, al massimo N processi Lean in parallelo:
 | `stima` | dice quanto costerebbe e quanto durerebbe. **Non spende e non lancia niente.** |
 | `lancia` | avvia in background. Chiede conferma prima di spendere crediti e usa `caffeinate`, così un lavoro di otto ore non si interrompe quando il computer va in sospensione. |
 | `stato` | elenco dei lavori, con quelli attivi in cima e le ultime righe di log. |
+| `guarda` | **che cosa sta facendo l'agente adesso**: da quanto gira, su quale problema è arrivato, se Lean sta verificando in questo istante, e l'ultimo programma Python che il modello ha scritto da sé. Funziona anche quando il lavoro è stato lanciato senza un log da seguire, perché guarda le tracce sul disco invece dell'output. |
 | `segui` | mostra il log mentre scorre. `Ctrl-C` smette di guardare, **il lavoro continua**. |
 | `ferma` | interrompe con garbo: le ricerche salvano il checkpoint prima di chiudere. |
 | `riprendi` | riparte dall'ultimo checkpoint, non da capo. |
