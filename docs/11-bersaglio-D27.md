@@ -173,3 +173,117 @@ Il modello SAT ha 945.402 variabili e 2.071.211 clausole; il solutore è CaDiCaL
 
 **Qualunque esito, niente annunci:** docs/04 per intero, confronto fra le
 formulazioni, e tutto mostrato prima di qualunque passo.
+
+---
+
+## 4. Le probabilità, dette prima
+
+*Scritto alle 14:37 del 12 settembre 2026, a metà delle corse di quattro ore. Tutti i
+numeri che seguono sono **stime mie**, non misure: le misure su cui si appoggiano sono
+nella sezione 5.*
+
+**Quanto è plausibile che un caso aperto dal 1998 ceda al nostro Mac in qualche ora?
+Poco: stimo attorno al 5%** che una delle tre formulazioni in corso concluda entro le
+17:10.
+
+Le ragioni, in ordine di peso:
+
+1. **Qualcuno di competente ci ha già provato con il calcolatore.** Il limite 31 è di
+   Aw, Chee e Ling (2003), e Ling aveva appena pubblicato proprio sui packing con
+   blocchi di 5 e λ = 1. Non è un caso che nessuno ha guardato: è un caso in cui una
+   ricerca mirata di specialisti si è fermata a 31. È vero che le «possibili eccezioni»
+   piccole restano spesso aperte perché nessuno lancia una ricerca esaustiva, non
+   perché le ricerche falliscono — ma qui una ricerca c'è stata.
+2. **I nostri strumenti non danno segni di convergenza** (sezione 5): il limite duale
+   fermo a 32 per un'ora e mezza, nessuna soluzione da 32, e la via del grafo residuo
+   che costa più di un mese di calcolo.
+3. **Una risposta «31» varrebbe poco senza un certificato.** Un «non esiste» ottenuto
+   da un solutore non è credibile per nessun matematico se non viene con una prova
+   verificabile in modo indipendente (per un solutore SAT, un file DRAT controllato da
+   un verificatore formale), più i lemmi della forma canonica scritti per esteso.
+   Un «32» invece si verifica in un secondo: basta la lista dei blocchi. **Le due
+   risposte hanno costi di verifica molto diversi**, e quella più probabile è la più
+   costosa.
+
+**Quale delle due risposte è più probabile? Stimo 65% per 31, 35% per 32.** Per 32
+parla il fatto che nella stessa classe (v ≡ 7 mod 20) il limite è raggiunto quasi
+sempre. Per 31 parlano tre cose: le eccezioni certe della stessa classe sono proprio
+i valori piccoli (11 e 15); sia la ricerca del 2003 sia la nostra trovano 31 senza
+fatica e mai 32; e il metodo di Kramer–Mesner dimostra che un eventuale pacchetto da
+32 **non** è invariante sotto nessuno dei nostri gruppi di ordine ≥ 9, cioè che la via
+costruttiva facile non esiste. È un'evidenza debole in entrambi i sensi.
+
+**Stimo 10–20%** che con un metodo migliore (sezione 5) e **qualche notte** di Mac si
+arrivi a una risposta, e meno ancora a una risposta **certificata**.
+
+### In quale caso ha senso insistere
+
+Solo se valgono **tutte e tre** le condizioni:
+
+1. **il Handbook conferma che il caso è aperto** — altrimenti ci si ferma comunque;
+2. **un metodo più forte mostra prima un segnale misurabile su scala piccola**. Per
+   esempio: decide in pochi secondi l'una le forme del grafo residuo del campione,
+   oppure chiude per intero il caso B (685 forme) in un tempo ragionevole. Senza un
+   segnale del genere, allungare i tempi è solo sperare;
+3. **un tetto di calcolo fissato prima**: tre notti di Mac, poi ci si ferma e si
+   scrive cosa si è imparato.
+
+Se una sola manca, **conviene cambiare cella**. La scelta migliore è una cella dove
+la domanda è di **esistenza** — trovare un codice più grande — e non di non esistenza,
+perché lì un successo si verifica in un secondo e non chiede certificati.
+
+---
+
+## 5. Che cosa hanno mostrato i solutori, e le vie non ancora provate
+
+### Il comportamento misurato (alle 14:37, dopo 1 h 28 min)
+
+| formulazione | che cosa si vede | che cosa vuol dire |
+|---|---|---|
+| **ILP minimo** (HiGHS) | limite duale **fermo a 26 blocchi aggiuntivi, cioè 32 in tutto, dal primo secondo**; nessuna soluzione trovata; la stima dell'albero esplorato torna a 0% dopo un riavvio dalla radice; HiGHS ha rilevato da solo 20 generatori di simmetria | il rilassamento lineare ammette 32 senza fatica. Per dimostrare 31 il solutore deve chiudere quasi tutto l'albero, e la simmetria residua (circa 10¹¹ rinomine) lo moltiplica. **Nessun segno di convergenza** |
+| **ILP con blocco fissato** | stesso limite duale fermo a 32; circa 15.000 nodi; stima dell'albero fra il 4% e il 6%, che **sale e scende** | la stima di HiGHS non è affidabile, e non va letta come una barra di avanzamento. Nessuna soluzione da 32 trovata dalle sue euristiche |
+| **SAT indipendente** (CaDiCaL) | nessuna risposta; 690 MB di memoria | nessuna informazione intermedia disponibile |
+
+**Un difetto trovato strada facendo, ed è importante.** CaDiCaL, dentro PySAT,
+**ignora l'interruzione a tempo**: su un'istanza difficile di prova non si è fermato a
+3 secondi (Glucose sì). Il SAT principale avrebbe quindi girato a oltranza, oltre il
+limite di quattro ore. Ora lo ferma una **guardia esterna** alle 17:10. Anche la prima
+misura dei tempi si era piantata per un'ora per un difetto mio (un `multiprocessing.Pool`
+rimasto appeso): rifatta con un processo per forma, ucciso dall'esterno allo scadere.
+
+### La via del grafo residuo, misurata
+
+Le 25.158 forme possibili del grafo delle coppie non coperte (sezione 2 e
+`ricerca/residui_d27.py`), ognuna trasformata in una **copertura esatta** di K27 − L
+con 32 copie di K5:
+
+| misura | valore |
+|---|---|
+| forme del campione | 16 (12 del caso A, 4 del caso B) |
+| forme decise entro 100 s | **0 su 16** |
+| tempo di costruzione del modello | 0,6 s: **gli altri 99 s sono risoluzione** |
+| dimensione di un'istanza | circa 31.700 K5 ammessi, 320 coppie da coprire, 950.000 clausole |
+
+**25.158 forme per più di 99 secondi l'una fanno più di 29 giorni**, e questo è solo il
+limite inferiore. **Così com'è, questa via non è percorribile.**
+
+### Le vie non provate, con un giudizio su ciascuna
+
+| via | che cosa può dare | giudizio |
+|---|---|---|
+| **cliquer** (clique massima esatta, di Östergård) | in teoria entrambi i versi | **poco promettente.** Dopo la forma canonica il grafo di compatibilità ha 15.104 vertici e si cerca una clique di 26. Un risolutore di clique generico non sfrutta la struttura di packing, e i suoi limiti per colorazione sono deboli su grafi così densi |
+| **CHILS / KaMIS** (insieme indipendente di peso massimo, euristico) | **solo il verso «esiste»**: può trovare un 32, non può dimostrare 31 | **tentativo economico, probabilità bassa.** È lo stato dell'arte e batte la nostra ricerca locale, ma la nostra trova 31 in un minuto e mai 32. Poche ore di calcolo, da compilare in C++ |
+| **Kramer–Mesner con gruppi piccoli** (ordine 2, 3, 5, 7) | solo «esiste» | **economico.** Sopra l'ordine 9 non c'è niente oltre 27; un pacchetto da 32, se esiste, avrebbe un gruppo di automorfismi piccolo. Con gruppi di ordine 2 o 3 l'ILP resta grande, ma molto meno di quello completo |
+| **forma canonica e grafo residuo insieme** | entrambi i versi | **la più promettente fra quelle economiche.** Le due riduzioni sono compatibili: i due punti liberi 25 e 26 della forma canonica sono **esattamente** i due vicini del punto 0 nel grafo residuo, perché il punto 0 ha grado 2 in L. Si fissa quindi la forma di L, si sceglie come 0 un vertice di grado 2 di L (senza perdita di generalità) e si mettono 25 e 26 sui suoi vicini. I sei blocchi per 0 non sono più fissi: diventano una partizione dei 24 punti restanti in quartine senza lati di L, da enumerare a meno degli automorfismi di L. **Da provare prima di tutto sulle stesse 16 forme**: se il tempo per forma scende a pochi secondi, l'enumerazione completa diventa questione di un giorno |
+| **copertura esatta dedicata** (Algorithm X / *dancing links* di Knuth) | entrambi i versi | da provare sulle stesse 16 forme contro SAT. Sulle coperture esatte strette la scelta della coppia con meno blocchi candidati è spesso molto più efficace di un solutore generico |
+| **generazione ordinata** con rigetto degli isomorfi (alla McKay) | entrambi i versi, **ed è la via professionale** | la più affidabile per un risultato definitivo, ma giorni di scrittura del codice e di calcolo, e il problema del certificato per «31» resta |
+
+**La mia raccomandazione, per le 17:10 se nessuno avrà concluso:** fermare le tre corse
+come deciso, **senza allungarle**; fare **un solo** test economico — forma canonica e
+grafo residuo insieme, sulle stesse 16 forme, limite 100 s — e decidere su quel numero.
+Se il tempo per forma scende a pochi secondi **e** il Handbook conferma che il caso è
+aperto, vale una notte di calcolo. Altrimenti si chiude D(27,5,2), si scrive che cosa
+abbiamo imparato, e si passa a una cella di esistenza.
+
+Qualunque esito: **niente annunci**, protocollo di docs/04 per intero, e tutto mostrato
+prima di qualunque passo.

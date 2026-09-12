@@ -70,6 +70,20 @@ def decidi(argomenti):
 
 
 def main() -> int:
+    """Un sottoprocesso per forma, ucciso dall'esterno allo scadere.
+
+    La prima versione usava multiprocessing.Pool e si e' piantata: dopo un'ora il
+    processo principale era fermo allo 0% di CPU e i figli erano spariti. Qui ogni forma
+    gira in un processo suo, lanciato da un thread, con un limite imposto da
+    subprocess: se il solutore ignora l'interruzione, viene ucciso comunque.
+    """
+    import subprocess
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    if len(sys.argv) > 1 and sys.argv[1] == "--una":
+        forma = json.loads(sys.argv[2])
+        forma = {k: tuple(v) if isinstance(v, list) else v for k, v in forma.items()}
+        print(json.dumps(decidi((forma, float(sys.argv[3]))), default=list), flush=True)
+        return 0
     quanti = int(sys.argv[1]) if len(sys.argv) > 1 else 16
     limite = float(sys.argv[2]) if len(sys.argv) > 2 else 40.0
     rng = random.Random(27)
@@ -77,25 +91,43 @@ def main() -> int:
     campione = rng.sample(A, quanti * 3 // 4) + rng.sample(B, quanti - quanti * 3 // 4)
     print(f"{len(campione)} forme su {len(A) + len(B)}, limite {limite:.0f} s ciascuna\n",
           flush=True)
+
+    def lancia(forma):
+        t0 = time.time()
+        try:
+            r = subprocess.run([sys.executable, __file__, "--una", json.dumps(forma),
+                                str(limite)], capture_output=True, text=True,
+                               timeout=limite + 60)
+            righe = [x for x in r.stdout.splitlines() if x.startswith("{")]
+            if righe:
+                return json.loads(righe[-1])
+            return {"forma": forma, "stato": "ERRORE", "secondi": round(time.time() - t0, 1),
+                    "candidati": 0, "costruzione": 0, "errore": r.stderr[-300:]}
+        except subprocess.TimeoutExpired:
+            return {"forma": forma, "stato": "UCCISO (ignora l'interruzione)",
+                    "secondi": round(time.time() - t0, 1), "candidati": 0, "costruzione": 0}
+
     esiti = []
-    with Pool(4) as p:
-        for e in p.imap_unordered(decidi, [(f, limite) for f in campione]):
+    with ThreadPoolExecutor(4) as ex:
+        futuri = [ex.submit(lancia, f) for f in campione]
+        for fu in as_completed(futuri):
+            e = fu.result()
             esiti.append(e)
             descr = {k: v for k, v in e["forma"].items() if k != "caso"}
-            print(f"  caso {e['forma']['caso']}  {e['stato']:<16} {e['secondi']:>6.1f} s "
-                  f"(costruzione {e['costruzione']:.1f})  candidati {e['candidati']:>5}  {descr}",
-                  flush=True)
+            print(f"  caso {e['forma']['caso']}  {e['stato']:<30} {e['secondi']:>6.1f} s "
+                  f"candidati {e.get('candidati', 0):>5}  {descr}"
+                  + (f"  {e['errore']}" if "errore" in e else ""), flush=True)
+            (RADICE / "dati_ricerca" / "copertura_campione.json").write_text(
+                json.dumps(esiti, indent=1, default=list))
     from collections import Counter
-    print("\n", dict(Counter(e["stato"] for e in esiti)))
-    conclusi = sorted(e["secondi"] for e in esiti if e["stato"] != "NON CONCLUSO")
+    print("\n", dict(Counter(e["stato"] for e in esiti)), flush=True)
+    conclusi = sorted(e["secondi"] for e in esiti if e["stato"] in ("SAT", "UNSAT", "UNSAT immediato"))
     if conclusi:
         print(f"tempo per forma conclusa: mediana {conclusi[len(conclusi)//2]:.1f} s, "
-              f"massimo {conclusi[-1]:.1f} s")
-    (RADICE / "dati_ricerca" / "copertura_campione.json").write_text(
-        json.dumps(esiti, indent=1, default=list))
+              f"massimo {conclusi[-1]:.1f} s", flush=True)
     if any(e["stato"] == "SAT" for e in esiti):
         print("\nATTENZIONE: una forma e' SAT, cioe' esisterebbe un pacchetto di 32. "
-              "NIENTE ANNUNCI: docs/04 per intero.")
+              "NIENTE ANNUNCI: docs/04 per intero.", flush=True)
     return 0
 
 

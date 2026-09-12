@@ -1,0 +1,368 @@
+[
+ {
+  "forma": {
+   "caso": "A",
+   "lato_uw": 1,
+   "connettori": [
+    1
+   ],
+   "petali_u": [
+    9,
+    8
+   ],
+   "petali_w": [
+    5,
+    2
+   ],
+   "cicli": []
+  },
+  "stato": "UCCISO (ignora l'interruzione)",
+  "secondi": 100.0,
+  "candidati": 0,
+  "costruzione": 0
+ },
+ {
+  "forma": {
+   "caso": "A",
+   "lato_uw": 1,
+   "connettori": [
+    7,
+    7,
+    4,
+    2,
+    1
+   ],
+   "petali_u": [],
+   "petali_w": [],
+   "cicli": [
+    4
+   ]
+  },
+  "stato": "UCCISO (ignora l'interruzione)",
+  "secondi": 100.0,
+  "candidati": 0,
+  "costruzione": 0
+ },
+ {
+  "forma": {
+   "caso": "A",
+   "lato_uw": 1,
+   "connettori": [
+    2,
+    2,
+    2
+   ],
+   "petali_u": [
+    6
+   ],
+   "petali_w": [
+    6
+   ],
+   "cicli": [
+    7
+   ]
+  },
+  "stato": "UCCISO (ignora l'interruzione)",
+  "secondi": 100.0,
+  "candidati": 0,
+  "costruzione": 0
+ },
+ {
+  "forma": {
+   "caso": "A",
+   "lato_uw": 0,
+   "connettori": [
+    4,
+    2,
+    1,
+    1
+   ],
+   "petali_u": [
+    5
+   ],
+   "petali_w": [
+    4
+   ],
+   "cicli": [
+    8
+   ]
+  },
+  "stato": "UCCISO (ignora l'interruzione)",
+  "secondi": 100.0,
+  "candidati": 0,
+  "costruzione": 0
+ },
+ {
+  "forma": {
+   "caso": "A",
+   "lato_uw": 0,
+   "connettori": [
+    3,
+    3,
+    3,
+    1
+   ],
+   "petali_u": [
+    5
+   ],
+   "petali_w": [
+    3
+   ],
+   "cicli": [
+    4,
+    3
+   ]
+  },
+  "stato": "UCCISO (ignora l'interruzione)",
+  "secondi": 100.0,
+  "candidati": 0,
+  "costruzione": 0
+ },
+ {
+  "forma": {
+   "caso": "A",
+   "lato_uw": 0,
+   "connettori": [
+    4,
+    3
+   ],
+   "petali_u": [
+    8,
+    4
+   ],
+   "petali_w": [
+    4,
+    2
+   ],
+   "cicli": []
+  },
+  "stato": "UCCISO (ignora l'interruzione)",
+  "secondi": 100.0,
+  "candidati": 0,
+  "costruzione": 0
+ },
+ {
+  "forma": {
+   "caso": "A",
+   "lato_uw": 0,
+   "connettori": [
+    8,
+    1,
+    1,
+    1
+   ],
+   "petali_u": [
+    7
+   ],
+   "petali_w": [
+    2
+   ],
+   "cicli": [
+    5
+   ]
+  },
+  "stato": "UCCISO (ignora l'interruzione)",
+  "secondi": 100.0,
+  "candidati": 0,
+  "costruzione": 0
+ },
+ {
+  "forma": {
+   "caso": "A",
+   "lato_uw": 0,
+   "connettori": [
+    5,
+    1
+   ],
+   "petali_u": [
+    9,
+    4
+   ],
+   "petali_w": [
+    3,
+    3
+   ],
+   "cicli": []
+  },
+  "stato": "UCCISO (ignora l'interruzione)",
+  "secondi": 100.0,
+  "candidati": 0,
+  "costruzione": 0
+ },
+ {
+  "forma": {
+   "caso": "A",
+   "lato_uw": 0,
+   "connettori": [
+    5,
+    1,
+    1,
+    1
+   ],
+   "petali_u": [
+    5
+   ],
+   "petali_w": [
+    3
+   ],
+   "cicli": [
+    3,
+    3,
+    3
+   ]
+  },
+  "stato": "UCCISO (ignora l'interruzione)",
+  "secondi": 100.0,
+  "candidati": 0,
+  "costruzione": 0
+ },
+ {
+  "forma": {
+   "caso": "A",
+   "lato_uw": 0,
+   "connettori": [
+    5,
+    1,
+    1,
+    1
+   ],
+   "petali_u": [
+    11
+   ],
+   "petali_w": [
+    3
+   ],
+   "cicli": [
+    3
+   ]
+  },
+  "stato": "UCCISO (ignora l'interruzione)",
+  "secondi": 100.0,
+  "candidati": 0,
+  "costruzione": 0
+ },
+ {
+  "forma": {
+   "caso": "A",
+   "lato_uw": 0,
+   "connettori": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "petali_u": [
+    6
+   ],
+   "petali_w": [
+    2
+   ],
+   "cicli": [
+    8,
+    5
+   ]
+  },
+  "stato": "UCCISO (ignora l'interruzione)",
+  "secondi": 100.0,
+  "candidati": 0,
+  "costruzione": 0
+ },
+ {
+  "forma": {
+   "caso": "A",
+   "lato_uw": 1,
+   "connettori": [
+    7,
+    6,
+    1
+   ],
+   "petali_u": [
+    6
+   ],
+   "petali_w": [
+    5
+   ],
+   "cicli": []
+  },
+  "stato": "UCCISO (ignora l'interruzione)",
+  "secondi": 100.0,
+  "candidati": 0,
+  "costruzione": 0
+ },
+ {
+  "forma": {
+   "caso": "B",
+   "petali": [
+    6,
+    4,
+    3,
+    3,
+    3
+   ],
+   "cicli": [
+    7
+   ]
+  },
+  "stato": "UCCISO (ignora l'interruzione)",
+  "secondi": 100.0,
+  "candidati": 0,
+  "costruzione": 0
+ },
+ {
+  "forma": {
+   "caso": "B",
+   "petali": [
+    8,
+    5,
+    5,
+    4,
+    4
+   ],
+   "cicli": []
+  },
+  "stato": "UCCISO (ignora l'interruzione)",
+  "secondi": 100.0,
+  "candidati": 0,
+  "costruzione": 0
+ },
+ {
+  "forma": {
+   "caso": "B",
+   "petali": [
+    7,
+    6,
+    4,
+    3,
+    2
+   ],
+   "cicli": [
+    4
+   ]
+  },
+  "stato": "UCCISO (ignora l'interruzione)",
+  "secondi": 100.0,
+  "candidati": 0,
+  "costruzione": 0
+ },
+ {
+  "forma": {
+   "caso": "B",
+   "petali": [
+    6,
+    3,
+    2,
+    2,
+    2
+   ],
+   "cicli": [
+    4,
+    4,
+    3
+   ]
+  },
+  "stato": "UCCISO (ignora l'interruzione)",
+  "secondi": 100.0,
+  "candidati": 0,
+  "costruzione": 0
+ }
+]
