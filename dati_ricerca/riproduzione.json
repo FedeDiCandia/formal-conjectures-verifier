@@ -1,0 +1,3230 @@
+[
+ {
+  "cella": "A(32,18,11)",
+  "atteso": 4,
+  "fonte": "BSSS",
+  "file": "cwc/d18/a32.18.11.4",
+  "formato": "elenco di parole",
+  "trovato": 4,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,18,12)",
+  "atteso": 5,
+  "fonte": "BSSS",
+  "file": "cwc/d18/a30.18.12.5",
+  "formato": "elenco di parole",
+  "trovato": 5,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,18,13)",
+  "atteso": 5,
+  "fonte": "BSSS",
+  "file": "cwc/d18/a30.18.13.5",
+  "formato": "elenco di parole",
+  "trovato": 5,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,18,14)",
+  "atteso": 5,
+  "fonte": "BSSS",
+  "file": "cwc/d18/a30.18.14.5",
+  "formato": "elenco di parole",
+  "trovato": 5,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(35,18,11)",
+  "atteso": 5,
+  "fonte": "BSSS",
+  "file": "cwc/d18/a35.18.11.5",
+  "formato": "elenco di parole",
+  "trovato": 5,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,18,15)",
+  "atteso": 6,
+  "fonte": "BSSS",
+  "file": "cwc/d18/a30.18.15.6",
+  "formato": "elenco di parole",
+  "trovato": 6,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,18,14)",
+  "atteso": 6,
+  "fonte": "BSSS",
+  "file": "cwc/d18/a31.18.14.6",
+  "formato": "elenco di parole",
+  "trovato": 6,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,18,13)",
+  "atteso": 6,
+  "fonte": "BSSS",
+  "file": "cwc/d18/a32.18.13.6",
+  "formato": "elenco di parole",
+  "trovato": 6,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,18,14)",
+  "atteso": 7,
+  "fonte": "BSSS",
+  "file": "cwc/d18/a32.18.14.7",
+  "formato": "elenco di parole",
+  "trovato": 7,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(33,18,13)",
+  "atteso": 7,
+  "fonte": "BSSS",
+  "file": "cwc/d18/a33.18.13.7",
+  "formato": "elenco di parole",
+  "trovato": 7,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(35,18,12)",
+  "atteso": 7,
+  "fonte": "BSSS",
+  "file": "cwc/d18/a35.18.12.7",
+  "formato": "elenco di parole",
+  "trovato": 7,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(22,12,9)",
+  "atteso": 8,
+  "fonte": "BSSS",
+  "file": "cwc/d12/i22.9",
+  "formato": "cicli [2, 4, 8, 8] (|G|=8, 1 semi)",
+  "trovato": 8,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,18,15)",
+  "atteso": 8,
+  "fonte": "BSSS",
+  "file": "cwc/d18/a32.18.15.8",
+  "formato": "elenco di parole",
+  "trovato": 8,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,18,16)",
+  "atteso": 8,
+  "fonte": "BSSS",
+  "file": "cwc/d18/a32.18.16.8",
+  "formato": "elenco di parole",
+  "trovato": 8,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,12,7)",
+  "atteso": 9,
+  "fonte": "BSSS",
+  "file": "cwc/d12/a30.12.7.9",
+  "formato": "elenco di parole",
+  "trovato": 9,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(20,10,7)",
+  "atteso": 10,
+  "fonte": "BSSS",
+  "file": "cwc/d10/i20.7",
+  "formato": "cicli [10, 10] (|G|=10, 1 semi)",
+  "trovato": 10,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,12,8)",
+  "atteso": 10,
+  "fonte": "BSSS",
+  "file": "cwc/d12/i25.8",
+  "formato": "cicli [5, 5, 5, 5, 5] (|G|=5, 2 semi)",
+  "trovato": 10,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,14,9)",
+  "atteso": 10,
+  "fonte": "x",
+  "file": "cwc/d14/a30.14.9.10",
+  "formato": "elenco di parole",
+  "trovato": 10,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,16,12)",
+  "atteso": 10,
+  "fonte": "BSSS",
+  "file": "cwc/d16/a30.16.12.10",
+  "formato": "elenco di parole",
+  "trovato": 10,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(34,18,14)",
+  "atteso": 10,
+  "fonte": "x",
+  "file": "cwc/d18/a34.18.14.10",
+  "formato": "elenco di parole",
+  "trovato": 10,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(35,18,13)",
+  "atteso": 10,
+  "fonte": "BSSS",
+  "file": "cwc/d18/a35.18.13.10",
+  "formato": "elenco di parole",
+  "trovato": 10,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,14,10)",
+  "atteso": 11,
+  "fonte": "x",
+  "file": "cwc/d14/a28.14.10.11",
+  "formato": "elenco di parole",
+  "trovato": 11,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,16,12)",
+  "atteso": 11,
+  "fonte": "BSSS",
+  "file": "cwc/d16/a31.16.12.11",
+  "formato": "elenco di parole",
+  "trovato": 11,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(33,18,15)",
+  "atteso": 11,
+  "fonte": "BSSS",
+  "file": "cwc/d18/a33.18.15.11",
+  "formato": "elenco di parole",
+  "trovato": 11,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(33,18,16)",
+  "atteso": 11,
+  "fonte": "BSSS",
+  "file": "cwc/d18/a33.18.16.11",
+  "formato": "elenco di parole",
+  "trovato": 11,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(12,6,5)",
+  "atteso": 12,
+  "fonte": "BSSS",
+  "file": "cwc/d6/i12.5",
+  "formato": "cicli [12] (|G|=12, 1 semi)",
+  "trovato": 12,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(19,10,8)",
+  "atteso": 12,
+  "fonte": "BSSS",
+  "file": "cwc/d10/a19.10.8.12",
+  "formato": "elenco di parole",
+  "trovato": 12,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,16,13)",
+  "atteso": 12,
+  "fonte": "BSSS",
+  "file": "cwc/d16/a30.16.13.12",
+  "formato": "elenco di parole",
+  "trovato": 12,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,14,9)",
+  "atteso": 12,
+  "fonte": "BSSS",
+  "file": "cwc/d14/a32.14.9.12",
+  "formato": "elenco di parole",
+  "trovato": 12,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(21,10,7)",
+  "atteso": 13,
+  "fonte": "BSSS",
+  "file": "cwc/d10/a21.10.7.13",
+  "formato": "elenco di parole",
+  "trovato": 13,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,14,11)",
+  "atteso": 13,
+  "fonte": "BSSS",
+  "file": "cwc/d14/i26.12",
+  "formato": "cicli [13, 13] (|G|=13, 1 semi)",
+  "stato": "DISCORDE",
+  "nota": "lunghezza letta 26, attesa 27"
+ },
+ {
+  "cella": "A(34,18,15)",
+  "atteso": 14,
+  "fonte": "BSSS",
+  "file": "cwc/d18/a34.18.15.14",
+  "formato": "elenco di parole",
+  "trovato": 14,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,12,8)",
+  "atteso": 15,
+  "fonte": "BSSS",
+  "file": "cwc/d12/i27.8",
+  "formato": "cicli [3, 3, 3, 3, 3, 3, 3, 3, 3] (|G|=3, 5 semi)",
+  "trovato": 15,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,14,10)",
+  "atteso": 15,
+  "fonte": "BSSS",
+  "file": "cwc/d14/i29.10",
+  "formato": "cicli [1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3] (|G|=3, 5 semi)",
+  "trovato": 15,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(16,8,6)",
+  "atteso": 16,
+  "fonte": "BSSS",
+  "file": "cwc/d8/i16.6",
+  "formato": "cicli [8, 8] (|G|=8, 2 semi)",
+  "trovato": 16,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(16,8,7)",
+  "atteso": 16,
+  "fonte": "BSSS",
+  "file": "cwc/d8/i16.7",
+  "formato": "cicli [16] (|G|=16, 1 semi)",
+  "trovato": 16,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(22,10,7)",
+  "atteso": 16,
+  "fonte": "BSSS",
+  "file": "cwc/d10/i22.7",
+  "formato": "cicli [5, 5, 5, 5, 1, 1] (|G|=5, 4 semi)",
+  "trovato": 16,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(23,12,10)",
+  "atteso": 16,
+  "fonte": "BSSS",
+  "file": "cwc/d12/a23.12.10.16",
+  "formato": "elenco di parole",
+  "trovato": 16,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,16,12)",
+  "atteso": 16,
+  "fonte": "BSSS",
+  "file": "cwc/d16/a32.16.12.16",
+  "formato": "elenco di parole",
+  "trovato": 16,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(17,8,6)",
+  "atteso": 17,
+  "fonte": "BSSS",
+  "file": "cwc/d8/i17.6",
+  "formato": "cicli [2, 3, 12] (|G|=12, 3 semi)",
+  "trovato": 17,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(20,10,8)",
+  "atteso": 17,
+  "fonte": "BSSS",
+  "file": "cwc/d10/a20.10.8.17",
+  "formato": "elenco di parole",
+  "trovato": 17,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,16,13)",
+  "atteso": 17,
+  "fonte": "R",
+  "file": "cwc/d16/a31.16.13.17",
+  "formato": "elenco di parole",
+  "trovato": 17,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(34,18,16)",
+  "atteso": 17,
+  "fonte": "BSSS",
+  "file": "cwc/d18/i34.16",
+  "formato": "cicli [17, 17] (|G|=17, 1 semi)",
+  "trovato": 17,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(34,18,17)",
+  "atteso": 18,
+  "fonte": "BSSS",
+  "file": "cwc/d18/i34.17",
+  "formato": "cicli [17, 17] (|G|=17, 2 semi)",
+  "trovato": 18,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,14,12)",
+  "atteso": 19,
+  "fonte": "BSSS",
+  "file": "cwc/d14/i27.12",
+  "formato": "cicli [3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 1] (|G|=3, 7 semi)",
+  "trovato": 19,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,12,8)",
+  "atteso": 19,
+  "fonte": "BSSS",
+  "file": "cwc/d12/i28.8",
+  "formato": "cicli [3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] (|G|=3, 9 semi)",
+  "trovato": 19,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(20,10,9)",
+  "atteso": 20,
+  "fonte": "BSSS",
+  "file": "cwc/d10/i20.9",
+  "formato": "cicli [20] (|G|=20, 1 semi)",
+  "trovato": 20,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(23,10,7)",
+  "atteso": 20,
+  "fonte": "Ko",
+  "file": "cwc/d10/a23.10.7.20",
+  "formato": "elenco di parole",
+  "trovato": 20,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(18,8,6)",
+  "atteso": 21,
+  "fonte": "BSSS",
+  "file": "cwc/d8/i18.6",
+  "formato": "cicli [6, 6, 6] (|G|=6, 5 semi)",
+  "trovato": 21,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(21,10,8)",
+  "atteso": 21,
+  "fonte": "BSSS",
+  "file": "cwc/d10/i21.8",
+  "formato": "cicli [21] (|G|=21, 1 semi)",
+  "trovato": 21,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,14,11)",
+  "atteso": 21,
+  "fonte": "BSSS",
+  "file": "cwc/d14/i28.11",
+  "formato": "cicli [7, 7, 7, 7] (|G|=7, 3 semi)",
+  "trovato": 21,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,14,10)",
+  "atteso": 21,
+  "fonte": "BSSS",
+  "file": "cwc/d14/a30.14.10.21",
+  "formato": "elenco di parole",
+  "trovato": 21,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(35,18,16)",
+  "atteso": 22,
+  "fonte": "R",
+  "file": "cwc/d18/a35.18.16.22",
+  "formato": "elenco di parole",
+  "trovato": 22,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(17,8,7)",
+  "atteso": 24,
+  "fonte": "BSSS",
+  "file": "cwc/d8/i17.7",
+  "formato": "cicli [1, 16] (|G|=16, 2 semi)",
+  "trovato": 24,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(24,10,7)",
+  "atteso": 24,
+  "fonte": "BSSS",
+  "file": "cwc/d10/i24.7",
+  "formato": "cicli [24] (|G|=24, 1 semi)",
+  "trovato": 24,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(24,12,10)",
+  "atteso": 24,
+  "fonte": "BSSS",
+  "file": "cwc/d12/i24.10",
+  "formato": "cicli [24] (|G|=24, 1 semi)",
+  "trovato": 24,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,16,14)",
+  "atteso": 24,
+  "fonte": "R",
+  "file": "cwc/d16/a31.16.14.24",
+  "formato": "elenco di parole",
+  "trovato": 24,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(22,10,8)",
+  "atteso": 25,
+  "fonte": "R",
+  "file": "cwc/d10/a22.10.8.25",
+  "formato": "elenco di parole",
+  "trovato": 25,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,12,9)",
+  "atteso": 25,
+  "fonte": "BSSS",
+  "file": "cwc/d12/i25.9",
+  "formato": "orbite (|G|=12, 7 semi)",
+  "trovato": 25,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,16,13)",
+  "atteso": 25,
+  "fonte": "R",
+  "file": "cwc/d16/a32.16.13.25",
+  "formato": "elenco di parole",
+  "trovato": 25,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(13,6,6)",
+  "atteso": 26,
+  "fonte": "BSSS",
+  "file": "cwc/d6/i13.6",
+  "formato": "cicli [13] (|G|=13, 2 semi)",
+  "trovato": 26,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,12,9)",
+  "atteso": 26,
+  "fonte": "BSSS",
+  "file": "cwc/d12/i26.9",
+  "formato": "cicli [26] (|G|=26, 1 semi)",
+  "trovato": 26,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(21,10,9)",
+  "atteso": 27,
+  "fonte": "BSSS",
+  "file": "cwc/d10/a21.10.9.27",
+  "formato": "elenco di parole",
+  "trovato": 27,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,10,7)",
+  "atteso": 28,
+  "fonte": "BSSS",
+  "file": "cwc/d10/i25.7",
+  "formato": "cicli [1, 24] (|G|=24, 2 semi)",
+  "trovato": 28,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,12,10)",
+  "atteso": 28,
+  "fonte": "cKT",
+  "file": "cwc/d12/i25.10",
+  "formato": "cicli [1, 2, 4, 6, 12] (|G|=12, 6 semi)",
+  "trovato": 28,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,14,12)",
+  "atteso": 28,
+  "fonte": "BSSS",
+  "file": "cwc/d14/i28.12",
+  "formato": "cicli [28] (|G|=28, 1 semi)",
+  "trovato": 28,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,14,13)",
+  "atteso": 28,
+  "fonte": "BSSS",
+  "file": "cwc/d14/i28.13",
+  "formato": "cicli [28] (|G|=28, 1 semi)",
+  "trovato": 28,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,14,11)",
+  "atteso": 28,
+  "fonte": "BSSS",
+  "file": "cwc/d14/i29.11",
+  "formato": "cicli [1, 7, 7, 7, 7] (|G|=7, 4 semi)",
+  "trovato": 28,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,14,12)",
+  "atteso": 29,
+  "fonte": "cPo",
+  "file": "cwc/d14/i29.12",
+  "formato": "cicli [29] (|G|=29, 1 semi)",
+  "trovato": 29,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(16,8,8)",
+  "atteso": 30,
+  "fonte": "H",
+  "file": "cwc/d8/a16.8.8.30",
+  "formato": "elenco di parole",
+  "trovato": 30,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,10,7)",
+  "atteso": 30,
+  "fonte": "BSSS",
+  "file": "cwc/d10/i26.7",
+  "formato": "cicli [1, 5, 5, 5, 5, 5] (|G|=5, 6 semi)",
+  "trovato": 30,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,12,8)",
+  "atteso": 30,
+  "fonte": "BSSS",
+  "file": "cwc/d12/i30.8",
+  "formato": "cicli [15, 15] (|G|=15, 2 semi)",
+  "trovato": 30,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,14,11)",
+  "atteso": 30,
+  "fonte": "BSSS",
+  "file": "cwc/d14/i30.11",
+  "formato": "cicli [30] (|G|=30, 1 semi)",
+  "trovato": 30,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,8,5)",
+  "atteso": 31,
+  "fonte": "ACL",
+  "file": "cwc/d8/a27.8.5.31",
+  "formato": "elenco di parole",
+  "trovato": 31,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,12,8)",
+  "atteso": 31,
+  "fonte": "BSSS",
+  "file": "cwc/d12/i31.8",
+  "formato": "cicli [31] (|G|=31, 1 semi)",
+  "trovato": 31,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,14,10)",
+  "atteso": 31,
+  "fonte": "bibd",
+  "file": "cwc/d14/a31.14.10.31",
+  "formato": "elenco di parole",
+  "trovato": 31,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,14,10)",
+  "atteso": 32,
+  "fonte": "BSSS",
+  "file": "cwc/d14/i32.10",
+  "formato": "cicli [16, 16] (|G|=16, 2 semi)",
+  "trovato": 32,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,16,14)",
+  "atteso": 32,
+  "fonte": "BSSS",
+  "file": "cwc/d16/i32.14",
+  "formato": "cicli [16, 16] (|G|=16, 2 semi)",
+  "trovato": 32,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,16,15)",
+  "atteso": 32,
+  "fonte": "BSSS",
+  "file": "cwc/d16/a32.16.15.32",
+  "formato": "elenco di parole",
+  "trovato": 32,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(23,10,8)",
+  "atteso": 33,
+  "fonte": "BSSS",
+  "file": "cwc/d10/i23.8",
+  "formato": "cicli [11, 11, 1] (|G|=11, 3 semi)",
+  "trovato": 33,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,12,10)",
+  "atteso": 33,
+  "fonte": "Nu",
+  "file": "cwc/d12/i26.10",
+  "formato": "orbite (|G|=16, 4 semi)",
+  "trovato": 33,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,8,5)",
+  "atteso": 33,
+  "fonte": "BSSS",
+  "file": "cwc/d8/a28.8.5.33",
+  "formato": "elenco di parole",
+  "trovato": 33,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(17,8,8)",
+  "atteso": 34,
+  "fonte": "BSSS",
+  "file": "cwc/d8/i17.8",
+  "formato": "cicli [17] (|G|=17, 2 semi)",
+  "trovato": 34,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(22,10,9)",
+  "atteso": 35,
+  "fonte": "BSSS",
+  "file": "cwc/d10/i22.9",
+  "formato": "cicli [7, 7, 7, 1] (|G|=7, 5 semi)",
+  "trovato": 35,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,14,11)",
+  "atteso": 35,
+  "fonte": "BSSS",
+  "file": "cwc/d14/i31.11",
+  "formato": "cicli [1, 10, 10, 10] (|G|=10, 4 semi)",
+  "trovato": 35,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(35,18,17)",
+  "atteso": 35,
+  "fonte": "BSSS",
+  "file": "cwc/d18/i35.17",
+  "formato": "cicli [35] (|G|=35, 1 semi)",
+  "trovato": 35,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,12,11)",
+  "atteso": 36,
+  "fonte": "BSSS",
+  "file": "cwc/d12/i25.11",
+  "formato": "cicli [1, 24] (|G|=24, 2 semi)",
+  "trovato": 36,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,10,7)",
+  "atteso": 36,
+  "fonte": "BSSS",
+  "file": "cwc/d10/i27.7",
+  "formato": "cicli [9, 9, 9] (|G|=9, 4 semi)",
+  "trovato": 36,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,14,12)",
+  "atteso": 36,
+  "fonte": "cPo",
+  "file": "cwc/d14/i30.12",
+  "formato": "cicli [3, 9, 9, 9] (|G|=9, 4 semi)",
+  "trovato": 36,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,12,8)",
+  "atteso": 36,
+  "fonte": "BSSS",
+  "file": "cwc/d12/i32.8",
+  "formato": "cicli [16, 16] (|G|=16, 3 semi)",
+  "trovato": 36,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(20,10,10)",
+  "atteso": 38,
+  "fonte": "H",
+  "file": "cwc/d10/a20.10.10.38",
+  "formato": "elenco di parole",
+  "trovato": 38,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,10,7)",
+  "atteso": 38,
+  "fonte": "R",
+  "file": "cwc/d10/a28.10.7.38",
+  "formato": "elenco di parole",
+  "trovato": 38,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,14,13)",
+  "atteso": 38,
+  "fonte": "E",
+  "file": "cwc/d14/a29.14.13.38",
+  "formato": "elenco di parole",
+  "trovato": 38,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(24,10,8)",
+  "atteso": 39,
+  "fonte": "E",
+  "file": "cwc/d10/a24.10.8.39",
+  "formato": "elenco di parole",
+  "trovato": 39,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,12,10)",
+  "atteso": 39,
+  "fonte": "BSSS",
+  "file": "cwc/d12/i27.10",
+  "formato": "cicli [1, 26] (|G|=26, 2 semi)",
+  "trovato": 39,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,12,9)",
+  "atteso": 39,
+  "fonte": "BSSS",
+  "file": "cwc/d12/i27.9",
+  "formato": "cicli [9, 9, 9] (|G|=9, 5 semi)",
+  "trovato": 39,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,14,11)",
+  "atteso": 40,
+  "fonte": "Po",
+  "file": "cwc/d14/a32.14.11.40",
+  "formato": "elenco di parole",
+  "trovato": 40,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,12,11)",
+  "atteso": 41,
+  "fonte": "S",
+  "file": "cwc/d12/i26.11",
+  "formato": "orbite (|G|=10, 9 semi)",
+  "trovato": 41,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(14,6,7)",
+  "atteso": 42,
+  "fonte": "BSSS",
+  "file": "cwc/d6/a14.6.7.42",
+  "formato": "elenco di parole",
+  "trovato": 42,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,10,7)",
+  "atteso": 42,
+  "fonte": "BSSS",
+  "file": "cwc/d10/i29.7",
+  "formato": "cicli [7, 7, 7, 7, 1] (|G|=7, 6 semi)",
+  "trovato": 42,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,12,9)",
+  "atteso": 42,
+  "fonte": "gPo",
+  "file": "cwc/d12/i29.9",
+  "formato": "orbite (|G|=42, 4 semi)",
+  "trovato": 42,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,12,9)",
+  "atteso": 44,
+  "fonte": "Po",
+  "file": "cwc/d12/a30.12.9.44",
+  "formato": "elenco di parole",
+  "trovato": 44,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(23,10,9)",
+  "atteso": 45,
+  "fonte": "cMEL",
+  "file": "cwc/d10/i23.9",
+  "formato": "cicli [21, 1, 1] (|G|=21, 3 semi)",
+  "trovato": 45,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,14,12)",
+  "atteso": 45,
+  "fonte": "BSSS",
+  "file": "cwc/d14/i31.12",
+  "formato": "cicli [1, 15, 15] (|G|=15, 3 semi)",
+  "trovato": 45,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(22,10,10)",
+  "atteso": 46,
+  "fonte": "NuPo",
+  "file": "cwc/d10/a22.10.10.46",
+  "formato": "orbite (|G|=1, 8 semi)",
+  "trovato": 8,
+  "stato": "DISCORDE",
+  "nota": "valido ma 8 parole invece di 46"
+ },
+ {
+  "cella": "A(22,10,11)",
+  "atteso": 46,
+  "fonte": "cPo",
+  "file": "cwc/d10/i22.11",
+  "formato": "cicli [22] (|G|=22, 3 semi)",
+  "trovato": 46,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(24,12,12)",
+  "atteso": 46,
+  "fonte": "H",
+  "file": "cwc/d12/a24.12.12.46",
+  "formato": "elenco di parole",
+  "trovato": 46,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,14,13)",
+  "atteso": 46,
+  "fonte": "EPo",
+  "file": "cwc/d14/a30.14.13.46",
+  "formato": "elenco di parole",
+  "trovato": 46,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(18,8,9)",
+  "atteso": 48,
+  "fonte": "sb\u00d6",
+  "file": "cwc/d8/a18.8.9.48",
+  "formato": "elenco di parole",
+  "trovato": 48,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,12,12)",
+  "atteso": 50,
+  "fonte": "BSSS",
+  "file": "cwc/d12/i25.12",
+  "formato": "cicli [5, 10, 10] (|G|=10, 6 semi)",
+  "trovato": 50,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,12,9)",
+  "atteso": 50,
+  "fonte": "cPo",
+  "file": "cwc/d12/i31.9",
+  "formato": "cicli [1, 3, 9, 9, 9] (|G|=9, 8 semi)",
+  "trovato": 50,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,10,8)",
+  "atteso": 51,
+  "fonte": "BSSS",
+  "file": "cwc/d10/a25.10.8.51",
+  "formato": "elenco di parole",
+  "trovato": 51,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(23,10,10)",
+  "atteso": 54,
+  "fonte": "Po",
+  "file": "cwc/d10/a23.10.10.54",
+  "formato": "elenco di parole",
+  "trovato": 54,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,12,12)",
+  "atteso": 54,
+  "fonte": "Ho",
+  "file": "cwc/d12/i26.12",
+  "formato": "cicli [1, 1, 12, 12] (|G|=12, 8 semi)",
+  "trovato": 54,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,12,11)",
+  "atteso": 54,
+  "fonte": "BSSS",
+  "file": "cwc/d12/i27.11",
+  "formato": "cicli [27] (|G|=27, 2 semi)",
+  "trovato": 54,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,14,12)",
+  "atteso": 55,
+  "fonte": "cPo",
+  "file": "cwc/d14/i32.12",
+  "formato": "cicli [2, 10, 10, 10] (|G|=10, 6 semi)",
+  "trovato": 55,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(24,10,9)",
+  "atteso": 56,
+  "fonte": "cMEL",
+  "file": "cwc/d10/i24.9",
+  "formato": "cicli [24] (|G|=24, 3 semi)",
+  "trovato": 56,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,12,10)",
+  "atteso": 56,
+  "fonte": "BSSS",
+  "file": "cwc/d12/i28.10",
+  "formato": "orbite (|G|=12, 9 semi)",
+  "trovato": 56,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,12,13)",
+  "atteso": 58,
+  "fonte": "HoS",
+  "file": "cwc/d12/a26.12.13.58",
+  "formato": "elenco di parole",
+  "trovato": 58,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,14,14)",
+  "atteso": 58,
+  "fonte": "BSSS",
+  "file": "cwc/d14/i29.14",
+  "formato": "cicli [29] (|G|=29, 2 semi)",
+  "trovato": 58,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,14,13)",
+  "atteso": 60,
+  "fonte": "cPo",
+  "file": "cwc/d14/i31.13",
+  "formato": "cicli [1, 30] (|G|=30, 2 semi)",
+  "trovato": 60,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,12,9)",
+  "atteso": 60,
+  "fonte": "BSSS",
+  "file": "cwc/d12/i32.9",
+  "formato": "cicli [4, 28] (|G|=28, 3 semi)",
+  "trovato": 60,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,14,15)",
+  "atteso": 62,
+  "fonte": "cPo",
+  "file": "cwc/d14/i30.15",
+  "formato": "cicli [30] (|G|=30, 3 semi)",
+  "trovato": 62,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,10,7)",
+  "atteso": 62,
+  "fonte": "BSSS",
+  "file": "cwc/d10/i31.7",
+  "formato": "cicli [31] (|G|=31, 2 semi)",
+  "trovato": 62,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,10,7)",
+  "atteso": 64,
+  "fonte": "BSSS",
+  "file": "cwc/d10/i32.7",
+  "formato": "cicli [16, 16] (|G|=16, 4 semi)",
+  "trovato": 64,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(23,10,11)",
+  "atteso": 65,
+  "fonte": "Nu",
+  "file": "cwc/d10/i23.11",
+  "stato": "NON LETTO",
+  "nota": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d10_i23.11: seme di lunghezza diversa: '# Nurmela et al.'"
+ },
+ {
+  "cella": "A(28,12,11)",
+  "atteso": 65,
+  "fonte": "Nu",
+  "file": "cwc/d12/i28.11",
+  "stato": "NON LETTO",
+  "nota": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d12_i28.11: seme di lunghezza diversa: '# Nurmela et al.'"
+ },
+ {
+  "cella": "A(31,14,14)",
+  "atteso": 66,
+  "fonte": "L",
+  "file": "cwc/d14/i31.14",
+  "formato": "cicli [1, 6, 12, 12] (|G|=12, 6 semi)",
+  "trovato": 66,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(17,6,5)",
+  "atteso": 68,
+  "fonte": "BSSS",
+  "file": "cwc/d6/i17.5",
+  "formato": "orbite (|G|=16320, 1 semi)",
+  "trovato": 68,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,10,8)",
+  "atteso": 68,
+  "fonte": "E",
+  "file": "cwc/d10/a26.10.8.68",
+  "formato": "elenco di parole",
+  "trovato": 68,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(15,6,7)",
+  "atteso": 69,
+  "fonte": "G \u00d6",
+  "file": "cwc/d6/a15.6.7.69",
+  "formato": "elenco di parole",
+  "trovato": 69,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(18,6,5)",
+  "atteso": 69,
+  "fonte": "ACL",
+  "file": "cwc/d6/a18.6.5.69",
+  "formato": "elenco di parole",
+  "trovato": 69,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,12,10)",
+  "atteso": 70,
+  "fonte": "EPo",
+  "file": "cwc/d12/a29.12.10.70",
+  "formato": "elenco di parole",
+  "trovato": 70,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,14,13)",
+  "atteso": 70,
+  "fonte": "L",
+  "file": "cwc/d14/i32.13",
+  "formato": "cicli [2, 10, 10, 10] (|G|=10, 7 semi)",
+  "trovato": 70,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(24,10,10)",
+  "atteso": 72,
+  "fonte": "cKKT",
+  "file": "cwc/d10/i24.10",
+  "formato": "cicli [24] (|G|=24, 3 semi)",
+  "trovato": 72,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,10,9)",
+  "atteso": 72,
+  "fonte": "cMEL",
+  "file": "cwc/d10/i25.9",
+  "formato": "cicli [1, 24] (|G|=24, 3 semi)",
+  "trovato": 72,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,14,15)",
+  "atteso": 72,
+  "fonte": "L",
+  "file": "cwc/d14/i31.15",
+  "formato": "cicli [1, 6, 12, 12] (|G|=12, 7 semi)",
+  "trovato": 72,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(19,6,5)",
+  "atteso": 76,
+  "fonte": "BSSS",
+  "file": "cwc/d6/i19.5",
+  "formato": "cicli [19] (|G|=19, 4 semi)",
+  "trovato": 76,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,10,8)",
+  "atteso": 76,
+  "fonte": "E",
+  "file": "cwc/d10/a27.10.8.76",
+  "formato": "elenco di parole",
+  "trovato": 76,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(22,8,6)",
+  "atteso": 77,
+  "fonte": "BSSS",
+  "file": "cwc/d8/i22.6",
+  "formato": "orbite (|G|=1320, 2 semi)",
+  "trovato": 77,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(24,8,6)",
+  "atteso": 78,
+  "fonte": "BSSS",
+  "file": "cwc/d8/a24.8.6.78",
+  "formato": "elenco di parole",
+  "trovato": 78,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(12,4,5)",
+  "atteso": 80,
+  "fonte": "\u00d6",
+  "file": "cwc/d4/a12.4.5.80H",
+  "stato": "NON LETTO",
+  "nota": "ValueError: invalid literal for int() with base 16: '$N=12'"
+ },
+ {
+  "cella": "A(27,12,12)",
+  "atteso": 82,
+  "fonte": "KKT",
+  "file": "cwc/d12/a27.12.12.82",
+  "formato": "elenco di parole",
+  "trovato": 82,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,10,8)",
+  "atteso": 85,
+  "fonte": "E",
+  "file": "cwc/d10/a28.10.8.85",
+  "formato": "elenco di parole",
+  "trovato": 85,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,12,13)",
+  "atteso": 87,
+  "fonte": "BoKKT",
+  "file": "cwc/d12/a27.12.13.87",
+  "formato": "elenco di parole",
+  "trovato": 87,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,12,11)",
+  "atteso": 87,
+  "fonte": "L",
+  "file": "cwc/d12/i29.11",
+  "formato": "cicli [29] (|G|=29, 3 semi)",
+  "trovato": 87,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(20,6,5)",
+  "atteso": 90,
+  "fonte": "BSSS",
+  "file": "cwc/d6/i20.5",
+  "formato": "cicli [1, 1, 9, 9] (|G|=9, 10 semi)",
+  "trovato": 90,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,10,9)",
+  "atteso": 91,
+  "fonte": "NuKKT",
+  "file": "cwc/d10/i26.9",
+  "stato": "NON LETTO",
+  "nota": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d10_i26.9: seme di lunghezza diversa: '# Nurmela et al.'"
+ },
+ {
+  "cella": "A(24,10,11)",
+  "atteso": 95,
+  "fonte": "NuKKT",
+  "file": "cwc/d10/a24.10.11.95",
+  "formato": "elenco di parole",
+  "trovato": 95,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,10,8)",
+  "atteso": 96,
+  "fonte": "E",
+  "file": "cwc/d10/a29.10.8.96",
+  "formato": "elenco di parole",
+  "trovato": 96,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,14,14)",
+  "atteso": 96,
+  "fonte": "L",
+  "file": "cwc/d14/i32.14",
+  "formato": "orbite (|G|=16, 6 semi)",
+  "trovato": 96,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,14,15)",
+  "atteso": 96,
+  "fonte": "L",
+  "file": "cwc/d14/i32.15",
+  "formato": "orbite (|G|=48, 2 semi)",
+  "trovato": 96,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,10,10)",
+  "atteso": 100,
+  "fonte": "BSSS",
+  "file": "cwc/d10/i25.10",
+  "formato": "cicli [25] (|G|=25, 4 semi)",
+  "trovato": 100,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,8,6)",
+  "atteso": 100,
+  "fonte": "BSSS",
+  "file": "cwc/d8/i25.6",
+  "formato": "orbite (|G|=1200, 1 semi)",
+  "trovato": 100,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,12,10)",
+  "atteso": 101,
+  "fonte": "EL",
+  "file": "cwc/d12/a30.12.10.101",
+  "formato": "elenco di parole",
+  "trovato": 101,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,10,8)",
+  "atteso": 108,
+  "fonte": "BSSS",
+  "file": "cwc/d10/i30.8",
+  "formato": "cicli [1, 1, 1, 27] (|G|=27, 4 semi)",
+  "trovato": 108,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,12,10)",
+  "atteso": 108,
+  "fonte": "E",
+  "file": "cwc/d12/a31.12.10.108H",
+  "formato": "elenco di parole",
+  "trovato": 108,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(16,6,7)",
+  "atteso": 109,
+  "fonte": "G",
+  "file": "cwc/d6/a16.6.7.109",
+  "formato": "elenco di parole",
+  "trovato": 109,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(21,6,5)",
+  "atteso": 110,
+  "fonte": "Bo",
+  "file": "cwc/d6/a21.6.5.110H",
+  "formato": "elenco esadecimale",
+  "trovato": 110,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(16,6,6)",
+  "atteso": 112,
+  "fonte": "BSSS",
+  "file": "cwc/d6/i16.6",
+  "formato": "orbite (|G|=40320, 1 semi)",
+  "trovato": 112,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,12,13)",
+  "atteso": 112,
+  "fonte": "gKKT",
+  "file": "cwc/d12/i28.13",
+  "formato": "orbite (|G|=168, 2 semi)",
+  "trovato": 112,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(17,6,6)",
+  "atteso": 113,
+  "fonte": "Ch\u00d6",
+  "file": "cwc/d6/a17.6.6.113",
+  "formato": "elenco di parole",
+  "trovato": 113,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,10,9)",
+  "atteso": 118,
+  "fonte": "NuPo",
+  "file": "cwc/d10/a27.10.9.118",
+  "formato": "elenco di parole",
+  "trovato": 118,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,12,12)",
+  "atteso": 119,
+  "fonte": "gKKT",
+  "file": "cwc/d12/i28.12",
+  "formato": "orbite (|G|=672, 3 semi)",
+  "trovato": 119,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(16,6,8)",
+  "atteso": 120,
+  "fonte": "BSSS",
+  "file": "cwc/d6/i16.8",
+  "formato": "orbite (|G|=5760, 1 semi)",
+  "trovato": 120,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,12,12)",
+  "atteso": 120,
+  "fonte": "BoL",
+  "file": "cwc/d12/a29.12.12.120",
+  "formato": "elenco di parole",
+  "trovato": 120,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,14,16)",
+  "atteso": 122,
+  "fonte": "L",
+  "file": "cwc/d14/i32.16",
+  "formato": "orbite (|G|=240, 3 semi)",
+  "trovato": 122,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(13,4,5)",
+  "atteso": 123,
+  "fonte": "BSSS",
+  "file": "cwc/d4/a13.4.5.123H",
+  "stato": "NON LETTO",
+  "nota": "ValueError: invalid literal for int() with base 16: '$N=13'"
+ },
+ {
+  "cella": "A(24,10,12)",
+  "atteso": 123,
+  "fonte": "KKT",
+  "file": "cwc/d10/a24.10.12.123",
+  "formato": "elenco di parole",
+  "trovato": 123,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,12,10)",
+  "atteso": 123,
+  "fonte": "Bo",
+  "file": "cwc/d12/a32.12.10.123H",
+  "formato": "elenco esadecimale",
+  "trovato": 123,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,10,8)",
+  "atteso": 124,
+  "fonte": "cPo",
+  "file": "cwc/d10/i31.8",
+  "formato": "cicli [31] (|G|=31, 4 semi)",
+  "trovato": 124,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,10,11)",
+  "atteso": 125,
+  "fonte": "cKT",
+  "file": "cwc/d10/i25.11",
+  "formato": "cicli [25] (|G|=25, 5 semi)",
+  "trovato": 125,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,10,10)",
+  "atteso": 130,
+  "fonte": "cPo",
+  "file": "cwc/d10/i26.10",
+  "formato": "cicli [26] (|G|=26, 5 semi)",
+  "trovato": 130,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,8,6)",
+  "atteso": 130,
+  "fonte": "BSSS",
+  "file": "cwc/d8/i26.6",
+  "formato": "orbite (|G|=1200, 2 semi)",
+  "trovato": 130,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(12,4,6)",
+  "atteso": 132,
+  "fonte": "BSSS",
+  "file": "cwc/d4/i12.6",
+  "formato": "orbite (|G|=660, 1 semi)",
+  "trovato": 132,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(22,6,5)",
+  "atteso": 132,
+  "fonte": "BSSS",
+  "file": "cwc/d6/i22.5",
+  "formato": "orbite (|G|=7920, 2 semi)",
+  "trovato": 132,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,8,6)",
+  "atteso": 132,
+  "fonte": "E",
+  "file": "cwc/d8/a28.8.6.132H",
+  "formato": "elenco esadecimale",
+  "trovato": 132,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(18,6,6)",
+  "atteso": 133,
+  "fonte": "R",
+  "file": "cwc/d6/a18.6.6.133",
+  "formato": "elenco di parole",
+  "trovato": 133,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,10,9)",
+  "atteso": 140,
+  "fonte": "BSSS",
+  "file": "cwc/d10/i28.9",
+  "formato": "orbite (|G|=42, 4 semi)",
+  "trovato": 140,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,10,12)",
+  "atteso": 141,
+  "fonte": "EKT",
+  "file": "cwc/d10/a25.10.12.141H",
+  "formato": "elenco esadecimale",
+  "trovato": 141,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,10,8)",
+  "atteso": 145,
+  "fonte": "Po",
+  "file": "cwc/d10/a32.10.8.145H",
+  "formato": "elenco esadecimale",
+  "trovato": 145,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(23,6,5)",
+  "atteso": 147,
+  "fonte": "t",
+  "file": "cwc/d6/a23.6.5.147",
+  "formato": "elenco di parole",
+  "trovato": 147,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,12,13)",
+  "atteso": 153,
+  "fonte": "E",
+  "file": "cwc/d12/a29.12.13.153",
+  "formato": "elenco di parole",
+  "trovato": 153,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(20,8,9)",
+  "atteso": 160,
+  "fonte": "BSSS",
+  "file": "cwc/d8/i20.9",
+  "formato": "orbite (|G|=5760, 1 semi)",
+  "trovato": 160,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,10,10)",
+  "atteso": 162,
+  "fonte": "NuPo",
+  "file": "cwc/d10/i27.10",
+  "stato": "NON LETTO",
+  "nota": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d10_i27.10: seme di lunghezza diversa: '# Nurmela et al.'"
+ },
+ {
+  "cella": "A(13,4,6)",
+  "atteso": 166,
+  "fonte": "BSSS",
+  "file": "cwc/d4/a13.4.6.166H",
+  "stato": "NON LETTO",
+  "nota": "ValueError: invalid literal for int() with base 16: '$N=13'"
+ },
+ {
+  "cella": "A(17,6,7)",
+  "atteso": 166,
+  "fonte": "GPo",
+  "file": "cwc/d6/a17.6.7.166",
+  "formato": "elenco di parole",
+  "trovato": 166,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,10,11)",
+  "atteso": 168,
+  "fonte": "cKT",
+  "file": "cwc/d10/i26.11",
+  "formato": "cicli [24, 2] (|G|=24, 7 semi)",
+  "trovato": 168,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,10,9)",
+  "atteso": 168,
+  "fonte": "gPo",
+  "file": "cwc/d10/i29.9",
+  "formato": "orbite (|G|=42, 6 semi)",
+  "trovato": 168,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(14,4,5)",
+  "atteso": 169,
+  "fonte": "BSSS",
+  "file": "cwc/d4/i14.5",
+  "formato": "orbite (|G|=156, 3 semi)",
+  "trovato": 169,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(19,6,6)",
+  "atteso": 172,
+  "fonte": "BSSS",
+  "file": "cwc/d6/i19.6",
+  "formato": "orbite (|G|=96, 7 semi)",
+  "trovato": 172,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,12,14)",
+  "atteso": 172,
+  "fonte": "NuKKT",
+  "file": "cwc/d12/i28.14",
+  "stato": "NON LETTO",
+  "nota": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d12_i28.14: seme di lunghezza diversa: '# Nurmela et al'"
+ },
+ {
+  "cella": "A(29,12,14)",
+  "atteso": 174,
+  "fonte": "EPo",
+  "file": "cwc/d12/a29.12.14.174",
+  "formato": "elenco di parole",
+  "trovato": 174,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(20,8,10)",
+  "atteso": 176,
+  "fonte": "BSSS",
+  "file": "cwc/d8/i20.10",
+  "formato": "orbite (|G|=3840, 2 semi)",
+  "trovato": 176,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(17,6,8)",
+  "atteso": 184,
+  "fonte": "BSSS",
+  "file": "cwc/d6/i17.8",
+  "formato": "orbite (|G|=16, 14 semi)",
+  "trovato": 184,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,12,11)",
+  "atteso": 187,
+  "fonte": "BoPo",
+  "file": "cwc/d12/a32.12.11.187",
+  "formato": "elenco di parole",
+  "trovato": 187,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,10,9)",
+  "atteso": 203,
+  "fonte": "Po",
+  "file": "cwc/d10/a30.10.9.203H",
+  "formato": "elenco esadecimale",
+  "trovato": 203,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,10,12)",
+  "atteso": 208,
+  "fonte": "gKT",
+  "file": "cwc/d10/i26.12",
+  "formato": "orbite (|G|=78, 4 semi)",
+  "trovato": 208,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,10,10)",
+  "atteso": 219,
+  "fonte": "gMEL",
+  "file": "cwc/d10/i28.10",
+  "formato": "orbite (|G|=54, 7 semi)",
+  "trovato": 219,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(20,6,6)",
+  "atteso": 232,
+  "fonte": "t",
+  "file": "cwc/d6/i20.6",
+  "formato": "orbite (|G|=96, 10 semi)",
+  "trovato": 232,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,10,9)",
+  "atteso": 232,
+  "fonte": "cPo",
+  "file": "cwc/d10/i31.9",
+  "formato": "cicli [1, 1, 29] (|G|=29, 8 semi)",
+  "trovato": 232,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,10,13)",
+  "atteso": 234,
+  "fonte": "ES",
+  "file": "cwc/d10/a26.10.13.234H",
+  "formato": "elenco esadecimale",
+  "trovato": 234,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,12,13)",
+  "atteso": 239,
+  "fonte": "EPo",
+  "file": "cwc/d12/a30.12.13.239H",
+  "formato": "elenco di parole",
+  "trovato": 239,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(15,4,5)",
+  "atteso": 242,
+  "fonte": "Ex",
+  "file": "cwc/d4/a15.4.5.242",
+  "formato": "elenco di parole",
+  "trovato": 242,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(18,6,7)",
+  "atteso": 243,
+  "fonte": "GPo",
+  "file": "cwc/d6/a18.6.7.243",
+  "formato": "elenco di parole",
+  "trovato": 243,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,10,11)",
+  "atteso": 243,
+  "fonte": "gKT",
+  "file": "cwc/d10/i27.11",
+  "formato": "orbite (|G|=81, 3 semi)",
+  "trovato": 243,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,8,7)",
+  "atteso": 255,
+  "fonte": "R",
+  "file": "cwc/d8/a25.8.7.255",
+  "formato": "elenco di parole",
+  "trovato": 255,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(18,6,8)",
+  "atteso": 260,
+  "fonte": "KKT",
+  "file": "cwc/d6/a18.6.8.260",
+  "formato": "elenco di parole",
+  "trovato": 260,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,6,5)",
+  "atteso": 262,
+  "fonte": "Bo",
+  "file": "cwc/d6/a27.6.5.262H",
+  "formato": "elenco esadecimale",
+  "trovato": 262,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,8,7)",
+  "atteso": 264,
+  "fonte": "E",
+  "file": "cwc/d8/a26.8.7.264H",
+  "formato": "elenco esadecimale",
+  "trovato": 264,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,10,10)",
+  "atteso": 266,
+  "fonte": "BSSS",
+  "file": "cwc/d10/i29.10",
+  "formato": "orbite (|G|=84, 4 semi)",
+  "trovato": 266,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(21,6,6)",
+  "atteso": 273,
+  "fonte": "BSSS",
+  "file": "cwc/d6/i21.6",
+  "formato": "orbite (|G|=21, 17 semi)",
+  "trovato": 273,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(14,4,6)",
+  "atteso": 278,
+  "fonte": "BSSS",
+  "file": "cwc/d4/a14.4.6.278H",
+  "stato": "NON LETTO",
+  "nota": "ValueError: invalid literal for int() with base 16: '$N=14'"
+ },
+ {
+  "cella": "A(28,6,5)",
+  "atteso": 280,
+  "fonte": "Nu",
+  "file": "cwc/d6/i28.5",
+  "formato": "orbite (|G|=84, 4 semi)",
+  "trovato": 280,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,12,14)",
+  "atteso": 289,
+  "fonte": "Po",
+  "file": "cwc/d12/a30.12.14.289H",
+  "formato": "elenco esadecimale",
+  "trovato": 289,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(22,8,9)",
+  "atteso": 292,
+  "fonte": "RPo",
+  "file": "cwc/d8/a22.8.9.292",
+  "formato": "elenco di parole",
+  "trovato": 292,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,12,15)",
+  "atteso": 302,
+  "fonte": "sbPo",
+  "file": "cwc/d12/a30.12.15.302H",
+  "formato": "elenco esadecimale",
+  "trovato": 302,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,8,7)",
+  "atteso": 303,
+  "fonte": "d",
+  "file": "cwc/d8/a27.8.7.303H",
+  "stato": "NON LETTO",
+  "nota": "ValueError: invalid literal for int() with base 16: '$N=27'"
+ },
+ {
+  "cella": "A(32,10,9)",
+  "atteso": 305,
+  "fonte": "E",
+  "file": "cwc/d10/a32.10.9.305H",
+  "formato": "elenco esadecimale",
+  "trovato": 305,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,10,11)",
+  "atteso": 308,
+  "fonte": "gKT",
+  "file": "cwc/d10/i28.11",
+  "formato": "orbite (|G|=84, 5 semi)",
+  "trovato": 308,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,6,5)",
+  "atteso": 315,
+  "fonte": "BSSS",
+  "file": "cwc/d6/i29.5",
+  "formato": "orbite (|G|=84, 6 semi)",
+  "trovato": 315,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(18,6,9)",
+  "atteso": 320,
+  "fonte": "gKKT",
+  "file": "cwc/d6/i18.9",
+  "formato": "orbite (|G|=96, 10 semi)",
+  "trovato": 320,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,8,7)",
+  "atteso": 321,
+  "fonte": "E",
+  "file": "cwc/d8/a28.8.7.321H",
+  "formato": "elenco esadecimale",
+  "trovato": 321,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(16,4,5)",
+  "atteso": 322,
+  "fonte": "BSSS",
+  "file": "cwc/d4/i16.5",
+  "formato": "orbite (|G|=21, 20 semi)",
+  "trovato": 322,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,10,10)",
+  "atteso": 322,
+  "fonte": "BSSS",
+  "file": "cwc/d10/i30.10",
+  "formato": "orbite (|G|=84, 6 semi)",
+  "trovato": 322,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(14,4,7)",
+  "atteso": 325,
+  "fonte": "BSSS",
+  "file": "cwc/d4/a14.4.7.325H",
+  "stato": "NON LETTO",
+  "nota": "ValueError: invalid literal for int() with base 16: '$N=14'"
+ },
+ {
+  "cella": "A(19,6,7)",
+  "atteso": 338,
+  "fonte": "sbPo",
+  "file": "cwc/d6/a19.6.7.338",
+  "formato": "elenco di parole",
+  "trovato": 338,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(22,6,6)",
+  "atteso": 343,
+  "fonte": "BJL\u00d6",
+  "file": "cwc/d6/i22.6a",
+  "formato": "orbite (|G|=6, 77 semi)",
+  "trovato": 347,
+  "stato": "NON VALIDO",
+  "nota": "parole 291 e 292: condividono le 4 posizioni [3, 4, 5, 18], quindi distano al pi\u00f9 4 < 6"
+ },
+ {
+  "cella": "A(28,10,12)",
+  "atteso": 390,
+  "fonte": "S",
+  "file": "cwc/d10/i28.12",
+  "formato": "orbite (|G|=78, 5 semi)",
+  "trovato": 390,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(15,4,6)",
+  "atteso": 399,
+  "fonte": "BSSS",
+  "file": "cwc/d4/i15.6",
+  "formato": "orbite (|G|=21, 23 semi)",
+  "trovato": 399,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,12,13)",
+  "atteso": 400,
+  "fonte": "CXYPo",
+  "file": "cwc/d12/a31.12.13.400H",
+  "formato": "elenco esadecimale",
+  "trovato": 400,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,10,11)",
+  "atteso": 406,
+  "fonte": "gPo",
+  "file": "cwc/d10/i29.11",
+  "formato": "orbite (|G|=203, 2 semi)",
+  "trovato": 406,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(19,6,8)",
+  "atteso": 408,
+  "fonte": "gPo",
+  "file": "cwc/d6/i19.8a",
+  "formato": "orbite (|G|=96, 10 semi)",
+  "trovato": 408,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(23,8,9)",
+  "atteso": 412,
+  "fonte": "RPo",
+  "file": "cwc/d8/a23.8.9.412",
+  "formato": "elenco di parole",
+  "trovato": 412,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,10,13)",
+  "atteso": 425,
+  "fonte": "EKT",
+  "file": "cwc/d10/a27.10.13.425H",
+  "formato": "elenco esadecimale",
+  "trovato": 425,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,12,13)",
+  "atteso": 434,
+  "fonte": "Po",
+  "file": "cwc/d12/a32.12.13.434H",
+  "formato": "elenco esadecimale",
+  "trovato": 434,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(17,4,5)",
+  "atteso": 444,
+  "fonte": "Mi",
+  "file": "cwc/d4/a17.4.5.444",
+  "formato": "elenco di parole",
+  "trovato": 444,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(20,6,7)",
+  "atteso": 462,
+  "fonte": "t",
+  "file": "cwc/d6/a20.6.7.462H",
+  "stato": "NON LETTO",
+  "nota": "ValueError: invalid literal for int() with base 16: '$N=20'"
+ },
+ {
+  "cella": "A(31,10,10)",
+  "atteso": 465,
+  "fonte": "BSSS",
+  "file": "cwc/d10/i31.10",
+  "formato": "orbite (|G|=465, 1 semi)",
+  "trovato": 465,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,12,12)",
+  "atteso": 496,
+  "fonte": "BCHPo",
+  "file": "cwc/d12/a32.12.12.496H",
+  "formato": "elenco esadecimale",
+  "trovato": 496,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,10,10)",
+  "atteso": 500,
+  "fonte": "BSSS",
+  "file": "cwc/d10/a32.10.10.500H",
+  "formato": "elenco esadecimale",
+  "trovato": 500,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(19,6,9)",
+  "atteso": 504,
+  "fonte": "BSSS",
+  "file": "cwc/d6/i19.9",
+  "formato": "orbite (|G|=96, 11 semi)",
+  "trovato": 504,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,12,14)",
+  "atteso": 510,
+  "fonte": "CXYPo",
+  "file": "cwc/d12/a31.12.14.510H",
+  "formato": "elenco esadecimale",
+  "trovato": 510,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,10,11)",
+  "atteso": 512,
+  "fonte": "EPo",
+  "file": "cwc/d10/a30.10.11.512H",
+  "formato": "elenco esadecimale",
+  "trovato": 512,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,10,12)",
+  "atteso": 543,
+  "fonte": "Po",
+  "file": "cwc/d10/a29.10.12.543H",
+  "formato": "elenco esadecimale",
+  "trovato": 543,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(18,4,5)",
+  "atteso": 544,
+  "fonte": "BSSS",
+  "file": "cwc/d4/i18.5",
+  "formato": "orbite (|G|=17, 32 semi)",
+  "trovato": 544,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(21,6,7)",
+  "atteso": 570,
+  "fonte": "b",
+  "file": "cwc/d6/i21.7",
+  "formato": "orbite (|G|=63, 12 semi)",
+  "trovato": 570,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,12,15)",
+  "atteso": 572,
+  "fonte": "sPo",
+  "file": "cwc/d12/a31.12.15.572H",
+  "formato": "elenco esadecimale",
+  "trovato": 572,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(20,6,8)",
+  "atteso": 590,
+  "fonte": "EPo",
+  "file": "cwc/d6/a20.6.8.590H",
+  "formato": "elenco esadecimale",
+  "trovato": 590,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(16,4,6)",
+  "atteso": 624,
+  "fonte": "BJL\u00d6",
+  "file": "cwc/d4/i16.6a",
+  "formato": "orbite (|G|=48, 19 semi)",
+  "trovato": 624,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,12,15)",
+  "atteso": 629,
+  "fonte": "BSSS",
+  "file": "cwc/d12/a32.12.15.629H",
+  "formato": "elenco esadecimale",
+  "trovato": 629,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(23,8,10)",
+  "atteso": 648,
+  "fonte": "R",
+  "file": "cwc/d8/a23.8.10.648",
+  "formato": "elenco di parole",
+  "trovato": 648,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(24,8,9)",
+  "atteso": 656,
+  "fonte": "RPo",
+  "file": "cwc/d8/a24.8.9.656",
+  "formato": "elenco di parole",
+  "trovato": 656,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,10,13)",
+  "atteso": 756,
+  "fonte": "Nu",
+  "file": "cwc/d10/i28.13",
+  "formato": "orbite (|G|=9828, 1 semi)",
+  "trovato": 756,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(22,6,7)",
+  "atteso": 759,
+  "fonte": "G",
+  "file": "cwc/d6/a22.6.7.759",
+  "formato": "elenco di parole",
+  "trovato": 759,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(24,8,8)",
+  "atteso": 759,
+  "fonte": "G",
+  "file": "cwc/d8/i24.8",
+  "formato": "orbite (|G|=6072, 1 semi)",
+  "trovato": 759,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,10,13)",
+  "atteso": 759,
+  "fonte": "BoPo",
+  "file": "cwc/d10/a29.10.13.759H",
+  "formato": "elenco esadecimale",
+  "trovato": 759,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,8,8)",
+  "atteso": 763,
+  "fonte": "R",
+  "file": "cwc/d8/a26.8.8.763H",
+  "formato": "elenco esadecimale",
+  "trovato": 763,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,10,12)",
+  "atteso": 768,
+  "fonte": "Po",
+  "file": "cwc/d10/a30.10.12.768H",
+  "formato": "elenco esadecimale",
+  "trovato": 768,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(21,6,8)",
+  "atteso": 775,
+  "fonte": "Po",
+  "file": "cwc/d6/a21.6.8.775H",
+  "formato": "elenco esadecimale",
+  "trovato": 775,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,8,8)",
+  "atteso": 775,
+  "fonte": "E",
+  "file": "cwc/d8/a27.8.8.775H",
+  "formato": "elenco esadecimale",
+  "trovato": 775,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,10,14)",
+  "atteso": 814,
+  "fonte": "EKKT",
+  "file": "cwc/d10/a28.10.14.814H",
+  "formato": "elenco esadecimale",
+  "trovato": 814,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(20,6,9)",
+  "atteso": 832,
+  "fonte": "t",
+  "file": "cwc/d6/i20.9",
+  "formato": "orbite (|G|=96, 21 semi)",
+  "trovato": 832,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(16,4,7)",
+  "atteso": 836,
+  "fonte": "b",
+  "file": "cwc/d4/a16.4.7.836H",
+  "stato": "NON LETTO",
+  "nota": "ValueError: invalid literal for int() with base 16: '$N=16'"
+ },
+ {
+  "cella": "A(25,8,9)",
+  "atteso": 837,
+  "fonte": "RPo",
+  "file": "cwc/d8/a25.8.9.837H",
+  "formato": "elenco esadecimale",
+  "trovato": 837,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(20,4,5)",
+  "atteso": 874,
+  "fonte": "BSSS",
+  "file": "cwc/d4/a20.4.5.874H",
+  "stato": "NON LETTO",
+  "nota": "ValueError: invalid literal for int() with base 16: '$N=20'"
+ },
+ {
+  "cella": "A(26,8,9)",
+  "atteso": 890,
+  "fonte": "EPo",
+  "file": "cwc/d8/a26.8.9.890H",
+  "formato": "elenco esadecimale",
+  "trovato": 890,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,12,14)",
+  "atteso": 900,
+  "fonte": "CXYPo",
+  "file": "cwc/d12/a32.12.14.900H",
+  "formato": "elenco esadecimale",
+  "trovato": 900,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,10,12)",
+  "atteso": 930,
+  "fonte": "gPo",
+  "file": "cwc/d10/i31.12",
+  "formato": "orbite (|G|=465, 2 semi)",
+  "trovato": 930,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,10,13)",
+  "atteso": 936,
+  "fonte": "BoPo",
+  "file": "cwc/d10/a30.10.13.936H",
+  "formato": "elenco esadecimale",
+  "trovato": 936,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(20,6,10)",
+  "atteso": 944,
+  "fonte": "tKKT",
+  "file": "cwc/d6/a20.6.10.944H",
+  "formato": "elenco esadecimale",
+  "trovato": 944,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(24,8,10)",
+  "atteso": 960,
+  "fonte": "GS",
+  "file": "cwc/d8/a24.8.10.960H",
+  "formato": "elenco esadecimale",
+  "trovato": 960,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,10,11)",
+  "atteso": 992,
+  "fonte": "gPo",
+  "file": "cwc/d10/i32.11",
+  "formato": "orbite (|G|=992, 1 semi)",
+  "trovato": 992,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,8,9)",
+  "atteso": 1029,
+  "fonte": "EPo",
+  "file": "cwc/d8/a27.8.9.1029H",
+  "formato": "elenco esadecimale",
+  "trovato": 1029,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,8,8)",
+  "atteso": 1057,
+  "fonte": "BSSS",
+  "file": "cwc/d8/a28.8.8.1057H",
+  "stato": "NON LETTO",
+  "nota": "ValueError: invalid literal for int() with base 16: '$N=28'"
+ },
+ {
+  "cella": "A(21,4,5)",
+  "atteso": 1113,
+  "fonte": "BSSS",
+  "file": "cwc/d4/i21.5",
+  "formato": "orbite (|G|=63, 19 semi)",
+  "trovato": 1113,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,12,16)",
+  "atteso": 1144,
+  "fonte": "BSSS",
+  "file": "cwc/d12/a32.12.16.1144H",
+  "formato": "elenco esadecimale",
+  "trovato": 1144,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(22,6,8)",
+  "atteso": 1145,
+  "fonte": "E",
+  "file": "cwc/d6/a22.6.8.1145H",
+  "formato": "elenco esadecimale",
+  "trovato": 1145,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(16,4,8)",
+  "atteso": 1170,
+  "fonte": "BSSS",
+  "file": "cwc/d4/a16.4.8.1170H",
+  "stato": "NON LETTO",
+  "nota": "ValueError: invalid literal for int() with base 16: '$N=16'"
+ },
+ {
+  "cella": "A(28,6,6)",
+  "atteso": 1174,
+  "fonte": "Bo",
+  "file": "cwc/d6/a28.6.6.1174H",
+  "formato": "elenco esadecimale",
+  "trovato": 1174,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(21,6,9)",
+  "atteso": 1186,
+  "fonte": "Po",
+  "file": "cwc/d6/a21.6.9.1186H",
+  "formato": "elenco esadecimale",
+  "trovato": 1186,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,6,6)",
+  "atteso": 1204,
+  "fonte": "BSSS",
+  "file": "cwc/d6/a29.6.6.1204H",
+  "formato": "elenco esadecimale",
+  "trovato": 1204,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,8,10)",
+  "atteso": 1248,
+  "fonte": "S",
+  "file": "cwc/d8/a25.8.10.1248H",
+  "formato": "elenco esadecimale",
+  "trovato": 1248,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(18,4,6)",
+  "atteso": 1260,
+  "fonte": "BSSS",
+  "file": "cwc/d4/i18.6",
+  "formato": "orbite (|G|=3024, 4 semi)",
+  "trovato": 1260,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,8,9)",
+  "atteso": 1376,
+  "fonte": "Bo",
+  "file": "cwc/d8/a28.8.9.1376H",
+  "formato": "elenco esadecimale",
+  "trovato": 1376,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(24,8,11)",
+  "atteso": 1378,
+  "fonte": "RS",
+  "file": "cwc/d8/a24.8.11.1378H",
+  "formato": "elenco esadecimale",
+  "trovato": 1378,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,10,13)",
+  "atteso": 1395,
+  "fonte": "gPo",
+  "file": "cwc/d10/i31.13",
+  "formato": "orbite (|G|=465, 3 semi)",
+  "trovato": 1395,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,10,12)",
+  "atteso": 1395,
+  "fonte": "gPo",
+  "file": "cwc/d10/i32.12",
+  "formato": "orbite (|G|=465, 3 semi)",
+  "trovato": 1395,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(23,6,8)",
+  "atteso": 1439,
+  "fonte": "BSSS",
+  "file": "cwc/d6/a23.6.8.1439H",
+  "formato": "elenco esadecimale",
+  "trovato": 1439,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,10,14)",
+  "atteso": 1458,
+  "fonte": "gPo",
+  "file": "cwc/d10/i29.14",
+  "formato": "orbite (|G|=19656, 2 semi)",
+  "trovato": 1458,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(30,10,14)",
+  "atteso": 1467,
+  "fonte": "BoPo",
+  "file": "cwc/d10/a30.10.14.1467H",
+  "formato": "elenco esadecimale",
+  "trovato": 1467,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(21,6,10)",
+  "atteso": 1474,
+  "fonte": "S",
+  "file": "cwc/d6/a21.6.10.1474H",
+  "formato": "elenco esadecimale",
+  "trovato": 1474,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,8,10)",
+  "atteso": 1519,
+  "fonte": "GS",
+  "file": "cwc/d8/a26.8.10.1519H",
+  "formato": "elenco esadecimale",
+  "trovato": 1519,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,10,14)",
+  "atteso": 1539,
+  "fonte": "EPo",
+  "file": "cwc/d10/a31.10.14.1539H",
+  "formato": "elenco esadecimale",
+  "trovato": 1539,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(19,4,6)",
+  "atteso": 1620,
+  "fonte": "b",
+  "file": "cwc/d4/a19.4.6.1620H",
+  "formato": "elenco esadecimale",
+  "trovato": 1620,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,8,11)",
+  "atteso": 1722,
+  "fonte": "ES",
+  "file": "cwc/d8/a25.8.11.1722H",
+  "formato": "elenco esadecimale",
+  "trovato": 1722,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,8,10)",
+  "atteso": 1728,
+  "fonte": "Bo",
+  "file": "cwc/d8/a27.8.10.1728H",
+  "formato": "elenco esadecimale",
+  "trovato": 1728,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(22,6,9)",
+  "atteso": 1818,
+  "fonte": "S",
+  "file": "cwc/d6/a22.6.9.1818H",
+  "formato": "elenco esadecimale",
+  "trovato": 1818,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(24,6,8)",
+  "atteso": 1915,
+  "fonte": "E",
+  "file": "cwc/d6/a24.6.8.1915H",
+  "formato": "elenco esadecimale",
+  "trovato": 1915,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(24,4,5)",
+  "atteso": 1920,
+  "fonte": "BJL\u00d6",
+  "file": "cwc/d4/i24.5",
+  "formato": "orbite (|G|=96, 22 semi)",
+  "trovato": 1920,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(31,10,15)",
+  "atteso": 1922,
+  "fonte": "Po",
+  "file": "cwc/d10/a31.10.15.1922H",
+  "formato": "elenco esadecimale",
+  "trovato": 1922,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,10,13)",
+  "atteso": 1984,
+  "fonte": "gPo",
+  "file": "cwc/d10/i32.13",
+  "formato": "orbite (|G|=992, 2 semi)",
+  "trovato": 1984,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,8,11)",
+  "atteso": 2042,
+  "fonte": "EKT",
+  "file": "cwc/d8/a26.8.11.2042H",
+  "formato": "elenco esadecimale",
+  "trovato": 2042,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,8,10)",
+  "atteso": 2103,
+  "fonte": "ES",
+  "file": "cwc/d8/a28.8.10.2103H",
+  "formato": "elenco esadecimale",
+  "trovato": 2103,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(22,6,10)",
+  "atteso": 2183,
+  "fonte": "S",
+  "file": "cwc/d6/a22.6.10.2183H",
+  "formato": "elenco esadecimale",
+  "trovato": 2183,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(23,6,9)",
+  "atteso": 2278,
+  "fonte": "BSSS",
+  "file": "cwc/d6/a23.6.9.2278H",
+  "formato": "elenco esadecimale",
+  "trovato": 2278,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(20,4,6)",
+  "atteso": 2304,
+  "fonte": "Nu",
+  "file": "cwc/d4/i20.6",
+  "stato": "NON LETTO",
+  "nota": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d4_i20.6: seme di lunghezza diversa: '# Nurmela et al.'"
+ },
+ {
+  "cella": "A(32,10,14)",
+  "atteso": 2325,
+  "fonte": "gPo",
+  "file": "cwc/d10/i32.14",
+  "stato": "NON LETTO",
+  "nota": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d10_i32.14: seme di lunghezza diversa: '# size 2325'"
+ },
+ {
+  "cella": "A(25,4,5)",
+  "atteso": 2380,
+  "fonte": "BJL\u00d6",
+  "file": "cwc/d4/i25.5",
+  "formato": "orbite (|G|=125, 20 semi)",
+  "trovato": 2380,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,8,11)",
+  "atteso": 2404,
+  "fonte": "KT",
+  "file": "cwc/d8/a27.8.11.2404H",
+  "stato": "NON LETTO",
+  "nota": "ValueError: invalid literal for int() with base 16: '$N=27'"
+ },
+ {
+  "cella": "A(24,8,12)",
+  "atteso": 2576,
+  "fonte": "G",
+  "file": "cwc/d8/i24.12",
+  "formato": "orbite (|G|=6072, 4 semi)",
+  "trovato": 2576,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,8,12)",
+  "atteso": 2610,
+  "fonte": "RS",
+  "file": "cwc/d8/a25.8.12.2610H",
+  "formato": "elenco esadecimale",
+  "trovato": 2610,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,10,15)",
+  "atteso": 2635,
+  "fonte": "gPo",
+  "file": "cwc/d10/i32.15",
+  "stato": "NON LETTO",
+  "nota": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d10_i32.15: seme di lunghezza diversa: '# size 2635'"
+ },
+ {
+  "cella": "A(22,6,11)",
+  "atteso": 2636,
+  "fonte": "tMo",
+  "file": "cwc/d6/a22.6.11.2636H",
+  "formato": "elenco esadecimale",
+  "trovato": 2636,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,6,8)",
+  "atteso": 2646,
+  "fonte": "E",
+  "file": "cwc/d6/a25.6.8.2646H",
+  "formato": "elenco esadecimale",
+  "trovato": 2646,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(21,4,6)",
+  "atteso": 2880,
+  "fonte": "BJL\u00d6",
+  "file": "cwc/d4/i21.6",
+  "formato": "orbite (|G|=126, 32 semi)",
+  "trovato": 2898,
+  "stato": "NON VALIDO",
+  "nota": "parole 312 e 1029: condividono le 5 posizioni [0, 3, 6, 9, 12], quindi distano al pi\u00f9 2 < 4"
+ },
+ {
+  "cella": "A(23,6,10)",
+  "atteso": 2992,
+  "fonte": "BSSS",
+  "file": "cwc/d6/a23.6.10.2992H",
+  "formato": "elenco esadecimale",
+  "trovato": 2992,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(32,10,16)",
+  "atteso": 3038,
+  "fonte": "Po",
+  "file": "cwc/d10/a32.10.16.3038H",
+  "formato": "elenco esadecimale",
+  "trovato": 3038,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,8,12)",
+  "atteso": 3070,
+  "fonte": "GS",
+  "file": "cwc/d8/a26.8.12.3070H",
+  "formato": "elenco esadecimale",
+  "trovato": 3070,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(24,6,9)",
+  "atteso": 3080,
+  "fonte": "BJL\u00d6",
+  "file": "cwc/d6/i24.9a",
+  "formato": "orbite (|G|=1320, 3 semi)",
+  "trovato": 3080,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,8,12)",
+  "atteso": 3337,
+  "fonte": "EKT",
+  "file": "cwc/d8/a27.8.12.3337H",
+  "formato": "elenco esadecimale",
+  "trovato": 3337,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,4,5)",
+  "atteso": 3456,
+  "fonte": "BJL\u00d6",
+  "file": "cwc/d4/i27.5",
+  "formato": "orbite (|G|=27, 128 semi)",
+  "trovato": 3456,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(23,6,11)",
+  "atteso": 3588,
+  "fonte": "BSSS",
+  "file": "cwc/d6/a23.6.11.3588H",
+  "formato": "elenco esadecimale",
+  "trovato": 3588,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,8,13)",
+  "atteso": 3588,
+  "fonte": "sbS",
+  "file": "cwc/d8/i26.13",
+  "stato": "NON LETTO",
+  "nota": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d8_i26.13: seme di lunghezza diversa: '# Nurmela et al.'"
+ },
+ {
+  "cella": "A(26,6,8)",
+  "atteso": 3602,
+  "fonte": "E",
+  "file": "cwc/d6/a26.6.8.3602H",
+  "formato": "elenco esadecimale",
+  "trovato": 3602,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,8,11)",
+  "atteso": 3773,
+  "fonte": "KT",
+  "file": "cwc/d8/a28.8.11.3773H",
+  "stato": "NON LETTO",
+  "nota": "ValueError: invalid literal for int() with base 16: '$N=28'"
+ },
+ {
+  "cella": "A(27,8,13)",
+  "atteso": 4094,
+  "fonte": "NuKKT",
+  "file": "cwc/d8/i27.13",
+  "stato": "NON LETTO",
+  "nota": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d8_i27.13: seme di lunghezza diversa: '# A(27,8,13) >= 4094'"
+ },
+ {
+  "cella": "A(24,6,10)",
+  "atteso": 4237,
+  "fonte": "BSSS",
+  "file": "cwc/d6/a24.6.10.4237H",
+  "formato": "elenco esadecimale",
+  "trovato": 4237,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,6,9)",
+  "atteso": 4260,
+  "fonte": "b",
+  "file": "cwc/d6/a25.6.9.4260H",
+  "formato": "elenco esadecimale",
+  "trovato": 4260,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,6,7)",
+  "atteso": 4680,
+  "fonte": "BSSS",
+  "file": "cwc/d6/i28.7",
+  "formato": "orbite (|G|=9828, 2 semi)",
+  "trovato": 4680,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,6,7)",
+  "atteso": 4689,
+  "fonte": "Bo",
+  "file": "cwc/d6/a29.6.7.4689H",
+  "formato": "elenco esadecimale",
+  "trovato": 4689,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,6,8)",
+  "atteso": 4828,
+  "fonte": "E",
+  "file": "cwc/d6/a27.6.8.4828H",
+  "formato": "elenco esadecimale",
+  "trovato": 4828,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,8,12)",
+  "atteso": 4927,
+  "fonte": "KT",
+  "file": "cwc/d8/a28.8.12.4927H",
+  "formato": "elenco esadecimale",
+  "trovato": 4927,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(24,6,11)",
+  "atteso": 5376,
+  "fonte": "BJL\u00d6",
+  "file": "cwc/d6/i24.11a",
+  "formato": "orbite (|G|=504, 14 semi)",
+  "trovato": 5376,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(24,6,12)",
+  "atteso": 5616,
+  "fonte": "BSSS",
+  "file": "#lost",
+  "stato": "NON LETTO",
+  "nota": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/#lost: riga 1 non \u00e8 una lista di posizioni: '<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML '"
+ },
+ {
+  "cella": "A(26,6,9)",
+  "atteso": 5761,
+  "fonte": "Bo",
+  "file": "cwc/d6/a26.6.9.5761H",
+  "formato": "elenco esadecimale",
+  "trovato": 5761,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,8,14)",
+  "atteso": 6218,
+  "fonte": "S",
+  "file": "cwc/d8/a28.8.14.6218H",
+  "formato": "elenco esadecimale",
+  "trovato": 6218,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,6,8)",
+  "atteso": 6356,
+  "fonte": "E",
+  "file": "cwc/d6/a28.6.8.6356H",
+  "formato": "elenco esadecimale",
+  "trovato": 6356,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,6,10)",
+  "atteso": 6600,
+  "fonte": "BJL\u00d6",
+  "file": "cwc/d6/i25.10a",
+  "formato": "orbite (|G|=1320, 5 semi)",
+  "trovato": 6600,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,8,13)",
+  "atteso": 6848,
+  "fonte": "gKT",
+  "file": "cwc/d8/i28.13",
+  "formato": "orbite (|G|=192, 70 semi)",
+  "trovato": 6848,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(24,4,6)",
+  "atteso": 7084,
+  "fonte": "BSSS",
+  "file": "cwc/d4/i24.6",
+  "formato": "orbite (|G|=6072, 3 semi)",
+  "trovato": 7084,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(20,4,8)",
+  "atteso": 7830,
+  "fonte": "BJL\u00d6",
+  "file": "cwc/d4/i20.8",
+  "formato": "orbite (|G|=400, 59 semi)",
+  "trovato": 8070,
+  "stato": "NON VALIDO",
+  "nota": "parole 0 e 1: condividono le 7 posizioni [0, 1, 2, 3, 4, 5, 6], quindi distano al pi\u00f9 2 < 4"
+ },
+ {
+  "cella": "A(27,6,9)",
+  "atteso": 8112,
+  "fonte": "BSSS",
+  "file": "cwc/d6/i27.9",
+  "formato": "orbite (|G|=2106, 7 semi)",
+  "trovato": 8112,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,6,8)",
+  "atteso": 8148,
+  "fonte": "E",
+  "file": "cwc/d6/a29.6.8.8148H",
+  "formato": "elenco esadecimale",
+  "trovato": 8148,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,6,11)",
+  "atteso": 8698,
+  "fonte": "Bo",
+  "file": "cwc/d6/a25.6.11.8698H",
+  "formato": "elenco esadecimale",
+  "trovato": 8698,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,6,10)",
+  "atteso": 8810,
+  "fonte": "BSSS",
+  "file": "cwc/d6/i26.10",
+  "formato": "orbite (|G|=3000, 8 semi)",
+  "trovato": 8810,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(25,6,12)",
+  "atteso": 9880,
+  "fonte": "BSSS",
+  "file": "cwc/d6/a25.6.12.9880H",
+  "formato": "elenco esadecimale",
+  "trovato": 9880,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,6,9)",
+  "atteso": 10920,
+  "fonte": "BSSS",
+  "file": "cwc/d6/i28.9",
+  "formato": "orbite (|G|=2106, 9 semi)",
+  "trovato": 10920,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,6,11)",
+  "atteso": 12206,
+  "fonte": "Mo",
+  "file": "cwc/d6/a26.6.11.12206H",
+  "formato": "elenco esadecimale",
+  "trovato": 12206,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,6,10)",
+  "atteso": 12987,
+  "fonte": "BSSS",
+  "file": "cwc/d6/i27.10",
+  "formato": "orbite (|G|=2106, 8 semi)",
+  "trovato": 12987,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,6,9)",
+  "atteso": 13026,
+  "fonte": "BSSS",
+  "file": "cwc/d6/i29.9",
+  "formato": "orbite (|G|=1053, 16 semi)",
+  "trovato": 13026,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(20,4,10)",
+  "atteso": 13452,
+  "fonte": "BSSS",
+  "file": "cwc/d4/i20.10",
+  "formato": "orbite (|G|=3420, 7 semi)",
+  "trovato": 13452,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,6,12)",
+  "atteso": 14854,
+  "fonte": "gsS",
+  "file": "cwc/d6/a26.6.12.14854H",
+  "formato": "elenco esadecimale",
+  "trovato": 14854,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,4,6)",
+  "atteso": 15288,
+  "fonte": "BSSS",
+  "file": "cwc/d4/i28.6",
+  "formato": "orbite (|G|=1092, 26 semi)",
+  "trovato": 15288,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(26,6,13)",
+  "atteso": 16117,
+  "fonte": "BSSS",
+  "file": "cwc/d6/a26.6.13.16117H",
+  "formato": "elenco esadecimale",
+  "trovato": 16117,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,6,11)",
+  "atteso": 18260,
+  "fonte": "KKT",
+  "file": "cwc/d6/a27.6.11.18260H",
+  "formato": "elenco esadecimale",
+  "trovato": 18260,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,6,10)",
+  "atteso": 18346,
+  "fonte": "Bo",
+  "file": "cwc/d6/a28.6.10.18346H",
+  "formato": "elenco esadecimale",
+  "trovato": 18346,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(27,6,12)",
+  "atteso": 23903,
+  "fonte": "BoKKT",
+  "file": "cwc/d6/a27.6.12.23903H",
+  "formato": "elenco esadecimale",
+  "trovato": 23903,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(29,6,10)",
+  "atteso": 24254,
+  "fonte": "BSSS",
+  "file": "cwc/d6/a29.6.10.24254H",
+  "formato": "elenco esadecimale",
+  "trovato": 24254,
+  "stato": "CONFERMATO"
+ },
+ {
+  "cella": "A(28,6,11)",
+  "atteso": 29484,
+  "fonte": "NuKKT",
+  "file": "cwc/d6/i28.11",
+  "stato": "NON LETTO",
+  "nota": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d6_i28.11: seme di lunghezza diversa: '# Nurmela et al.'"
+ },
+ {
+  "cella": "A(24,4,8)",
+  "atteso": 34914,
+  "fonte": "BSSS",
+  "file": "cwc/d4/i24.8",
+  "formato": "orbite (|G|=6072, 12 semi)",
+  "trovato": 34914,
+  "stato": "CONFERMATO"
+ }
+]

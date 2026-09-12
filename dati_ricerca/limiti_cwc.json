@@ -1,0 +1,7553 @@
+{
+ "10,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 13,
+  "perduto": false,
+  "superiore": 13
+ },
+ "10,4,4": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 30,
+  "perduto": false,
+  "superiore": 30
+ },
+ "10,4,5": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 36,
+  "perduto": false,
+  "superiore": 36
+ },
+ "10,6,4": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "10,6,5": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "10,8,5": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "11,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 17,
+  "perduto": false,
+  "superiore": 17
+ },
+ "11,4,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 35,
+  "perduto": false,
+  "superiore": 35
+ },
+ "11,4,5": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 66,
+  "perduto": false,
+  "superiore": 66
+ },
+ "11,6,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "11,6,5": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 11,
+  "perduto": false,
+  "superiore": null
+ },
+ "11,8,5": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "12,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "12,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 20,
+  "perduto": false,
+  "superiore": 20
+ },
+ "12,4,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 51,
+  "perduto": false,
+  "superiore": 51
+ },
+ "12,4,5": {
+  "codice": "cwc/d4/a12.4.5.80H",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "\u00d6",
+  "inferiore": 80,
+  "perduto": false,
+  "superiore": 80
+ },
+ "12,4,6": {
+  "codice": "cwc/d4/i12.6",
+  "costruzione": "g",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 132,
+  "perduto": false,
+  "superiore": 132
+ },
+ "12,6,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 9,
+  "perduto": false,
+  "superiore": null
+ },
+ "12,6,5": {
+  "codice": "cwc/d6/i12.5",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 12,
+  "perduto": false,
+  "superiore": null
+ },
+ "12,6,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "H",
+  "inferiore": 22,
+  "perduto": false,
+  "superiore": null
+ },
+ "12,8,5": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "12,8,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "d",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "13,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "13,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 26,
+  "perduto": false,
+  "superiore": 26
+ },
+ "13,4,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 65,
+  "perduto": false,
+  "superiore": 65
+ },
+ "13,4,5": {
+  "codice": "cwc/d4/a13.4.5.123H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 123,
+  "perduto": false,
+  "superiore": null
+ },
+ "13,4,6": {
+  "codice": "cwc/d4/a13.4.6.166H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 166,
+  "perduto": false,
+  "superiore": null
+ },
+ "13,6,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 13,
+  "perduto": false,
+  "superiore": null
+ },
+ "13,6,5": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 18,
+  "perduto": false,
+  "superiore": null
+ },
+ "13,6,6": {
+  "codice": "cwc/d6/i13.6",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 26,
+  "perduto": false,
+  "superiore": null
+ },
+ "13,8,5": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "13,8,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "14,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "14,10,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "14,12,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "14,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 28,
+  "perduto": false,
+  "superiore": 28
+ },
+ "14,4,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 91,
+  "perduto": false,
+  "superiore": 91
+ },
+ "14,4,5": {
+  "codice": "cwc/d4/i14.5",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 169,
+  "perduto": false,
+  "superiore": null
+ },
+ "14,4,6": {
+  "codice": "cwc/d4/a14.4.6.278H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 278,
+  "perduto": false,
+  "superiore": null
+ },
+ "14,4,7": {
+  "codice": "cwc/d4/a14.4.7.325H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 325,
+  "perduto": false,
+  "superiore": null
+ },
+ "14,6,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 14,
+  "perduto": false,
+  "superiore": null
+ },
+ "14,6,5": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 28,
+  "perduto": false,
+  "superiore": null
+ },
+ "14,6,6": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 42,
+  "perduto": false,
+  "superiore": null
+ },
+ "14,6,7": {
+  "codice": "cwc/d6/a14.6.7.42",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 42,
+  "perduto": false,
+  "superiore": null
+ },
+ "14,8,5": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "14,8,6": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 7,
+  "perduto": false,
+  "superiore": null
+ },
+ "14,8,7": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 8,
+  "perduto": false,
+  "superiore": null
+ },
+ "15,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "15,10,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "15,12,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "15,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 35,
+  "perduto": false,
+  "superiore": 35
+ },
+ "15,4,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 105,
+  "perduto": false,
+  "superiore": 105
+ },
+ "15,4,5": {
+  "codice": "cwc/d4/a15.4.5.242",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Ex",
+  "inferiore": 242,
+  "perduto": false,
+  "superiore": null
+ },
+ "15,4,6": {
+  "codice": "cwc/d4/i15.6",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 399,
+  "perduto": false,
+  "superiore": null
+ },
+ "15,4,7": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 585,
+  "perduto": false,
+  "superiore": null
+ },
+ "15,6,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 15,
+  "perduto": false,
+  "superiore": null
+ },
+ "15,6,5": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 42,
+  "perduto": false,
+  "superiore": null
+ },
+ "15,6,6": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 70,
+  "perduto": false,
+  "superiore": null
+ },
+ "15,6,7": {
+  "codice": "cwc/d6/a15.6.7.69",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "G \u00d6",
+  "inferiore": 69,
+  "perduto": false,
+  "superiore": null
+ },
+ "15,8,5": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "15,8,6": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 10,
+  "perduto": false,
+  "superiore": null
+ },
+ "15,8,7": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 15,
+  "perduto": false,
+  "superiore": null
+ },
+ "16,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "16,10,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "16,10,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "16,12,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "16,12,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "16,14,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "16,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 37,
+  "perduto": false,
+  "superiore": 37
+ },
+ "16,4,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 140,
+  "perduto": false,
+  "superiore": 140
+ },
+ "16,4,5": {
+  "codice": "cwc/d4/i16.5",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 322,
+  "perduto": false,
+  "superiore": null
+ },
+ "16,4,6": {
+  "codice": "cwc/d4/i16.6a",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BJL\u00d6",
+  "inferiore": 624,
+  "perduto": false,
+  "superiore": null
+ },
+ "16,4,7": {
+  "codice": "cwc/d4/a16.4.7.836H",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "b",
+  "inferiore": 836,
+  "perduto": false,
+  "superiore": null
+ },
+ "16,4,8": {
+  "codice": "cwc/d4/a16.4.8.1170H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 1170,
+  "perduto": false,
+  "superiore": null
+ },
+ "16,6,4": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 20,
+  "perduto": false,
+  "superiore": null
+ },
+ "16,6,5": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 48,
+  "perduto": false,
+  "superiore": null
+ },
+ "16,6,6": {
+  "codice": "cwc/d6/i16.6",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 112,
+  "perduto": false,
+  "superiore": null
+ },
+ "16,6,7": {
+  "codice": "cwc/d6/a16.6.7.109",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "G",
+  "inferiore": 109,
+  "perduto": false,
+  "superiore": 122
+ },
+ "16,6,8": {
+  "codice": "cwc/d6/i16.8",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 120,
+  "perduto": false,
+  "superiore": 138
+ },
+ "16,8,5": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "16,8,6": {
+  "codice": "cwc/d8/i16.6",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 16,
+  "perduto": false,
+  "superiore": null
+ },
+ "16,8,7": {
+  "codice": "cwc/d8/i16.7",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 16,
+  "perduto": false,
+  "superiore": null
+ },
+ "16,8,8": {
+  "codice": "cwc/d8/a16.8.8.30",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "H",
+  "inferiore": 30,
+  "perduto": false,
+  "superiore": null
+ },
+ "17,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "17,10,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "17,10,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "17,12,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "17,12,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "17,14,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "17,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 44,
+  "perduto": false,
+  "superiore": 44
+ },
+ "17,4,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "Ji",
+  "inferiore": 157,
+  "perduto": false,
+  "superiore": 157
+ },
+ "17,4,5": {
+  "codice": "cwc/d4/a17.4.5.444",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Mi",
+  "inferiore": 444,
+  "perduto": false,
+  "superiore": null
+ },
+ "17,4,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 854,
+  "perduto": false,
+  "superiore": null
+ },
+ "17,4,7": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 1416,
+  "perduto": false,
+  "superiore": null
+ },
+ "17,4,8": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 1770,
+  "perduto": false,
+  "superiore": null
+ },
+ "17,6,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 20,
+  "perduto": false,
+  "superiore": null
+ },
+ "17,6,5": {
+  "codice": "cwc/d6/i17.5",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 68,
+  "perduto": false,
+  "superiore": null
+ },
+ "17,6,6": {
+  "codice": "cwc/d6/a17.6.6.113",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Ch\u00d6",
+  "inferiore": 113,
+  "perduto": false,
+  "superiore": 124
+ },
+ "17,6,7": {
+  "codice": "cwc/d6/a17.6.7.166",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "GPo",
+  "inferiore": 166,
+  "perduto": false,
+  "superiore": 206
+ },
+ "17,6,8": {
+  "codice": "cwc/d6/i17.8",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 184,
+  "perduto": false,
+  "superiore": 259
+ },
+ "17,8,5": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 7,
+  "perduto": false,
+  "superiore": null
+ },
+ "17,8,6": {
+  "codice": "cwc/d8/i17.6",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 17,
+  "perduto": false,
+  "superiore": null
+ },
+ "17,8,7": {
+  "codice": "cwc/d8/i17.7",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 24,
+  "perduto": false,
+  "superiore": null
+ },
+ "17,8,8": {
+  "codice": "cwc/d8/i17.8",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 34,
+  "perduto": false,
+  "superiore": null
+ },
+ "18,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "18,10,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "18,10,8": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 9,
+  "perduto": false,
+  "superiore": null
+ },
+ "18,10,9": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 10,
+  "perduto": false,
+  "superiore": null
+ },
+ "18,12,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "18,12,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "d",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "18,12,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "j",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "18,14,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "18,14,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "18,16,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "18,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 48,
+  "perduto": false,
+  "superiore": 48
+ },
+ "18,4,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 198,
+  "perduto": false,
+  "superiore": 198
+ },
+ "18,4,5": {
+  "codice": "cwc/d4/i18.5",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 544,
+  "perduto": false,
+  "superiore": null
+ },
+ "18,4,6": {
+  "codice": "cwc/d4/i18.6",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 1260,
+  "perduto": false,
+  "superiore": null
+ },
+ "18,4,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 2042,
+  "perduto": false,
+  "superiore": null
+ },
+ "18,4,8": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3186,
+  "perduto": false,
+  "superiore": null
+ },
+ "18,4,9": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3540,
+  "perduto": false,
+  "superiore": null
+ },
+ "18,6,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 22,
+  "perduto": false,
+  "superiore": null
+ },
+ "18,6,5": {
+  "codice": "cwc/d6/a18.6.5.69",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "ACL",
+  "inferiore": 69,
+  "perduto": false,
+  "superiore": 72
+ },
+ "18,6,6": {
+  "codice": "cwc/d6/a18.6.6.133",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "R",
+  "inferiore": 133,
+  "perduto": false,
+  "superiore": 186
+ },
+ "18,6,7": {
+  "codice": "cwc/d6/a18.6.7.243",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "GPo",
+  "inferiore": 243,
+  "perduto": false,
+  "superiore": 312
+ },
+ "18,6,8": {
+  "codice": "cwc/d6/a18.6.8.260",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "KKT",
+  "inferiore": 260,
+  "perduto": false,
+  "superiore": 427
+ },
+ "18,6,9": {
+  "codice": "cwc/d6/i18.9",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gKKT",
+  "inferiore": 320,
+  "perduto": false,
+  "superiore": 424
+ },
+ "18,8,5": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 9,
+  "perduto": false,
+  "superiore": null
+ },
+ "18,8,6": {
+  "codice": "cwc/d8/i18.6",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 21,
+  "perduto": false,
+  "superiore": null
+ },
+ "18,8,7": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "\u00d6",
+  "inferiore": 33,
+  "perduto": false,
+  "superiore": null
+ },
+ "18,8,8": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "\u00d6",
+  "inferiore": 46,
+  "perduto": false,
+  "superiore": 49
+ },
+ "18,8,9": {
+  "codice": "cwc/d8/a18.8.9.48",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "sb\u00d6",
+  "inferiore": 48,
+  "perduto": false,
+  "superiore": 58
+ },
+ "19,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "19,10,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 8,
+  "perduto": false,
+  "superiore": null
+ },
+ "19,10,8": {
+  "codice": "cwc/d10/a19.10.8.12",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 12,
+  "perduto": false,
+  "superiore": null
+ },
+ "19,10,9": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 19,
+  "perduto": false,
+  "superiore": null
+ },
+ "19,12,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "19,12,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "19,12,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "19,14,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "19,14,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "19,16,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "19,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 57,
+  "perduto": false,
+  "superiore": 57
+ },
+ "19,4,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 228,
+  "perduto": false,
+  "superiore": 228
+ },
+ "19,4,5": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 692,
+  "perduto": false,
+  "superiore": null
+ },
+ "19,4,6": {
+  "codice": "cwc/d4/a19.4.6.1620H",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "b",
+  "inferiore": 1620,
+  "perduto": false,
+  "superiore": null
+ },
+ "19,4,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 3172,
+  "perduto": false,
+  "superiore": null
+ },
+ "19,4,8": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4698,
+  "perduto": false,
+  "superiore": null
+ },
+ "19,4,9": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6726,
+  "perduto": false,
+  "superiore": null
+ },
+ "19,6,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 25,
+  "perduto": false,
+  "superiore": null
+ },
+ "19,6,5": {
+  "codice": "cwc/d6/i19.5",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 76,
+  "perduto": false,
+  "superiore": 83
+ },
+ "19,6,6": {
+  "codice": "cwc/d6/i19.6",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 172,
+  "perduto": false,
+  "superiore": 228
+ },
+ "19,6,7": {
+  "codice": "cwc/d6/a19.6.7.338",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "sbPo",
+  "inferiore": 338,
+  "perduto": false,
+  "superiore": 463
+ },
+ "19,6,8": {
+  "codice": "cwc/d6/i19.8a",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gPo",
+  "inferiore": 408,
+  "perduto": false,
+  "superiore": 693
+ },
+ "19,6,9": {
+  "codice": "cwc/d6/i19.9",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 504,
+  "perduto": false,
+  "superiore": 789
+ },
+ "19,8,5": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 12,
+  "perduto": false,
+  "superiore": null
+ },
+ "19,8,6": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 28,
+  "perduto": false,
+  "superiore": null
+ },
+ "19,8,7": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "\u00d6",
+  "inferiore": 52,
+  "perduto": false,
+  "superiore": null
+ },
+ "19,8,8": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "\u00d6",
+  "inferiore": 78,
+  "perduto": false,
+  "superiore": null
+ },
+ "19,8,9": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 88,
+  "perduto": false,
+  "superiore": 103
+ },
+ "20,10,10": {
+  "codice": "cwc/d10/a20.10.10.38",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "H",
+  "inferiore": 38,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,10,7": {
+  "codice": "cwc/d10/i20.7",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 10,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,10,8": {
+  "codice": "cwc/d10/a20.10.8.17",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 17,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,10,9": {
+  "codice": "cwc/d10/i20.9",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 20,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,12,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "d",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,12,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,12,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "d",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,12,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "j",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,14,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,14,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,14,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,16,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,16,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,18,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,4,10": {
+  "codice": "cwc/d4/i20.10",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 13452,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 60,
+  "perduto": false,
+  "superiore": 60
+ },
+ "20,4,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 285,
+  "perduto": false,
+  "superiore": 285
+ },
+ "20,4,5": {
+  "codice": "cwc/d4/a20.4.5.874H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 874,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,4,6": {
+  "codice": "cwc/d4/i20.6",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Nu",
+  "inferiore": 2304,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,4,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 4213,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,4,8": {
+  "codice": "cwc/d4/i20.8",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BJL\u00d6",
+  "inferiore": 7830,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,4,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 10048,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,6,10": {
+  "codice": "cwc/d6/a20.6.10.944H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "tKKT",
+  "inferiore": 944,
+  "perduto": false,
+  "superiore": 1420
+ },
+ "20,6,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 30,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,6,5": {
+  "codice": "cwc/d6/i20.5",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 90,
+  "perduto": false,
+  "superiore": 100
+ },
+ "20,6,6": {
+  "codice": "cwc/d6/i20.6",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "t",
+  "inferiore": 232,
+  "perduto": false,
+  "superiore": 276
+ },
+ "20,6,7": {
+  "codice": "cwc/d6/a20.6.7.462H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "t",
+  "inferiore": 462,
+  "perduto": false,
+  "superiore": 651
+ },
+ "20,6,8": {
+  "codice": "cwc/d6/a20.6.8.590H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "EPo",
+  "inferiore": 590,
+  "perduto": false,
+  "superiore": 1084
+ },
+ "20,6,9": {
+  "codice": "cwc/d6/i20.9",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "t",
+  "inferiore": 832,
+  "perduto": false,
+  "superiore": 1363
+ },
+ "20,8,10": {
+  "codice": "cwc/d8/i20.10",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 176,
+  "perduto": false,
+  "superiore": 206
+ },
+ "20,8,5": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 16,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,8,6": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 40,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,8,7": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 80,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,8,8": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "\u00d6",
+  "inferiore": 130,
+  "perduto": false,
+  "superiore": null
+ },
+ "20,8,9": {
+  "codice": "cwc/d8/i20.9",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 160,
+  "perduto": false,
+  "superiore": 173
+ },
+ "21,10,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 38,
+  "perduto": false,
+  "superiore": 42
+ },
+ "21,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 7,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,10,7": {
+  "codice": "cwc/d10/a21.10.7.13",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 13,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,10,8": {
+  "codice": "cwc/d10/i21.8",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 21,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,10,9": {
+  "codice": "cwc/d10/a21.10.9.27",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 27,
+  "perduto": false,
+  "superiore": 35
+ },
+ "21,12,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "j",
+  "inferiore": 7,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,12,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,12,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,12,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "j",
+  "inferiore": 7,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,14,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,14,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,14,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,16,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,16,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,18,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,4,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 20654,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 70,
+  "perduto": false,
+  "superiore": 70
+ },
+ "21,4,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 315,
+  "perduto": false,
+  "superiore": 315
+ },
+ "21,4,5": {
+  "codice": "cwc/d4/i21.5",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 1113,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,4,6": {
+  "codice": "cwc/d4/i21.6",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BJL\u00d6",
+  "inferiore": 2880,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,4,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 6161,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,4,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 10767,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,4,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 17177,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,6,10": {
+  "codice": "cwc/d6/a21.6.10.1474H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "S",
+  "inferiore": 1474,
+  "perduto": false,
+  "superiore": 2685
+ },
+ "21,6,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 31,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,6,5": {
+  "codice": "cwc/d6/a21.6.5.110H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Bo",
+  "inferiore": 110,
+  "perduto": false,
+  "superiore": 126
+ },
+ "21,6,6": {
+  "codice": "cwc/d6/i21.6",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 273,
+  "perduto": false,
+  "superiore": 350
+ },
+ "21,6,7": {
+  "codice": "cwc/d6/i21.7",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "b",
+  "inferiore": 570,
+  "perduto": false,
+  "superiore": 828
+ },
+ "21,6,8": {
+  "codice": "cwc/d6/a21.6.8.775H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Po",
+  "inferiore": 775,
+  "perduto": false,
+  "superiore": 1665
+ },
+ "21,6,9": {
+  "codice": "cwc/d6/a21.6.9.1186H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Po",
+  "inferiore": 1186,
+  "perduto": false,
+  "superiore": 2328
+ },
+ "21,8,10": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 336,
+  "perduto": false,
+  "superiore": 363
+ },
+ "21,8,5": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 21,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,8,6": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 56,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,8,7": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 120,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,8,8": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 210,
+  "perduto": false,
+  "superiore": null
+ },
+ "21,8,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "sPo",
+  "inferiore": 280,
+  "perduto": false,
+  "superiore": 294
+ },
+ "22,10,10": {
+  "codice": "cwc/d10/a22.10.10.46",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "NuPo",
+  "inferiore": 46,
+  "perduto": false,
+  "superiore": 71
+ },
+ "22,10,11": {
+  "codice": "cwc/d10/i22.11",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "cPo",
+  "inferiore": 46,
+  "perduto": false,
+  "superiore": 79
+ },
+ "22,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 7,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,10,7": {
+  "codice": "cwc/d10/i22.7",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 16,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,10,8": {
+  "codice": "cwc/d10/a22.10.8.25",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "R",
+  "inferiore": 25,
+  "perduto": false,
+  "superiore": 33
+ },
+ "22,10,9": {
+  "codice": "cwc/d10/i22.9",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 35,
+  "perduto": false,
+  "superiore": 51
+ },
+ "22,12,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "d",
+  "inferiore": 11,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,12,11": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 12,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,12,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,12,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "d",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,12,9": {
+  "codice": "cwc/d12/i22.9",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 8,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,14,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,14,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,14,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,14,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,16,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,16,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,16,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,18,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,18,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,4,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 37127,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,4,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 40624,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 73,
+  "perduto": false,
+  "superiore": 73
+ },
+ "22,4,4": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 385,
+  "perduto": false,
+  "superiore": 385
+ },
+ "22,4,5": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 1386,
+  "perduto": false,
+  "superiore": 1386
+ },
+ "22,4,6": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3927,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,4,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 8338,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,4,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 16527,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,4,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 25902,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,6,10": {
+  "codice": "cwc/d6/a22.6.10.2183H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "S",
+  "inferiore": 2183,
+  "perduto": false,
+  "superiore": 4415
+ },
+ "22,6,11": {
+  "codice": "cwc/d6/a22.6.11.2636H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "tMo",
+  "inferiore": 2636,
+  "perduto": false,
+  "superiore": 5033
+ },
+ "22,6,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 37,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,6,5": {
+  "codice": "cwc/d6/i22.5",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 132,
+  "perduto": false,
+  "superiore": 136
+ },
+ "22,6,6": {
+  "codice": "cwc/d6/i22.6a",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BJL\u00d6",
+  "inferiore": 343,
+  "perduto": false,
+  "superiore": 462
+ },
+ "22,6,7": {
+  "codice": "cwc/d6/a22.6.7.759",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "G",
+  "inferiore": 759,
+  "perduto": false,
+  "superiore": 1100
+ },
+ "22,6,8": {
+  "codice": "cwc/d6/a22.6.8.1145H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "E",
+  "inferiore": 1145,
+  "perduto": false,
+  "superiore": 2277
+ },
+ "22,6,9": {
+  "codice": "cwc/d6/a22.6.9.1818H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "S",
+  "inferiore": 1818,
+  "perduto": false,
+  "superiore": 3736
+ },
+ "22,8,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "s Po",
+  "inferiore": 616,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,8,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "s Po",
+  "inferiore": 672,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,8,5": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 21,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,8,6": {
+  "codice": "cwc/d8/i22.6",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 77,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,8,7": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 176,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,8,8": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 330,
+  "perduto": false,
+  "superiore": null
+ },
+ "22,8,9": {
+  "codice": "cwc/d8/a22.8.9.292",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "RPo",
+  "inferiore": 292,
+  "perduto": false,
+  "superiore": 440
+ },
+ "23,10,10": {
+  "codice": "cwc/d10/a23.10.10.54",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Po",
+  "inferiore": 54,
+  "perduto": false,
+  "superiore": 116
+ },
+ "23,10,11": {
+  "codice": "cwc/d10/i23.11",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Nu",
+  "inferiore": 65,
+  "perduto": false,
+  "superiore": 135
+ },
+ "23,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 8,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,10,7": {
+  "codice": "cwc/d10/a23.10.7.20",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Ko",
+  "inferiore": 20,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,10,8": {
+  "codice": "cwc/d10/i23.8",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 33,
+  "perduto": false,
+  "superiore": 46
+ },
+ "23,10,9": {
+  "codice": "cwc/d10/i23.9",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "cMEL",
+  "inferiore": 45,
+  "perduto": false,
+  "superiore": 78
+ },
+ "23,12,10": {
+  "codice": "cwc/d12/a23.12.10.16",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 16,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,12,11": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 23,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,12,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,12,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,12,9": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 10,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,14,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,14,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,14,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,14,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,16,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,16,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,16,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,18,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,18,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,4,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 58659,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,4,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 76233,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 83,
+  "perduto": false,
+  "superiore": 83
+ },
+ "23,4,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BJi",
+  "inferiore": 419,
+  "perduto": false,
+  "superiore": 419
+ },
+ "23,4,5": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 1771,
+  "perduto": false,
+  "superiore": 1771
+ },
+ "23,4,6": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 5313,
+  "perduto": false,
+  "superiore": 5313
+ },
+ "23,4,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 11696,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,4,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 23467,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,4,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 41413,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,6,10": {
+  "codice": "cwc/d6/a23.6.10.2992H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2992,
+  "perduto": false,
+  "superiore": 7521
+ },
+ "23,6,11": {
+  "codice": "cwc/d6/a23.6.11.3588H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3588,
+  "perduto": false,
+  "superiore": 7953
+ },
+ "23,6,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 40,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,6,5": {
+  "codice": "cwc/d6/a23.6.5.147",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "t",
+  "inferiore": 147,
+  "perduto": false,
+  "superiore": 170
+ },
+ "23,6,6": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 399,
+  "perduto": false,
+  "superiore": 521
+ },
+ "23,6,7": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 969,
+  "perduto": false,
+  "superiore": 1518
+ },
+ "23,6,8": {
+  "codice": "cwc/d6/a23.6.8.1439H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 1439,
+  "perduto": false,
+  "superiore": 3162
+ },
+ "23,6,9": {
+  "codice": "cwc/d6/a23.6.9.2278H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2278,
+  "perduto": false,
+  "superiore": 5819
+ },
+ "23,8,10": {
+  "codice": "cwc/d8/a23.8.10.648",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "R",
+  "inferiore": 648,
+  "perduto": false,
+  "superiore": 1012
+ },
+ "23,8,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "s S",
+  "inferiore": 1288,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,8,5": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 23,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,8,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 77,
+  "perduto": false,
+  "superiore": 80
+ },
+ "23,8,7": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 253,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,8,8": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 506,
+  "perduto": false,
+  "superiore": null
+ },
+ "23,8,9": {
+  "codice": "cwc/d8/a23.8.9.412",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "RPo",
+  "inferiore": 412,
+  "perduto": false,
+  "superiore": 662
+ },
+ "24,10,10": {
+  "codice": "cwc/d10/i24.10",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "cKKT",
+  "inferiore": 72,
+  "perduto": false,
+  "superiore": 170
+ },
+ "24,10,11": {
+  "codice": "cwc/d10/a24.10.11.95",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "NuKKT",
+  "inferiore": 95,
+  "perduto": false,
+  "superiore": 222
+ },
+ "24,10,12": {
+  "codice": "cwc/d10/a24.10.12.123",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "KKT",
+  "inferiore": 123,
+  "perduto": false,
+  "superiore": 246
+ },
+ "24,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 9,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,10,7": {
+  "codice": "cwc/d10/i24.7",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 24,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,10,8": {
+  "codice": "cwc/d10/a24.10.8.39",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "E",
+  "inferiore": 39,
+  "perduto": false,
+  "superiore": 60
+ },
+ "24,10,9": {
+  "codice": "cwc/d10/i24.9",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "cMEL",
+  "inferiore": 56,
+  "perduto": false,
+  "superiore": 116
+ },
+ "24,12,10": {
+  "codice": "cwc/d12/i24.10",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 24,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,12,11": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 24,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,12,12": {
+  "codice": "cwc/d12/a24.12.12.46",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "H",
+  "inferiore": 46,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,12,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,12,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "d",
+  "inferiore": 9,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,12,9": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 16,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,14,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,14,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,14,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,14,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,14,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,16,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,16,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,16,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,16,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,18,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,18,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,18,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,4,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 98852,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,4,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 118422,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,4,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 151484,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 88,
+  "perduto": false,
+  "superiore": 88
+ },
+ "24,4,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 498,
+  "perduto": false,
+  "superiore": 498
+ },
+ "24,4,5": {
+  "codice": "cwc/d4/i24.5",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BJL\u00d6",
+  "inferiore": 1920,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,4,6": {
+  "codice": "cwc/d4/i24.6",
+  "costruzione": "g",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 7084,
+  "perduto": false,
+  "superiore": 7084
+ },
+ "24,4,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "EB",
+  "inferiore": 15656,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,4,8": {
+  "codice": "cwc/d4/i24.8",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 34914,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,4,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 59904,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,6,10": {
+  "codice": "cwc/d6/a24.6.10.4237H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4237,
+  "perduto": false,
+  "superiore": 12186
+ },
+ "24,6,11": {
+  "codice": "cwc/d6/i24.11a",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BJL\u00d6",
+  "inferiore": 5376,
+  "perduto": false,
+  "superiore": 14682
+ },
+ "24,6,12": {
+  "codice": "#lost",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5616,
+  "perduto": true,
+  "superiore": 15906
+ },
+ "24,6,4": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 42,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,6,5": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 168,
+  "perduto": false,
+  "superiore": 192
+ },
+ "24,6,6": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 532,
+  "perduto": false,
+  "superiore": 680
+ },
+ "24,6,7": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 1368,
+  "perduto": false,
+  "superiore": 1786
+ },
+ "24,6,8": {
+  "codice": "cwc/d6/a24.6.8.1915H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "E",
+  "inferiore": 1915,
+  "perduto": false,
+  "superiore": 4554
+ },
+ "24,6,9": {
+  "codice": "cwc/d6/i24.9a",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BJL\u00d6",
+  "inferiore": 3080,
+  "perduto": false,
+  "superiore": 8432
+ },
+ "24,8,10": {
+  "codice": "cwc/d8/a24.8.10.960H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "GS",
+  "inferiore": 960,
+  "perduto": false,
+  "superiore": 1551
+ },
+ "24,8,11": {
+  "codice": "cwc/d8/a24.8.11.1378H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "RS",
+  "inferiore": 1378,
+  "perduto": false,
+  "superiore": 2142
+ },
+ "24,8,12": {
+  "codice": "cwc/d8/i24.12",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "G",
+  "inferiore": 2576,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,8,5": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 24,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,8,6": {
+  "codice": "cwc/d8/a24.8.6.78",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 78,
+  "perduto": false,
+  "superiore": 92
+ },
+ "24,8,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 253,
+  "perduto": false,
+  "superiore": 274
+ },
+ "24,8,8": {
+  "codice": "cwc/d8/i24.8",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "G",
+  "inferiore": 759,
+  "perduto": false,
+  "superiore": null
+ },
+ "24,8,9": {
+  "codice": "cwc/d8/a24.8.9.656",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "RPo",
+  "inferiore": 656,
+  "perduto": false,
+  "superiore": 968
+ },
+ "25,10,10": {
+  "codice": "cwc/d10/i25.10",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 100,
+  "perduto": false,
+  "superiore": 262
+ },
+ "25,10,11": {
+  "codice": "cwc/d10/i25.11",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "cKT",
+  "inferiore": 125,
+  "perduto": false,
+  "superiore": 379
+ },
+ "25,10,12": {
+  "codice": "cwc/d10/a25.10.12.141H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "EKT",
+  "inferiore": 141,
+  "perduto": false,
+  "superiore": 433
+ },
+ "25,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 10,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,10,7": {
+  "codice": "cwc/d10/i25.7",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 28,
+  "perduto": false,
+  "superiore": 32
+ },
+ "25,10,8": {
+  "codice": "cwc/d10/a25.10.8.51",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 51,
+  "perduto": false,
+  "superiore": 75
+ },
+ "25,10,9": {
+  "codice": "cwc/d10/i25.9",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "cMEL",
+  "inferiore": 72,
+  "perduto": false,
+  "superiore": 157
+ },
+ "25,12,10": {
+  "codice": "cwc/d12/i25.10",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "cKT",
+  "inferiore": 28,
+  "perduto": false,
+  "superiore": 36
+ },
+ "25,12,11": {
+  "codice": "cwc/d12/i25.11",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 36,
+  "perduto": false,
+  "superiore": 42
+ },
+ "25,12,12": {
+  "codice": "cwc/d12/i25.12",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 50,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,12,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,12,8": {
+  "codice": "cwc/d12/i25.8",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 10,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,12,9": {
+  "codice": "cwc/d12/i25.9",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 25,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,14,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,14,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 7,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,14,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 8,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,14,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,14,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,16,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,16,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,16,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,16,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,18,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,18,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,18,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,4,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 142373,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,4,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 198387,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,4,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 231530,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 100,
+  "perduto": false,
+  "superiore": 100
+ },
+ "25,4,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 550,
+  "perduto": false,
+  "superiore": 550
+ },
+ "25,4,5": {
+  "codice": "cwc/d4/i25.5",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BJL\u00d6",
+  "inferiore": 2380,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,4,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 7787,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,4,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 21220,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,4,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 47265,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,4,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 89742,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,6,10": {
+  "codice": "cwc/d6/i25.10a",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BJL\u00d6",
+  "inferiore": 6600,
+  "perduto": false,
+  "superiore": 19037
+ },
+ "25,6,11": {
+  "codice": "cwc/d6/a25.6.11.8698H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Bo",
+  "inferiore": 8698,
+  "perduto": false,
+  "superiore": 24630
+ },
+ "25,6,12": {
+  "codice": "cwc/d6/a25.6.12.9880H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 9880,
+  "perduto": false,
+  "superiore": 30587
+ },
+ "25,6,4": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 50,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,6,5": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 210,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,6,6": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 700,
+  "perduto": false,
+  "superiore": 800
+ },
+ "25,6,7": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 1900,
+  "perduto": false,
+  "superiore": 2428
+ },
+ "25,6,8": {
+  "codice": "cwc/d6/a25.6.8.2646H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "E",
+  "inferiore": 2646,
+  "perduto": false,
+  "superiore": 5581
+ },
+ "25,6,9": {
+  "codice": "cwc/d6/a25.6.9.4260H",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "b",
+  "inferiore": 4260,
+  "perduto": false,
+  "superiore": 12620
+ },
+ "25,8,10": {
+  "codice": "cwc/d8/a25.8.10.1248H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "S",
+  "inferiore": 1248,
+  "perduto": false,
+  "superiore": 2333
+ },
+ "25,8,11": {
+  "codice": "cwc/d8/a25.8.11.1722H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "ES",
+  "inferiore": 1722,
+  "perduto": false,
+  "superiore": 3422
+ },
+ "25,8,12": {
+  "codice": "cwc/d8/a25.8.12.2610H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "RS",
+  "inferiore": 2610,
+  "perduto": false,
+  "superiore": 4087
+ },
+ "25,8,5": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 30,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,8,6": {
+  "codice": "cwc/d8/i25.6",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 100,
+  "perduto": false,
+  "superiore": null
+ },
+ "25,8,7": {
+  "codice": "cwc/d8/a25.8.7.255",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "R",
+  "inferiore": 255,
+  "perduto": false,
+  "superiore": 328
+ },
+ "25,8,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Po",
+  "inferiore": 759,
+  "perduto": false,
+  "superiore": 850
+ },
+ "25,8,9": {
+  "codice": "cwc/d8/a25.8.9.837H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "RPo",
+  "inferiore": 837,
+  "perduto": false,
+  "superiore": 1366
+ },
+ "26,10,10": {
+  "codice": "cwc/d10/i26.10",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "cPo",
+  "inferiore": 130,
+  "perduto": false,
+  "superiore": 397
+ },
+ "26,10,11": {
+  "codice": "cwc/d10/i26.11",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "cKT",
+  "inferiore": 168,
+  "perduto": false,
+  "superiore": 565
+ },
+ "26,10,12": {
+  "codice": "cwc/d10/i26.12",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gKT",
+  "inferiore": 208,
+  "perduto": false,
+  "superiore": 691
+ },
+ "26,10,13": {
+  "codice": "cwc/d10/a26.10.13.234H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "ES",
+  "inferiore": 234,
+  "perduto": false,
+  "superiore": 754
+ },
+ "26,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 13,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,10,7": {
+  "codice": "cwc/d10/i26.7",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 30,
+  "perduto": false,
+  "superiore": 36
+ },
+ "26,10,8": {
+  "codice": "cwc/d10/a26.10.8.68",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "E",
+  "inferiore": 68,
+  "perduto": false,
+  "superiore": 104
+ },
+ "26,10,9": {
+  "codice": "cwc/d10/i26.9",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "NuKKT",
+  "inferiore": 91,
+  "perduto": false,
+  "superiore": 213
+ },
+ "26,12,10": {
+  "codice": "cwc/d12/i26.10",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Nu",
+  "inferiore": 33,
+  "perduto": false,
+  "superiore": 37
+ },
+ "26,12,11": {
+  "codice": "cwc/d12/i26.11",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "S",
+  "inferiore": 41,
+  "perduto": false,
+  "superiore": 66
+ },
+ "26,12,12": {
+  "codice": "cwc/d12/i26.12",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Ho",
+  "inferiore": 54,
+  "perduto": false,
+  "superiore": 83
+ },
+ "26,12,13": {
+  "codice": "cwc/d12/a26.12.13.58",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "HoS",
+  "inferiore": 58,
+  "perduto": false,
+  "superiore": 91
+ },
+ "26,12,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,12,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "d",
+  "inferiore": 13,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,12,9": {
+  "codice": "cwc/d12/i26.9",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 26,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,14,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 8,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,14,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 10,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,14,12": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 13,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,14,13": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 14,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,14,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,14,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,16,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,16,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,16,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,16,13": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,16,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,18,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,18,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,18,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,18,13": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,4,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 222775,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,4,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 320584,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,4,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 401937,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,4,13": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 431724,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 104,
+  "perduto": false,
+  "superiore": 104
+ },
+ "26,4,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 650,
+  "perduto": false,
+  "superiore": 650
+ },
+ "26,4,5": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2816,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,4,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 10010,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,4,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 27050,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,4,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 66352,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,4,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 129708,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,6,10": {
+  "codice": "cwc/d6/i26.10",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 8810,
+  "perduto": false,
+  "superiore": 28893
+ },
+ "26,6,11": {
+  "codice": "cwc/d6/a26.6.11.12206H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Mo",
+  "inferiore": 12206,
+  "perduto": false,
+  "superiore": 42017
+ },
+ "26,6,12": {
+  "codice": "cwc/d6/a26.6.12.14854H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gsS",
+  "inferiore": 14854,
+  "perduto": false,
+  "superiore": 50169
+ },
+ "26,6,13": {
+  "codice": "cwc/d6/a26.6.13.16117H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 16117,
+  "perduto": false,
+  "superiore": 61174
+ },
+ "26,6,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 52,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,6,5": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 260,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,6,6": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 910,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,6,7": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2600,
+  "perduto": false,
+  "superiore": 2971
+ },
+ "26,6,8": {
+  "codice": "cwc/d6/a26.6.8.3602H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "E",
+  "inferiore": 3602,
+  "perduto": false,
+  "superiore": 7891
+ },
+ "26,6,9": {
+  "codice": "cwc/d6/a26.6.9.5761H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Bo",
+  "inferiore": 5761,
+  "perduto": false,
+  "superiore": 16122
+ },
+ "26,8,10": {
+  "codice": "cwc/d8/a26.8.10.1519H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "GS",
+  "inferiore": 1519,
+  "perduto": false,
+  "superiore": 3496
+ },
+ "26,8,11": {
+  "codice": "cwc/d8/a26.8.11.2042H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "EKT",
+  "inferiore": 2042,
+  "perduto": false,
+  "superiore": 5208
+ },
+ "26,8,12": {
+  "codice": "cwc/d8/a26.8.12.3070H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "GS",
+  "inferiore": 3070,
+  "perduto": false,
+  "superiore": 6741
+ },
+ "26,8,13": {
+  "codice": "cwc/d8/i26.13",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "sbS",
+  "inferiore": 3588,
+  "perduto": false,
+  "superiore": 7080
+ },
+ "26,8,5": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 30,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,8,6": {
+  "codice": "cwc/d8/i26.6",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 130,
+  "perduto": false,
+  "superiore": null
+ },
+ "26,8,7": {
+  "codice": "cwc/d8/a26.8.7.264H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "E",
+  "inferiore": 264,
+  "perduto": false,
+  "superiore": 371
+ },
+ "26,8,8": {
+  "codice": "cwc/d8/a26.8.8.763H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "R",
+  "inferiore": 763,
+  "perduto": false,
+  "superiore": 1066
+ },
+ "26,8,9": {
+  "codice": "cwc/d8/a26.8.9.890H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "EPo",
+  "inferiore": 890,
+  "perduto": false,
+  "superiore": 1901
+ },
+ "27,10,10": {
+  "codice": "cwc/d10/i27.10",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "NuPo",
+  "inferiore": 162,
+  "perduto": false,
+  "superiore": 555
+ },
+ "27,10,11": {
+  "codice": "cwc/d10/i27.11",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gKT",
+  "inferiore": 243,
+  "perduto": false,
+  "superiore": 871
+ },
+ "27,10,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "sKT",
+  "inferiore": 351,
+  "perduto": false,
+  "superiore": 1190
+ },
+ "27,10,13": {
+  "codice": "cwc/d10/a27.10.13.425H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "EKT",
+  "inferiore": 425,
+  "perduto": false,
+  "superiore": 1406
+ },
+ "27,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 14,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,10,7": {
+  "codice": "cwc/d10/i27.7",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 36,
+  "perduto": false,
+  "superiore": 48
+ },
+ "27,10,8": {
+  "codice": "cwc/d10/a27.10.8.76",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "E",
+  "inferiore": 76,
+  "perduto": false,
+  "superiore": 121
+ },
+ "27,10,9": {
+  "codice": "cwc/d10/a27.10.9.118",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "NuPo",
+  "inferiore": 118,
+  "perduto": false,
+  "superiore": 291
+ },
+ "27,12,10": {
+  "codice": "cwc/d12/i27.10",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 39,
+  "perduto": false,
+  "superiore": 58
+ },
+ "27,12,11": {
+  "codice": "cwc/d12/i27.11",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 54,
+  "perduto": false,
+  "superiore": 90
+ },
+ "27,12,12": {
+  "codice": "cwc/d12/a27.12.12.82",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "KKT",
+  "inferiore": 82,
+  "perduto": false,
+  "superiore": 139
+ },
+ "27,12,13": {
+  "codice": "cwc/d12/a27.12.13.87",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BoKKT",
+  "inferiore": 87,
+  "perduto": false,
+  "superiore": 155
+ },
+ "27,12,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,12,8": {
+  "codice": "cwc/d12/i27.8",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 15,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,12,9": {
+  "codice": "cwc/d12/i27.9",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 39,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,14,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 9,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,14,11": {
+  "codice": "cwc/d14/i26.12",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 13,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,14,12": {
+  "codice": "cwc/d14/i27.12",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 19,
+  "perduto": false,
+  "superiore": 20
+ },
+ "27,14,13": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 27,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,14,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,14,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,16,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,16,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,16,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,16,13": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,16,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,18,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,18,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,18,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,18,13": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,4,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 334859,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,4,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 518014,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,4,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 686164,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,4,13": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 791461,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 117,
+  "perduto": false,
+  "superiore": 117
+ },
+ "27,4,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 702,
+  "perduto": false,
+  "superiore": 702
+ },
+ "27,4,5": {
+  "codice": "cwc/d4/i27.5",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BJL\u00d6",
+  "inferiore": 3456,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,4,6": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 12012,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,4,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 35874,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,4,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 88604,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,4,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 188561,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,6,10": {
+  "codice": "cwc/d6/i27.10",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 12987,
+  "perduto": false,
+  "superiore": 43529
+ },
+ "27,6,11": {
+  "codice": "cwc/d6/a27.6.11.18260H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "KKT",
+  "inferiore": 18260,
+  "perduto": false,
+  "superiore": 66078
+ },
+ "27,6,12": {
+  "codice": "cwc/d6/a27.6.12.23903H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BoKKT",
+  "inferiore": 23903,
+  "perduto": false,
+  "superiore": 84573
+ },
+ "27,6,13": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "JXKKT",
+  "inferiore": 27600,
+  "perduto": false,
+  "superiore": 91079
+ },
+ "27,6,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 54,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,6,5": {
+  "codice": "cwc/d6/a27.6.5.262H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Bo",
+  "inferiore": 262,
+  "perduto": false,
+  "superiore": 280
+ },
+ "27,6,6": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 1170,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,6,7": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3510,
+  "perduto": false,
+  "superiore": null
+ },
+ "27,6,8": {
+  "codice": "cwc/d6/a27.6.8.4828H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "E",
+  "inferiore": 4828,
+  "perduto": false,
+  "superiore": 10027
+ },
+ "27,6,9": {
+  "codice": "cwc/d6/i27.9",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 8112,
+  "perduto": false,
+  "superiore": 23673
+ },
+ "27,8,10": {
+  "codice": "cwc/d8/a27.8.10.1728H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Bo",
+  "inferiore": 1728,
+  "perduto": false,
+  "superiore": 4986
+ },
+ "27,8,11": {
+  "codice": "cwc/d8/a27.8.11.2404H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "KT",
+  "inferiore": 2404,
+  "perduto": false,
+  "superiore": 7754
+ },
+ "27,8,12": {
+  "codice": "cwc/d8/a27.8.12.3337H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "EKT",
+  "inferiore": 3337,
+  "perduto": false,
+  "superiore": 10460
+ },
+ "27,8,13": {
+  "codice": "cwc/d8/i27.13",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "NuKKT",
+  "inferiore": 4094,
+  "perduto": false,
+  "superiore": 11897
+ },
+ "27,8,5": {
+  "codice": "cwc/d8/a27.8.5.31",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "ACL",
+  "inferiore": 31,
+  "perduto": false,
+  "superiore": 32
+ },
+ "27,8,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 130,
+  "perduto": false,
+  "superiore": 135
+ },
+ "27,8,7": {
+  "codice": "cwc/d8/a27.8.7.303H",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "d",
+  "inferiore": 303,
+  "perduto": false,
+  "superiore": 500
+ },
+ "27,8,8": {
+  "codice": "cwc/d8/a27.8.8.775H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "E",
+  "inferiore": 775,
+  "perduto": false,
+  "superiore": 1252
+ },
+ "27,8,9": {
+  "codice": "cwc/d8/a27.8.9.1029H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "EPo",
+  "inferiore": 1029,
+  "perduto": false,
+  "superiore": 2616
+ },
+ "28,10,10": {
+  "codice": "cwc/d10/i28.10",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gMEL",
+  "inferiore": 219,
+  "perduto": false,
+  "superiore": 785
+ },
+ "28,10,11": {
+  "codice": "cwc/d10/i28.11",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gKT",
+  "inferiore": 308,
+  "perduto": false,
+  "superiore": 1351
+ },
+ "28,10,12": {
+  "codice": "cwc/d10/i28.12",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "S",
+  "inferiore": 390,
+  "perduto": false,
+  "superiore": 1977
+ },
+ "28,10,13": {
+  "codice": "cwc/d10/i28.13",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Nu",
+  "inferiore": 756,
+  "perduto": false,
+  "superiore": 2438
+ },
+ "28,10,14": {
+  "codice": "cwc/d10/a28.10.14.814H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "EKKT",
+  "inferiore": 814,
+  "perduto": false,
+  "superiore": 2628
+ },
+ "28,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 16,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,10,7": {
+  "codice": "cwc/d10/a28.10.7.38",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "R",
+  "inferiore": 38,
+  "perduto": false,
+  "superiore": 56
+ },
+ "28,10,8": {
+  "codice": "cwc/d10/a28.10.8.85",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "E",
+  "inferiore": 85,
+  "perduto": false,
+  "superiore": 168
+ },
+ "28,10,9": {
+  "codice": "cwc/d10/i28.9",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 140,
+  "perduto": false,
+  "superiore": 376
+ },
+ "28,12,10": {
+  "codice": "cwc/d12/i28.10",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 56,
+  "perduto": false,
+  "superiore": 87
+ },
+ "28,12,11": {
+  "codice": "cwc/d12/i28.11",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Nu",
+  "inferiore": 65,
+  "perduto": false,
+  "superiore": 147
+ },
+ "28,12,12": {
+  "codice": "cwc/d12/i28.12",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gKKT",
+  "inferiore": 119,
+  "perduto": false,
+  "superiore": 198
+ },
+ "28,12,13": {
+  "codice": "cwc/d12/i28.13",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gKKT",
+  "inferiore": 112,
+  "perduto": false,
+  "superiore": 244
+ },
+ "28,12,14": {
+  "codice": "cwc/d12/i28.14",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "NuKKT",
+  "inferiore": 172,
+  "perduto": false,
+  "superiore": 264
+ },
+ "28,12,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 8,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,12,8": {
+  "codice": "cwc/d12/i28.8",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 19,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,12,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 39,
+  "perduto": false,
+  "superiore": 45
+ },
+ "28,14,10": {
+  "codice": "cwc/d14/a28.14.10.11",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "x",
+  "inferiore": 11,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,14,11": {
+  "codice": "cwc/d14/i28.11",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 21,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,14,12": {
+  "codice": "cwc/d14/i28.12",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 28,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,14,13": {
+  "codice": "cwc/d14/i28.13",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 28,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,14,14": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "H",
+  "inferiore": 54,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,14,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,14,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 7,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,16,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,16,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,16,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 7,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,16,13": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 7,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,16,14": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 8,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,16,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,18,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,18,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,18,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,18,13": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,18,14": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,4,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 508952,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,4,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 819041,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,4,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 1167909,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,4,13": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 1420920,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,4,14": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 1535756,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 121,
+  "perduto": false,
+  "superiore": 121
+ },
+ "28,4,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 819,
+  "perduto": false,
+  "superiore": 819
+ },
+ "28,4,5": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 3718,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,4,6": {
+  "codice": "cwc/d4/i28.6",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 15288,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,4,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 44915,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,4,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 122685,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,4,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 263008,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,6,10": {
+  "codice": "cwc/d6/a28.6.10.18346H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Bo",
+  "inferiore": 18346,
+  "perduto": false,
+  "superiore": 63756
+ },
+ "28,6,11": {
+  "codice": "cwc/d6/i28.11",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "NuKKT",
+  "inferiore": 29484,
+  "perduto": false,
+  "superiore": 104230
+ },
+ "28,6,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "JX",
+  "inferiore": 40237,
+  "perduto": false,
+  "superiore": 142117
+ },
+ "28,6,13": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "JXKKT",
+  "inferiore": 49510,
+  "perduto": false,
+  "superiore": 164219
+ },
+ "28,6,14": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "JXKKT",
+  "inferiore": 53046,
+  "perduto": false,
+  "superiore": 169739
+ },
+ "28,6,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 63,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,6,5": {
+  "codice": "cwc/d6/i28.5",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Nu",
+  "inferiore": 280,
+  "perduto": false,
+  "superiore": 302
+ },
+ "28,6,6": {
+  "codice": "cwc/d6/a28.6.6.1174H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Bo",
+  "inferiore": 1174,
+  "perduto": false,
+  "superiore": 1306
+ },
+ "28,6,7": {
+  "codice": "cwc/d6/i28.7",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4680,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,6,8": {
+  "codice": "cwc/d6/a28.6.8.6356H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "E",
+  "inferiore": 6356,
+  "perduto": false,
+  "superiore": 12285
+ },
+ "28,6,9": {
+  "codice": "cwc/d6/i28.9",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 10920,
+  "perduto": false,
+  "superiore": 31195
+ },
+ "28,8,10": {
+  "codice": "cwc/d8/a28.8.10.2103H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "ES",
+  "inferiore": 2103,
+  "perduto": false,
+  "superiore": 7016
+ },
+ "28,8,11": {
+  "codice": "cwc/d8/a28.8.11.3773H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "KT",
+  "inferiore": 3773,
+  "perduto": false,
+  "superiore": 11896
+ },
+ "28,8,12": {
+  "codice": "cwc/d8/a28.8.12.4927H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "KT",
+  "inferiore": 4927,
+  "perduto": false,
+  "superiore": 17008
+ },
+ "28,8,13": {
+  "codice": "cwc/d8/i28.13",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gKT",
+  "inferiore": 6848,
+  "perduto": false,
+  "superiore": 21148
+ },
+ "28,8,14": {
+  "codice": "cwc/d8/a28.8.14.6218H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "S",
+  "inferiore": 6218,
+  "perduto": false,
+  "superiore": 22710
+ },
+ "28,8,5": {
+  "codice": "cwc/d8/a28.8.5.33",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 33,
+  "perduto": false,
+  "superiore": null
+ },
+ "28,8,6": {
+  "codice": "cwc/d8/a28.8.6.132H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "E",
+  "inferiore": 132,
+  "perduto": false,
+  "superiore": 149
+ },
+ "28,8,7": {
+  "codice": "cwc/d8/a28.8.7.321H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "E",
+  "inferiore": 321,
+  "perduto": false,
+  "superiore": 540
+ },
+ "28,8,8": {
+  "codice": "cwc/d8/a28.8.8.1057H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 1057,
+  "perduto": false,
+  "superiore": 1750
+ },
+ "28,8,9": {
+  "codice": "cwc/d8/a28.8.9.1376H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Bo",
+  "inferiore": 1376,
+  "perduto": false,
+  "superiore": 3855
+ },
+ "29,10,10": {
+  "codice": "cwc/d10/i29.10",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 266,
+  "perduto": false,
+  "superiore": 1090
+ },
+ "29,10,11": {
+  "codice": "cwc/d10/i29.11",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gPo",
+  "inferiore": 406,
+  "perduto": false,
+  "superiore": 2036
+ },
+ "29,10,12": {
+  "codice": "cwc/d10/a29.10.12.543H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Po",
+  "inferiore": 543,
+  "perduto": false,
+  "superiore": 3091
+ },
+ "29,10,13": {
+  "codice": "cwc/d10/a29.10.13.759H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BoPo",
+  "inferiore": 759,
+  "perduto": false,
+  "superiore": 4282
+ },
+ "29,10,14": {
+  "codice": "cwc/d10/i29.14",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gPo",
+  "inferiore": 1458,
+  "perduto": false,
+  "superiore": 4927
+ },
+ "29,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 20,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,10,7": {
+  "codice": "cwc/d10/i29.7",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 42,
+  "perduto": false,
+  "superiore": 66
+ },
+ "29,10,8": {
+  "codice": "cwc/d10/a29.10.8.96",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "E",
+  "inferiore": 96,
+  "perduto": false,
+  "superiore": 203
+ },
+ "29,10,9": {
+  "codice": "cwc/d10/i29.9",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gPo",
+  "inferiore": 168,
+  "perduto": false,
+  "superiore": 523
+ },
+ "29,12,10": {
+  "codice": "cwc/d12/a29.12.10.70",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "EPo",
+  "inferiore": 70,
+  "perduto": false,
+  "superiore": 126
+ },
+ "29,12,11": {
+  "codice": "cwc/d12/i29.11",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "L",
+  "inferiore": 87,
+  "perduto": false,
+  "superiore": 197
+ },
+ "29,12,12": {
+  "codice": "cwc/d12/a29.12.12.120",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BoL",
+  "inferiore": 120,
+  "perduto": false,
+  "superiore": 298
+ },
+ "29,12,13": {
+  "codice": "cwc/d12/a29.12.13.153",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "E",
+  "inferiore": 153,
+  "perduto": false,
+  "superiore": 441
+ },
+ "29,12,14": {
+  "codice": "cwc/d12/a29.12.14.174",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "EPo",
+  "inferiore": 174,
+  "perduto": false,
+  "superiore": 492
+ },
+ "29,12,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 8,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,12,8": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 22,
+  "perduto": false,
+  "superiore": 26
+ },
+ "29,12,9": {
+  "codice": "cwc/d12/i29.9",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gPo",
+  "inferiore": 42,
+  "perduto": false,
+  "superiore": 59
+ },
+ "29,14,10": {
+  "codice": "cwc/d14/i29.10",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 15,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,14,11": {
+  "codice": "cwc/d14/i29.11",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 28,
+  "perduto": false,
+  "superiore": 29
+ },
+ "29,14,12": {
+  "codice": "cwc/d14/i29.12",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "cPo",
+  "inferiore": 29,
+  "perduto": false,
+  "superiore": 47
+ },
+ "29,14,13": {
+  "codice": "cwc/d14/a29.14.13.38",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "E",
+  "inferiore": 38,
+  "perduto": false,
+  "superiore": 50
+ },
+ "29,14,14": {
+  "codice": "cwc/d14/i29.14",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 58,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,14,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,14,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 7,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,16,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,16,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "x",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,16,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 7,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,16,13": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "x",
+  "inferiore": 9,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,16,14": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "x",
+  "inferiore": 10,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,16,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,18,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,18,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,18,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,18,13": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,18,14": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,4,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 728330,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,4,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 1266026,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,4,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 1895939,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,4,13": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 2499311,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,4,14": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 2870880,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 134,
+  "perduto": false,
+  "superiore": 134
+ },
+ "29,4,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "Ji",
+  "inferiore": 877,
+  "perduto": false,
+  "superiore": 877
+ },
+ "29,4,5": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 4423,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,4,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 17710,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,4,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 57943,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,4,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 157734,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,4,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 365699,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,6,10": {
+  "codice": "cwc/d6/a29.6.10.24254H",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 24254,
+  "perduto": false,
+  "superiore": 24254
+ },
+ "29,6,11": {
+  "codice": "",
+  "costruzione": "gs",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 41216,
+  "perduto": false,
+  "superiore": 41216
+ },
+ "29,6,12": {
+  "codice": "",
+  "costruzione": "gs",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 61820,
+  "perduto": false,
+  "superiore": 61820
+ },
+ "29,6,13": {
+  "codice": "",
+  "costruzione": "gs",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 80837,
+  "perduto": false,
+  "superiore": 80837
+ },
+ "29,6,14": {
+  "codice": "",
+  "costruzione": "gs",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 92366,
+  "perduto": false,
+  "superiore": 92366
+ },
+ "29,6,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 65,
+  "perduto": false,
+  "superiore": null
+ },
+ "29,6,5": {
+  "codice": "cwc/d6/i29.5",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 315,
+  "perduto": false,
+  "superiore": 364
+ },
+ "29,6,6": {
+  "codice": "cwc/d6/a29.6.6.1204H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 1204,
+  "perduto": false,
+  "superiore": 1459
+ },
+ "29,6,7": {
+  "codice": "cwc/d6/a29.6.7.4689H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Bo",
+  "inferiore": 4689,
+  "perduto": false,
+  "superiore": 5410
+ },
+ "29,6,8": {
+  "codice": "cwc/d6/a29.6.8.8148H",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "E",
+  "inferiore": 8148,
+  "perduto": false,
+  "superiore": 8148
+ },
+ "29,6,9": {
+  "codice": "cwc/d6/i29.9",
+  "costruzione": "g",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 13026,
+  "perduto": false,
+  "superiore": 13026
+ },
+ "30,10,10": {
+  "codice": "cwc/d10/i30.10",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 322,
+  "perduto": false,
+  "superiore": 1569
+ },
+ "30,10,11": {
+  "codice": "cwc/d10/a30.10.11.512H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "EPo",
+  "inferiore": 512,
+  "perduto": false,
+  "superiore": 2924
+ },
+ "30,10,12": {
+  "codice": "cwc/d10/a30.10.12.768H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Po",
+  "inferiore": 768,
+  "perduto": false,
+  "superiore": 5008
+ },
+ "30,10,13": {
+  "codice": "cwc/d10/a30.10.13.936H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BoPo",
+  "inferiore": 936,
+  "perduto": false,
+  "superiore": 6724
+ },
+ "30,10,14": {
+  "codice": "cwc/d10/a30.10.14.1467H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BoPo",
+  "inferiore": 1467,
+  "perduto": false,
+  "superiore": 8146
+ },
+ "30,10,15": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Po",
+  "inferiore": 1458,
+  "perduto": false,
+  "superiore": 8948
+ },
+ "30,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 25,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,10,7": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 48,
+  "perduto": false,
+  "superiore": 85
+ },
+ "30,10,8": {
+  "codice": "cwc/d10/i30.8",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 108,
+  "perduto": false,
+  "superiore": 247
+ },
+ "30,10,9": {
+  "codice": "cwc/d10/a30.10.9.203H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Po",
+  "inferiore": 203,
+  "perduto": false,
+  "superiore": 657
+ },
+ "30,12,10": {
+  "codice": "cwc/d12/a30.12.10.101",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "EL",
+  "inferiore": 101,
+  "perduto": false,
+  "superiore": 159
+ },
+ "30,12,11": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "L",
+  "inferiore": 120,
+  "perduto": false,
+  "superiore": 268
+ },
+ "30,12,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "sPo",
+  "inferiore": 190,
+  "perduto": false,
+  "superiore": 492
+ },
+ "30,12,13": {
+  "codice": "cwc/d12/a30.12.13.239H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "EPo",
+  "inferiore": 239,
+  "perduto": false,
+  "superiore": 642
+ },
+ "30,12,14": {
+  "codice": "cwc/d12/a30.12.14.289H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Po",
+  "inferiore": 289,
+  "perduto": false,
+  "superiore": 801
+ },
+ "30,12,15": {
+  "codice": "cwc/d12/a30.12.15.302H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "sbPo",
+  "inferiore": 302,
+  "perduto": false,
+  "superiore": 894
+ },
+ "30,12,7": {
+  "codice": "cwc/d12/a30.12.7.9",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 9,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,12,8": {
+  "codice": "cwc/d12/i30.8",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 30,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,12,9": {
+  "codice": "cwc/d12/a30.12.9.44",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Po",
+  "inferiore": 44,
+  "perduto": false,
+  "superiore": 74
+ },
+ "30,14,10": {
+  "codice": "cwc/d14/a30.14.10.21",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 21,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,14,11": {
+  "codice": "cwc/d14/i30.11",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 30,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,14,12": {
+  "codice": "cwc/d14/i30.12",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "cPo",
+  "inferiore": 36,
+  "perduto": false,
+  "superiore": 62
+ },
+ "30,14,13": {
+  "codice": "cwc/d14/a30.14.13.46",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "EPo",
+  "inferiore": 46,
+  "perduto": false,
+  "superiore": 78
+ },
+ "30,14,14": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Po",
+  "inferiore": 58,
+  "perduto": false,
+  "superiore": 95
+ },
+ "30,14,15": {
+  "codice": "cwc/d14/i30.15",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "cPo",
+  "inferiore": 62,
+  "perduto": false,
+  "superiore": 104
+ },
+ "30,14,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,14,9": {
+  "codice": "cwc/d14/a30.14.9.10",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "x",
+  "inferiore": 10,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,16,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "x",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,16,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,16,12": {
+  "codice": "cwc/d16/a30.16.12.10",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 10,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,16,13": {
+  "codice": "cwc/d16/a30.16.13.12",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 12,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,16,14": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 15,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,16,15": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 16,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,16,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,18,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,18,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,18,12": {
+  "codice": "cwc/d18/a30.18.12.5",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,18,13": {
+  "codice": "cwc/d18/a30.18.13.5",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,18,14": {
+  "codice": "cwc/d18/a30.18.14.5",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,18,15": {
+  "codice": "cwc/d18/a30.18.15.6",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,4,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 1085000,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,4,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 1977548,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,4,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 3143989,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,4,13": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 4325235,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,4,14": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 5313399,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,4,15": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 5697080,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 140,
+  "perduto": false,
+  "superiore": 140
+ },
+ "30,4,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 1005,
+  "perduto": false,
+  "superiore": 1005
+ },
+ "30,4,5": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5148,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,4,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 21931,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,4,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 73853,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,4,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 214545,
+  "perduto": false,
+  "superiore": null
+ },
+ "30,4,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "p",
+  "inferiore": 514015,
+  "perduto": false,
+  "superiore": null
+ },
+ "31,10,10": {
+  "codice": "cwc/d10/i31.10",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 465,
+  "perduto": false,
+  "superiore": 2036
+ },
+ "31,10,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "sPo",
+  "inferiore": 651,
+  "perduto": false,
+  "superiore": 4141
+ },
+ "31,10,12": {
+  "codice": "cwc/d10/i31.12",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gPo",
+  "inferiore": 930,
+  "perduto": false,
+  "superiore": 7259
+ },
+ "31,10,13": {
+  "codice": "cwc/d10/i31.13",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gPo",
+  "inferiore": 1395,
+  "perduto": false,
+  "superiore": 10530
+ },
+ "31,10,14": {
+  "codice": "cwc/d10/a31.10.14.1539H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "EPo",
+  "inferiore": 1539,
+  "perduto": false,
+  "superiore": 13519
+ },
+ "31,10,15": {
+  "codice": "cwc/d10/a31.10.15.1922H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Po",
+  "inferiore": 1922,
+  "perduto": false,
+  "superiore": 15031
+ },
+ "31,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 31,
+  "perduto": false,
+  "superiore": null
+ },
+ "31,10,7": {
+  "codice": "cwc/d10/i31.7",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 62,
+  "perduto": false,
+  "superiore": 109
+ },
+ "31,10,8": {
+  "codice": "cwc/d10/i31.8",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "cPo",
+  "inferiore": 124,
+  "perduto": false,
+  "superiore": 322
+ },
+ "31,10,9": {
+  "codice": "cwc/d10/i31.9",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "cPo",
+  "inferiore": 232,
+  "perduto": false,
+  "superiore": 822
+ },
+ "31,12,10": {
+  "codice": "cwc/d12/a31.12.10.108H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "E",
+  "inferiore": 108,
+  "perduto": false,
+  "superiore": 229
+ },
+ "31,12,11": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 186,
+  "perduto": false,
+  "superiore": 415
+ },
+ "31,12,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "sPo",
+  "inferiore": 310,
+  "perduto": false,
+  "superiore": 679
+ },
+ "31,12,13": {
+  "codice": "cwc/d12/a31.12.13.400H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "CXYPo",
+  "inferiore": 400,
+  "perduto": false,
+  "superiore": 958
+ },
+ "31,12,14": {
+  "codice": "cwc/d12/a31.12.14.510H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "CXYPo",
+  "inferiore": 510,
+  "perduto": false,
+  "superiore": 1238
+ },
+ "31,12,15": {
+  "codice": "cwc/d12/a31.12.15.572H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "sPo",
+  "inferiore": 572,
+  "perduto": false,
+  "superiore": 1435
+ },
+ "31,12,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 9,
+  "perduto": false,
+  "superiore": null
+ },
+ "31,12,8": {
+  "codice": "cwc/d12/i31.8",
+  "costruzione": "c",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 31,
+  "perduto": false,
+  "superiore": 31
+ },
+ "31,12,9": {
+  "codice": "cwc/d12/i31.9",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "cPo",
+  "inferiore": 50,
+  "perduto": false,
+  "superiore": 94
+ },
+ "31,14,10": {
+  "codice": "cwc/d14/a31.14.10.31",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "bibd",
+  "inferiore": 31,
+  "perduto": false,
+  "superiore": null
+ },
+ "31,14,11": {
+  "codice": "cwc/d14/i31.11",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 35,
+  "perduto": false,
+  "superiore": 46
+ },
+ "31,14,12": {
+  "codice": "cwc/d14/i31.12",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 45,
+  "perduto": false,
+  "superiore": 77
+ },
+ "31,14,13": {
+  "codice": "cwc/d14/i31.13",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "cPo",
+  "inferiore": 60,
+  "perduto": false,
+  "superiore": 129
+ },
+ "31,14,14": {
+  "codice": "cwc/d14/i31.14",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "L",
+  "inferiore": 66,
+  "perduto": false,
+  "superiore": 167
+ },
+ "31,14,15": {
+  "codice": "cwc/d14/i31.15",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "L",
+  "inferiore": 72,
+  "perduto": false,
+  "superiore": 183
+ },
+ "31,14,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "31,14,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 10,
+  "perduto": false,
+  "superiore": null
+ },
+ "31,16,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "31,16,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "x",
+  "inferiore": 8,
+  "perduto": false,
+  "superiore": null
+ },
+ "31,16,12": {
+  "codice": "cwc/d16/a31.16.12.11",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 11,
+  "perduto": false,
+  "superiore": null
+ },
+ "31,16,13": {
+  "codice": "cwc/d16/a31.16.13.17",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "R",
+  "inferiore": 17,
+  "perduto": false,
+  "superiore": 17
+ },
+ "31,16,14": {
+  "codice": "cwc/d16/a31.16.14.24",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "R",
+  "inferiore": 24,
+  "perduto": false,
+  "superiore": 24
+ },
+ "31,16,15": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 31,
+  "perduto": false,
+  "superiore": null
+ },
+ "31,16,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "31,18,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "31,18,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "31,18,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "31,18,13": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "31,18,14": {
+  "codice": "cwc/d18/a31.18.14.6",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "31,18,15": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "32,10,10": {
+  "codice": "cwc/d10/a32.10.10.500H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 500,
+  "perduto": false,
+  "superiore": 2630
+ },
+ "32,10,11": {
+  "codice": "cwc/d10/i32.11",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gPo",
+  "inferiore": 992,
+  "perduto": false,
+  "superiore": 5696
+ },
+ "32,10,12": {
+  "codice": "cwc/d10/i32.12",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gPo",
+  "inferiore": 1395,
+  "perduto": false,
+  "superiore": 10446
+ },
+ "32,10,13": {
+  "codice": "cwc/d10/i32.13",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gPo",
+  "inferiore": 1984,
+  "perduto": false,
+  "superiore": 16755
+ },
+ "32,10,14": {
+  "codice": "cwc/d10/i32.14",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gPo",
+  "inferiore": 2325,
+  "perduto": false,
+  "superiore": 22213
+ },
+ "32,10,15": {
+  "codice": "cwc/d10/i32.15",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "gPo",
+  "inferiore": 2635,
+  "perduto": false,
+  "superiore": 26361
+ },
+ "32,10,16": {
+  "codice": "cwc/d10/a32.10.16.3038H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Po",
+  "inferiore": 3038,
+  "perduto": false,
+  "superiore": 27429
+ },
+ "32,10,6": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 31,
+  "perduto": false,
+  "superiore": null
+ },
+ "32,10,7": {
+  "codice": "cwc/d10/i32.7",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 64,
+  "perduto": false,
+  "superiore": 139
+ },
+ "32,10,8": {
+  "codice": "cwc/d10/a32.10.8.145H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Po",
+  "inferiore": 145,
+  "perduto": false,
+  "superiore": 402
+ },
+ "32,10,9": {
+  "codice": "cwc/d10/a32.10.9.305H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "E",
+  "inferiore": 305,
+  "perduto": false,
+  "superiore": 1143
+ },
+ "32,12,10": {
+  "codice": "cwc/d12/a32.12.10.123H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Bo",
+  "inferiore": 123,
+  "perduto": false,
+  "superiore": 300
+ },
+ "32,12,11": {
+  "codice": "cwc/d12/a32.12.11.187",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BoPo",
+  "inferiore": 187,
+  "perduto": false,
+  "superiore": 573
+ },
+ "32,12,12": {
+  "codice": "cwc/d12/a32.12.12.496H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BCHPo",
+  "inferiore": 496,
+  "perduto": false,
+  "superiore": 952
+ },
+ "32,12,13": {
+  "codice": "cwc/d12/a32.12.13.434H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Po",
+  "inferiore": 434,
+  "perduto": false,
+  "superiore": 1497
+ },
+ "32,12,14": {
+  "codice": "cwc/d12/a32.12.14.900H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "CXYPo",
+  "inferiore": 900,
+  "perduto": false,
+  "superiore": 2140
+ },
+ "32,12,15": {
+  "codice": "cwc/d12/a32.12.15.629H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 629,
+  "perduto": false,
+  "superiore": 2641
+ },
+ "32,12,16": {
+  "codice": "cwc/d12/a32.12.16.1144H",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 1144,
+  "perduto": false,
+  "superiore": 2870
+ },
+ "32,12,7": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 10,
+  "perduto": false,
+  "superiore": null
+ },
+ "32,12,8": {
+  "codice": "cwc/d12/i32.8",
+  "costruzione": "c",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 36,
+  "perduto": false,
+  "superiore": 36
+ },
+ "32,12,9": {
+  "codice": "cwc/d12/i32.9",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 60,
+  "perduto": false,
+  "superiore": 110
+ },
+ "32,14,10": {
+  "codice": "cwc/d14/i32.10",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 32,
+  "perduto": false,
+  "superiore": null
+ },
+ "32,14,11": {
+  "codice": "cwc/d14/a32.14.11.40",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "Po",
+  "inferiore": 40,
+  "perduto": false,
+  "superiore": 68
+ },
+ "32,14,12": {
+  "codice": "cwc/d14/i32.12",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "cPo",
+  "inferiore": 55,
+  "perduto": false,
+  "superiore": 118
+ },
+ "32,14,13": {
+  "codice": "cwc/d14/i32.13",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "L",
+  "inferiore": 70,
+  "perduto": false,
+  "superiore": 183
+ },
+ "32,14,14": {
+  "codice": "cwc/d14/i32.14",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "L",
+  "inferiore": 96,
+  "perduto": false,
+  "superiore": 233
+ },
+ "32,14,15": {
+  "codice": "cwc/d14/i32.15",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "L",
+  "inferiore": 96,
+  "perduto": false,
+  "superiore": 277
+ },
+ "32,14,16": {
+  "codice": "cwc/d14/i32.16",
+  "costruzione": "g",
+  "esatto": false,
+  "fonte": "L",
+  "inferiore": 122,
+  "perduto": false,
+  "superiore": 295
+ },
+ "32,14,8": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "32,14,9": {
+  "codice": "cwc/d14/a32.14.9.12",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 12,
+  "perduto": false,
+  "superiore": null
+ },
+ "32,16,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "32,16,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "x",
+  "inferiore": 9,
+  "perduto": false,
+  "superiore": null
+ },
+ "32,16,12": {
+  "codice": "cwc/d16/a32.16.12.16",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 16,
+  "perduto": false,
+  "superiore": null
+ },
+ "32,16,13": {
+  "codice": "cwc/d16/a32.16.13.25",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "R",
+  "inferiore": 25,
+  "perduto": false,
+  "superiore": 27
+ },
+ "32,16,14": {
+  "codice": "cwc/d16/i32.14",
+  "costruzione": "c",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 32,
+  "perduto": false,
+  "superiore": 32
+ },
+ "32,16,15": {
+  "codice": "cwc/d16/a32.16.15.32",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 32,
+  "perduto": false,
+  "superiore": 32
+ },
+ "32,16,16": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "H",
+  "inferiore": 62,
+  "perduto": false,
+  "superiore": null
+ },
+ "32,16,9": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "32,18,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "32,18,11": {
+  "codice": "cwc/d18/a32.18.11.4",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "32,18,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "32,18,13": {
+  "codice": "cwc/d18/a32.18.13.6",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "32,18,14": {
+  "codice": "cwc/d18/a32.18.14.7",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 7,
+  "perduto": false,
+  "superiore": null
+ },
+ "32,18,15": {
+  "codice": "cwc/d18/a32.18.15.8",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 8,
+  "perduto": false,
+  "superiore": null
+ },
+ "32,18,16": {
+  "codice": "cwc/d18/a32.18.16.8",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 8,
+  "perduto": false,
+  "superiore": null
+ },
+ "33,18,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ },
+ "33,18,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "33,18,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "j",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "33,18,13": {
+  "codice": "cwc/d18/a33.18.13.7",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 7,
+  "perduto": false,
+  "superiore": null
+ },
+ "33,18,14": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "j",
+  "inferiore": 9,
+  "perduto": false,
+  "superiore": null
+ },
+ "33,18,15": {
+  "codice": "cwc/d18/a33.18.15.11",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 11,
+  "perduto": false,
+  "superiore": null
+ },
+ "33,18,16": {
+  "codice": "cwc/d18/a33.18.16.11",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 11,
+  "perduto": false,
+  "superiore": null
+ },
+ "34,18,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "x",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "34,18,11": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "34,18,12": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 6,
+  "perduto": false,
+  "superiore": null
+ },
+ "34,18,13": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "j",
+  "inferiore": 8,
+  "perduto": false,
+  "superiore": null
+ },
+ "34,18,14": {
+  "codice": "cwc/d18/a34.18.14.10",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "x",
+  "inferiore": 10,
+  "perduto": false,
+  "superiore": null
+ },
+ "34,18,15": {
+  "codice": "cwc/d18/a34.18.15.14",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 14,
+  "perduto": false,
+  "superiore": null
+ },
+ "34,18,16": {
+  "codice": "cwc/d18/i34.16",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 17,
+  "perduto": false,
+  "superiore": null
+ },
+ "34,18,17": {
+  "codice": "cwc/d18/i34.17",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 18,
+  "perduto": false,
+  "superiore": null
+ },
+ "35,18,10": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": null
+ },
+ "35,18,11": {
+  "codice": "cwc/d18/a35.18.11.5",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 5,
+  "perduto": false,
+  "superiore": null
+ },
+ "35,18,12": {
+  "codice": "cwc/d18/a35.18.12.7",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 7,
+  "perduto": false,
+  "superiore": null
+ },
+ "35,18,13": {
+  "codice": "cwc/d18/a35.18.13.10",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 10,
+  "perduto": false,
+  "superiore": null
+ },
+ "35,18,14": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 15,
+  "perduto": false,
+  "superiore": null
+ },
+ "35,18,15": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 21,
+  "perduto": false,
+  "superiore": null
+ },
+ "35,18,16": {
+  "codice": "cwc/d18/a35.18.16.22",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "R",
+  "inferiore": 22,
+  "perduto": false,
+  "superiore": 28
+ },
+ "35,18,17": {
+  "codice": "cwc/d18/i35.17",
+  "costruzione": "c",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 35,
+  "perduto": false,
+  "superiore": null
+ },
+ "6,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 4,
+  "perduto": false,
+  "superiore": 4
+ },
+ "7,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 7,
+  "perduto": false,
+  "superiore": 7
+ },
+ "8,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 8,
+  "perduto": false,
+  "superiore": 8
+ },
+ "8,4,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 14,
+  "perduto": false,
+  "superiore": 14
+ },
+ "8,6,4": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 2,
+  "perduto": false,
+  "superiore": null
+ },
+ "9,4,3": {
+  "codice": "",
+  "costruzione": "",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 12,
+  "perduto": false,
+  "superiore": 12
+ },
+ "9,4,4": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": true,
+  "fonte": "BSSS",
+  "inferiore": 18,
+  "perduto": false,
+  "superiore": 18
+ },
+ "9,6,4": {
+  "codice": "",
+  "costruzione": "s",
+  "esatto": false,
+  "fonte": "BSSS",
+  "inferiore": 3,
+  "perduto": false,
+  "superiore": null
+ }
+}
