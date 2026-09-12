@@ -110,6 +110,30 @@ speso **$1000 per problema** su 59 problemi di Erdős e ne ha risolti **3**.
 
 ---
 
+## Domande per Federico
+
+**1. Il credito sulla Console sta finendo, e il piano non ci sta.**
+
+| | |
+|---|---|
+| caricato in tutto | $24,00 |
+| speso finora (tutte le esecuzioni, dalla prima prova a oggi) | **$11,16** |
+| il giro in corso può arrivare a | $6,00 |
+| **residuo nel caso peggiore** | **$6,84** |
+
+Hai autorizzato fino a $12 per il rilancio del giro 0 e $15 per la sessione: sul
+conto non ci sono. Ho ridimensionato il rilancio a quello che resta davvero e
+te lo dico invece di scoprirlo con un errore di credito esaurito a metà lavoro.
+*Ho proceduto con la scelta prudente: meno problemi con un tetto usabile, invece
+di dieci affamati.*
+
+**2. Serve ricaricare?** Se vuoi che la scala prosegua oltre il rilancio (giri 1
+e 2, che comunque approvi tu), servono altri $20-30. Se preferisci non
+ricaricare, la raccomandazione in fondo a questo documento resta valida: fermarsi
+e riprovare col modello successivo, che costa zero.
+
+---
+
 ## La conclusione operativa più importante
 
 **Il modo più economico di migliorare i risultati è cambiare modello, non
