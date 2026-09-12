@@ -564,7 +564,19 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
                       f"(${budget.residuo:.4f} sul totale, ${residuo_problema:.4f} su "
                       f"questo problema)")
             if budget.residuo <= peggiore:
-                raise LimiteSpesaSuperato(motivo)   # ferma tutta l'esecuzione
+                # Il tentativo va allegato all'eccezione: senza, il lavoro fatto
+                # su QUESTO problema sparisce dal rapporto — costo, iterazioni e
+                # verifiche comprese. E' successo davvero: nel giro 0 bis il
+                # settimo problema risultava con $0,00 e zero verifiche mentre nel
+                # registro aveva una verifica consegnata e mezzo dollaro speso.
+                # Un rapporto che sottostima la spesa e' un problema di sicurezza,
+                # non di cosmetica.
+                t.motivo = motivo
+                t.causa = t.classifica_fallimento()
+                t.secondi = time.time() - avvio
+                e = LimiteSpesaSuperato(motivo)
+                e.tentativo = t
+                raise e
             t.motivo = motivo                        # solo questo problema si ferma
             break
 
@@ -790,7 +802,13 @@ def main() -> int:
                         variante_istruzioni=args.istruzioni)
         except LimiteSpesaSuperato as e:
             print(f"\n!! {e}")
-            tentativi.append(Tentativo(problema=p.theorem, motivo=str(e)))
+            parziale = getattr(e, "tentativo", None)
+            tentativi.append(parziale if parziale is not None
+                             else Tentativo(problema=p.theorem, motivo=str(e)))
+            if parziale is not None:
+                print(f"     lavoro svolto prima di fermarsi: "
+                      f"{parziale.iterazioni} iterazioni, {parziale.verifiche} "
+                      f"verifiche, ${parziale.consumo.costo(args.modello):.4f}")
             break
         except anthropic.APIError as e:
             print(f"\n!! Errore dall'API: {e}")

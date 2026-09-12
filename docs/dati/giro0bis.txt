@@ -1,0 +1,613 @@
+Registro: runs/lavori/giro0bis.log
+  da un altro terminale:  tail -f runs/lavori/giro0bis.log
+Modello: claude-fable-5-1 | effort: medium | istruzioni: insistenti
+Budget totale: $6.00  (tetto per problema: $2.00)
+Problemi: 10
+
+==============================================================================
+[1/10] OeisA109074.conjecture   (research open)
+==============================================================================
+
+  ── iterazione 1  [spesa $0.0000 / $6.00  (0%)]  [5,644 token in ingresso, fino a 32,000 in uscita, al massimo $1.6705]
+     [ragionamento] I'm working out the formula for frac(n+1) in terms of factorials, and checking whether the known product expression for A005156(n) actually always yields an integer under floor division.
+
+Testing n=1 and n=2 numerically confirms the product formula gives 1 and 3 as expected, so the ratio b(n+1)/b(n) matches the frac(n+1) expression I derived. This reduces the conjecture to a divisibility claim: wh
+     -> run_python (566 caratteri)...
+        [(6, 2, -1), (18, 6, -1), (30, 10, -1), (42, 14, -1), (54, 18, -1), (66, 22, -1), (78, 26, -1), (90, 30, -1), (102, 34, -1), (114, 38, -1), (126, 42, -1), (138, 46, -1), (150, 50, -1), (162, 54, -1), 
+
+  ── iterazione 2  [spesa $0.2007 / $6.00  (3%)]  [8,456 token in ingresso, fino a 32,000 in uscita, al massimo $1.7057]
+     [ragionamento] Since failures only occur at m ≡ 6 mod 12, not at prime powers, I can rely on a p-adic approach: for odd primes the partial sums stay nonnegative, and for p=2 the sums of f over powers of 2 are at least n. Formalizing this in Lean would require setting up Legendre's formula for the p-adic valuation of factorials as a starting point.
+
+I realize the linear parts cancel out, so f(k,m) reduces to a su
+     -> run_python (192 caratteri)...
+        3 [0, 0, 0, 0, 0, 0]
+5 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+7 [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0]
+9 [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
+11 [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0
+
+  ── iterazione 3  [spesa $0.5486 / $6.00  (9%)]  [15,546 token in ingresso, fino a 25,141 in uscita, al massimo $1.4514]
+     [ragionamento] I'm exploring whether S(n,m) for odd m has a closed form involving floor functions, trying combinations like differences of ⌊(6n+a)/m⌋ terms to match the observed small nonnegative values.
+     -> run_python (781 caratteri)...
+        ERRORE: il codice ha superato il tempo massimo di 30 secondi ed e' stato interrotto.
+
+  ── iterazione 4  [spesa $0.6812 / $6.00  (11%)]  [16,469 token in ingresso, fino a 22,259 in uscita, al massimo $1.3188]
+     [ragionamento] That approach is too slow, so I'm trying to think analytically instead, using the periodicity of S(n,m) and reframing it as counting multiples of m falling within certain interval bounds tied to k.
+
+Rather than brute-force the combinatorial feature search, which would be far too slow, I'll instead just run a least-squares fit over the feature set and check the solution for integrality.
+     -> run_python (509 caratteri)...
+        [] 47
+(1, -6) 0.1436
+(1, -5) 0.038
+(1, -4) -0.0028
+(1, -3) -0.2869
+(1, -2) 0.1557
+(1, -1) -0.0612
+(1, 0) 0.025
+(1, 1) -0.2312
+(1, 2) 0.2985
+(1, 3) 0.2455
+(1, 4) -0.1823
+(1, 5) -0.1773
+(1, 6) -0.7265
+(
+
+  ── iterazione 5  [spesa $0.7316 / $6.00  (12%)]  [17,993 token in ingresso, fino a 20,870 in uscita, al massimo $1.2684]
+     [ragionamento] That approach seems rank-deficient and not helpful for the sparse case, so I'm switching to a counting formulation instead, trying to express S(n,m) as a sum over j of interval counts for k, but this is getting complicated too.
+
+I'm now trying to factor r_k as a ratio of binomial coefficients to relate the ASM product formula to something more manageable, hoping to spot a pattern connecting it to 
+     -> run_python (1216 caratteri)...
+        2 True
+4 True
+8 True
+16 True
+32 True
+[]
+
+  ── iterazione 6  [spesa $0.8841 / $6.00  (15%)]  [20,652 token in ingresso, fino a 17,154 in uscita, al massimo $1.1159]
+     [ragionamento] I can't find a closed form with just a few floor terms that captures this. Given the budget spent already, fully formalizing this p-adic argument in Lean — Legendre's formula, factoring products, swapping sums, and this stubborn floor inequality — looks infeasible in the time left, but I should keep pushing anyway.
+
+The archive statement checked out for n up to 39, so there's no counterexample the
+     -> lean_explore (0 caratteri)...
+        compila senza errori  (8.0s)  [8s]
+
+  => non risolto: budget insufficiente per continuare: 35,234 token in ingresso, la prossima chiamata costerebbe fino a $0.7404 ma restano $0.3521 ($4.3521 sul totale, $0.3521 su questo problema)
+     7 iterazioni, 1 esplorazioni, 0 verifiche Lean, 5 esecuzioni Python, 363s, $1.6479
+     tempo: 321s in attesa dell'API, 8s di Lean in locale, 32s di Python in locale
+     natura delle verifiche: nessuna
+     causa: sistema: nessun tentativo vero, tutto speso in esplorazione
+
+==============================================================================
+[2/10] OeisA108081.count_words_in_x_is_a_shifted   (research open)
+==============================================================================
+
+  ── iterazione 1  [spesa $1.6479 / $6.00  (27%)]  [5,599 token in ingresso, fino a 32,000 in uscita, al massimo $1.6700]
+     [ragionamento] I need to figure out whether the count of XWords of length n matches a(n-1), so I'm planning to compute XWord sets for small n programmatically using the recursive construction rules (base case and left/right step operations that concatenate words) and compare against a(n-1).
+     -> run_python (448 caratteri)...
+        --- stderr ---
+Traceback (most recent call last):
+  File "/Users/fededicandia/Documents/Math/runs/lavoro/OeisA108081.count_words_in_x_is_a_shifted/programma.py", line 15, in <module>
+    for n in rang
+
+  ── iterazione 2  [spesa $1.6917 / $6.00  (28%)]  [6,506 token in ingresso, fino a 32,000 in uscita, al massimo $1.6813]
+     Nat subtraction in Lean truncates: (n+k-1) with n=0,k=0 gives 0.
+     -> run_python (490 caratteri)...
+        1 1 1
+2 2 2
+3 7 7
+4 25 25
+5 92 92
+6 344 344
+7 1300 1300
+8 4950 4950
+9 18955 18955
+[(-1, 0), (0, 1)] [(-1, -2, 0), (-1, -1, 0), (-1, 0, 1), (0, -1, 0), (0, 1, 0), (0, 1, 1), (0, 2, 1)]
+
+  ── iterazione 3  [spesa $1.7213 / $6.00  (29%)]  [7,036 token in ingresso, fino a 32,000 in uscita, al massimo $1.6880]
+     [ragionamento] The conjecture checks out for small n, but this looks like an open research problem, and proving it in Lean would need a full combinatorial bijection, which seems hard. I'm trying to find a formula for a(n) as a sum of binomial coefficients, and wondering if there's a simple characterization of the words in X that would make the counting argument tractable.
+
+Even with such a characterization, form
+     -> run_python (540 caratteri)...
+        1 [(0,)]
+2 [(-1, 0), (0, 1)]
+3 [(-1, -2, 0), (-1, -1, 0), (-1, 0, 1), (0, -1, 0), (0, 1, 0), (0, 1, 1), (0, 2, 1)]
+4 [(-1, -3, -2, 0), (-1, -2, -2, 0), (-1, -2, -1, 0), (-1, -2, 0, 1), (-1, -1, -2, 0)
+
+  ── iterazione 4  [spesa $1.7567 / $6.00  (29%)]  [9,799 token in ingresso, fino a 32,000 in uscita, al massimo $1.7225]
+     [ragionamento] I'm noticing the counts for words starting with 0 follow a sequence like 1, 4, 14, 51, 189, 709, 2683, and trying to recognize it as a known combinatorial identity, but nothing clean jumps out yet.
+
+A rigorous Lean proof would need a decidable characterization of XWord, a bijective counting argument, and verification that it matches a(n) — this looks like an open research question OEIS itself pose
+     -> run_python (1081 caratteri)...
+        ERRORE: il codice ha superato il tempo massimo di 30 secondi ed e' stato interrotto.
+
+  ── iterazione 5  [spesa $1.8483 / $6.00  (31%)]  [10,991 token in ingresso, fino a 32,000 in uscita, al massimo $1.7374]
+     -> run_python (1188 caratteri)...
+        1 0 0
+2 -1 1
+3 -2 2
+4 -3 3
+5 -4 4
+6 -5 5
+7 -6 6
+8 -7 7
+9 -8 8
+2 60 [(3, 2), (10, 7), (35, 25), (126, 92), (462, 344), (1716, 1300), (6435, 4950), (24310, 18955)]
+3 208 [(10, 7), (35, 25), (126, 92), (
+
+  ── iterazione 6  [spesa $1.8955 / $6.00  (32%)]  [11,864 token in ingresso, fino a 32,000 in uscita, al massimo $1.7483]
+     [ragionamento] I realize this isn't locally characterizable — the local upper bound only gives a weaker bound, so the actual structure seems tied to something like a tree or path arrangement that resists a simple description. This looks like a genuine research-level problem rather than something with a clean characterization, making a full formal proof within limited iterations unrealistic, but I should keep pro
+     -> run_python (245 caratteri)...
+        [1, 2, 7, 25, 92, 344, 1300, 4950, 18955, 72905, 281403, 1089343, 4227273, 16438345, 64037453, 249855417]
+2 1
+3 4
+4 18
+5 78
+6 333
+7 1406
+8 5889
+9 24516
+10 101574
+11 419226
+12 1724832
+13 7077918
+14 289
+
+  ── iterazione 7  [spesa $1.9837 / $6.00  (33%)]  [13,537 token in ingresso, fino a 29,899 in uscita, al massimo $1.6642]
+     [ragionamento] I'm estimating that computing X[13] with 7 million pair combinations would need around 1GB of memory storing 4.2 million tuples, which feels heavy but doable in Python. I'm considering encoding words as integers using numpy arrays to make this more efficient.
+
+I realize I need base 27 encoding (since letters range across 27 values) to fit within 64-bit integers for n up to 13, but n=14 would overf
+     -> run_python (941 caratteri)...
+        2 2 0.004138946533203125
+3 7 0.004431962966918945
+4 25 0.004624843597412109
+5 92 0.004806995391845703
+6 344 0.005036115646362305
+7 1300 0.0055501461029052734
+8 4950 0.00658416748046875
+9 18955 0.00934
+
+  ── iterazione 8  [spesa $2.1012 / $6.00  (35%)]  [15,684 token in ingresso, fino a 27,014 in uscita, al massimo $1.5468]
+     Fast. Continue to 12, 13.
+     -> run_python (978 caratteri)...
+        12 1089343 1.4944109916687012
+13 4227273 13.858980178833008
+
+--- file nella cartella di lavoro (restano disponibili alla prossima chiamata) ---
+X10.npy, X11.npy, X12.npy, X13.npy, X2.npy, X3.npy, X4.n
+
+  ── iterazione 9  [spesa $2.1626 / $6.00  (36%)]  [16,490 token in ingresso, fino a 25,583 in uscita, al massimo $1.4853]
+     [ragionamento] Confirming a(12)=4227273 and now working toward n=14, expecting a large number of pair codes (~29M), so I need an efficient encoding where the first letter is special-cased since it derives from the negation of the previous piece's last letter. I'm planning to process this in blocks per split index, saving partial unions to keep runtime manageable, estimating around a minute total.
+     -> run_python (1297 caratteri)...
+        1 8454546 3.112119197845459
+2 10829649 7.988722085952759
+3 12062843 12.749520063400269
+4 12866118 17.622833967208862
+5 13454748 22.597091913223267
+partial
+
+--- file nella cartella di lavoro (restano d
+
+  ── iterazione 10  [spesa $2.2403 / $6.00  (37%)]  [18,001 token in ingresso, fino a 23,651 in uscita, al massimo $1.4076]
+     -> run_python (1027 caratteri)...
+        6 13919478 5.154861211776733
+7 14306634 10.451696157455444
+8 14643399 15.813486099243164
+9 14947989 21.305588006973267
+10 15234847 26.858978033065796
+partial target 16438345
+
+--- file nella cartella d
+
+  ── iterazione 11  [spesa $2.2947 / $6.00  (38%)]  [18,871 token in ingresso, fino a 22,346 in uscita, al massimo $1.3532]
+     -> run_python (1027 caratteri)...
+        11 15520379 5.81989598274231
+12 15814309 12.16024899482727
+13 16438345 20.410878896713257
+done target 16438345
+
+--- file nella cartella di lavoro (restano disponibili alla prossima chiamata) ---
+C14.n
+
+  ── iterazione 12  [spesa $2.3415 / $6.00  (39%)]  [19,712 token in ingresso, fino a 21,200 in uscita, al massimo $1.3064]
+     [ragionamento] Since the conjecture holds through n=14 with no counterexample, proving it in Lean would require actual mathematical structure rather than brute-force checking. I'm trying to find a pattern in the counting sequences for words starting with 0 or -1, checking if the resulting numbers match a known integer sequence.
+
+I'm now exploring the algebraic structure of the shift-reversal operation, noting th
+     -> run_python (279 caratteri)...
+        [0, 1, 2, 7, 30, 143, 728, 3876, 21318, 120175, 690690, 4032015, 23841480]
+
+--- file nella cartella di lavoro (restano disponibili alla prossima chiamata) ---
+C14.npy, X10.npy, X11.npy, X12.npy, X13.n
+
+  ── iterazione 13  [spesa $2.4526 / $6.00  (41%)]  [21,843 token in ingresso, fino a 18,444 in uscita, al massimo $1.1952]
+     [ragionamento] I'm seeing another discrepancy at n=4 (30 vs 25), so I need to enumerate all parses for length-4 strings under this grammar to spot which words have multiple parses.
+     -> run_python (811 caratteri)...
+        2 2
+3 7
+4 25
+(-1, 0, -1, 0) ['(l0 (l(0 r0) 0))', '(l(0 r(l0 0)) 0)']
+(-1, -2, -1, 0) ['(l(l0 0) (l0 0))', '(l(l(0 r0) 0) 0)']
+(0, 1, -1, 0) ['(l(0 r(0 r0)) 0)', '(0 r(l(l0 0) 0))']
+(0, 1, 0, 1) ['(0 r
+
+  ── iterazione 14  [spesa $2.5085 / $6.00  (42%)]  [25,258 token in ingresso, fino a 16,473 in uscita, al massimo $1.1394]
+     [ragionamento] I'm working through a specific case to verify the reversal identity, checking that (0,1,2,1) decomposes into two reversed pieces consistently, and I'm trying to establish the general rule that r(u ++ r(v)) equals r(r(v)) ++ r(u).
+
+Given the difficulty here, this looks like it may be a genuinely open combinatorial problem, not something with a known Lean proof — but I should keep probing for hidden
+     -> run_python (670 caratteri)...
+        2 [((-1, 0, ('L',)), 1), ((0, 1, ('R',)), 1)]
+3 [((-1, 0, ('L',)), 2), ((-1, 1, ('L', 'R')), 1), ((0, 0, ('L',)), 1), ((0, 0, ('R',)), 1), ((0, 1, ('R',)), 2)]
+4 [((-1, 0, ('L',)), 6), ((-1, 0, ('L', 
+
+  ── iterazione 15  [spesa $2.6768 / $6.00  (45%)]  [28,539 token in ingresso, fino a 12,287 in uscita, al massimo $0.9711]
+     [ragionamento] I'm computing the counts of words starting and ending in 0 for increasing lengths, getting a sequence 2, 7, 26, 97, 365, and trying to spot the recurrence pattern behind it.
+
+No clean local structure is emerging, and I'm now suspecting these constraints are non-local rather than something I can bound with binomial coefficients directly. I try reframing the count as a sum involving Fibonacci-weight
+     -> run_python (602 caratteri)...
+        3 [(((), ()), 2), (((), (0, 1)), 2), (((-1, 0), ()), 2), (((0, 1), (-1, 0)), 1)]
+4 [(((), ()), 5), (((), (0,)), 6), (((-1,), (-1,)), 1), (((0,), ()), 6), (((0,), (-1,)), 1), (((0,), (0,)), 4), (((1,),
+
+  ── iterazione 16  [spesa $2.7786 / $6.00  (46%)]  [31,662 token in ingresso, fino a 9,469 in uscita, al massimo $0.8692]
+     [ragionamento] I've confirmed computationally that the conjecture holds up to n ≤ 14 with no counterexamples, but constructing an actual proof is beyond what my remaining budget allows. I'm weighing whether submitting a sorry-laden attempt to lean_check has any value, since a proof with sorry would just get rejected—maybe the best move is verifying the definitions at least compile cleanly.
+
+One last check: does 
+     I was not able to produce a proof, and I want to be transparent about why rather than submit something broken.
+
+## What I established
+
+**The statement is a genuine open research conjecture, and it is not falsified by computation.** I computed the sets `xN n` exactly (as sets of integer words, via a bit-packed numpy enumeration with checkpoints) and compared with `a (n-1)` as defined in Lean (with truncated ℕ-subtraction, so `a 0 = 1`):
+
+| n | \|xN n\| | a(n−1) |
+|---|---|---|
+| 1..9 | 1, 2, 7, 25, 92, 344, 1300, 4950, 18955 | same |
+| 10 | 72905 | 72905 |
+| 11 | 281403 | 281403 |
+| 12 | 108934
+
+  => non risolto: il modello ha smesso di usare gli strumenti senza una prova accettata
+     16 iterazioni, 0 esplorazioni, 0 verifiche Lean, 15 esecuzioni Python, 359s, $1.2427
+     tempo: 240s in attesa dell'API, 0s di Lean in locale, 116s di Python in locale
+     natura delle verifiche: nessuna
+     causa: sistema: nessun tentativo vero, tutto speso in esplorazione
+
+==============================================================================
+[3/10] OeisA1157.conjecture   (research open)
+==============================================================================
+
+  ── iterazione 1  [spesa $2.8906 / $6.00  (48%)]  [5,043 token in ingresso, fino a 32,000 in uscita, al massimo $1.6630]
+     [ragionamento] I'm considering whether this open conjecture actually holds, examining the sum σ_k(n)/n^k = Σ_{d|n} 1/d^k and checking whether its fractional parts could ever coincide for different n, starting with the trivial case n=1.
+
+Looking at reduced denominators, I try small examples like k=2, n=2, 5, 10 to see whether σ_2(n)/n² fractional parts collide — computing σ_2(10)/100 = 13/10 as a test case to pro
+     -> run_python (500 caratteri)...
+        k 2 done False
+k 3 done False
+k 4 done False
+k 5 done False
+k 6 done False
+k 7 done False
+
+  ── iterazione 2  [spesa $2.9703 / $6.00  (50%)]  [6,397 token in ingresso, fino a 32,000 in uscita, al massimo $1.6800]
+     [ragionamento] No small counterexample found, so this looks like a genuine open problem. I'm trying a mathematical approach: the fractional part of the divisor sum equals the sum over divisors greater than 1, which stays bounded below 1 since it's less than ζ(2)-1, and this is zero only for n=1, giving distinctness there.
+
+For n₁, n₂ > 1, the question reduces to whether σ_k(n)/n^k is injective, essentially injec
+     -> run_python (639 caratteri)...
+        k 2 no collision up to 1500000
+k 3 no collision up to 1500000
+
+  ── iterazione 3  [spesa $3.0840 / $6.00  (51%)]  [8,383 token in ingresso, fino a 32,000 in uscita, al massimo $1.7048]
+     [ragionamento] I don't have a counterexample, and injectivity of σ_{-k} seems like it might genuinely be an open problem, so I can't prove it directly. Let me try once more to work out a proof by assuming σ_{-k}(n₁) = σ_{-k}(n₂) with n₁ ≠ n₂ and k ≥ 2, writing n₁ = m·a, n₂ = m·b to see if I can derive a contradiction.
+
+I'm working through a p-adic argument: for a prime p where the valuations in n₁ and n₂ differ,
+     -> run_python (763 caratteri)...
+        duplicates: 0
+
+  ── iterazione 4  [spesa $3.1703 / $6.00  (53%)]  [9,637 token in ingresso, fino a 31,996 in uscita, al massimo $1.7203]
+     [ragionamento] I've found no counterexample up to 10^7 for k=2, and I don't believe injectivity of σ_{-k} for k≥2 is a known result. I should honestly report that this conjecture remains open rather than submit a flawed proof.
+     I was not able to settle this one, and I want to be explicit about why rather than submit something broken.
+
+## What the statement amounts to
+
+For `k ≥ 2`, `σ_k(n)/n^k = Σ_{d|n} 1/d^k = 1 + Σ_{d|n, d>1} 1/d^k`, and the tail is `< ζ(2) − 1 ≈ 0.645`, so the fractional part is exactly `Σ_{d|n, d>1} d^{-k}` (and `0` for `n = 1`). Hence the conjecture is precisely the statement that the multiplicative function `σ_{-k}(n) = σ_k(n)/n^k` is **injective** on positive integers, for every `k ≥ 2`. (For `k = 1` it is false — perfect numbers `6, 28` both give `σ(n)/n = 2` — which is why the conjecture star
+
+  => non risolto: il modello ha smesso di usare gli strumenti senza una prova accettata
+     4 iterazioni, 0 esplorazioni, 0 verifiche Lean, 3 esecuzioni Python, 85s, $0.3554
+     tempo: 73s in attesa dell'API, 0s di Lean in locale, 11s di Python in locale
+     natura delle verifiche: nessuna
+     causa: sistema: nessun tentativo vero, tutto speso in esplorazione
+
+==============================================================================
+[4/10] OeisA110475.conjecture   (research open)
+==============================================================================
+
+  ── iterazione 1  [spesa $3.2460 / $6.00  (54%)]  [5,245 token in ingresso, fino a 32,000 in uscita, al massimo $1.6656]
+     [ragionamento] So a(n)=1 happens exactly when n is a squarefree semiprime or a prime power with exponent at least 2, giving the sequence 4, 6, 8, 9, 10, 14, 15, 16, 21, 22, 25, 26, 27, 32, 33... I'm conjecturing every positive integer other than 1 appears among these values in some form.
+
+Now I'm wondering whether every m ≥ 12 (excluding a few small exceptions like 9, 11) can be written as a sum of two elements 
+     -> run_python (255 caratteri)...
+        [1, 2, 3, 4, 5, 6, 7, 9, 11]
+
+  ── iterazione 2  [spesa $3.3448 / $6.00  (56%)]  [6,915 token in ingresso, fino a 32,000 in uscita, al massimo $1.6864]
+     [ragionamento] This looks like a genuinely open Goldbach-type problem that I can't fully prove, but I'm trying anyway. I'm considering the set of prime powers and semiprimes, checking whether every sufficiently large number splits into two such elements, starting with the even case.
+
+I doubt there's an elementary argument here—this seems essentially as hard as Goldbach's conjecture, since known results (Chen's t
+     -> lean_explore (1136 caratteri)...
+        con errori  (32.1s)  [32s]
+
+  ── iterazione 3  [spesa $3.4506 / $6.00  (58%)]  [10,028 token in ingresso, fino a 32,000 in uscita, al massimo $1.7253]
+     [ragionamento] The helper lemmas mostly check out, but the main theorem seems to genuinely reduce to a Goldbach-type statement, which isn't provable elementarily. I'm trying to see if there's some clever elementary argument by considering the structure of the set—elements like 2p, 3p, p², powers of 2—and whether even numbers can always be written as sums fitting this pattern, but this really does look like it hi
+     -> lean_explore (1272 caratteri)...
+        con errori  (7.4s)  [7s]
+
+  ── iterazione 4  [spesa $3.5574 / $6.00  (59%)]  [11,724 token in ingresso, fino a 30,841 in uscita, al massimo $1.6886]
+     -> lean_explore (1243 caratteri)...
+        compila senza errori  (7.0s)  [7s]
+
+  ── iterazione 5  [spesa $3.6194 / $6.00  (60%)]  [12,640 token in ingresso, fino a 29,372 in uscita, al massimo $1.6266]
+     [ragionamento] The reverse direction checks out, but the forward direction resembles a Goldbach-type open problem — showing every m ≥ 8 (except 9, 11) decomposes into elements of S seems to require unproven number-theoretic results, since even cases reduce to needing p + q = k for primes, which isn't known in general. I don't think I can fully close this gap.
+     I investigated this problem thoroughly, and here is my honest assessment.
+
+## What the statement says
+
+`a n = 1` holds exactly when `n` is either a prime power `p^k` with `k ≥ 2`, or a product of two distinct primes `pq`. Call this set `S = {4, 6, 8, 9, 10, 14, 15, 16, 21, 22, 25, 26, 27, 32, 33, …}`. The theorem claims: for every `m > 0`, `m ∉ {1,2,3,4,5,6,7,9,11}` **iff** `m` is a sum of two elements of `S`.
+
+## What I verified
+
+- **Computationally** (Python, all `m ≤ 200 000`): the set of non-representable positive integers is exactly `{1,2,3,4,5,6,7,9,11}`. So the formalisation matches the
+
+  => non risolto: il modello ha smesso di usare gli strumenti senza una prova accettata
+     5 iterazioni, 3 esplorazioni, 0 verifiche Lean, 1 esecuzioni Python, 136s, $0.4417
+     tempo: 88s in attesa dell'API, 47s di Lean in locale, 1s di Python in locale
+     natura delle verifiche: nessuna
+     causa: sistema: nessun tentativo vero, tutto speso in esplorazione
+
+==============================================================================
+[5/10] OeisA63880.unique_primitive_108   (research open)
+==============================================================================
+
+  ── iterazione 1  [spesa $3.6877 / $6.00  (61%)]  [5,764 token in ingresso, fino a 32,000 in uscita, al massimo $1.6721]
+     [ragionamento] This looks like an open research problem, so I want to check how `Set.IsPrimitive` is actually defined in FormalConjecturesUtil—there might be some quirk in the formalization that makes it trivially provable or disprovable. Let me explore the definition first.
+     Let me start by inspecting the definitions involved, especially `Set.IsPrimitive`.
+     -> lean_explore (154 caratteri)...
+        compila senza errori  (6.9s)  [7s]
+
+  ── iterazione 2  [spesa $3.7266 / $6.00  (62%)]  [6,390 token in ingresso, fino a 32,000 in uscita, al massimo $1.6799]
+     [ragionamento] This does seem faithful to a genuine open problem — whether 108 is the only known primitive term of A063880. I recall OEIS comments suggesting all terms take the form 108 times a squarefree number coprime to 6, and I want to verify by searching powerful numbers for other primitive terms.
+
+The condition σ(n) = 2·usigma(n) reduces to requiring a multiplicative ratio over prime-power components equal
+     This is a genuinely open problem, so let me first search computationally for other primitive terms (which must be powerful numbers, since the ratio σ/usigma only depends on the powerful part).
+     -> run_python (841 caratteri)...
+        [108]
+
+  ── iterazione 3  [spesa $3.8365 / $6.00  (64%)]  [8,456 token in ingresso, fino a 32,000 in uscita, al massimo $1.7057]
+     [ragionamento] With only 108 examples found up to 10^13, proving there are no more seems tied to an open Diophantine problem involving products of sigma function ratios over prime powers—this likely can't be resolved with a clean, general proof.
+
+I'm digging into the 2-adic valuation structure, comparing σ(n) and the unitary sigma function usigma(n) across odd primes with even versus odd exponents, trying to see
+     Nothing but 108 up to 10¹³. Let me do a structural search (product of σ(pᵃ)/(pᵃ+1) = 2 with bounded number of prime factors, but unbounded size), which reaches far beyond brute force.
+     -> run_python (848 caratteri)...
+        ERRORE: il codice ha superato il tempo massimo di 30 secondi ed e' stato interrotto.
+
+  ── iterazione 4  [spesa $3.9776 / $6.00  (66%)]  [10,815 token in ingresso, fino a 31,497 in uscita, al massimo $1.7100]
+     [ragionamento] This is running too slow, so I should limit k to at most 3, add progress printing, and lower AMAX to 20. For the k=1 case, I can solve for r directly and check primes p where p/(p-1) exceeds r, though I realize the bound blows up when r is close to 1.
+
+I'm trying to find a smarter approach for the k=1 case by relating the equation to gcd properties of σ(p^a) and p^a+1, working through the recursiv
+     -> run_python (1015 caratteri)...
+        1 [] 9.202957153320312e-05
+2 [[(2, 2), (3, 3)]] 0.6872241497039795
+3 [[(2, 2), (3, 3)], [(2, 2), (3, 3)]] 25.028779983520508
+
+  ── iterazione 5  [spesa $4.0925 / $6.00  (68%)]  [12,615 token in ingresso, fino a 28,749 in uscita, al massimo $1.5951]
+     [ragionamento] I don't see a counterexample, and this looks like an open Diophantine problem akin to the odd perfect number question—a full proof isn't realistically achievable. I could try pushing on a 2-adic constraint using the multiplicativity of σ, but I don't see how that leads to a complete resolution.
+
+I should be honest that this is beyond what can actually be proven here, rather than submitting empty o
+     ## Result
+
+I was not able to prove this theorem, and I want to be transparent about why: it is a genuinely open Diophantine problem, and my computational work only *strengthens* the conjecture rather than revealing a route to a proof or a counterexample.
+
+### What the statement amounts to
+
+`Set.IsPrimitive S n` is `n ∈ S ∧ Disjoint n.properDivisors S` (checked with `#print`), so the archive definition is faithful. For `n = ∏ pᵃ`, both σ and usigma are multiplicative, so the condition `σ n = 2·usigma n` is
+
+$$\prod_{p^a \,\|\, n} \frac{\sigma(p^a)}{p^a+1} = 2 .$$
+
+Prime factors with exponent 1 
+
+  => non risolto: il modello ha smesso di usare gli strumenti senza una prova accettata
+     5 iterazioni, 1 esplorazioni, 0 verifiche Lean, 3 esecuzioni Python, 172s, $0.5009
+     tempo: 100s in attesa dell'API, 7s di Lean in locale, 63s di Python in locale
+     natura delle verifiche: nessuna
+     causa: sistema: nessun tentativo vero, tutto speso in esplorazione
+
+==============================================================================
+[6/10] OeisA105720.conjecture   (research open)
+==============================================================================
+
+  ── iterazione 1  [spesa $4.1885 / $6.00  (70%)]  [5,430 token in ingresso, fino a 32,000 in uscita, al massimo $1.6679]
+     [ragionamento] This is genuinely an open research problem — the sequence of prime sums from p_n to p_2n is conjectured to be square only at n=3, 6, 4072, and proving that in general seems out of reach unless I can find a computational counterexample. I should try searching further to see if another square value turns up beyond the known cases.
+
+I'm thinking through the computational approach: I'd need a sieve to
+     -> run_python (729 caratteri)...
+        50847533 2.1386849880218506
+[] 2.4854748249053955
+
+  ── iterazione 2  [spesa $4.2779 / $6.00  (71%)]  [6,863 token in ingresso, fino a 32,000 in uscita, al massimo $1.6858]
+     [ragionamento] I got an empty result but expected 3, 6, 4072 — something's off, maybe with how numba handles the list typing or the sqrt call. Let me check the difference S[6]-S[2] to debug where it's diverging.
+     -> run_python (524 caratteri)...
+        [ 2  5  7 11 13 17 19 23 29 31] 48 197
+-1 []
+0 []
+1 []
+247635003 247590225
+
+  ── iterazione 3  [spesa $4.3206 / $6.00  (72%)]  [7,428 token in ingresso, fino a 31,731 in uscita, al massimo $1.6794]
+     Bug: I overwrote 3 with 2 (index 0 was 1, set to False, so first entry was 3). Fix by prepending 2.
+     -> run_python (512 caratteri)...
+        98222287
+-1 []
+0 [   3    6 4072]
+1 []
+247590225 247590225 72639261984065704
+
+  ── iterazione 4  [spesa $4.3494 / $6.00  (72%)]  [7,917 token in ingresso, fino a 31,033 in uscita, al massimo $1.6506]
+     [ragionamento] No counterexample turns up even past 49 million, so this really is an open problem — proving it in Lean would mean showing no square exists for all n, which isn't feasible here. Heuristically though, summing the expected density of squares among these values gives a divergent series, suggesting infinitely many squares should occur, just extremely sparsely.
+
+Estimating the probability of hitting a 
+     -> run_python (1670 caratteri)...
+        {'N': 1000000, 'pslow': 15485863, 'Sslow': 7472951481636, 'pfast': 32452867, 'Sfast': 31381137530481, 'found': []}
+
+--- file nella cartella di lavoro (restano disponibili alla prossima chiamata) ---
+_
+
+  ── iterazione 5  [spesa $4.4857 / $6.00  (75%)]  [10,641 token in ingresso, fino a 27,626 in uscita, al massimo $1.5143]
+     [ragionamento] I'm setting up the chunked loop, tracking slow and fast pointers into the prime sequence and their cumulative sums so each chunk can advance both indices by the chunk size C.
+
+Then for each n in the chunk I compute a(n) as S[2n] minus S[n-1] using the incremental cumulative sums from the slow/fast pointers, and I want to sanity-check this against a small direct computation before trusting it at la
+     -> run_python (2382 caratteri)...
+        --- stderr ---
+Traceback (most recent call last):
+  File "/Users/fededicandia/Documents/Math/runs/lavoro/OeisA105720.conjecture/programma.py", line 74, in <module>
+    exec(code)
+    ~~~~^^^^^^
+  File
+
+  ── iterazione 6  [spesa $4.6070 / $6.00  (77%)]  [13,034 token in ingresso, fino a 24,601 in uscita, al massimo $1.3930]
+     -> run_python (188 caratteri)...
+        ERRORE: il codice ha superato il tempo massimo di 30 secondi ed e' stato interrotto.
+
+  ── iterazione 7  [spesa $4.6462 / $6.00  (77%)]  [13,252 token in ingresso, fino a 23,763 in uscita, al massimo $1.3538]
+     [ragionamento] Given the 30 second limit, I'll test with a smaller chunk and tmax=15 to see how far it gets, timing the run.
+     -> run_python (143 caratteri)...
+        FOUND 111008771 387024194082134596
+{'N': 165000000, 'pslow': 3449931889, 'Sslow': 277438967622059922, 'pfast': 7140493429, 'Sfast': 1149524802495632731, 'found': [[111008771, 387024194082134596]]} 12.
+
+  ── iterazione 8  [spesa $4.6598 / $6.00  (78%)]  [13,618 token in ingresso, fino a 23,399 in uscita, al massimo $1.3402]
+     [ragionamento] That jump from 1e6 to 165e6 in just 12 seconds seems suspicious, so the checkpoint from the earlier timed-out run must have carried forward progress. I found n = 111008771 with a(n) = 387024194082134596, possibly equal to 622112 squared, and now I need to verify this independently using a different method.
+
+I'll try a fresh segmented numpy sieve up to 5e9 in chunks of 1e8, tracking prime counts an
+     -> run_python (1304 caratteri)...
+        {'lo': 4800000002, 'count': 225991743, 'total': 528925141442346286, 'pn': 2274652151, 'Sbefore': 123000804558174777, 'p2n': 4711447171, 'S2n': 510024998640309373}
+387024194082134596 622112686 True
+
+--
+
+  ── iterazione 9  [spesa $4.7345 / $6.00  (79%)]  [15,155 token in ingresso, fino a 21,520 in uscita, al massimo $1.2654]
+     [ragionamento] So the conjecture is actually false, with n = 111008771 as a counterexample where a(n) = 622112686². Proving this in Lean is infeasible though, since it would require computing a sum over 111 million terms within the kernel—so there's no way to formally verify this disproof directly.
+
+I want to double-check the indexing convention: a(n) sums the primes from the n-th to the 2n-th (1-based), which m
+     -> run_python (89 caratteri)...
+        True True 387024194082134596
+
+--- file nella cartella di lavoro (restano disponibili alla prossima chiamata) ---
+__pycache__, ck.json, lib.py, ver.json
+
+  ── iterazione 10  [spesa $4.7855 / $6.00  (80%)]  [15,833 token in ingresso, fino a 20,332 in uscita, al massimo $1.2145]
+     ## Result: the conjecture is **false** — a fourth square exists
+
+The statement `OeisA105720.conjecture` asserts that for `0 < n`, `a n` is a square **iff** `n ∈ {3, 6, 4072}`. I found a counterexample by computation, so no Lean proof of the statement can exist (and I therefore did not submit one).
+
+### Counterexample
+
+**n = 111 008 771**
+
+With the archive's definition `a n = ∑ i ∈ Ico (n-1) (2n), nth Prime i` (i.e. $p_n + p_{n+1} + \dots + p_{2n}$ with $p_1 = 2$):
+
+- $p_n = p_{111008771} = 2\,274\,652\,151$ (verified prime)
+- $p_{2n} = p_{222017542} = 4\,711\,447\,171$ (verified prime)
+- sum o
+
+  => non risolto: il modello ha smesso di usare gli strumenti senza una prova accettata
+     10 iterazioni, 0 esplorazioni, 0 verifiche Lean, 9 esecuzioni Python, 219s, $0.6608
+     tempo: 143s in attesa dell'API, 0s di Lean in locale, 75s di Python in locale
+     natura delle verifiche: nessuna
+     causa: sistema: nessun tentativo vero, tutto speso in esplorazione
+
+==============================================================================
+[7/10] OeisA113010.conjecture   (research open)
+==============================================================================
+
+  ── iterazione 1  [spesa $4.8494 / $6.00  (81%)]  [4,772 token in ingresso, fino a 21,819 in uscita, al massimo $1.1506]
+     [ragionamento] I need to determine whether this Prop is true or false by checking for fixed points where a number equals (digit count)^(digit sum). I'm testing small cases like n=1, checking digits and sums to see which values satisfy this equation.
+
+Checking d=2 gives 32 as a valid fixed point (2 digits, digit sum 5, 2^5=32). For d=3 and d=4 no fixed points emerge, and in general the required exponent s grows m
+     -> run_python (241 caratteri)...
+        --- stderr ---
+Traceback (most recent call last):
+  File "/Users/fededicandia/Documents/Math/runs/lavoro/OeisA113010.conjecture/programma.py", line 11, in <module>
+    if p>=lo and sum(map(int,str(p))
+
+  ── iterazione 2  [spesa $4.9040 / $6.00  (82%)]  [5,825 token in ingresso, fino a 20,464 in uscita, al massimo $1.0960]
+     -> run_python (246 caratteri)...
+        [(2, 5, 32)]
+
+  ── iterazione 3  [spesa $4.9271 / $6.00  (82%)]  [6,060 token in ingresso, fino a 19,943 in uscita, al massimo $1.0729]
+     [ragionamento] I'm wondering whether it's actually provable that no other fixed points exist beyond what's found so far, since the digit sum only gives a congruence mod 9, not a full proof — I'd need a real lower bound argument on digit sums for larger exponents.
+
+I'm also weighing whether there's a shortcut: could the answer simply restate the existential statement itself as a tautology so the equivalence trivi
+     -> lean_explore (102 caratteri)...
+        con errori  (0.0s, SENZA isolamento)  [0s]
+
+  ── iterazione 4  [spesa $4.9682 / $6.00  (83%)]  [6,994 token in ingresso, fino a 18,888 in uscita, al massimo $1.0318]
+     -> lean_explore (131 caratteri)...
+        compila senza errori  (29.2s)  [29s]
+
+  ── iterazione 5  [spesa $4.9881 / $6.00  (83%)]  [7,280 token in ingresso, fino a 18,417 in uscita, al massimo $1.0118]
+     [ragionamento] Computationally it looks like no other fixed points exist, but that's not something I can actually prove here. I shouldn't submit a trivially true statement dressed up as if it settles the conjecture — that would be misleading rather than a genuine solution.
+
+I'm weighing a slightly stronger alternative claim like restricting to a bounded digit-length threshold, but proving equivalence would requi
+     -> run_python (195 caratteri)...
+        1 1 1 1
+2 5 32 5
+9 9 387420489 45
+
+  ── iterazione 6  [spesa $5.0832 / $6.00  (85%)]  [9,149 token in ingresso, fino a 16,048 in uscita, al massimo $0.9168]
+     [ragionamento] I notice one extra edge case, (9,9), where 9^9=387420489 has digit sum 45, not 9. I'm wondering whether `decide` or `norm_num` can directly evaluate `Nat.digits 10 387420489` to handle this case computationally, and testing whether there's a suitable simp/norm_num extension for digit computations.
+
+Alternatively, I'm thinking about characterizing digit length using bounds like 10^(d-1) ≤ n < 10^d 
+     -> lean_explore (488 caratteri)...
+        con errori  (8.5s)  [9s]
+
+  ── iterazione 7  [spesa $5.1822 / $6.00  (86%)]  [11,199 token in ingresso, fino a 13,555 in uscita, al massimo $0.8177]
+     [ragionamento] The digit sum examples passed, aside from one decide error. I'm checking whether the decidability instance for the bounded universal statement works correctly, since the binder desugars into a standard form that should be fine.
+
+Rather than fighting with `Nat.decidableBallLE`, I'll switch to `∀ d < 11, ∀ s < 9*d+1`, using `Nat.decidableBallLT` instead, which should be more reliable.
+     -> lean_explore (177 caratteri)...
+        con errori  (8.0s)  [8s]
+
+  ── iterazione 8  [spesa $5.2343 / $6.00  (87%)]  [12,031 token in ingresso, fino a 12,305 in uscita, al massimo $0.7656]
+     [ragionamento] I'm puzzled about where the decidability instance is failing, so I want to test individual pieces of the nested quantifier statement separately to isolate which part lacks the needed instance.
+     -> lean_explore (388 caratteri)...
+        con errori  (8.2s)  [8s]
+
+  ── iterazione 9  [spesa $5.2700 / $6.00  (88%)]  [12,813 token in ingresso, fino a 11,397 in uscita, al massimo $0.7300]
+     [ragionamento] I'm puzzled why the disjunction conclusion isn't decidable as expected, wondering if it's an elaboration order issue with numeral unification under `∨`. I'll try restructuring the conclusion as an equality of pairs instead, or test the full statement with a simplified placeholder proof.
+     -> lean_explore (473 caratteri)...
+        con errori  (7.3s)  [7s]
+
+  ── iterazione 10  [spesa $5.3121 / $6.00  (89%)]  [14,132 token in ingresso, fino a 10,224 in uscita, al massimo $0.6878]
+     [ragionamento] It's odd that the version with `∧` worked but `∨` fails — maybe it's a heartbeat/timeout issue during instance synthesis rather than a real unification problem. I could try forcing `instDecidableOr` explicitly, or restructure the conclusion differently to sidestep the issue.
+     -> lean_explore (499 caratteri)...
+        con errori  (8.2s)  [8s]
+
+  ── iterazione 11  [spesa $5.3637 / $6.00  (89%)]  [15,277 token in ingresso, fino a 8,907 in uscita, al massimo $0.6363]
+     [ragionamento] Good, the Bool version worked while the Prop version with more hypotheses struggled — likely the decidability instance needing a specific predicate form. I'll go with the Bool version and convert with simp, then start writing the theorem statement.
+
+I'm structuring the equivalence proof: one direction is trivial by dropping the digit-length hypothesis, the other requires deriving a contradiction f
+     -> lean_check (2092 caratteri)...
+        ESITO: RIFIUTATO  [enunciato_sbagliato, 27s]
+
+!! budget insufficiente per continuare: 18,333 token in ingresso, la prossima chiamata costerebbe fino a $0.5292 ma restano $0.4919 ($0.4919 sul totale, $1.3413 su questo problema)
+
+==============================================================================
+RESOCONTO
+==============================================================================
+  [non risolto] OeisA109074.conjecture   $1.6479   budget insufficiente per continuare: 35,234 token in ingresso, la prossima chiamata costerebbe fino a $0.7404 ma restano $0.3521 ($4.3521 sul totale, $0.3521 su questo problema)
+  [non risolto] OeisA108081.count_words_in_x_is_a_shifted   $1.2427   il modello ha smesso di usare gli strumenti senza una prova accettata
+  [non risolto] OeisA1157.conjecture   $0.3554   il modello ha smesso di usare gli strumenti senza una prova accettata
+  [non risolto] OeisA110475.conjecture   $0.4417   il modello ha smesso di usare gli strumenti senza una prova accettata
+  [non risolto] OeisA63880.unique_primitive_108   $0.5009   il modello ha smesso di usare gli strumenti senza una prova accettata
+  [non risolto] OeisA105720.conjecture   $0.6608   il modello ha smesso di usare gli strumenti senza una prova accettata
+  [non risolto] OeisA113010.conjecture   $0.0000   budget insufficiente per continuare: 18,333 token in ingresso, la prossima chiamata costerebbe fino a $0.5292 ma restano $0.4919 ($0.4919 sul totale, $1.3413 su questo problema)
+
+  Risolti: 0/7
+  Spesa totale: $5.5081 su $6.00 disponibili
+  57 chiamate | input 228 | cache scritta 95,542 | cache letta 585,137 | output 83,305 | costo $5.5081
+
+  Resoconto salvato in runs/giro0bis.json

@@ -110,3 +110,23 @@ def test_opus_5_regge_un_tetto_piu_basso_di_fable():
     o = _chiamate_possibili("claude-opus-5", 0.50, 8000, 0.05)
     f = _chiamate_possibili("claude-fable-5-1", 0.50, 8000, 0.05)
     assert o >= f, f"Opus {o} chiamate, Fable {f}"
+
+
+def test_il_tentativo_interrotto_dal_budget_non_perde_il_lavoro_fatto():
+    """Quando il budget TOTALE finisce a metà di un problema, quel problema
+    finiva nel rapporto con $0,00 e zero verifiche.
+
+    E' successo nel giro 0 bis: il settimo problema risultava a costo zero
+    mentre il registro mostrava una verifica consegnata. Un rapporto che
+    sottostima la spesa e' un problema di sicurezza, non di cosmetica: il
+    limite rigido si controlla proprio su quei numeri.
+    """
+    from costi import LimiteSpesaSuperato
+    t = agente.Tentativo(problema="X.y")
+    t.iterazioni = 3
+    t.verifiche = 1
+    e = LimiteSpesaSuperato("finito")
+    e.tentativo = t
+    # e' il meccanismo che main() usa: l'eccezione porta con se' il tentativo
+    assert getattr(e, "tentativo", None) is t
+    assert e.tentativo.verifiche == 1

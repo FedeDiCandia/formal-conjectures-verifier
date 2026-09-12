@@ -856,3 +856,96 @@ problemi.
 risultati non è spendere di più, è **aspettare il modello successivo**. Costa
 zero e, secondo i loro dati, rende quattro volte più del quadruplicare il
 budget.
+
+---
+
+## 12. Il confronto fra istruzioni, e cosa misura davvero lo zero
+
+*11 settembre, sera. Tutti i numeri di questa sezione sono **MISURATI** sui
+nostri rapporti.*
+
+### 12.1 Sui problemi GIÀ DIMOSTRATI (tre problemi, tetto $1,40, Fable 5.1)
+
+| | istruzioni attuali | istruzioni insistenti |
+|---|---|---|
+| risolti | 2 su 3 | 2 su 3 |
+| spesa media per problema | $0,303 | **$0,577** |
+| quota del tetto consumata | 22% | **41%** |
+| candidati consegnati a `lean_check`, per problema | 1,0 | **2,0** |
+
+Le istruzioni insistenti raddoppiano consumo e consegne, a parità di successi.
+
+### 12.2 Sui problemi APERTI (i dieci del lotto, tetto $2,00, Fable 5.1)
+
+| | giro 0, attuali | giro 0 bis, insistenti |
+|---|---|---|
+| problemi coperti | 10 | 7 (poi il budget totale è finito) |
+| **risolti** | **0** | **0** |
+| spesa media per problema | $0,230 | **$0,693** (tre volte tanto) |
+| quota del tetto consumata | 12% | **35%** |
+| iterazioni | 32 | 47 |
+| esecuzioni di `run_python` | 21 | **39** |
+| esplorazioni Lean | 0 | **12** |
+| **candidati consegnati a `lean_check`** | **0** | **1** |
+
+Questa è la tabella che conta, ed è scomoda. Le istruzioni insistenti fanno
+spendere tre volte tanto, e quei soldi vanno in **calcolo ed esplorazione**, non
+in tentativi di dimostrazione: su sette problemi il modello ha consegnato un
+candidato **una volta sola**, e quella volta è stato rifiutato perché l'enunciato
+non combaciava.
+
+### 12.3 Che cosa misura lo zero, adesso
+
+La conclusione precedente — «ci fermiamo, il problema è l'infrastruttura» — era
+**prematura**, e va detto perché, con precisione:
+
+1. **Non era il controllo di budget.** Nel giro 0 il contabile non è scattato
+   nemmeno una volta: tutti e dieci si sono fermati da soli dopo 2–6 chiamate
+   avendo speso il 6–32% del tetto. (Il contabile ha invece invalidato la
+   *variante B*, dove otto fallimenti su undici erano suoi e due problemi hanno
+   speso $0,00. Quel difetto è corretto.)
+2. **Era in parte il modo di arrendersi**, e quello si correggeva: le istruzioni
+   insistenti triplicano l'impegno.
+3. **Ma lo zero regge.** Con tre volte la spesa, 47 iterazioni, 39 calcoli e 12
+   esplorazioni, i successi restano zero. Quindi la conclusione giusta non è «non
+   ci ha provato» e non è «non avevamo budget»: è che **su questi dieci problemi
+   il modello non trova una strada verso una dimostrazione**. Calcola, esplora,
+   capisce, e conclude che non c'è.
+
+È lo stesso esito a cui era arrivata la mia analisi gratuita, che per quattro dei
+dieci aveva già escluso il testimone piccolo e per l'identità A109074 aveva
+concluso che serve un argomento p-adico con stime strette.
+
+**Variante scelta: le insistenti.** Non perché diano successi — non ne danno —
+ma perché rendono il fallimento *interpretabile*: con quelle, uno zero significa
+«non ci riesce», non «non ci ha provato». E sui problemi dimostrabili raddoppiano
+le consegne a parità di esito. Il costo è tre volte tanto per problema, e va
+messo nel conto di qualunque giro futuro.
+
+---
+
+## 13. Riproiezione: quante chiamate compra un tetto
+
+Dopo la correzione (la soglia di arresto scende da 6000 a 2000 token di uscita),
+con un contesto tipico di 15 000 token e il costo medio per chiamata misurato sui
+nostri giri:
+
+| tetto per problema | Opus 5, prima | Opus 5, ora | Fable 5.1, prima | Fable 5.1, ora |
+|---|---|---|---|---|
+| $0,50 | 3 | **4** | 1 | **2** |
+| $1,00 | 8 | **9** | 3 | **4** |
+| $1,40 | 12 | **13** | 5 | **6** |
+| $2,00 | 18 | **19** | 8 | **9** |
+| $3,00 | 28 | **29** | 13 | **14** |
+
+Due letture, e la seconda corregge una mia raccomandazione precedente.
+
+1. **La correzione aggiunge una chiamata a ogni tetto** — poco, ma nei tetti
+   bassi era la differenza fra una chiamata e zero.
+2. **A parità di tetto, Opus 5 compra il doppio delle chiamate di Fable 5.1.**
+   Avevo raccomandato Fable 5.1 sulla base dei dati di Epoch, dove batte Opus 4.8
+   53% contro 29% — ma quella misura è a **$200 per problema**, dove entrambi
+   hanno chiamate in abbondanza. A **$2 per problema** la valuta non è la qualità
+   del modello: è il numero di iterazioni, e là Opus 5 ne compra il doppio. Per i
+   giri a tetto basso **la scelta giusta è Opus 5**; Fable 5.1 torna a convenire
+   quando il tetto è alto.
