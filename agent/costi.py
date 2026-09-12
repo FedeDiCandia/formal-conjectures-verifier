@@ -39,6 +39,19 @@ class Prezzi:
 #:   - scrittura in cache a 1 ora:    2 volte l'input  (non 1,25!);
 #:   - lettura da cache:              0,1 volte l'input,
 #:     TRANNE Fable 5.1 e Mythos 5.1, che usano 0,025 volte.
+#: Prezzi in dollari per milione di token, VERIFICATI sulla pagina ufficiale
+#: <https://platform.claude.com/docs/en/about-claude/pricing> l'11 settembre 2026.
+#: Si tengono in forma assoluta e non come moltiplicatori perche' i moltiplicatori
+#: NON sono universali: la lettura dalla cache costa 0,1x il prezzo d'ingresso su
+#: tutti i modelli tranne Fable 5.1 e Mythos 5.1, dove costa 0,025x. Con un
+#: moltiplicatore unico il budget di Fable 5.1 sarebbe sbagliato di quattro volte
+#: sulla voce che in una sessione lunga pesa piu' di tutte.
+#:
+#: Nota sul confronto fra modelli: Fable 5.1 costa il doppio di Opus 5 in ingresso
+#: e in uscita, ma la sua lettura dalla cache costa la META' in valore assoluto
+#: ($0,25 contro $0,50). Sul profilo di token di un tentativo lungo — MISURATO da
+#: Epoch AI: 36,9 milioni di token letti dalla cache contro 685 mila in uscita —
+#: il rapporto reale non e' 2x ma 1,45x.
 LISTINO: dict[str, Prezzi] = {
     "claude-opus-5":    Prezzi(input=5.00,  output=25.00, scrittura_cache_5m=6.25,
                                scrittura_cache_1h=10.00, lettura_cache=0.50),

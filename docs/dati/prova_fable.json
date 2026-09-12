@@ -1,0 +1,69 @@
+{
+  "modello": "claude-fable-5-1",
+  "effort": "medium",
+  "budget": 0.6,
+  "speso": 0.0791775,
+  "consumo_totale": {
+    "input_tokens": 4,
+    "output_tokens": 383,
+    "scrittura_cache_5m": 4799,
+    "scrittura_cache_1h": 0,
+    "lettura_cache": 0,
+    "chiamate": 1
+  },
+  "tentativi": [
+    {
+      "problema": "WilsonPrime.not_isWilsonPrime_seven",
+      "risolto": true,
+      "motivo": "dimostrazione accettata dal verificatore",
+      "causa": "risolto",
+      "iterazioni": 1,
+      "verifiche": 1,
+      "esplorazioni": 0,
+      "esecuzioni_python": 0,
+      "secondi_totali": 257.02398109436035,
+      "secondi_api": 6.9531848430633545,
+      "secondi_lean": 249.81929683685303,
+      "secondi_python": 0.0,
+      "costo": 0.0791775,
+      "consumo": {
+        "input_tokens": 4,
+        "output_tokens": 383,
+        "scrittura_cache_5m": 4799,
+        "scrittura_cache_1h": 0,
+        "lettura_cache": 0,
+        "chiamate": 1
+      },
+      "verifiche_per_natura": {
+        "accettato": 1
+      },
+      "iterazioni_dettaglio": [
+        {
+          "numero": 1,
+          "costo": 0.0791775,
+          "token_input": 4,
+          "token_output": 383,
+          "cache_scritta": 4799,
+          "cache_letta": 0,
+          "secondi_api": 6.9531848430633545,
+          "secondi_lean": 249.81929683685303,
+          "secondi_python": 0.0,
+          "esecuzioni_python": 0,
+          "esplorazioni": 0,
+          "secondi_esplorazione": 0.0,
+          "verifiche": [
+            {
+              "caratteri": 447,
+              "esito": "ACCETTATO",
+              "controllo_fallito": "",
+              "secondi": 249.81929683685303,
+              "natura": "accettato"
+            }
+          ],
+          "ragionamento": "To disprove Wilson primality for 7, I just need to check that 6! + 1 = 721 isn't divisible by 49, since 721 = 49·14 + 35. I'll write this as a decidable check in the file.\n\n"
+        }
+      ],
+      "soluzione": "import FormalConjecturesUtil\n\nnamespace WilsonPrime\n\n/-- A Wilson prime is a prime $p$ such that $p^2 \\mid (p-1)!+1$. -/\ndef IsWilsonPrime (p : ℕ) : Prop :=\n  p.Prime ∧ p ^ 2 ∣ (p - 1).factorial + 1\n\n/-- The prime $7$ is not a Wilson prime. -/\n@[category test, AMS 11]\ntheorem not_isWilsonPrime_seven : ¬ IsWilsonPrime 7 := by\n  intro h\n  have h2 := h.2\n  have : (7 - 1).factorial + 1 = 721 := by decide\n  rw [this] at h2\n  omega\n\nend WilsonPrime\n"
+    }
+  ]
+}

@@ -531,3 +531,153 @@ metterei solo se il primo tentativo mostra che serve.
 **Quindi la capienza viene prima di tutto**, come avevi previsto: sono modifiche
 gratuite, mezza giornata di lavoro mio, e senza di esse i $50 non sono
 spendibili in modo sensato.
+
+---
+
+## 7. Probabilità per famiglia, e quanti problemi nostri ci appartengono
+
+*Aggiunta dell'11 settembre, dopo aver letto i file di Epoch AI problema per
+problema. Tutti i numeri di questa sezione sono **MISURATI** contando i loro
+`info.json` e `scores.json`.*
+
+### 7.1 Il tasso dipende dalla famiglia, e la differenza è di sei volte
+
+| famiglia | tentativi misurati | risolti | tasso | tetto per problema |
+|---|---|---|---|---|
+| **OEIS** (congetture su successioni, poco studiate) | 492 × 3 run | 147 / 129 / 109 | **29,9% / 26,2% / 22,2%** | $50 |
+| **OEIS**, modelli attuali | 100 | 53 (Fable 5.1) / 57 (GPT-6 astra) | **53% / 57%** | $200 |
+| **Erdős** (problemi con un nome e una storia) | 59 + 38 | 2 + 2 | **5,1% / 7,4%** | **$1000** |
+| Erdős autoformalizzati | 17 + 9 | 1 + 1 | 5,9% / 11,1% | $1000 |
+| `fc100open` (misto, dal nostro archivio) | 3 | 0 | 0% (intervallo 0–63%: **non dice niente**) | $300–1000 |
+
+La riga da ricordare: **mille dollari per problema sui problemi di Erdős danno
+il 5%; cinquanta dollari sulle congetture OEIS danno il 30%.** Non è il budget
+che fa la differenza, è la famiglia.
+
+### 7.2 Quanti dei nostri aperti appartengono a quella famiglia
+
+| famiglia | aperti verificabili | elementari | mai nel benchmark di Epoch |
+|---|---|---|---|
+| Erdős | 488 | 196 | 157 |
+| Wikipedia (celebri) | 251 | 165 | 151 |
+| **OEIS** | **209** | **183** | **54** |
+| articoli (arXiv, Paper) | 114 | 90 | 80 |
+| Green's open problems | 83 | 43 | 41 |
+| Millennium | 14 | 11 | 10 |
+| WOWII (generate da un programma) | 9 | 9 | 9 |
+
+- **La famiglia dove il 30% misurato si applica davvero: 54 problemi.** Sono le
+  congetture OEIS del nostro archivio, elementari, che Epoch non ha mai messo nel
+  suo benchmark.
+- Allargando a «oscuro ed elementare, non celebre, mai toccato da loro» —
+  articoli, MathOverflow, WOWII, varie — si arriva a **186**.
+- I 488 di Erdős e i 251 da Wikipedia restano fuori: là il tasso misurato è il
+  5%, e a mille dollari per problema.
+
+**Conseguenza operativa:** la riserva di bersagli buoni è di 54 problemi, non di
+1188. È poca, e questo mette un tetto naturale alla spesa sensata: esaurita
+quella famiglia, il denaro successivo comprerebbe tentativi su famiglie dove la
+misura dice 5%.
+
+---
+
+## 8. Tre da $50 o due da $75? Nessuno dei due
+
+*Domanda di Federico, e la risposta viene dai loro dati.*
+
+Il numero che ribalta la questione: **il costo mediano di un tentativo RIUSCITO
+è $3,55** (Fable 5.1; $3,97 Opus 4.8; $1,84 GPT-6 astra). Quando funziona,
+funziona subito. Il tetto non è quello che si spende per un successo: è quello
+che si butta su un fallimento.
+
+Quindi un «tetto da $50» non costa $50 per tentativo. Costa in media **$30,89**,
+perché i successi si fermano prima (MISURATO sul run Fable 5.1). Con $195:
+
+| tetto per problema | p(successo) | spesa media per tentativo | tentativi con $195 | successi attesi |
+|---|---|---|---|---|
+| $2 | 22% | $1,71 | 114 | **25,1** |
+| $5 | 29% | $3,93 | 50 | 14,4 |
+| $15 | 38% | $10,64 | 18 | 7,0 |
+| $25 | 41% | $16,71 | 12 | 4,8 |
+| **$50** | 48% | $30,89 | **6,3** | **3,0** |
+| $75 | 49% | $43,81 | 4,5 | 2,2 |
+| $200 | 53% | $103,01 | 1,9 | 1,0 |
+
+Tutti **MISURATI** sul run `oeis-open-lite-fable51` (100 problemi, 53 risolti):
+per ogni tetto ho contato quanti successi sarebbero arrivati entro quel tetto e
+quanto si sarebbe speso in tutto.
+
+**La curva scende in modo monotono.** Tre tentativi da $50 sono meglio di due da
+$75, ma entrambi sono peggio di venti da $15 e molto peggio di cinquanta da $5.
+La ragione è aritmetica: il tetto alto compra solo la coda dei successi costosi
+(dal 48% al 53%, cinque punti) al prezzo di tre quarti dei tentativi.
+
+**Due avvertenze, perché il 25,1 della prima riga non è una promessa.**
+
+1. **Lo sconto di trasferimento.** Quel 22% è misurato sulle *loro*
+   formalizzazioni, in un ambiente con SageMath e terminale libero. Le nostre
+   sono scritte da altri e il nostro ambiente è più povero. **STIMO che il nostro
+   tasso sia la metà del loro**, quindi dai 25 attesi si scende verso 10–12. È
+   una stima, e il primo lotto di tentativi la misura.
+2. **I successi da pochi centesimi sono sospetti.** Fra i loro 22 successi sotto
+   $2, la mediana è di 52 righe di Lean utili — lavoro vero, non una riga — ma il
+   più economico di tutti ($0,06, 17 righe) è proprio l'artefatto `C = 0`. Quindi
+   ogni successo a basso costo va passato dal protocollo della fase 7 prima di
+   chiamarlo risultato. Il 40% dei loro successi sono confutazioni, e le
+   confutazioni a buon mercato sono il posto dove si annidano le formalizzazioni
+   sbagliate.
+
+**Il piano che ne segue è una scala, non tre affondi:** molti tentativi a tetto
+basso sui 54 problemi della famiglia buona, poi si rialza il tetto **solo** sui
+problemi che a tetto basso hanno mostrato di essere a un passo. È la stessa
+logica del setaccio che avevi bocciato, con una differenza che conta: qui il
+tasso di successo per tentativo non è una mia congettura al 2%, è il 22–53%
+misurato da altri sulla stessa famiglia di problemi.
+
+---
+
+## 9. Fable 5.1: prezzi verificati, e la prova che funziona
+
+### 9.1 I prezzi sono giusti nel nostro calcolo del budget
+
+Verificati sulla pagina ufficiale
+([platform.claude.com](https://platform.claude.com/docs/en/about-claude/pricing))
+l'11 settembre 2026:
+
+| | ingresso | cache 5m | cache 1h | lettura cache | uscita |
+|---|---|---|---|---|---|
+| Fable 5.1 | $10 | $12,50 | $20 | **$0,25** | $50 |
+| Opus 5 | $5 | $6,25 | $10 | $0,50 | $25 |
+
+Corrispondono esattamente a `agent/costi.py`. Il punto delicato è la lettura
+dalla cache: **0,025x** su Fable 5.1 e Mythos 5.1, **0,1x** su tutti gli altri.
+La documentazione lo dice in una nota a piè di tabella, ed è la ragione per cui
+nel nostro codice i prezzi stanno in forma assoluta e non come moltiplicatori.
+
+**Conseguenza contro l'intuito:** Fable 5.1 costa il doppio per token, ma la sua
+lettura dalla cache costa la *metà* in valore assoluto. Su un tentativo lungo la
+cache è la voce più grossa — MISURATO da Epoch: 36,9 milioni di token letti
+dalla cache contro 685 mila in uscita — quindi il rapporto vero è **1,45x**, non
+2x.
+
+**Controprova esterna del nostro calcolo:** con quel profilo di token il nostro
+`costi.py` dà **$50,00**; Epoch ha pagato **$50,0049**. È la verifica più forte
+che abbiamo sul codice del budget, perché viene da una fattura di qualcun altro.
+Ora è un test (`tests/test_costi.py`).
+
+### 9.2 La prova a costo quasi zero
+
+`WilsonPrime.not_isWilsonPrime_seven`, dimostrazione nascosta, tetto $0,60:
+
+| | Fable 5.1 | Opus 5 (calibrazione) |
+|---|---|---|
+| esito | **RISOLTO** | RISOLTO |
+| iterazioni | 1 | 1 |
+| costo | **$0,0792** | $0,0148 |
+
+Tutta la catena funziona con Fable 5.1: streaming, ragionamento adattivo,
+`effort`, strumenti, conteggio del budget. Su una chiamata sola costa cinque
+volte Opus 5, perché non c'è nessuna cache da rileggere e il vantaggio di Fable
+sta tutto là: il divario si chiude quando la conversazione si allunga.
+
+**Spesa di questa prova: $0,0792.** Residuo: ~$194,8.

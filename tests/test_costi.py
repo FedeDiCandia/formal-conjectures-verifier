@@ -156,3 +156,36 @@ def test_il_consumo_viene_tenuto_anche_per_problema():
     assert b.per_problema["A"].output_tokens == 1_000
     assert b.per_problema["B"].output_tokens == 3_000
     assert b.consumo.output_tokens == 4_000
+
+
+# --- controprova esterna: il conto deve riprodurre una bolletta vera ---------
+
+def test_riproduce_la_spesa_misurata_da_epoch_ai():
+    """Un tentativo del benchmark OEIS Open, con i token e il costo che Epoch AI
+    ha pubblicato: il nostro conto deve dare lo stesso numero.
+
+    Provenienza: `external/LeanOpenProblems-results/runs/oeis-full-50usd-ant-.../
+    A055487_conjecture/info.json`, modello `anthropic/claude-opus-4-8`,
+    `total_cost` = 50.00493775. È la prova più forte che abbiamo sulla
+    correttezza del calcolo del budget: viene da fuori e da una fattura vera.
+    """
+    c = Consumo(input_tokens=607, output_tokens=684_987,
+                scrittura_cache_5m=2_304_613, lettura_cache=36_946_793)
+    # Opus 4.8 e Opus 5 hanno lo stesso listino
+    assert abs(c.costo("claude-opus-4-8") - 50.005) < 0.01
+    assert abs(c.costo("claude-opus-5") - 50.005) < 0.01
+
+
+def test_fable_5_1_costa_1_45_volte_opus_5_su_un_profilo_lungo():
+    """Non il doppio, come suggerirebbe il prezzo base.
+
+    Fable 5.1 costa il doppio in ingresso e in uscita, ma la lettura dalla cache
+    costa la METÀ in valore assoluto ($0,25 contro $0,50: 0,025x invece di 0,1x).
+    In una sessione lunga la cache è la voce più grossa, quindi il rapporto vero
+    è più basso. Se questo test si rompe, il confronto fra modelli nel piano di
+    spesa va rifatto.
+    """
+    c = Consumo(input_tokens=607, output_tokens=684_987,
+                scrittura_cache_5m=2_304_613, lettura_cache=36_946_793)
+    rapporto = c.costo("claude-fable-5-1") / c.costo("claude-opus-5")
+    assert 1.40 < rapporto < 1.50, rapporto
