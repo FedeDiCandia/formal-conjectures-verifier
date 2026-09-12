@@ -96,28 +96,35 @@ numeri OEIS**. L'agente non consegnava niente perché gli stavamo chiedendo Gold
 
 ### 2b. Riduzioni vere, con una verifica mia
 
-**`OeisA105020.conjecture` — e Goldbach.** È il caso più interessante, e l'ho
-controllato a mano perché è abbastanza semplice da poterlo fare.
+**`OeisA105020.conjecture` — è Goldbach.** È il caso più interessante, ed è ora
+verificato in ogni passo: la bozza di segnalazione, con la dimostrazione completa, è
+in [docs/segnalazioni/A105020.md](segnalazioni/A105020.md).
 
-L'enunciato dell'archivio riguarda un array di numeri m² − n² letto per
-antidiagonali. Il modello dimostra (Lemma 1, con un conto sul
-`antidiagonalIndex` che ho ripercorso) che sull'antidiagonale n-esima il termine di
-posizione k vale
+Il risultato: sull'antidiagonale c il termine in posizione T_c + κ vale
+**(κ+1)(2c+1−κ)**, quindi con i = T_n e j = T_{n+1} le ipotesi della congettura sono
+soddisfatte e i termini fra i due sono (κ+1)(2n+1−κ) per κ = 1…n. Posto p = κ+1 e
+q = 2n+1−κ si ha **p+q = 2n+2** con p, q ≥ 2, e allora Ω(pq) = Ω(p)+Ω(q) = 2 **forza
+p e q a essere entrambi primi**. Dunque l'esistenza di un semiprimo fra quei termini
+equivale a scrivere 2n+2 come somma di due primi.
 
-> a(N) = (k+1)·(2n+1−k),  per 0 ≤ k ≤ n
+| direzione | stato |
+|---|---|
+| **l'enunciato ⟹ Goldbach binaria** | **dimostrato**, e ogni passo ricontrollato per calcolo. Bastano le istanze canoniche |
+| Goldbach ⟹ l'enunciato, sulle istanze canoniche | dimostrato (si prende κ = p−1) |
+| Goldbach ⟹ l'enunciato nella sua forma quantificata | **non dimostrato**: l'enunciato quantifica su *ogni* coppia (i,j) che soddisfi le ipotesi. Una ricerca esaustiva su tutti gli indici < 20.000 non trova **nessuna** coppia non canonica, e in nessuna la conclusione fallisce — ma non è una dimostrazione |
 
-e la congettura chiede che uno di questi sia **semiprimo**. Posto p = k+1 e
-q = 2n+1−k si ha **p + q = 2n+2**. Quindi:
+**Correzione di una mia lettura sbagliata.** In una prima versione di questo
+documento avevo scritto il contrario: che la direzione facile fosse «Goldbach ⟹
+l'enunciato» e che quella difficile avesse un ostacolo nel caso κ = 0, dove il
+termine è 2n+1 e può essere semiprimo senza che i fattori siano primi. **Quel caso
+non esiste**: la congettura chiede i < k, cioè κ ≥ 1, quindi p = κ+1 ≥ 2 e
+l'argomento su Ω è senza buchi. La direzione rigorosa è quella che conta, ed è
+«l'enunciato ⟹ Goldbach»: il problema è **almeno tanto difficile quanto Goldbach**.
 
-| direzione | chi la dimostra | stato |
-|---|---|---|
-| **Goldbach ⟹ l'enunciato** | banale: data la scomposizione 2n+2 = p+q con p ≤ q primi, si prende k = p−1 e a(N) = p·q è semiprimo | **verificata da me.** L'enunciato dell'archivio è quindi *non più difficile* di Goldbach |
-| **l'enunciato ⟹ Goldbach** | il modello lo afferma, e afferma l'equivalenza | **non verificata, e c'è un ostacolo preciso**: (k+1)(2n+1−k) può essere semiprimo *senza* che i due fattori siano primi. Per k = 0 il termine è 2n+1, che è semiprimo ogni volta che 2n+1 = p·q. Questa direzione ha bisogno di un argomento in più, e il modello ha dichiarato da sé che il suo punto debole è la definizione di `IsSemiprime` |
-
-**Da questo segue una cosa utile in ogni caso**: la voce OEIS chiama A105020 «a
-Goldbach Conjecture *for this sequence*», cioè un'analogia. Il conto sopra mostra
-che non è un'analogia — è **letteralmente** una riformulazione di Goldbach, a meno
-della direzione delicata. Questo la voce OEIS non lo dice.
+**E la formalizzazione dell'archivio è corretta.** Il punto debole che il modello
+aveva dichiarato da sé era l'identificazione di `Nat.IsSemiprime`; controllato in
+Mathlib, `Nat.IsSemiprime n` è `IsAlmostPrime 2 n`, cioè `n ≠ 0 ∧ Ω n = 2` — cioè
+esattamente «prodotto di due primi, non necessariamente distinti».
 
 **`OeisA108569.conjecture` — e il problema del totiente di Lehmer.**
 
