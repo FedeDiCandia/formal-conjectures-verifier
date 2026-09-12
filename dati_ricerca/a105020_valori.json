@@ -1,0 +1,14 @@
+{
+ "modo": "valori",
+ "valori_fino_a": 4000000000,
+ "collaudo_d1": {
+  "canoniche_trovate_con_d1": 1000000,
+  "attese": 1000000,
+  "errori_parametrizzazione": 0
+ },
+ "fattorizzazioni_esaminate": 9825158659,
+ "errori_parametrizzazione": 0,
+ "coppie_non_canoniche": 0,
+ "esempi": [],
+ "secondi": 36.2
+}

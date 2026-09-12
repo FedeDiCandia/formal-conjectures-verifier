@@ -94,7 +94,7 @@ OEIS** che non avevo letto.
 | `OeisA103151` | la congettura di **Lemoine** |
 | `OeisA110835` | la congettura di **Sierpiński** del 1958 |
 | `OeisA231201` | una congettura di **Zhi-Wei Sun**, con premio di $1000 |
-| `OeisA105020` | **Goldbach** |
+| `OeisA105020` | **Goldbach** — equivalenza dimostrata il 12 settembre 2026, [segnalazioni/A105020.md](segnalazioni/A105020.md) |
 | `OeisA108569` | implica il problema del totiente di **Lehmer**, aperto dal 1932 |
 | `OeisA101779` | un'istanza della congettura di **Dickson** |
 | `OeisA109909` | famiglia Goldbach |

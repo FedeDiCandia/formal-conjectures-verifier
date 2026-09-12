@@ -96,35 +96,26 @@ numeri OEIS**. L'agente non consegnava niente perché gli stavamo chiedendo Gold
 
 ### 2b. Riduzioni vere, con una verifica mia
 
-**`OeisA105020.conjecture` — è Goldbach.** È il caso più interessante, ed è ora
-verificato in ogni passo: la bozza di segnalazione, con la dimostrazione completa, è
-in [docs/segnalazioni/A105020.md](segnalazioni/A105020.md).
+**`OeisA105020.conjecture` — è equivalente a Goldbach, dimostrato.** La bozza di
+segnalazione con la dimostrazione completa e tutti i controlli è in
+[docs/segnalazioni/A105020.md](segnalazioni/A105020.md).
 
-Il risultato: sull'antidiagonale c il termine in posizione T_c + κ vale
-**(κ+1)(2c+1−κ)**, quindi con i = T_n e j = T_{n+1} le ipotesi della congettura sono
-soddisfatte e i termini fra i due sono (κ+1)(2n+1−κ) per κ = 1…n. Posto p = κ+1 e
-q = 2n+1−κ si ha **p+q = 2n+2** con p, q ≥ 2, e allora Ω(pq) = Ω(p)+Ω(q) = 2 **forza
-p e q a essere entrambi primi**. Dunque l'esistenza di un semiprimo fra quei termini
-equivale a scrivere 2n+2 come somma di due primi.
+In breve: sull'antidiagonale c il termine in posizione k vale (k+1)(2c+1−k); gli
+indici con un valore dato corrispondono alle sue fattorizzazioni; con i = T_n e
+j = T_{n+1} i termini intermedi sono pq con p + q = 2n+2, e pq è semiprimo se e solo se
+p e q sono primi.
 
 | direzione | stato |
 |---|---|
-| **l'enunciato ⟹ Goldbach binaria** | **dimostrato**, e ogni passo ricontrollato per calcolo. Bastano le istanze canoniche |
-| Goldbach ⟹ l'enunciato, sulle istanze canoniche | dimostrato (si prende κ = p−1) |
-| Goldbach ⟹ l'enunciato nella sua forma quantificata | **non dimostrato**: l'enunciato quantifica su *ogni* coppia (i,j) che soddisfi le ipotesi. Una ricerca esaustiva su tutti gli indici < 20.000 non trova **nessuna** coppia non canonica, e in nessuna la conclusione fallisce — ma non è una dimostrazione |
+| l'enunciato ⟹ Goldbach binaria | **dimostrato** |
+| Goldbach ⟹ l'enunciato | **dimostrato**, grazie al lemma: le ipotesi forzano i = T_n e j = T_{n+1} |
+| il lemma | dimostrato in due casi; identità verificate con sympy; forza bruta per s ≤ 1500; **nessuna coppia non canonica** fra tutti gli indici < 10¹⁰ né fra tutti i valori ≤ 4·10⁹ (9,8 miliardi di casi) |
 
-**Correzione di una mia lettura sbagliata.** In una prima versione di questo
-documento avevo scritto il contrario: che la direzione facile fosse «Goldbach ⟹
-l'enunciato» e che quella difficile avesse un ostacolo nel caso κ = 0, dove il
-termine è 2n+1 e può essere semiprimo senza che i fattori siano primi. **Quel caso
-non esiste**: la congettura chiede i < k, cioè κ ≥ 1, quindi p = κ+1 ≥ 2 e
-l'argomento su Ω è senza buchi. La direzione rigorosa è quella che conta, ed è
-«l'enunciato ⟹ Goldbach»: il problema è **almeno tanto difficile quanto Goldbach**.
-
-**E la formalizzazione dell'archivio è corretta.** Il punto debole che il modello
-aveva dichiarato da sé era l'identificazione di `Nat.IsSemiprime`; controllato in
-Mathlib, `Nat.IsSemiprime n` è `IsAlmostPrime 2 n`, cioè `n ≠ 0 ∧ Ω n = 2` — cioè
-esattamente «prodotto di due primi, non necessariamente distinti».
+**Una correzione, già registrata.** In una prima stesura avevo invertito il verso
+rigoroso; poi mancava il lemma sulle coppie non canoniche, individuato da Federico come
+unico pezzo mancante e ora dimostrato. La formalizzazione dell'archivio è corretta
+(`Nat.IsSemiprime n` è `n ≠ 0 ∧ Ω n = 2`); non è formalizzata in Lean la nostra
+dimostrazione.
 
 **`OeisA108569.conjecture` — e il problema del totiente di Lehmer.**
 
@@ -150,7 +141,7 @@ Niente è stato inviato a nessuno. Le tre cose che avrebbero un destinatario:
 | l'etichetta scaduta di `general_supercongruence` | chi cura `formal-conjectures` (Google DeepMind), come *issue* | un problema marcato aperto che è stato dimostrato e formalizzato da due mesi; il loro stesso file cita già la prova AlphaProof del caso m = 1 |
 | le sette etichette scadute trovate prima | stesso destinatario, stessa *issue* | sono nel registro del progetto con la fonte di ciascuna |
 | la riduzione A108569 → Lehmer | un commento alla voce OEIS A108569 | spiegherebbe *perché* la congettura di Firoozbakht è difficile, cosa che la voce oggi non dice |
-| che A105020 è Goldbach, non un'analogia di Goldbach | un commento alla voce OEIS A105020 | la voce dice «a Goldbach Conjecture *for this sequence*»; il conto mostra che è Goldbach |
+| che A105020 è **equivalente** a Goldbach, non un'analogia | un commento alla voce OEIS A105020, e una segnalazione all'archivio | la voce dice «a Goldbach Conjecture *for this sequence*»; l'equivalenza è dimostrata, con i testi pronti in [segnalazioni/A105020.md](segnalazioni/A105020.md) |
 | la riduzione A101779 → Dickson | un commento alla voce OEIS A101779 | idem, ma è la meno originale: per un esperto è probabilmente folklore |
 
 **La terza va trattata con più prudenza delle altre due.** Le prime due sono fatti
