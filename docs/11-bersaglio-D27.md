@@ -73,6 +73,57 @@ Handbook, la tabella di §VI.40 risolverebbe il dubbio in un minuto.
 Quindi 32 non è escluso da nessuno dei limiti noti che so calcolare, e la domanda
 «31 o 32?» è ben posta.
 
+### Che cosa leggere in biblioteca, esattamente
+
+Una copia del *Handbook* risolve il dubbio principale. Istruzioni pensate per chi non
+è del mestiere.
+
+**Il libro.** C. J. Colbourn e J. H. Dinitz (a cura di), *Handbook of Combinatorial
+Designs*, **seconda edizione**, CRC Press / Chapman & Hall, 2007 (ISBN
+978-1-58488-506-1). La prima edizione (1996) è più vecchia e non basta.
+
+**Il capitolo.** Parte VI, capitolo **40, «Packings»**, di D. R. Stinson, R. Wei e
+J. Yin, **pagine 550–556**. Sette pagine: si può leggere tutto.
+
+**Il nostro caso, in tutti i nomi con cui può comparire.** Blocchi di **5** punti,
+**coppie** (t = 2), **indice 1** (λ = 1), **v = 27** punti. Il numero cercato può
+essere scritto D(27,5,2), D(27,5,1), D₁(27,5,2), PDN(27,5) o simili: quello che
+conta è che ci sia *5* come taglia dei blocchi e *1* come indice. Il limite
+superiore è chiamato «Schönheim bound», «Johnson bound», J(v,5,1) o U(v,5,1), e per
+v = 27 vale **32**.
+
+**Che cosa cercare.** Un teorema o una tabella sui packing con **k = 5** e
+**λ = 1**. Probabilmente dice che il numero di pacchetto è uguale al limite
+superiore «except» (tranne) alcuni valori, e «possibly except» (forse tranne) altri.
+Serve la riga che riguarda **v ≡ 7 (mod 20)**, oppure v ≡ 3 (mod 4), oppure un
+elenco di valori piccoli.
+
+**Come leggere l'esito.**
+
+| che cosa trovi | che cosa significa | che cosa facciamo |
+|---|---|---|
+| 27 compare fra i valori **possibili** eccezioni («possibly», «unknown», «open») | nel 2007 era aperto, come dice Brouwer oggi | continuiamo |
+| una riga che dà **D(27,5,…) = 31** o **= 32**, oppure 27 fra le eccezioni **certe** con un valore | **il valore è determinato** | ci fermiamo: fotografa la riga e il numero di riferimento bibliografico accanto |
+| la classe v ≡ 7 (mod 20) ha un elenco di eccezioni **senza** 27, e 27 non è altrove | quasi certamente chiuso fra il 1998 e il 2007 | ci fermiamo: fotografa l'enunciato e il riferimento citato, lo cerchiamo |
+| non trovi niente su k = 5, λ = 1 | il capitolo rimanda altrove | fotografa l'indice del capitolo e la bibliografia |
+
+**Non confondere** con tre cose vicine che nel libro stanno in altri capitoli: le
+*coverings* (capitolo VI.11, dove ogni coppia è coperta **almeno** una volta), i
+*directed designs* (VI.20), e i packing con **λ = 2**. Sono tutti problemi in cui 27
+compare come caso speciale, e nessuno è il nostro.
+
+**Se c'è tempo, due verifiche in più**, in ordine di utilità:
+
+1. **Yin & Assaf**, *Constructions of optimal packing designs*, *Journal of
+   Combinatorial Designs* **6** (1998) 245–260. È la fonte che ho letto solo di
+   seconda mano: il teorema principale deve elencare 27 fra le possibili eccezioni.
+2. **Abel, Assaf, Bluskov, Greig, Shalaby**, *New results on GDDs, covering, packing
+   and directable designs with block size 5*, *Journal of Combinatorial Designs*
+   **18** (2010) 337–368. È il lavoro più recente su questi packing: cercare «27» nelle
+   tabelle dei casi con λ = 1.
+
+Una foto di ogni pagina rilevante basta: le leggo io.
+
 ---
 
 ## 3. Il blocco fissato {25,1,5,9,13}: ricontrollato, e comunque tolto dal calcolo che conta
