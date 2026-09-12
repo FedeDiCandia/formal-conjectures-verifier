@@ -1,136 +1,117 @@
 # Stato del progetto
 
-*Aggiornato: 10 settembre 2026, fine della sessione autonoma.*
+*Aggiornato: 11 settembre 2026, sera.*
 
 ---
 
 ## Riepilogo in cinque minuti
 
-**Niente ritrovamenti.** Nessun controesempio, nessun problema aperto risolto.
-Le tre ricerche di controesempi e la sonda automatica su una trentina di
-enunciati aperti non hanno prodotto nulla, che è l'esito atteso e non un
-fallimento: dice fino a dove si è guardato.
+**Tre giri sui problemi aperti, ventuno tentativi, $11,67 spesi, zero successi —
+e adesso sappiamo perché.** Non è il budget, non è il modo in cui l'agente si
+arrende, non è il modello.
 
-**La calibrazione è stata eseguita e questo è il numero che conta: 5 su 7.**
-Su undici problemi già dimostrati nell'archivio, entrati tutti *dopo* il taglio
-di addestramento del modello e con la dimostrazione nascosta, l'agente ne ha
-risolti nove. Ma quattro erano problemi di categoria `test`, cioè controlli di
-sanità: sulle sette varianti di congetture vere ne ha risolte cinque. Spesa
-totale **$2,98** su un limite di $15.
+| giro | modello | istruzioni | tetto | problemi | spesa | chiamate | candidati consegnati | risolti |
+|---|---|---|---|---|---|---|---|---|
+| 0 | Fable 5.1 | attuali | $2,00 | 10 | $2,30 | 32 | **0** | 0 |
+| 0 bis | Fable 5.1 | insistenti | $2,00 | 7 | $5,51 | 57 | **1** | 0 |
+| 0 ter | Opus 5 | insistenti + correzione del budget | $1,50 | 4 | $3,86 | 50 | **1** | 0 |
 
-**Costa molto meno del previsto.** Un successo costa in media **$0,12**, un
-fallimento **$0,97** (il fallimento consuma tutto il tetto, il successo si
-ferma appena la dimostrazione passa). Un solo colpo, la prima iterazione, costa
-**$0,043**: con **$53** si può dare un colpo a *ogni* problema aperto
-verificabile dell'archivio.
+Le due colonne che contano sono le ultime. In 139 chiamate all'API, su dieci
+problemi aperti distinti, l'agente ha consegnato al verificatore **due
+candidati**. Non ha fallito nel dimostrare: **non ha provato a dimostrare**.
+Quello che fa, invece, lo fa bene: calcola, conferma numericamente la congettura,
+individua il nocciolo della difficoltà, e si ferma.
 
-**La raccomandazione, in una riga:** setaccio a basso costo su tutto
-l'archivio, poi affondo solo dove il setaccio mostra un piano sensato. Il conto
-completo, con tre scenari e sei livelli di spesa, è in
-[docs/06-modello-costi.md](06-modello-costi.md).
+Tre spiegazioni sono state provate e scartate, ognuna con una misura:
 
-**Il difetto più serio l'ho trovato alla fine, e non riguarda l'agente: riguarda
-il giudice.** Sul ramo `main` l'archivio dichiara due librerie Lean che
-compilano gli stessi file nella stessa cartella di build, con opzioni diverse.
-Gli `.olean` si sovrascrivono a vicenda, quindi l'enunciato elaborato di un
-problema con `answer(sorry)` cambiava secondo l'ultimo comando eseguito:
-`True ↔ P` dopo un build della libreria, `sorry ↔ P` dopo un build del singolo
-modulo — che è quello che fa il giudice. Con la seconda semantica nessun
-candidato può combaciare, e i 94 problemi aperti che l'indice dava per
-attaccabili erano in realtà irraggiungibili. Corretto disattivando la libreria
-in eccesso nello snapshot; `bench-v1` non è toccato. Dettagli in
-[docs/01](01-archivio-formal-conjectures.md#la-modalita-non-dipende-solo-dallopzione-dipende-da-chi-compila).
+1. **Non è il controllo di budget.** Nel giro 0 non è scattato nemmeno una volta:
+   tutti e dieci i problemi si sono fermati da soli avendo speso il 6–32% del
+   tetto. (Il difetto del contabile era vero e l'ho corretto — vedi sotto — ma
+   riguardava altre esecuzioni.)
+2. **Non è il modo di arrendersi.** Con le istruzioni che togliono l'invito a
+   dichiararsi sconfitto, la spesa per problema tripla ($0,23 → $0,69) e i calcoli
+   raddoppiano (21 → 39 esecuzioni Python). I candidati consegnati restano uno.
+3. **Non è il modello.** Fable 5.1 e Opus 5 si comportano allo stesso modo.
 
-**La calibrazione non è contaminata da quel difetto, e l'ho verificato invece
-di supporlo.** Dei 17 problemi toccati fra calibrazione e verifiche d'archivio,
-uno solo (`Mersenne.new_mersenne_conjecture_of_prime`) ha un `answer( )` nel
-sorgente, quindi uno solo era sensibile all'opzione — e non è fra gli undici
-della calibrazione. Gli altri hanno enunciati che non cambiano con la modalità.
+**La conclusione, che regge a tre tentativi di smontarla:** su questi dieci
+problemi aperti il modello non vede una strada verso una dimostrazione Lean, e
+non ne inventa una spendendo di più. È lo stesso esito della mia analisi
+gratuita, che per quattro dei dieci aveva già escluso il testimone piccolo e per
+l'identità `A109074` aveva concluso che serve un argomento p-adico con stime
+strette.
 
-**Due allarmi falsi trovati e corretti, che valgono più di un ritrovamento.**
-La sonda automatica ha segnalato un enunciato aperto come «chiuso da
-`plausible`»: non lo era — `plausible`, quando non trova controesempi, lascia un
-`sorry` e il file compila comunque con un avviso. E i rapporti della caccia
-chiamavano «ritrovamenti» dei valori calcolati. Entrambi corretti, con test.
-Sono esattamente gli errori che in un progetto così fanno annunciare un
-risultato che non c'è.
+### Che cosa è stato corretto in questa sessione
 
----
+- **Il contabile.** Si fermava quando lo spazio per la risposta scendeva sotto
+  6000 token: con Fable 5.1 servivano $0,30 di margine per chiamata, e un tetto
+  da $0,50 dava **una** chiamata sola (due problemi su undici ne hanno avute
+  zero). Ora la soglia è 2000 e il limite resta rigido. **Una conclusione
+  precedente va rivista:** nella calibrazione `GraphConjecture65` non ha fallito
+  per incapacità, si è fermato per questo difetto al 76% del suo tetto. Va
+  contato come esito indeterminato.
+- **La contabilità dei rapporti.** Quando il budget totale finiva a metà di un
+  problema, quel problema risultava con $0,00 e zero verifiche: il lavoro
+  spariva. Un rapporto che sottostima la spesa è un problema di sicurezza, non
+  di cosmetica.
+- **Il registro.** L'agente ora scrive sempre un registro riga per riga, e
+  `./avvia.sh guarda --segui` mostra che cosa sta facendo. Prima un giro da
+  un'ora sembrava fermo.
+- **La selezione dei bersagli**, con due criteri imparati: la trappola del «ce ne
+  sono altri?» (l'archivio afferma «sì» e la risposta vera è quasi sempre «no»,
+  quindi il verso certificabile è vuoto) e il bonus alle identità, l'unica forma
+  su cui il modello costruisce qualcosa invece di limitarsi a calcolare.
 
-## Ritrovamenti
+### Spesa, e quanto resta
 
-*(nessuno)*
-
-| ricerca | fino a dove ha guardato | esito |
-|---|---|---|
-| un primo `p` con `p²` che divide un numero di Euclide | **tutti** i primi sotto 3 milioni (216 815), e per ognuno tutti i primoriali con fattori minori | nessuno. È l'unica delle tre **conclusiva**: un solo `p` chiuderebbe il problema. Per quei primi il controllo è completo, non parziale |
-| orbite di `n → σ(n)−1` che non toccano mai un primo | `n` fino a 200 000, 200 passi ciascuna | nessuna orbita anomala |
-| Erdős 396: il minimo `n` per ogni `k` | conclusa: `k` da 0 a 60, `n` fino a 20 000 (1h 45m) | minimo `n` per `k` = 0, 1, 2, 3: **1, 2, 2480, 8178**. Per `k ≥ 4` nessun `n` sotto 20 000. È un **indizio** sulla velocità con cui cresce il testimone, non un controesempio: la forma «per ogni k esiste n» non si confuta con un calcolo |
-| sonda automatica: `decide`, `plausible`, `norm_num`, `simp_arith`, forma diritta e negata | 30 enunciati aperti discreti, 240 prove | nessuno cade da solo. Limite superiore misurato al 90% sulla frazione di aperti che cadono da soli: **9,5%** |
-
-I rapporti per problema sono in [docs/dati/caccia/](dati/caccia/).
-
----
-
-## Stato dei componenti
-
-| componente | stato |
+| | |
 |---|---|
-| Ambiente Lean 4.27.0 + archivio `bench-v1` + comparator | ✅ |
-| Snapshot post-cutoff: `main` a commit fisso `0a8b856c`, Lean 4.33.1 | ✅ 1268 moduli, indice di 5271 teoremi |
-| Verificatore `verify.py` | ✅ 88 test, passati su **tutti e due** gli snapshot |
-| Sandbox della compilazione (`sandbox-exec`) + impronta dell'archivio | ✅ con controprova: è la sandbox, non il guard, a fermare la scrittura |
-| Strumenti dell'agente (`lean_explore`, `lean_check`, `run_python`) | ✅ |
-| Sfide negate (`--confutazione`) | ✅ 107 problemi aperti su `bench-v1`, 94 su `main` |
-| Infrastruttura per ricerche lunghe (checkpoint, ripresa, isolamento) | ✅ |
-| `avvia.sh` (`stima`, `lancia`, `stato`, `segui`, `ferma`, `riprendi`) | ✅ |
-| Calibrazione dell'agente | ✅ **eseguita**, 9 su 11, $2,98 |
-| Modello dei costi e proiezione | ✅ [docs/06](06-modello-costi.md) |
+| speso in tutto, dalla prima prova | **$20,53** |
+| caricato sulla Console | $24,00 |
+| **residuo** | **$3,47** |
 
----
+### La mia raccomandazione
 
-## Che cosa vorrebbe dire «risolvere un problema aperto», qui
+**Fermarsi qui, e non ricaricare per ritentare gli stessi problemi.** Il dato
+misurato è che la difficoltà non è dove pensavamo: non ci manca budget, ci manca
+una strada. Spendere altri $20 su questa famiglia comprerebbe altre 139 chiamate
+di calcolo e, se il triplo dell'impegno ha prodotto un candidato in più, la
+previsione ragionevole è un altro zero.
 
-Da mettere in chiaro prima di spendere. La strada che ha una probabilità reale
-di riuscita porta a congetture che l'articolo di Epoch AI descrive così, di sé:
+Le due cose che valgono, e costano zero:
 
-> «*The conjectures covered in this work are of uncertain mathematical
-> significance, and most have likely received little previous attention.*»
-> — [arXiv:2608.11941](https://arxiv.org/abs/2608.11941)
-
-Tradotto: un successo sarebbe **una congettura vera, genuinamente aperta,
-dimostrata e verificata dal kernel di Lean — e di importanza matematica
-incerta**, del tipo proposto da una persona sola su OEIS e mai più guardato da
-nessuno. Non è un risultato che cambia la matematica. È un risultato vero, e
-l'obiettivo dichiarato («uno qualsiasi, non mi interessa che sia famoso») è
-esattamente questo.
-
-Sui problemi **famosi** il dato è brutale e non è una mia stima: Epoch ha
-speso **$1000 per problema** su 59 problemi di Erdős e ne ha risolti **3**.
+1. **Il lavoro gratuito continua a produrre.** La sonda sta passando i 1188
+   enunciati in cerca di formalizzazioni sbagliate; le ricerche locali hanno
+   stabilito frontiere che nessuno aveva pubblicato (numeri di Euclide oltre
+   2,9 milioni di primi, Murthy oltre 350 milioni, A113010 esaustivo fino a
+   10³⁹⁹). Sono contributi veri all'archivio, verificabili, e non costano niente.
+2. **Aspettare il modello successivo.** È la conclusione operativa più solida di
+   tutto il progetto, ed è misurata sui dati di Epoch: quadruplicare il budget
+   sullo stesso modello recupera il 6% dei fallimenti, cambiare modello ne
+   recupera il 28–34%. Quando esce un modello nuovo si rilancia lo stesso piano
+   cambiando una parola, e la macchina, il verificatore, l'indice e i 1188
+   bersagli sono già lì.
 
 ---
 
 ## Domande per Federico
 
-**1. Il credito sulla Console sta finendo, e il piano non ci sta.**
+**1. Serve ricaricare il credito? La mia risposta è no, e il dato è sopra.**
 
-| | |
-|---|---|
-| caricato in tutto | $24,00 |
-| speso finora (tutte le esecuzioni, dalla prima prova a oggi) | **$11,16** |
-| il giro in corso può arrivare a | $6,00 |
-| **residuo nel caso peggiore** | **$6,84** |
+Restano **$3,47** dei $24 caricati. Per proseguire la scala (giri 1 e 2)
+servirebbero altri $20-30, e la misura di questa sessione dice che comprerebbero
+altre 139 chiamate di calcolo con la stessa probabilità di prima. *Ho proceduto
+con la scelta prudente: mi sono fermato e non ho speso il residuo.*
 
-Hai autorizzato fino a $12 per il rilancio del giro 0 e $15 per la sessione: sul
-conto non ci sono. Ho ridimensionato il rilancio a quello che resta davvero e
-te lo dico invece di scoprirlo con un errore di credito esaurito a metà lavoro.
-*Ho proceduto con la scelta prudente: meno problemi con un tetto usabile, invece
-di dieci affamati.*
+Se invece vuoi proseguire, l'ordine giusto è: aspettare un modello nuovo, non
+ricaricare adesso.
 
-**2. Serve ricaricare?** Se vuoi che la scala prosegua oltre il rilancio (giri 1
-e 2, che comunque approvi tu), servono altri $20-30. Se preferisci non
-ricaricare, la raccomandazione in fondo a questo documento resta valida: fermarsi
-e riprovare col modello successivo, che costa zero.
+**2. Il rilancio ha coperto quattro problemi, non dieci, e la ragione è il
+credito.** Con $5 disponibili e un tetto usabile di $1,50 per problema (che con
+Opus 5 compra ~14 chiamate) quattro è quanto ci stava davvero. Ho scelto
+`A109074` (il bersaglio, che nel giro precedente era stato troncato dal contabile
+all'82% del tetto), `A105720` (primo nella classifica aggiornata), e i due che il
+giro precedente non aveva coperto. Meglio quattro tentativi veri che dieci
+affamati, come avevi detto.
 
 ---
 
