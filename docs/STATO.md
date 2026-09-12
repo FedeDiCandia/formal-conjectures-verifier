@@ -110,6 +110,34 @@ speso **$1000 per problema** su 59 problemi di Erdős e ne ha risolti **3**.
 
 ---
 
+## La conclusione operativa più importante
+
+**Il modo più economico di migliorare i risultati è cambiare modello, non
+aumentare il budget.** È misurato sui dati pubblici di Epoch AI, sui 65 problemi
+che un tentativo da $50 non aveva risolto:
+
+| chi riprova | quanti ne recupera |
+|---|---|
+| lo **stesso** modello con **quattro volte** il budget ($200) | **6,2%** |
+| lo stesso modello con un agente più elaborato | 6,2% |
+| lo stesso modello con 476 000 articoli di arXiv a disposizione | 6,2% |
+| un modello **diverso e più recente**, stesso budget alto | **27,7%** e **33,8%** |
+
+Tre modi diversi di spendere di più sullo stesso modello danno esattamente lo
+stesso 6,2%. Un modello nuovo rende quattro o cinque volte tanto. E nessuno dei
+modelli nuovi ha **perso** un problema che il precedente aveva risolto: i
+tentativi si sommano.
+
+**Quindi, se i due giri previsti non danno nulla, la mossa giusta non è
+insistere: è fermarsi.** La macchina, il verificatore, l'indice, la sonda e i
+1188 bersagli restano dove sono; quando esce il modello successivo si rilancia
+lo stesso piano con `--modello <nuovo>` e si spende di nuovo la stessa cifra,
+con un'attesa quattro volte più alta di quella che si otterrebbe insistendo
+oggi. **Aspettare costa zero e rende più di qualunque altra cosa possiamo
+comprare.**
+
+---
+
 ## Lavori in corso in questo momento
 
 | lavoro | costo | cosa aspettarsi |

@@ -143,13 +143,48 @@ caso è **CANDIDATO NUOVO**.
 
 ---
 
+## Vale anche quando la dimostrazione RIESCE
+
+Il protocollo è nato pensando ai controesempi, ma serve identico — e viene
+dimenticato più facilmente — quando l'agente **dimostra** qualcosa.
+
+Il caso da cui guardarsi: le **identità**. Molte voci OEIS presentano come
+«congettura» un'identità che in letteratura è nota da tempo, a volte da
+decenni, semplicemente perché chi ha scritto il commento non l'ha cercata o
+perché la dimostrazione sta in un articolo che la tratta in un contesto più
+generale. Un esempio della specie: «si congettura che
+$\binom{6n-2}{2n} / (2\binom{4n-1}{2n}) = A005156(n+1)/A005156(n)$» — dove
+A005156 conta le matrici a segni alternanti verticalmente simmetriche, e le
+formule prodotto per quelle famiglie sono materia di articoli pubblicati.
+
+Un'identità dimostrata dall'agente **è** un teorema verificato dal kernel di
+Lean. Non è detto che sia un **risultato nuovo**, e la differenza va stabilita
+prima di raccontarla a qualcuno.
+
+### Che cosa fare, prima di chiamarlo risultato
+
+1. **Cercare l'identità in letteratura**, non la congettura: il testo del
+   commento OEIS può essere unico mentre il contenuto matematico è noto. Si
+   cercano la formula, i nomi delle successioni coinvolte e i termini tecnici
+   che compaiono nella dimostrazione trovata dall'agente.
+2. **Leggere i riferimenti della voce OEIS**: spesso la formula compare già fra
+   i `FORMULA` o i `REFERENCES` della voce stessa, e allora la «congettura» era
+   solo un commento aggiunto da qualcun altro.
+3. **Guardare la dimostrazione**: se si riduce a espandere le definizioni e
+   semplificare, l'affermazione era una riscrittura, non un problema. È un
+   esito utile — l'archivio dovrebbe saperlo — ma non è matematica nuova.
+4. Solo se i tre passi non trovano niente, il risultato passa alla revisione
+   umana come **candidato nuovo**, con la stessa cautela dei controesempi.
+
+---
+
 ## Le tre classificazioni
 
 | esito | significato | cosa farne |
 |---|---|---|
 | **SOSPETTO** | una tattica banale chiude l'enunciato, o lo chiude la sua negazione su un caso al bordo | non è un ritrovamento: si va al passo 2 e si prepara la segnalazione. **Non si spende su questi enunciati** |
 | **FORMALIZZAZIONE ERRATA** | l'enunciato Lean non cattura il problema originale | segnalare all'archivio; non è matematica nuova |
-| **GIÀ NOTO** | il fatto è in letteratura | annotarlo; conferma che il sistema funziona |
+| **GIÀ NOTO** | il fatto è in letteratura — vale anche per le identità dimostrate, non solo per i controesempi | annotarlo; conferma che il sistema funziona |
 | **CANDIDATO NUOVO** | ha superato tutti e quattro i passi | **non è ancora un risultato.** Serve la lettura di un matematico competente nell'area. Il verificatore garantisce che la dimostrazione Lean è corretta, non che l'enunciato Lean sia la congettura |
 
 ---
