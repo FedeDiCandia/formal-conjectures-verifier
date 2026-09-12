@@ -1,0 +1,18 @@
+[
+ {
+  "cella": "A(27,8,5)",
+  "pubblicato": 31,
+  "superiore": 32,
+  "fonte": "ACL",
+  "candidate": 80730,
+  "saltata": "matrice da 0.8 GB"
+ },
+ {
+  "cella": "A(23,8,6)",
+  "pubblicato": 77,
+  "superiore": 80,
+  "fonte": "BSSS",
+  "candidate": 100947,
+  "saltata": "matrice da 1.3 GB"
+ }
+]

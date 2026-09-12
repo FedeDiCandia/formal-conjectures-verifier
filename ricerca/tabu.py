@@ -65,9 +65,17 @@ def prova_dimensione(n: int, d: int, w: int, m: int, *, iterazioni: int = 60_000
     for passo in range(iterazioni):
         if totale == 0:
             break
-        # si sostituisce una delle parole piu' in conflitto
-        peggiori = np.flatnonzero(conf == conf.max())
-        posto = int(rng.choice(peggiori))
+        # Si sostituisce una delle parole piu' in conflitto -- ma non sempre: con
+        # probabilita' fissa si prende una parola in conflitto QUALUNQUE. Senza
+        # questa passeggiata casuale la ricerca cicla fra le stesse due
+        # configurazioni, ed e' la ragione misurata per cui sulle celle con divario
+        # aperto i residui restavano grandi e costanti (69-441 violazioni).
+        if rng.random() < 0.25:
+            in_conflitto = np.flatnonzero(conf > 0)
+            posto = int(rng.choice(in_conflitto)) if len(in_conflitto) else 0
+        else:
+            peggiori = np.flatnonzero(conf == conf.max())
+            posto = int(rng.choice(peggiori))
         vecchia = int(scelte[posto])
         altre = np.delete(scelte, posto)
         x = tutte[altre]
