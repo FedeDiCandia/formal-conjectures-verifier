@@ -5,6 +5,11 @@ problemi matematici formalizzati in Lean 4, presi dall'archivio
 [formal-conjectures](https://github.com/google-deepmind/formal-conjectures)
 di Google DeepMind.
 
+> **Se un giorno questo repository va online**, la pagina da mostrare è
+> [`README.en.md`](README.en.md): è in inglese, scritta per chi non conosce la
+> storia, e dice anche che cosa NON ha funzionato. Non è pubblicata da nessuna
+> parte, e niente di questo progetto è stato segnalato agli autori dell'archivio.
+
 Il pezzo importante non e' l'agente: e' il **verificatore**. Un modello che
 scrive dimostrazioni Lean ha molti modi di sembrare aver risolto un problema
 senza averlo fatto, e senza un giudice affidabile qualunque risultato sarebbe
