@@ -61,64 +61,77 @@ TATTICHE = [
 ]
 
 
-def costruisci(problema, heartbeats: int) -> tuple[str, dict[int, tuple[str, bool]]]:
-    """Il file con tutte le prove, e la mappa riga -> (tattica, negato)."""
+def costruisci(problema, heartbeats: int) -> tuple[str, dict[str, tuple[str, bool]]]:
+    """Il file con tutte le prove, e la mappa nome del teorema -> (tattica, negato).
+
+    Dopo ogni prova il file chiede a Lean **gli assiomi** di quella prova. È il
+    criterio decisivo, ed è lo stesso del verificatore: una tattica ha chiuso
+    davvero l'enunciato solo se la dichiarazione che ne risulta NON dipende da
+    `sorryAx`. Contare i messaggi di errore non basta — una tattica che falliva
+    produceva a volte un errore attribuito a un'altra riga, e la prova sembrava
+    riuscita. Con `#print axioms` la risposta arriva per nome, non per posizione.
+    """
     righe = [f"import {config_verificatore.modulo_utilita()}",
              f"import {problema.module}", ""]
-    mappa: dict[int, tuple[str, bool]] = {}
+    mappa: dict[str, tuple[str, bool]] = {}
     tipo = f"type_of% {problema.theorem}"
     for nome, tattica, anche_negato in TATTICHE:
         for negato in (False, True) if anche_negato else (False,):
             enunciato = f"¬ ({tipo})" if negato else tipo
+            teorema = f"sonda_{nome}{'_neg' if negato else ''}"
+            mappa[teorema] = (nome, negato)
             righe.append(f"set_option maxHeartbeats {heartbeats} in")
-            righe.append(f"theorem sonda_{nome}{'_neg' if negato else ''} : "
-                         f"{enunciato} := by")
-            mappa[len(righe)] = (nome, negato)     # riga 1-based della tattica
+            righe.append(f"theorem {teorema} : {enunciato} := by")
             righe.append(f"  {tattica}")
+            righe.append(f"#print axioms {teorema}")
             righe.append("")
     return "\n".join(righe) + "\n", mappa
 
 
-_RE_MESSAGGIO = re.compile(r"^[^:]*:(\d+):\d+:\s*(warning|error|info):\s*(.*)$")
+#: `#print axioms nome` stampa una riga di questa forma.
+_RE_ASSIOMI = re.compile(r"'(\S+)' depends on axioms: \[([^\]]*)\]")
+_RE_SENZA = re.compile(r"'(\S+)' does not depend on any axioms")
+_RE_CONTROESEMPIO = re.compile(r"Found a counter-example", re.I)
 
 
-def leggi(uscita: str, mappa: dict[int, tuple[str, bool]]) -> dict:
-    """Assegna a ogni tattica il suo esito, guardando le righe dei messaggi.
+def leggi(uscita: str, mappa: dict[str, tuple[str, bool]]) -> dict:
+    """Assegna a ogni tattica il suo esito leggendo gli assiomi, per nome.
 
-    Una tattica senza messaggi ha CHIUSO l'enunciato. `plausible`, quando non
-    trova controesempi, lascia un `sorry`: il file compila ma non dimostra
-    niente, e quel caso va contato come fallito — è l'errore opposto a quello
-    da evitare in un progetto come questo.
+    Regola: una tattica ha CHIUSO l'enunciato se la dichiarazione corrispondente
+    esiste e non dipende da `sorryAx`. Se dipende da `sorryAx` la tattica non ha
+    dimostrato niente — è il caso di `plausible`, che quando non trova
+    controesempi lascia un `sorry` e fa compilare il file comunque. Se la
+    dichiarazione non compare fra gli assiomi stampati, la prova è fallita prima
+    di arrivare a esistere.
     """
-    fallite: dict[tuple[str, bool], str] = {}
-    controesempi: dict[tuple[str, bool], str] = {}
-    righe_tattiche = sorted(mappa)
+    assiomi: dict[str, set[str]] = {}
     for riga in uscita.split("\n"):
-        m = _RE_MESSAGGIO.match(riga.strip())
-        if not m:
+        m = _RE_ASSIOMI.search(riga)
+        if m:
+            assiomi[m.group(1)] = {a.strip() for a in m.group(2).split(",") if a.strip()}
             continue
-        n, tipo, testo = int(m.group(1)), m.group(2), m.group(3)
-        # la dichiarazione a cui appartiene: l'ultima iniziata prima di n
-        precedenti = [r for r in righe_tattiche if r <= n + 1]
-        if not precedenti:
-            continue
-        chiave = mappa[precedenti[-1]]
-        if tipo == "error" or "uses 'sorry'" in testo or "Unable to find" in testo:
-            fallite.setdefault(chiave, testo[:200])
-        if "Found a counter-example" in testo or "counterexample" in testo.lower():
-            controesempi[chiave] = testo[:300]
+        m = _RE_SENZA.search(riga)
+        if m:
+            assiomi[m.group(1)] = set()
+    controesempio = bool(_RE_CONTROESEMPIO.search(uscita))
+
     esiti = []
-    for riga in righe_tattiche:
-        nome, negato = mappa[riga]
-        chiave = (nome, negato)
-        if chiave in controesempi:
-            esito = "controesempio"
-        elif chiave in fallite:
-            esito = "aperta"
+    for teorema, (nome, negato) in mappa.items():
+        ax = assiomi.get(teorema)
+        if ax is None:
+            esito, dettaglio = "aperta", "la dichiarazione non esiste: la tattica ha fallito"
+        elif "sorryAx" in ax:
+            esito, dettaglio = "aperta", "dipende da sorryAx: non ha dimostrato niente"
         else:
             esito = "confutata" if negato else "chiusa"
+            dettaglio = "assiomi: " + (", ".join(sorted(ax)) or "nessuno")
         esiti.append({"tattica": nome, "negato": negato, "esito": esito,
-                      "dettaglio": controesempi.get(chiave) or fallite.get(chiave, "")[:120]})
+                      "dettaglio": dettaglio})
+    if controesempio:
+        esiti.append({"tattica": "plausible", "negato": None,
+                      "esito": "controesempio",
+                      "dettaglio": "plausible ha esibito un controesempio: "
+                                   "vedi i messaggi grezzi"})
     return {"prove": esiti}
 
 
@@ -165,6 +178,7 @@ def main() -> int:
             notevole = [x for x in voce["prove"]
                         if x["esito"] in ("chiusa", "confutata", "controesempio")]
             if notevole:
+                voce["messaggi_grezzi"] = r.messaggi[:4000]
                 voce["ATTENZIONE"] = "; ".join(
                     f"{x['tattica']}{' (negata)' if x['negato'] else ''} -> {x['esito']}"
                     for x in notevole)

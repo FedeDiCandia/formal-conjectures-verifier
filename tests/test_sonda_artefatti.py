@@ -1,7 +1,11 @@
-"""Il lettore dei messaggi della sonda: è la parte che può sbagliare in silenzio.
+"""Il verdetto della sonda: si legge dagli ASSIOMI, non dai messaggi di errore.
 
 Un errore qui ha due facce, entrambe gravi: perdere un ritrovamento vero, o
-dichiararne uno che non c'è. I test sono di solo testo, senza Lean.
+dichiararne uno che non c'è. La prima versione di questo lettore contava i
+messaggi di errore per riga e sbagliava: segnalava come «chiuse» tattiche che
+avevano fallito, e arrivava a dire che un enunciato E la sua negazione erano
+entrambi dimostrati. Ora il criterio è quello del verificatore — una prova vale
+solo se la dichiarazione non dipende da `sorryAx`.
 """
 import sys
 from pathlib import Path
@@ -14,51 +18,59 @@ import sonda_artefatti as sonda
 
 
 def _mappa():
-    """Tre tattiche a righe note, come le costruisce `costruisci`."""
-    return {10: ("decide", False), 20: ("decide", True), 30: ("plausible", False)}
+    return {"sonda_decide": ("decide", False),
+            "sonda_decide_neg": ("decide", True),
+            "sonda_plausible": ("plausible", False)}
 
 
-def test_una_tattica_senza_messaggi_ha_chiuso():
-    r = sonda.leggi("", _mappa())
-    esiti = {(p["tattica"], p["negato"]): p["esito"] for p in r["prove"]}
-    assert esiti[("decide", False)] == "chiusa"
-    assert esiti[("decide", True)] == "confutata"
+def _esiti(uscita):
+    return {(p["tattica"], p["negato"]): p["esito"]
+            for p in sonda.leggi(uscita, _mappa())["prove"]}
 
 
-def test_un_errore_marca_solo_la_sua_tattica():
-    uscita = "prova.lean:11:2: error: failed to synthesize Decidable"
-    esiti = {(p["tattica"], p["negato"]): p["esito"]
-             for p in sonda.leggi(uscita, _mappa())["prove"]}
-    assert esiti[("decide", False)] == "aperta"      # riga 11 -> tattica a riga 10
-    assert esiti[("decide", True)] == "confutata"    # l'altra non è toccata
+def test_una_prova_senza_sorryAx_ha_chiuso():
+    uscita = ("E0.lean:5:0: info: 'sonda_decide' depends on axioms: "
+              "[propext, Classical.choice, Quot.sound]")
+    assert _esiti(uscita)[("decide", False)] == "chiusa"
 
 
-def test_plausible_che_lascia_un_sorry_non_ha_chiuso():
-    uscita = ("prova.lean:31:0: warning: declaration uses 'sorry'\n"
-              "Unable to find a counter-example")
-    esiti = {(p["tattica"], p["negato"]): p["esito"]
-             for p in sonda.leggi(uscita, _mappa())["prove"]}
-    assert esiti[("plausible", False)] == "aperta"
+def test_una_prova_senza_assiomi_ha_chiuso():
+    uscita = "E0.lean:5:0: info: 'sonda_decide' does not depend on any axioms"
+    assert _esiti(uscita)[("decide", False)] == "chiusa"
 
 
-def test_un_controesempio_viene_riconosciuto_e_riportato():
-    uscita = "prova.lean:31:2: error: Found a counter-example!\nn := 17"
+def test_una_prova_che_dipende_da_sorryAx_non_ha_chiuso():
+    """È il caso di `plausible`: non trova controesempi, lascia un `sorry`,
+    il file compila e la dichiarazione esiste. Non ha dimostrato niente."""
+    uscita = "E0.lean:5:0: info: 'sonda_plausible' depends on axioms: [sorryAx]"
+    assert _esiti(uscita)[("plausible", False)] == "aperta"
+
+
+def test_una_dichiarazione_che_non_esiste_e_un_fallimento():
+    assert _esiti("")[("decide", False)] == "aperta"
+
+
+def test_la_negazione_dimostrata_si_chiama_confutata():
+    uscita = "E0.lean:9:0: info: 'sonda_decide_neg' does not depend on any axioms"
+    assert _esiti(uscita)[("decide", True)] == "confutata"
+
+
+def test_un_controesempio_di_plausible_viene_riportato():
+    uscita = ("E0.lean:5:2: error: Found a counter-example!\nn := 17\n"
+              "E0.lean:5:0: info: 'sonda_plausible' depends on axioms: [sorryAx]")
     prove = sonda.leggi(uscita, _mappa())["prove"]
-    p = [x for x in prove if x["tattica"] == "plausible"][0]
-    assert p["esito"] == "controesempio"
-    assert "counter-example" in p["dettaglio"]
+    assert any(p["esito"] == "controesempio" for p in prove)
+    # e la prova in sé resta fallita: un controesempio non è una dimostrazione
+    assert _esiti(uscita)[("plausible", False)] == "aperta"
 
 
-def test_il_file_generato_ha_una_riga_per_tattica():
+def test_il_file_generato_chiede_gli_assiomi_di_ogni_prova():
     class FintoProblema:
         theorem = "Foo.bar"
         module = "FormalConjectures.Foo"
     codice, mappa = sonda.costruisci(FintoProblema(), 200000)
-    righe = codice.split("\n")
-    assert righe[1] == "import FormalConjectures.Foo"
-    for riga, (nome, negato) in mappa.items():
-        # la riga mappata contiene la tattica, quella sopra la dichiara
-        assert "theorem sonda_" in righe[riga - 1], righe[riga - 1]
-        assert ("_neg" in righe[riga - 1]) == negato
+    for teorema in mappa:
+        assert f"theorem {teorema} :" in codice
+        assert f"#print axioms {teorema}" in codice
     attese = sum(2 if anche else 1 for _, _, anche in sonda.TATTICHE)
     assert len(mappa) == attese
