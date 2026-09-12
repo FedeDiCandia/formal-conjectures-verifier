@@ -4,6 +4,150 @@
 
 ---
 
+## Come riprendere fra qualche mese
+
+*Scritto per il te futuro, o per chi trova questo repository senza conoscere la
+storia. Tutto quello che serve è già installato: non c'è niente da ricostruire.*
+
+### Che cosa è pronto
+
+| | |
+|---|---|
+| verificatore (`verify.py` + comparator) | funzionante, **123 test** |
+| archivio `bench-v1` (Lean 4.27) e snapshot `main` a commit fisso (Lean 4.33.1) | compilati |
+| indice dei problemi | 2615 teoremi su bench-v1, 5271 su main |
+| bersagli già scelti e ordinati | `docs/dati/lotto.json` |
+| esiti di Epoch AI per escludere i problemi già risolti | `external/LeanOpenProblems-results` |
+| agente con registro, cartella di lavoro persistente, `numpy`/`sympy` | pronto |
+
+### I quattro controlli da rifare PRIMA di spendere
+
+```bash
+cd ~/Documents/Math
+
+# 1. la suite deve passare: se Lean o Mathlib sono cambiati, si accorge qui
+./.venv/bin/python -m pytest tests/ -q
+
+# 2. l'archivio è vecchio? lo snapshot attuale è del 10 settembre 2026
+git -C external/fc-main log -1 --format='%h %ad'
+#    se vuoi uno snapshot nuovo:  bash scripts/setup_snapshot_main.sh
+#    ATTENZIONE: quel passo disattiva la libreria a doppio glob. Se lo salti,
+#    l'enunciato dei problemi con answer(sorry) cambia sotto i piedi al giudice.
+
+# 3. Epoch AI ha risolto altri problemi? Aggiorna e rifai l'igiene:
+git -C external/LeanOpenProblems-results pull
+git -C external/LeanOpenProblems pull
+./.venv/bin/python scripts/igiene_bersagli.py       # esclude le etichette scadute
+
+# 4. i prezzi del modello nuovo devono stare in agent/costi.py, altrimenti
+#    l'agente si RIFIUTA di partire (è voluto: senza prezzi il limite di spesa
+#    non si può far rispettare). Si leggono qui:
+#    https://platform.claude.com/docs/en/about-claude/pricing
+```
+
+### Il comando
+
+```bash
+env FCS_ARCHIVE=$PWD/external/fc-main \
+    FCS_LEAN4EXPORT=$PWD/external/lean4export-433/.lake/build/bin/lean4export \
+    FCS_INDEX=$PWD/verifier/problem_index_main.json \
+  ./.venv/bin/python agent/agente.py \
+    $(./.venv/bin/python -c "import json;print(' '.join(v['problema'] for v in json.load(open('docs/dati/lotto.json'))[:10]))") \
+    --modello IL-MODELLO-NUOVO \
+    --istruzioni insistenti \
+    --tetto-problema 2.00 \
+    --budget 20.00 \
+    --effort medium \
+    --max-iterazioni 60 \
+    --rapporto runs/giro-nuovo.json \
+    --registro runs/lavori/giro-nuovo.log
+```
+
+Da un altro terminale: `tail -f runs/lavori/giro-nuovo.log`, oppure
+`./avvia.sh guarda --segui`.
+
+### Perché questi parametri, e non altri
+
+| parametro | perché |
+|---|---|
+| `--modello IL-MODELLO-NUOVO` | è **la sola leva che ha reso** nei dati misurati. Quadruplicare il budget sullo stesso modello recupera il 6% dei fallimenti; cambiare modello ne recupera il 28–34% |
+| `--tetto-problema 2.00` | un tetto da $2 compra ~19 chiamate a un modello con i prezzi di Opus 5, ~9 con quelli di Fable 5.1. Sotto $0,30 (Opus) o $0,60 (Fable) il tentativo non ha spazio per lavorare |
+| `--istruzioni insistenti` | triplicano l'impegno e, soprattutto, rendono **interpretabile** un fallimento: con quelle uno zero significa «non ci riesce», non «non ci ha provato» |
+| `--effort medium` | è quello che ha dato 9 su 11 nella calibrazione. `high` costa ~3 volte per iterazione senza un guadagno misurato |
+| `--budget 20.00` | il limite è rigido e controllato prima di ogni chiamata. Va messo pari a quello che sei disposto a perdere |
+| i bersagli da `lotto.json` | congetture OEIS elementari, mai entrate nel benchmark di Epoch, ordinate per «se esiste un risultato, Lean lo può certificare in poche righe» |
+
+### Come sapere presto se non sta funzionando
+
+Guarda **una** colonna del rapporto: `verifiche`. Sono i candidati consegnati al
+verificatore. Se dopo metà del budget è ancora zero su tutti i problemi, il
+modello nuovo si comporta come i due vecchi e il giro non darà niente: fermalo.
+Nei nostri tre giri quel numero è stato 0, 1 e 1 su 139 chiamate.
+
+---
+
+## Le lezioni misurate, da non riscoprire
+
+**1. Cambiare modello rende più che aumentare il budget.** Sui 65 problemi che un
+tentativo da $50 non aveva risolto: lo stesso modello con quattro volte il budget
+ne recupera il **6,2%** (identico con un agente più elaborato, identico con
+476 000 articoli di arXiv a disposizione); un modello diverso e più recente ne
+recupera il **27,7%** e il **33,8%**. E nessun modello nuovo ha *perso* un
+problema che il vecchio aveva risolto: i tentativi si sommano.
+
+**2. Il tetto si misura in chiamate, non in dollari.** A parità di tetto, un
+modello con i prezzi di Opus 5 compra il doppio delle chiamate di uno con i
+prezzi di Fable 5.1:
+
+| tetto | Opus 5 | Fable 5.1 |
+|---|---|---|
+| $0,50 | 4 | 2 |
+| $1,00 | 9 | 4 |
+| $2,00 | 19 | 9 |
+| $3,00 | 29 | 14 |
+
+Quindi «quale modello conviene» dipende dal tetto: a $200 per problema vince il
+modello migliore, a $2 vince quello che compra più iterazioni.
+
+**3. Un successo costa poco, un fallimento costa il tetto.** Misurato sui dati di
+Epoch: il costo mediano di un tentativo **riuscito** è $3,55, e 22 dei 53
+successi sono arrivati con meno di $2. Il budget se lo mangiano i fallimenti, che
+arrivano sempre al tetto. Ne segue che molti tentativi a tetto basso rendono più
+di pochi tentativi profondi — con l'avvertenza del punto 5.
+
+**4. La trappola del «ce ne sono altri?».** Una domanda OEIS del tipo «dopo a(2),
+c'è un altro primo?» viene formalizzata come `True ↔ ∃ n, ...`: con la convenzione
+`answer(sorry)` dell'archivio **l'enunciato afferma che la risposta è sì**. Ma chi
+ha scritto il commento aveva già cercato un po', e la risposta vera è quasi sempre
+no. Il verso **certificabile** (esibire il testimone) è quindi quello vuoto, e
+l'altro è un'affermazione su infiniti casi che un calcolo non chiude. Verificato
+su tre: ricerca esaustiva fino a 10³⁹⁹ per `A113010`, fino a n = 24 per `A108301`,
+fino a 300 000 per `A1157` — nessun testimone.
+
+**5. Una confutazione per enumerazione non è certificabile.** Per un enunciato
+«per ogni n esiste k < n con P(n,k)», confutarlo su un n specifico vuol dire
+dimostrare in Lean che *nessuno* dei n−1 valori di k funziona. Oltre il milione
+sono un milione di fatti di compostezza: il kernel non ci arriva. Le confutazioni
+certificabili hanno **testimoni piccoli**, e i testimoni piccoli stanno solo dove
+la congettura non è stata verificata lontano, oppure dove la formalizzazione si
+discosta dalla fonte.
+
+**6. Una tattica banale che chiude un problema aperto è un difetto, non una
+scoperta.** `simp`, `decide`, `exact ⟨0, by simp⟩`: se chiudono un enunciato su cui
+i matematici si sono fermati, l'enunciato dice meno di quel che sembra. Sta nel
+protocollo ([docs/04](04-protocollo-ritrovamenti.md)), con i due casi documentati
+nei risultati pubblici di Epoch.
+
+**7. Quattro difetti nostri hanno prodotto o quasi prodotto risultati falsi.**
+`plausible` che lascia un `sorry` e fa compilare il file; due esplorazioni
+concorrenti che si scambiavano i messaggi di Lean; un lettore di verdetti che
+attribuiva gli errori alla riga sbagliata; il contabile che fermava i tentativi
+facendo sembrare che il modello si arrendesse. Nessuno di questi faceva fallire
+qualcosa in modo visibile: **tutti facevano apparire un esito che non c'era.** È
+la ragione per cui ogni verdetto, adesso, si legge dagli assiomi.
+
+---
+
 ## Riepilogo in cinque minuti
 
 **Tre giri sui problemi aperti, ventuno tentativi, $11,67 spesi, zero successi —
