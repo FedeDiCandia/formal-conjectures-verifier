@@ -61,5 +61,73 @@
   "fonte": "BSSS",
   "candidate": 92378,
   "saltata": "matrice da 1.1 GB"
+ },
+ {
+  "cella": "A(18,6,5)",
+  "pubblicato": 69,
+  "superiore": 72,
+  "fonte": "ACL",
+  "candidate": 8568,
+  "invariante": 63,
+  "gruppo": "blocchi2x9",
+  "raggiunto": 68,
+  "valido": true,
+  "gradini_riusciti": 5,
+  "secondi": 468.2
+ },
+ {
+  "cella": "A(16,6,7)",
+  "pubblicato": 109,
+  "superiore": 122,
+  "fonte": "G",
+  "candidate": 11440,
+  "invariante": 109,
+  "gruppo": "blocchi4x4",
+  "raggiunto": 109,
+  "valido": true,
+  "gradini_riusciti": 0,
+  "secondi": 541.0
+ },
+ {
+  "cella": "A(27,6,5)",
+  "pubblicato": 262,
+  "superiore": 280,
+  "fonte": "Bo",
+  "candidate": 80730,
+  "saltata": "matrice da 0.8 GB"
+ },
+ {
+  "cella": "A(28,6,5)",
+  "pubblicato": 280,
+  "superiore": 302,
+  "fonte": "Nu",
+  "candidate": 98280,
+  "saltata": "matrice da 1.2 GB"
+ },
+ {
+  "cella": "A(23,6,5)",
+  "pubblicato": 147,
+  "superiore": 170,
+  "fonte": "t",
+  "candidate": 33649,
+  "invariante": 138,
+  "gruppo": "Z23",
+  "raggiunto": 138,
+  "valido": true,
+  "gradini_riusciti": 0,
+  "secondi": 198.1
+ },
+ {
+  "cella": "A(16,6,8)",
+  "pubblicato": 120,
+  "superiore": 138,
+  "fonte": "BSSS",
+  "candidate": 12870,
+  "invariante": 100,
+  "gruppo": "Z16:2",
+  "raggiunto": 100,
+  "valido": true,
+  "gradini_riusciti": 0,
+  "secondi": 572.8
  }
 ]

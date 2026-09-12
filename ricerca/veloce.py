@@ -26,12 +26,18 @@ delle parole scelte è zero. Il verdetto finale resta di `codici.verifica`.
 """
 from __future__ import annotations
 
+import os
+
 import numpy as np
 
 from codici import verifica_veloce
 from tabu import _tutte_le_parole
 
-TETTO_MEMORIA_BYTE = 700_000_000
+# La matrice dei conflitti occupa N²/8 byte. Il tetto e' configurabile perche' la
+# cella piu' interessante che abbiamo (A(27,8,5), divario 1) ne chiede 0,8 GB, e su
+# 24 GB di RAM c'e' spazio -- ma non se si lanciano sei processi insieme. Chi lancia
+# in parallelo abbassa il tetto o riduce i processi.
+TETTO_MEMORIA_BYTE = int(os.environ.get("RICERCA_TETTO_MEMORIA", 700_000_000))
 
 
 def matrice_conflitti(tutte: np.ndarray, d: int) -> np.ndarray:
