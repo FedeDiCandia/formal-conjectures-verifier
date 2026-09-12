@@ -111,7 +111,12 @@ def riclassifica(percorso: Path) -> int:
 def prova(problema, tattica_nome, tattica, negato: bool, heartbeats: int,
           timeout: int) -> dict:
     """Prova una tattica sull'enunciato (o sulla sua negazione)."""
-    tipo = f"type_of% {problema.theorem}"
+    # Il `@` e' obbligatorio: senza, Lean istanzia gli argomenti
+    # impliciti come metavariabili e la sonda prova un enunciato DIVERSO
+    # da quello dell'archivio. Senza di esso `aesop` "confutava" la
+    # congettura di Agrawal, e il verificatore vero rifiutava la stessa
+    # dimostrazione: era il quarto falso positivo di questa specie.
+    tipo = f"type_of% @{problema.theorem}"
     enunciato = f"¬ ({tipo})" if negato else tipo
     codice = MODELLO.format(utilita=config_verificatore.modulo_utilita(),
                             modulo=problema.module, enunciato=enunciato,

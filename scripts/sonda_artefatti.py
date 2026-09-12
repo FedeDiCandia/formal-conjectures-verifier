@@ -74,7 +74,12 @@ def costruisci(problema, heartbeats: int) -> tuple[str, dict[str, tuple[str, boo
     righe = [f"import {config_verificatore.modulo_utilita()}",
              f"import {problema.module}", ""]
     mappa: dict[str, tuple[str, bool]] = {}
-    tipo = f"type_of% {problema.theorem}"
+    # Il `@` e' obbligatorio: senza, Lean istanzia gli argomenti
+    # impliciti come metavariabili e la sonda prova un enunciato DIVERSO
+    # da quello dell'archivio. Senza di esso `aesop` "confutava" la
+    # congettura di Agrawal, e il verificatore vero rifiutava la stessa
+    # dimostrazione: era il quarto falso positivo di questa specie.
+    tipo = f"type_of% @{problema.theorem}"
     for nome, tattica, anche_negato in TATTICHE:
         for negato in (False, True) if anche_negato else (False,):
             enunciato = f"¬ ({tipo})" if negato else tipo
@@ -135,6 +140,63 @@ def leggi(uscita: str, mappa: dict[str, tuple[str, bool]]) -> dict:
     return {"prove": esiti}
 
 
+def controlla_ambiente(bersagli: Path) -> None:
+    """I bersagli e l'archivio devono venire dallo stesso snapshot.
+
+    Quinto falso positivo: la sonda girava con l'indice predefinito (bench-v1)
+    mentre i bersagli erano scelti su `main`. Gli import fallivano, i messaggi di
+    Lean erano spazzatura, e il lettore ci leggeva dentro dei successi.
+    """
+    dati = json.loads(bersagli.read_text(encoding="utf-8"))
+    atteso = dati.get("snapshot", "")
+    attuale = str(config_verificatore.ARCHIVE)
+    if "fc-main" in atteso and "fc-main" not in attuale:
+        raise SystemExit(
+            f"AMBIENTE SBAGLIATO.\n"
+            f"  i bersagli sono stati scelti su: {atteso}\n"
+            f"  l'archivio in uso e':           {attuale}\n"
+            f"Rilancia con:\n"
+            f"  env FCS_ARCHIVE=$PWD/external/fc-main \\\n"
+            f"      FCS_LEAN4EXPORT=$PWD/external/lean4export-433/.lake/build/bin/lean4export \\\n"
+            f"      FCS_INDEX=$PWD/verifier/problem_index_main.json \\\n"
+            f"    ./.venv/bin/python scripts/sonda_artefatti.py")
+
+
+def conferma_col_verificatore(problema, tattica: str, negato: bool,
+                              timeout: int) -> tuple[str, str]:
+    """Sottopone la prova al verificatore vero. Ritorna (esito, dettaglio).
+
+    E' l'unico giudizio che conta. Il candidato e' scritto nella forma che
+    `verify.py` si aspetta: in modalita' confutazione gli e' permesso importare
+    il modulo del problema (e appoggiarsi alla sua dimostrazione non serve,
+    perche' e' un `sorry` e il controllo degli assiomi lo rifiuta).
+    """
+    import tempfile
+    from verify import verify, CONFUTAZIONE, STRETTA
+    corpo = (f"import {config_verificatore.modulo_utilita()}\n"
+             f"import {problema.module}\n\n")
+    if negato:
+        nome = f"{problema.theorem}_confutazione"
+        corpo += (f"theorem {nome} : ¬ (type_of% @{problema.theorem}) := by\n"
+                  f"  {tattica}\n")
+        modalita = CONFUTAZIONE
+    else:
+        nome = f"{problema.theorem}_riprova"
+        corpo += (f"theorem {nome} : type_of% @{problema.theorem} := by\n"
+                  f"  {tattica}\n")
+        modalita = STRETTA
+    with tempfile.NamedTemporaryFile("w", suffix=".lean", delete=False,
+                                    encoding="utf-8") as fh:
+        fh.write(corpo)
+        percorso = Path(fh.name)
+    try:
+        r = verify(problema.theorem, percorso, modalita=modalita,
+                   run_guard=False, timeout=timeout)
+        return r.status, (r.message or "")[:300]
+    finally:
+        percorso.unlink(missing_ok=True)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--bersagli", default=str(RADICE / "docs/dati/bersagli.json"))
@@ -144,6 +206,7 @@ def main() -> int:
     ap.add_argument("--uscita", default=str(RADICE / "runs/caccia/artefatti.json"))
     args = ap.parse_args()
 
+    controlla_ambiente(Path(args.bersagli))
     idx = ProblemIndex.load()
     dati = json.loads(Path(args.bersagli).read_text(encoding="utf-8"))
     scelti = []
@@ -175,15 +238,31 @@ def main() -> int:
             voce["errore"] = f"guard: {r.rifiutato_dal_guard}"
         else:
             voce.update(leggi(r.messaggi, mappa))
-            notevole = [x for x in voce["prove"]
-                        if x["esito"] in ("chiusa", "confutata", "controesempio")]
-            if notevole:
-                voce["messaggi_grezzi"] = r.messaggi[:4000]
-                voce["ATTENZIONE"] = "; ".join(
-                    f"{x['tattica']}{' (negata)' if x['negato'] else ''} -> {x['esito']}"
-                    for x in notevole)
-                notevoli += 1
-                print(f"  !!! {p.theorem}: {voce['ATTENZIONE']}", flush=True)
+            candidati = [x for x in voce["prove"]
+                         if x["esito"] in ("chiusa", "confutata", "controesempio")]
+            if candidati:
+                voce["messaggi_grezzi"] = r.messaggi[:20000]
+                voce["candidati"] = []
+                for x in candidati:
+                    if x["esito"] == "controesempio":
+                        continue          # un controesempio non e' una prova
+                    tattica = dict((n, t) for n, t, _ in TATTICHE)[x["tattica"]]
+                    print(f"  ? {p.theorem}: {x['tattica']}"
+                          f"{' (negata)' if x['negato'] else ''} sembra chiudere — "
+                          f"lo sottopongo al verificatore...", flush=True)
+                    esito, dettaglio = conferma_col_verificatore(
+                        p, tattica, x["negato"], args.timeout * 4)
+                    voce["candidati"].append(
+                        {"tattica": x["tattica"], "negato": x["negato"],
+                         "verificatore": esito, "dettaglio": dettaglio})
+                    print(f"    -> verificatore: {esito}", flush=True)
+                    if esito == "ACCETTATO":
+                        voce["ATTENZIONE"] = (
+                            f"{x['tattica']}{' (negata)' if x['negato'] else ''} "
+                            f"ACCETTATA DAL VERIFICATORE")
+                if "ATTENZIONE" in voce:
+                    notevoli += 1
+                    print(f"  !!! {p.theorem}: {voce['ATTENZIONE']}", flush=True)
         risultati.append(voce)
         uscita.write_text(json.dumps(risultati, ensure_ascii=False, indent=1),
                           encoding="utf-8")
