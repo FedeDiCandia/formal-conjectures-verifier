@@ -96,7 +96,7 @@ numeri OEIS**. L'agente non consegnava niente perché gli stavamo chiedendo Gold
 
 ### 2b. Riduzioni vere, con una verifica mia
 
-**`OeisA105020.conjecture` — è equivalente a Goldbach, dimostrato.** La bozza di
+**`OeisA105020.conjecture` — è equivalente a Goldbach, dimostrato; nella sostanza già noto** (formula di Hurt in A045917, 2021: vedi [segnalazioni/A105020.md](segnalazioni/A105020.md) §6). **Verificato in Lean** dal nostro verificatore (§5). La bozza di
 segnalazione con la dimostrazione completa e tutti i controlli è in
 [docs/segnalazioni/A105020.md](segnalazioni/A105020.md).
 

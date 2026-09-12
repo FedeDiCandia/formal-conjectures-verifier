@@ -278,7 +278,7 @@ ALLOWED_IMPORT_PREFIXES: tuple[str, ...] = (
 
 
 def check_source(src: str, *, esplorazione: bool = False,
-                 modulo_permesso: str | None = None) -> GuardReport:
+                 modulo_permesso: str | tuple[str, ...] | None = None) -> GuardReport:
     """Analizza il testo di un file Lean candidato.
 
     `modulo_permesso` consente UN singolo modulo in piu'. Serve alla modalita'
@@ -319,7 +319,10 @@ def check_source(src: str, *, esplorazione: bool = False,
             consentiti = (ALLOWED_IMPORT_PREFIXES + ("FormalConjectures",)
                           if esplorazione else ALLOWED_IMPORT_PREFIXES)
             if modulo_permesso:
-                consentiti = consentiti + (modulo_permesso,)
+                # uno solo (via type_of%) oppure una tupla (sfida libera, verify_libera)
+                aggiunti = ((modulo_permesso,) if isinstance(modulo_permesso, str)
+                            else tuple(modulo_permesso))
+                consentiti = consentiti + aggiunti
             if module and not module.startswith(consentiti):
                 add(idx, "import", f"import non consentito: `{module}`. Sono ammessi solo "
                                    f"i moduli di Mathlib e le utilita' dell'archivio "
@@ -374,7 +377,7 @@ def check_source(src: str, *, esplorazione: bool = False,
 
 
 def check_file(path, *, esplorazione: bool = False,
-               modulo_permesso: str | None = None) -> GuardReport:
+               modulo_permesso: str | tuple[str, ...] | None = None) -> GuardReport:
     with open(path, "r", encoding="utf-8") as f:
         return check_source(f.read(), esplorazione=esplorazione,
                             modulo_permesso=modulo_permesso)

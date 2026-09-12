@@ -374,6 +374,24 @@ def _lean_errors(output: str, max_caratteri: int = 40_000) -> str:
 # Verifica di un singolo candidato
 # ---------------------------------------------------------------------------
 
+def _errore_di_strumenti(output: str) -> str | None:
+    """Riconosce i fallimenti che riguardano GLI STRUMENTI, non il candidato.
+
+    Misurato il 12 settembre 2026: verificando A105020 sullo snapshot `main` (Lean
+    4.33.1) con il `lean4export` per Lean 4.27, comparator si e' fermato con
+    `failed to read file ... incompatible header`, e il rapporto diceva «la
+    compilazione e' fallita» con esito RIFIUTATO. Era falso: il candidato non era mai
+    stato giudicato. Un guasto degli strumenti deve risultare ERRORE, con la causa.
+    """
+    if "incompatible header" in output:
+        return ("LA VERIFICA NON E' AVVENUTA: comparator ha trovato file .olean compilati "
+                "con una versione di Lean diversa da quella dei suoi strumenti "
+                "(`incompatible header`). Non dice niente sul candidato.\n\n"
+                "Per lo snapshot `main` (Lean 4.33.1) serve "
+                "FCS_LEAN4EXPORT=external/lean4export-433/.lake/build/bin/lean4export.")
+    return None
+
+
 def verify(problem_id: str, candidate: Path | str, *,
            index: Optional[ProblemIndex] = None,
            timeout: Optional[int] = None,
@@ -665,6 +683,201 @@ def verify(problem_id: str, candidate: Path | str, *,
                 "giusta fosse NO, questo enunciato sarebbe falso e non dimostrabile.")
         return done(ACCEPTED, nota, raw=output)
 
+    guasto = _errore_di_strumenti(output)
+    if guasto:
+        checks.append(Check("strumenti coerenti con l'archivio", False,
+                            "file .olean con intestazione incompatibile"))
+        return done(ERROR, guasto, errors=_lean_errors(output), raw=output)
+    nome_controllo, spiegazione = _classify(output)
+    checks.append(Check(nome_controllo, False, spiegazione))
+    return done(REJECTED, spiegazione, errors=_lean_errors(output), raw=output)
+
+
+# ---------------------------------------------------------------------------
+# Verifica di un teorema NUOVO, con una sfida scritta a mano
+# ---------------------------------------------------------------------------
+
+_RE_ASSIOMA_SFIDA = re.compile(r"^\s*(?:private\s+|protected\s+)?axiom\b", re.MULTILINE)
+
+
+def verify_libera(testo_sfida: str, candidate: Path | str, teoremi: list[str], *,
+                  moduli_permessi: tuple[str, ...] = (),
+                  timeout: Optional[int] = None,
+                  slot: Optional[int] = None,
+                  keep_workspace: bool = False) -> Result:
+    """Verifica teoremi che NON stanno nell'archivio, contro una sfida scritta a mano.
+
+    `verify` confronta un candidato con un enunciato dell'archivio. Qui la sfida
+    (il modulo Challenge di comparator) la fornisce chi chiede la verifica: gli
+    enunciati dei teoremi `teoremi`, con `sorry` come dimostrazione. Il candidato deve
+    dichiarare gli stessi teoremi e dimostrarli. Il resto e' la stessa catena di
+    `verify`: controllo sintattico, compilazione isolata, confronto degli enunciati
+    elaborati, assiomi ammessi, riesecuzione nel kernel, impronta dell'archivio.
+
+    `moduli_permessi` sono i moduli dell'archivio che il candidato puo' importare per
+    leggere definizioni ed enunciati. Appoggiarsi alle loro dimostrazioni, che per i
+    problemi aperti sono `sorry`, viene rifiutato dal controllo degli assiomi: e' lo
+    stesso argomento della via `type_of%` delle confutazioni.
+
+    L'AVVERTENZA CHE CONTA: comparator garantisce che il candidato dimostri
+    esattamente gli enunciati della sfida. Se la sfida enuncia la cosa sbagliata, la
+    verifica certifica la cosa sbagliata. La sfida va letta da un essere umano, ed e'
+    per questo che deve restare corta.
+    """
+    started = time.time()
+    candidate = Path(candidate)
+    timeout = timeout or config.TIMEOUT_SECONDS
+    checks: list[Check] = []
+    etichetta = "sfida libera: " + ", ".join(teoremi)
+
+    def done(status: str, message: str = "", errors: str = "", raw: str = "") -> Result:
+        return Result(problem=etichetta, status=status, checks=checks,
+                      message=message, errors=errors,
+                      duration_s=time.time() - started, raw_output=raw)
+
+    problemi = config.check_installation()
+    if problemi:
+        return done(ERROR, "Ambiente non pronto:\n  - " + "\n  - ".join(problemi))
+    if not candidate.is_file():
+        return done(ERROR, f"File candidato non trovato: {candidate}")
+    if not teoremi:
+        return done(ERROR, "nessun teorema da verificare")
+    if _RE_ASSIOMA_SFIDA.search(testo_sfida):
+        return done(ERROR, "la sfida dichiara un assioma: una sfida contiene solo enunciati")
+    mancanti = [t for t in teoremi
+                if not re.search(r"\btheorem\s+(?:\S*\.)?" + re.escape(t.rsplit(".", 1)[-1])
+                                 + r"\b", testo_sfida)]
+    if mancanti:
+        return done(ERROR, "la sfida non dichiara: " + ", ".join(mancanti))
+    checks.append(Check("sfida ben formata", True,
+                        f"{len(teoremi)} enunciati, nessun assioma dichiarato"))
+
+    report = guard.check_file(candidate, modulo_permesso=tuple(moduli_permessi) or None)
+    if not report.ok:
+        dettagli = "\n".join(str(f) for f in report.findings)
+        checks.append(Check("controllo sintattico preventivo", False,
+                            f"{len(report.findings)} violazioni"))
+        return done(REJECTED, "Il file contiene costrutti vietati:\n\n" + dettagli,
+                    errors=dettagli)
+    checks.append(Check("controllo sintattico preventivo", True,
+                        "niente sorry/admit/axiom/native_decide; moduli dell'archivio "
+                        "importabili: " + (", ".join(moduli_permessi) or "nessuno")))
+
+    pool = get_pool()
+    owned_slot = slot is None
+    if owned_slot:
+        slot = pool.acquire()
+    sandbox_dir = config.ARCHIVE / config.SANDBOX_SUBDIR
+    sol_name, sfida_nome = f"S{slot}", f"Sfida{slot}"
+    sol_path = sandbox_dir / f"{sol_name}.lean"
+    sfida_path = sandbox_dir / f"{sfida_nome}.lean"
+    code, output = None, ""
+    try:
+        sandbox_dir.mkdir(parents=True, exist_ok=True)
+        _ripulisci_avanzi(sandbox_dir, slot)
+        sol_path.write_text(candidate.read_text(encoding="utf-8"), encoding="utf-8")
+        sfida_path.write_text(testo_sfida, encoding="utf-8")
+        sol_module = f"{config.SANDBOX_MODULE_PREFIX}.{sol_name}"
+        modulo_sfida = f"{config.SANDBOX_MODULE_PREFIX}.{sfida_nome}"
+        cfg = {"challenge_module": modulo_sfida, "solution_module": sol_module,
+               "theorem_names": list(teoremi),
+               "permitted_axioms": config.PERMITTED_AXIOMS}
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_dir = Path(tmp)
+            cfg_path = tmp_dir / "config.json"
+            cfg_path.write_text(json.dumps(cfg), encoding="utf-8")
+
+            profilo = None
+            if config.USA_SANDBOX and sandbox.disponibile():
+                for d in sandbox.cartelle_scrivibili(
+                        config.ARCHIVE, config.SANDBOX_SUBDIR, tmp_dir):
+                    d.mkdir(parents=True, exist_ok=True)
+                profilo = sandbox.scrivi_profilo(
+                    tmp_dir / "verifica.sb",
+                    sandbox.cartelle_scrivibili(config.ARCHIVE, config.SANDBOX_SUBDIR, tmp_dir),
+                    config.ROOT)
+                checks.append(Check("compilazione isolata", True,
+                                    "sandbox-exec: niente rete, scrittura solo nella "
+                                    "cartella del modulo temporaneo"))
+            elif config.USA_SANDBOX:
+                checks.append(Check("compilazione isolata", False,
+                                    "sandbox-exec non disponibile: compilazione NON isolata"))
+
+            pronto, uscita_prep = prepara_sfida(modulo_sfida, timeout)
+            if not pronto:
+                checks.append(Check("modulo della sfida pronto", False,
+                                    "la sfida non compila"))
+                return done(ERROR, "La SFIDA non compila: va corretto il testo della sfida, "
+                                   "non il candidato.",
+                            errors=_lean_errors(uscita_prep), raw=uscita_prep)
+            checks.append(Check("modulo della sfida pronto", True, modulo_sfida))
+
+            impronta_prima = None
+            if config.CONTROLLA_IMPRONTA:
+                impronta_prima = modulo_impronta.calcola(
+                    config.ARCHIVE, escludi=Path(config.SANDBOX_SUBDIR).name)
+            ambiente = config.lean_env()
+            ambiente["TMPDIR"] = str(tmp_dir)
+            code, output = _run_with_timeout(
+                [str(config.ELAN_BIN / "lake"), "env", str(config.COMPARATOR), str(cfg_path)],
+                cwd=config.ARCHIVE, env=ambiente, timeout=timeout,
+                profilo_sandbox=profilo,
+            )
+            if impronta_prima is not None:
+                differenze = modulo_impronta.confronta(
+                    impronta_prima,
+                    modulo_impronta.calcola(config.ARCHIVE,
+                                            escludi=Path(config.SANDBOX_SUBDIR).name))
+                if differenze:
+                    checks.append(Check("archivio intatto dopo la verifica", False,
+                                        "; ".join(differenze)))
+                    return done(ERROR,
+                                "LA VERIFICA NON E' ATTENDIBILE: l'archivio e' cambiato "
+                                "durante la verifica.\n"
+                                + "\n".join("  - " + d for d in differenze),
+                                errors=_lean_errors(output), raw=output)
+                checks.append(Check("archivio intatto dopo la verifica", True,
+                                    f"{impronta_prima.n_file_contenuto} file dell'archivio e "
+                                    f"{impronta_prima.n_file_metadati} delle dipendenze invariati"))
+    finally:
+        if not keep_workspace:
+            for nome, percorso in ((sol_name, sol_path), (sfida_nome, sfida_path)):
+                try:
+                    percorso.unlink(missing_ok=True)
+                    built = (config.ARCHIVE / ".lake" / "build" / "lib" / "lean"
+                             / config.SANDBOX_SUBDIR / nome)
+                    for ext in (".olean", ".ilean", ".trace", ".hash", ".c", ".o"):
+                        Path(str(built) + ext).unlink(missing_ok=True)
+                except Exception:
+                    pass
+        if owned_slot:
+            pool.release(slot)
+
+    if code == -signal.SIGKILL:
+        checks.append(Check("entro il tempo massimo", False, f"superati {timeout}s"))
+        return done(TIMEOUT, f"La verifica ha superato il tempo massimo di {timeout} secondi.",
+                    errors=_lean_errors(output), raw=output)
+    if code == 0 and "Your solution is okay!" in output:
+        for nome, dettaglio in [
+            ("compila senza errori", "il modulo candidato e' stato compilato da lake"),
+            ("enunciati identici alla sfida",
+             "confronto sull'albero sintattico esportato da lean4export, non sul testo"),
+            ("definizioni usate intatte",
+             "le costanti usate negli enunciati coincidono con quelle della sfida e "
+             "dell'archivio"),
+            ("assiomi ammessi", ", ".join(config.PERMITTED_AXIOMS)),
+            ("accettato dal kernel", "termini di prova rieseguiti nel kernel di Lean"),
+        ]:
+            checks.append(Check(nome, True, dettaglio))
+        return done(ACCEPTED,
+                    "Tutti gli enunciati della sfida sono dimostrati.\n\n"
+                    "Quello che la verifica NON dice: che la sfida enunci la cosa giusta. "
+                    "Va letta.", raw=output)
+    guasto = _errore_di_strumenti(output)
+    if guasto:
+        checks.append(Check("strumenti coerenti con l'archivio", False,
+                            "file .olean con intestazione incompatibile"))
+        return done(ERROR, guasto, errors=_lean_errors(output), raw=output)
     nome_controllo, spiegazione = _classify(output)
     checks.append(Check(nome_controllo, False, spiegazione))
     return done(REJECTED, spiegazione, errors=_lean_errors(output), raw=output)
