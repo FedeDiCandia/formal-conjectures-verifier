@@ -40,8 +40,17 @@ class Problem:
 
     @property
     def source_file(self) -> Path:
-        """Il file .lean che contiene questo teorema."""
-        return config.ARCHIVE / (self.module.replace(".", "/") + ".lean")
+        """Il file .lean che contiene questo teorema.
+
+        Le virgolette francesi vanno togliete: un identificatore Lean che comincia
+        con una cifra si scrive fra guillemet — il modulo delle voci OEIS si chiama
+        `FormalConjectures.OEIS.«109074»` — ma il file sul disco si chiama
+        `109074.lean`. Senza questa riga nessuno dei 209 problemi OEIS era
+        leggibile dal sorgente: l'agente non poteva riceverli, l'estrattore non
+        poteva estrarli e la sfida negata non si poteva generare.
+        """
+        pezzi = self.module.replace("«", "").replace("»", "")
+        return config.ARCHIVE / (pezzi.replace(".", "/") + ".lean")
 
     #: Gli unici assiomi che il verificatore ammette.
     ASSIOMI_AMMESSI = frozenset({"propext", "Classical.choice", "Quot.sound"})

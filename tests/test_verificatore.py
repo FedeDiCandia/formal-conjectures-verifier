@@ -350,3 +350,25 @@ end JugglerConjecture
     assert hash_bersaglio() == prima, \
         "il file compilato dell'archivio E' STATO MODIFICATO: tutte le verifiche " \
         "successive confronterebbero le soluzioni con un enunciato alterato"
+
+
+def test_i_problemi_oeis_si_leggono_dal_sorgente():
+    """Le voci OEIS hanno un modulo fra guillemet e un file senza.
+
+    Un identificatore Lean non puo' cominciare con una cifra, quindi il modulo
+    della voce A109074 si chiama `FormalConjectures.OEIS.«109074»` mentre il file
+    sul disco e' `109074.lean`. Finche' la conversione non toglieva le virgolette,
+    NESSUNO dei 209 problemi OEIS era leggibile: l'agente non poteva riceverli,
+    l'estrattore non poteva estrarli, la sfida negata non si poteva generare — e
+    quei 209 sono la famiglia su cui il piano di spesa si appoggia.
+    """
+    idx = ProblemIndex.load()
+    oeis = [p for p in idx.problems if "OEIS" in p.module]
+    if not oeis:
+        pytest.skip("questo snapshot non contiene voci OEIS")
+    letti = 0
+    for p in oeis[:20]:
+        if p.source_file.is_file() and p.range:
+            assert p.source_text().strip(), p.theorem
+            letti += 1
+    assert letti >= 15, f"solo {letti} voci OEIS su 20 leggibili dal sorgente"
