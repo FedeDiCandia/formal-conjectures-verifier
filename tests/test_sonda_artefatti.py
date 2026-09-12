@@ -74,3 +74,29 @@ def test_il_file_generato_chiede_gli_assiomi_di_ogni_prova():
         assert f"#print axioms {teorema}" in codice
     attese = sum(2 if anche else 1 for _, _, anche in sonda.TATTICHE)
     assert len(mappa) == attese
+
+
+def test_un_file_che_non_compila_non_da_un_esito_pulito():
+    """Il sesto falso positivo, del 12 settembre 2026.
+
+    Su `Erdos628.erdos_628` la sonda leggeva «aesop: chiusa, assiomi: nessuno»
+    mentre il file aveva un errore di notazione `⟨...⟩`, e il verificatore ha poi
+    risposto RIFIUTATO: il file non compila. Il candidato passava comunque da
+    verify.py -- che e' il motivo per cui nessun falso ritrovamento e' uscito da
+    1188 enunciati -- ma la riga mostrata a chi legge era ingannevole.
+    """
+    uscita = (
+        "FormalConjectures/_Judge/E0.lean:6:8: error: Invalid `<...>` notation: "
+        "The expected type is not an inductive type\n"
+        "'sonda_aesop' does not depend on any axioms\n")
+    esiti = sonda.leggi(uscita, {"sonda_aesop": ("aesop", False)})["prove"]
+    assert esiti[0]["esito"] == "chiusa"          # resta un candidato, non un verdetto
+    assert "ATTENZIONE" in esiti[0]["dettaglio"]
+    assert "non compila" in esiti[0]["dettaglio"] or "errori di compilazione" in esiti[0]["dettaglio"]
+    assert "verificatore" in esiti[0]["dettaglio"]
+
+
+def test_senza_errori_il_dettaglio_resta_asciutto():
+    esiti = sonda.leggi("'sonda_aesop' does not depend on any axioms\n",
+                        {"sonda_aesop": ("aesop", False)})["prove"]
+    assert esiti[0]["dettaglio"] == "assiomi: nessuno"

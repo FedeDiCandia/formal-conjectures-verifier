@@ -64,6 +64,37 @@ che abbiamo trovato: **l'agente non consegnava niente perché non c'era niente d
 consegnare.** Quei problemi sono aperti perché si riducono ad altri problemi
 aperti.
 
+### La sonda degli artefatti: 1188 enunciati, zero ritrovamenti — ed è un risultato
+
+La caccia alle **formalizzazioni sbagliate** è finita, con la sonda corretta a
+«proporre e non giudicare». Il bilancio:
+
+| | |
+|---|---|
+| enunciati aperti esaminati | **1188** |
+| tentativi di tattica | **22.572** |
+| candidati proposti al verificatore | **1** |
+| candidati **accettati** | **0** |
+
+L'unico candidato era `Erdos628.erdos_628`, che `aesop` dava per chiuso «senza
+dipendere da nessun assioma». Passato a `verify.py`, la risposta è stata
+**RIFIUTATO: il file non compila** — il file aveva un errore di notazione
+`⟨...⟩`, e la riga di assiomi pulita riguardava una dichiarazione salvata in un
+file che non compilava.
+
+**Questo è il sesto falso positivo di questo progetto, e il primo fermato prima di
+arrivare in un rapporto.** È esattamente il comportamento chiesto: la sonda
+propone, il verificatore giudica, e solo ACCETTATO viene segnalato. Ora è anche un
+test di regressione permanente (`tests/test_sonda_artefatti.py`), e la sonda non può
+più mostrare un esito positivo senza l'avviso che il file conteneva errori.
+
+**Il risultato va letto per quello che è: su 1188 enunciati aperti dell'archivio di
+Google DeepMind, con ventidue tattiche automatiche, nessuna formalizzazione cade a
+una tattica banale. Le formalizzazioni reggono.** Era una delle quattro strade che
+avevamo considerato — cercare traduzioni sbagliate invece di dimostrazioni — e ora
+sappiamo che quella strada è vuota. Non è un fallimento: è una domanda chiusa, e
+costa zero non riaprirla.
+
 ### Che cosa di questo repository serve ancora
 
 | serve | non serve più per la strada A |

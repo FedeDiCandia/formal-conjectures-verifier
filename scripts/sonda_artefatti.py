@@ -119,6 +119,13 @@ def leggi(uscita: str, mappa: dict[str, tuple[str, bool]]) -> dict:
         if m:
             assiomi[m.group(1)] = set()
     controesempio = bool(_RE_CONTROESEMPIO.search(uscita))
+    # Un file che non compila puo' comunque stampare una riga di assiomi pulita per
+    # una dichiarazione la cui elaborazione e' stata salvata: e' il caso di
+    # Erdos628.erdos_628, dove `aesop` risultava "chiusa, nessun assioma" mentre il
+    # file aveva un errore di notazione e il verificatore ha poi risposto
+    # RIFIUTATO: il file non compila. La sonda non deve mai mostrare un esito
+    # positivo senza questo avviso accanto.
+    errori = [r for r in uscita.split("\n") if " error: " in r or r.startswith("error:")]
 
     esiti = []
     for teorema, (nome, negato) in mappa.items():
@@ -130,6 +137,11 @@ def leggi(uscita: str, mappa: dict[str, tuple[str, bool]]) -> dict:
         else:
             esito = "confutata" if negato else "chiusa"
             dettaglio = "assiomi: " + (", ".join(sorted(ax)) or "nessuno")
+            if errori:
+                dettaglio = (f"ATTENZIONE: il file contiene {len(errori)} errori di "
+                             f"compilazione, quindi questo esito non vale niente "
+                             f"finche' il verificatore non dice ACCETTATO. "
+                             f"Primo errore: {errori[0].strip()[:160]}. " + dettaglio)
         esiti.append({"tattica": nome, "negato": negato, "esito": esito,
                       "dettaglio": dettaglio})
     if controesempio:
