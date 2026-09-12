@@ -76,6 +76,30 @@ def punteggio(p) -> tuple[int, list[str]]:
     else:
         note.append("forma del testimone non riconosciuta")
 
+    # --- IMPARATO DAL GIRO 0: la trappola del «ce ne sono altri?»
+    # Una domanda OEIS del tipo «dopo a(2), ce n'e' un altro?» viene formalizzata
+    # come `True ↔ ∃ ...`, cioe' l'archivio AFFERMA che la risposta e' si'. Ma
+    # chi ha scritto il commento aveva gia' cercato un po', e la risposta vera e'
+    # quasi sempre no: il verso certificabile (esibire il testimone) e' proprio
+    # quello vuoto, e l'altro e' un'affermazione su infiniti casi. Misurato su
+    # tre di questi: ricerca esaustiva fino a 10^399 per A113010, n fino a 24 per
+    # A108301, k fino a 300 000 per A1157 — nessun testimone.
+    ce_ne_sono_altri = bool(re.search(
+        r"are there (any )?(more|other)|another|only\(\?\)|last (term|odd)|"
+        r"no others|any others", doc, re.I))
+    if ce_ne_sono_altri and esistenziale:
+        punti -= 30
+        note.append("TRAPPOLA: domanda «ce ne sono altri?», il testimone probabilmente non esiste")
+
+    # --- IMPARATO DAL GIRO 0: le identita' sono l'unica forma su cui il modello
+    # ha costruito qualcosa di vero. Su A109074 e' arrivato da solo al nocciolo
+    # (la divisibilita' esatta di un prodotto di fattoriali, con un argomento
+    # p-adico), invece di fermarsi dopo due calcoli.
+    identita = bool(re.search(r"=\s*[^=]", corpo)) and "∃" not in corpo
+    if identita:
+        punti += 25
+        note.append("IDENTITA': forma su cui il modello costruisce, non solo calcola")
+
     # --- gli altri criteri, con peso minore
     if any(x in s for x in SEGNI_CALCOLABILE):
         punti += 30; note.append("predicato calcolabile")

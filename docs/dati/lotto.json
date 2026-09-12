@@ -1,17 +1,18 @@
 [
  {
   "posizione": 1,
-  "punteggio": 115,
-  "problema": "OeisA100474.conjecture",
-  "modulo": "FormalConjectures.OEIS.«100474»",
-  "enunciato": "True ↔ ∃ n > 2, Nat.Prime (OeisA100474.a n)",
+  "punteggio": 140,
+  "problema": "OeisA105720.conjecture",
+  "modulo": "FormalConjectures.OEIS.«105720»",
+  "enunciato": "∀ (n : ℕ), 0 < n → (IsSquare (OeisA105720.a n) ↔ n = 3 ∨ n = 6 ∨ n = 4072)",
   "note": [
-   "TESTIMONE PICCOLO: un oggetto concreto dimostra",
+   "TESTIMONE PICCOLO: un valore in piu' confuta",
+   "IDENTITA': forma su cui il modello costruisce, non solo calcola",
    "predicato calcolabile",
-   "enunciato corto (43)",
+   "enunciato corto (74)",
    "nessun nome celebre"
   ],
-  "docstring": "After $a(2) = 5$, is there another prime?"
+  "docstring": "Terms are squares at only(?) three values of $n = 3, 6, 4072$: corresponding terms are 6^2, 13^2, and 15735^2."
  },
  {
   "posizione": 2,
@@ -30,20 +31,6 @@
  {
   "posizione": 3,
   "punteggio": 115,
-  "problema": "OeisA108301.conjecture",
-  "modulo": "FormalConjectures.OEIS.«108301»",
-  "enunciato": "True ↔ ∃ n > 11, Nat.Prime (OeisA108301.a n)",
-  "note": [
-   "TESTIMONE PICCOLO: un oggetto concreto dimostra",
-   "predicato calcolabile",
-   "enunciato corto (44)",
-   "nessun nome celebre"
-  ],
-  "docstring": "$a(0)$, $a(1)$, $a(5)$, $a(6)$, $a(7)$ and $a(11)$ are primes. Are there any more?"
- },
- {
-  "posizione": 4,
-  "punteggio": 115,
   "problema": "OeisA108569.conjecture",
   "modulo": "FormalConjectures.OEIS.«108569»",
   "enunciato": "∀ (n : ℕ), 0 < n → Even (OeisA108569.a n)",
@@ -56,35 +43,7 @@
   "docstring": "Conjecture: Except for the first term all terms are even."
  },
  {
-  "posizione": 5,
-  "punteggio": 115,
-  "problema": "OeisA109227.conjecture",
-  "modulo": "FormalConjectures.OEIS.«109227»",
-  "enunciato": "True ↔ ∃ n > 0, n ≠ 2 ∧ n ≠ 121 ∧ Nat.Prime (OeisA109227.a n)",
-  "note": [
-   "TESTIMONE PICCOLO: un oggetto concreto dimostra",
-   "predicato calcolabile",
-   "enunciato corto (61)",
-   "nessun nome celebre"
-  ],
-  "docstring": "Conjecture: $a(2)$ and $a(121)$ are primes. Are there any more?"
- },
- {
-  "posizione": 6,
-  "punteggio": 115,
-  "problema": "OeisA105720.conjecture",
-  "modulo": "FormalConjectures.OEIS.«105720»",
-  "enunciato": "∀ (n : ℕ), 0 < n → (IsSquare (OeisA105720.a n) ↔ n = 3 ∨ n = 6 ∨ n = 4072)",
-  "note": [
-   "TESTIMONE PICCOLO: un valore in piu' confuta",
-   "predicato calcolabile",
-   "enunciato corto (74)",
-   "nessun nome celebre"
-  ],
-  "docstring": "Terms are squares at only(?) three values of $n = 3, 6, 4072$: corresponding terms are 6^2, 13^2, and 15735^2."
- },
- {
-  "posizione": 7,
+  "posizione": 4,
   "punteggio": 105,
   "problema": "OeisA113609.conjecture",
   "modulo": "FormalConjectures.OEIS.«113609»",
@@ -98,7 +57,7 @@
   "docstring": "(25,27) is the smallest pair of prime powers (q,q+2) such that both q and q+2 are not primes, conjecture: there are more (but not < 10^6)."
  },
  {
-  "posizione": 8,
+  "posizione": 5,
   "punteggio": 85,
   "problema": "OeisA103662.conjecture",
   "modulo": "FormalConjectures.OEIS.«103662»",
@@ -111,7 +70,22 @@
   "docstring": "For statistical reasons it is conjectured that the sequence is finite. This is formalized as the assertion that for large enough $n$, no valid zeroless power exists, which in our definition results in $a(n) = 0$."
  },
  {
-  "posizione": 9,
+  "posizione": 6,
+  "punteggio": 85,
+  "problema": "OeisA100474.conjecture",
+  "modulo": "FormalConjectures.OEIS.«100474»",
+  "enunciato": "True ↔ ∃ n > 2, Nat.Prime (OeisA100474.a n)",
+  "note": [
+   "TESTIMONE PICCOLO: un oggetto concreto dimostra",
+   "TRAPPOLA: domanda «ce ne sono altri?», il testimone probabilmente non esiste",
+   "predicato calcolabile",
+   "enunciato corto (43)",
+   "nessun nome celebre"
+  ],
+  "docstring": "After $a(2) = 5$, is there another prime?"
+ },
+ {
+  "posizione": 7,
   "punteggio": 85,
   "problema": "OeisA103425.conjecture",
   "modulo": "FormalConjectures.OEIS.«103425»",
@@ -126,20 +100,37 @@
   "docstring": "The current sequence contains primes, including $3, 5, 41, 21523361$. Is there an $(a, b, c)$ weighted tribonacci sequence with $a, b, c$ relatively prime which is prime-free?"
  },
  {
-  "posizione": 10,
+  "posizione": 8,
   "punteggio": 85,
-  "problema": "OeisA113010.conjecture",
-  "modulo": "FormalConjectures.OEIS.«113010»",
-  "enunciato": "True ↔ ∃ n, OeisA113010.a n = n ∧ n ≠ 1 ∧ n ≠ 32",
+  "problema": "OeisA108301.conjecture",
+  "modulo": "FormalConjectures.OEIS.«108301»",
+  "enunciato": "True ↔ ∃ n > 11, Nat.Prime (OeisA108301.a n)",
   "note": [
    "TESTIMONE PICCOLO: un oggetto concreto dimostra",
-   "enunciato corto (48)",
+   "TRAPPOLA: domanda «ce ne sono altri?», il testimone probabilmente non esiste",
+   "predicato calcolabile",
+   "enunciato corto (44)",
    "nessun nome celebre"
   ],
-  "docstring": "$n=1$ and $32$ are two fixed points. Are there any others?"
+  "docstring": "$a(0)$, $a(1)$, $a(5)$, $a(6)$, $a(7)$ and $a(11)$ are primes. Are there any more?"
  },
  {
-  "posizione": 11,
+  "posizione": 9,
+  "punteggio": 85,
+  "problema": "OeisA109227.conjecture",
+  "modulo": "FormalConjectures.OEIS.«109227»",
+  "enunciato": "True ↔ ∃ n > 0, n ≠ 2 ∧ n ≠ 121 ∧ Nat.Prime (OeisA109227.a n)",
+  "note": [
+   "TESTIMONE PICCOLO: un oggetto concreto dimostra",
+   "TRAPPOLA: domanda «ce ne sono altri?», il testimone probabilmente non esiste",
+   "predicato calcolabile",
+   "enunciato corto (61)",
+   "nessun nome celebre"
+  ],
+  "docstring": "Conjecture: $a(2)$ and $a(121)$ are primes. Are there any more?"
+ },
+ {
+  "posizione": 10,
   "punteggio": 65,
   "problema": "OeisA34693.exists_k",
   "modulo": "FormalConjectures.OEIS.«34693»",
@@ -153,7 +144,7 @@
   "docstring": "Conjecture: for every $n > 1$ there exists a number $k < n$ such that $nk + 1$ is a prime."
  },
  {
-  "posizione": 12,
+  "posizione": 11,
   "punteggio": 65,
   "problema": "OeisA108864.conjecture",
   "modulo": "FormalConjectures.OEIS.«108864»",
@@ -167,7 +158,7 @@
   "docstring": "Is $1155$ the last odd number in this sequence? ($1155$ is the $59$th term starting from $1$, corresponding to $a(58) = 1155$)."
  },
  {
-  "posizione": 13,
+  "posizione": 12,
   "punteggio": 65,
   "problema": "OeisA110566.conjecture",
   "modulo": "FormalConjectures.OEIS.«110566»",
@@ -181,7 +172,7 @@
   "docstring": "It is conjectured that every odd number occurs in this sequence."
  },
  {
-  "posizione": 14,
+  "posizione": 13,
   "punteggio": 65,
   "problema": "OeisA945.every_prime_occurs",
   "modulo": "FormalConjectures.OEIS.«945»",
@@ -195,7 +186,7 @@
   "docstring": "\"Does the sequence ... contain every prime? ... [It] was considered by Guy and Nowakowski and later by Shanks, [Wagstaff93] computed the sequence through the 43rd term. The computational problem inherent in continuing the sequence further is the enormous size of the numbers that must be factored. Already the number $a(1) \\cdots a(43) + 1$ has 180 digits.\" - [CrandallPomerance01] See also [Mullin63]."
  },
  {
-  "posizione": 15,
+  "posizione": 14,
   "punteggio": 65,
   "problema": "OeisA38552.odd_of_isA038552",
   "modulo": "FormalConjectures.OEIS.«38552»",
@@ -209,7 +200,7 @@
   "docstring": "For even class number $n$, the $n$-th term of A038552 is odd. The source states this as: the largest odd squarefree $k$ with $h(-k) = n$ is greater than the largest even one."
  },
  {
-  "posizione": 16,
+  "posizione": 15,
   "punteggio": 65,
   "problema": "OeisA114137.conjecture2",
   "modulo": "FormalConjectures.OEIS.«114137»",
@@ -223,7 +214,7 @@
   "docstring": "Does every odd number occur?"
  },
  {
-  "posizione": 17,
+  "posizione": 16,
   "punteggio": 65,
   "problema": "OeisA5153.conjecture",
   "modulo": "FormalConjectures.OEIS.«5153»",
@@ -237,7 +228,7 @@
   "docstring": "Conjecture: every odd number, beginning with 3, is the sum of a prime number and a practical number. - Hal M. Switkay, Jan 28 2023"
  },
  {
-  "posizione": 18,
+  "posizione": 17,
   "punteggio": 65,
   "problema": "OeisA167604.conjecture",
   "modulo": "FormalConjectures.OEIS.«167604»",
@@ -251,7 +242,7 @@
   "docstring": "Does Chua's sequence contain every prime?"
  },
  {
-  "posizione": 19,
+  "posizione": 18,
   "punteggio": 65,
   "problema": "OeisA1146.conjecture",
   "modulo": "FormalConjectures.OEIS.«1146»",
@@ -265,7 +256,77 @@
   "docstring": "I conjecture that { $a(n)$ ; $n>1$ } are the numbers such that $n^4-1$ divides $2^n-1$, intersection of A247219 and A247165. - M. F. Hasler, Jul 25 2015 This formalizes the reverse direction."
  },
  {
+  "posizione": 19,
+  "punteggio": 60,
+  "problema": "OeisA108081.count_words_in_x_is_a_shifted",
+  "modulo": "FormalConjectures.OEIS.«108081»",
+  "enunciato": "∀ n ≥ 1, (OeisA108081.xN n).ncard = OeisA108081.a (n - 1)",
+  "note": [
+   "forma del testimone non riconosciuta",
+   "IDENTITA': forma su cui il modello costruisce, non solo calcola",
+   "enunciato corto (57)",
+   "nessun nome celebre"
+  ],
+  "docstring": "\"The number of words of length $n$ for $n \\le 12$ is given by $a(n+1)$. Is this always true?\" Formalized as $|X_n| = a(n-1)$ for $n \\ge 1$, because the sequence values $a(0)=1, a(1)=2, a(2)=7$ match the examples given for word lengths $n=1, 2, 3$ respectively."
+ },
+ {
   "posizione": 20,
+  "punteggio": 60,
+  "problema": "OeisA109074.conjecture",
+  "modulo": "FormalConjectures.OEIS.«109074»",
+  "enunciato": "∀ (n : ℕ), OeisA109074.frac (n + 1) = ↑(OeisA109074.b (n + 1)) / ↑(OeisA109074.b n)",
+  "note": [
+   "forma del testimone non riconosciuta",
+   "IDENTITA': forma su cui il modello costruisce, non solo calcola",
+   "enunciato corto (83)",
+   "nessun nome celebre"
+  ],
+  "docstring": "It is conjectured that $\\binom{6n-2}{2n} / \\left(2 \\binom{4n-1}{2n}\\right) = A005156(n+1)/A005156(n)$, where the OEIS comment reads A005156 as 1-based; with the 0-indexed `b` this is `frac (n + 1) = b (n + 1) / b n`."
+ },
+ {
+  "posizione": 21,
+  "punteggio": 60,
+  "problema": "OeisA109905.conjecture",
+  "modulo": "FormalConjectures.OEIS.«109905»",
+  "enunciato": "True ↔ {n | n > 0 ∧ OeisA109905.a n = 0} = {1, 6, 30, 54}",
+  "note": [
+   "forma del testimone non riconosciuta",
+   "IDENTITA': forma su cui il modello costruisce, non solo calcola",
+   "enunciato corto (57)",
+   "nessun nome celebre"
+  ],
+  "docstring": "$a(n) = 0$ for $n = 1$, $6$, $30$ and $54$. Are there any others?"
+ },
+ {
+  "posizione": 22,
+  "punteggio": 60,
+  "problema": "OeisA38552.mod_24_of_isA038552",
+  "modulo": "FormalConjectures.OEIS.«38552»",
+  "enunciato": "∀ {n k : ℕ}, OeisA38552.IsA038552 n k → k % 24 = 19",
+  "note": [
+   "forma del testimone non riconosciuta",
+   "IDENTITA': forma su cui il modello costruisce, non solo calcola",
+   "enunciato corto (51)",
+   "nessun nome celebre"
+  ],
+  "docstring": "All terms of A038552 are congruent to $19 \\pmod{24}$."
+ },
+ {
+  "posizione": 23,
+  "punteggio": 60,
+  "problema": "OeisA63880.unique_primitive_108",
+  "modulo": "FormalConjectures.OEIS.«63880»",
+  "enunciato": "∀ {n : ℕ}, OeisA63880.IsPrimitiveTerm n → n = 108",
+  "note": [
+   "forma del testimone non riconosciuta",
+   "IDENTITA': forma su cui il modello costruisce, non solo calcola",
+   "enunciato corto (49)",
+   "nessun nome celebre"
+  ],
+  "docstring": "$108$ is the only primitive term."
+ },
+ {
+  "posizione": 24,
   "punteggio": 55,
   "problema": "OeisA357513.general_supercongruence",
   "modulo": "FormalConjectures.OEIS.«357513»",
@@ -279,7 +340,21 @@
   "docstring": "We conjecture that $u(p-1) == 0 (mod p^4)$ for all primes $p$, with a finite number of exceptions that depend on $m$."
  },
  {
-  "posizione": 21,
+  "posizione": 25,
+  "punteggio": 55,
+  "problema": "OeisA113010.conjecture",
+  "modulo": "FormalConjectures.OEIS.«113010»",
+  "enunciato": "True ↔ ∃ n, OeisA113010.a n = n ∧ n ≠ 1 ∧ n ≠ 32",
+  "note": [
+   "TESTIMONE PICCOLO: un oggetto concreto dimostra",
+   "TRAPPOLA: domanda «ce ne sono altri?», il testimone probabilmente non esiste",
+   "enunciato corto (48)",
+   "nessun nome celebre"
+  ],
+  "docstring": "$n=1$ and $32$ are two fixed points. Are there any others?"
+ },
+ {
+  "posizione": 26,
   "punteggio": 50,
   "problema": "OeisA239957.conjecture",
   "modulo": "FormalConjectures.OEIS.«239957»",
@@ -293,20 +368,7 @@
   "docstring": "**Zhi-Wei Sun's Conjecture (A239957)**: Every prime $p$ has a primitive root $0 < g < p$ of the form $k^2 + 1$, where $k$ is an integer."
  },
  {
-  "posizione": 22,
-  "punteggio": 35,
-  "problema": "OeisA108081.count_words_in_x_is_a_shifted",
-  "modulo": "FormalConjectures.OEIS.«108081»",
-  "enunciato": "∀ n ≥ 1, (OeisA108081.xN n).ncard = OeisA108081.a (n - 1)",
-  "note": [
-   "forma del testimone non riconosciuta",
-   "enunciato corto (57)",
-   "nessun nome celebre"
-  ],
-  "docstring": "\"The number of words of length $n$ for $n \\le 12$ is given by $a(n+1)$. Is this always true?\" Formalized as $|X_n| = a(n-1)$ for $n \\ge 1$, because the sequence values $a(0)=1, a(1)=2, a(2)=7$ match the examples given for word lengths $n=1, 2, 3$ respectively."
- },
- {
-  "posizione": 23,
+  "posizione": 27,
   "punteggio": 35,
   "problema": "OeisA103662.conjecture.variants.a_40",
   "modulo": "FormalConjectures.OEIS.«103662»",
@@ -319,7 +381,7 @@
   "docstring": "$a(40)$, if it exists, is not known. This claim is rooted in the finiteness conjecture. The most direct mathematical expression of the open problem concerning $a(40)$ is the negation of the existence of a valid base."
  },
  {
-  "posizione": 24,
+  "posizione": 28,
   "punteggio": 35,
   "problema": "OeisA114216.conjecture",
   "modulo": "FormalConjectures.OEIS.«114216»",
@@ -332,20 +394,21 @@
   "docstring": "Is $a(33900)$ the last term equal to $1$?"
  },
  {
-  "posizione": 25,
+  "posizione": 29,
   "punteggio": 35,
-  "problema": "OeisA109074.conjecture",
-  "modulo": "FormalConjectures.OEIS.«109074»",
-  "enunciato": "∀ (n : ℕ), OeisA109074.frac (n + 1) = ↑(OeisA109074.b (n + 1)) / ↑(OeisA109074.b n)",
+  "problema": "OeisA105210.conjecture_disjoint_starting_values",
+  "modulo": "FormalConjectures.OEIS.«105210»",
+  "enunciato": "∀ (j k : ℕ), j ∈ {1, 393, 412, 668, 932} → k ∈ {1, 393, 412, 668, 932} → j ≠ k → OeisA105210.sequenceSet j ∩ OeisA105210.sequenceSet k = ∅",
   "note": [
    "forma del testimone non riconosciuta",
-   "enunciato corto (83)",
-   "nessun nome celebre"
+   "IDENTITA': forma su cui il modello costruisce, non solo calcola",
+   "enunciato medio (138)",
+   "ATTENZIONE: congettura con un nome"
   ],
-  "docstring": "It is conjectured that $\\binom{6n-2}{2n} / \\left(2 \\binom{4n-1}{2n}\\right) = A005156(n+1)/A005156(n)$, where the OEIS comment reads A005156 as 1-based; with the 0-indexed `b` this is `frac (n + 1) = b (n + 1) / b n`."
+  "docstring": "Cormier and Selfridge found 5 starting values for which the sequences appear to not merge. The sequences were checked up to 10^8."
  },
  {
-  "posizione": 26,
+  "posizione": 30,
   "punteggio": 35,
   "problema": "OeisA231201.conjecture",
   "modulo": "FormalConjectures.OEIS.«231201»",
@@ -358,20 +421,7 @@
   "docstring": "The conjecture for sequence A231201: for any $n > 1$, there exist $x, y > 0$ such that $n = x + y$ and $2^x + y$ is prime."
  },
  {
-  "posizione": 27,
-  "punteggio": 35,
-  "problema": "OeisA109905.conjecture",
-  "modulo": "FormalConjectures.OEIS.«109905»",
-  "enunciato": "True ↔ {n | n > 0 ∧ OeisA109905.a n = 0} = {1, 6, 30, 54}",
-  "note": [
-   "forma del testimone non riconosciuta",
-   "enunciato corto (57)",
-   "nessun nome celebre"
-  ],
-  "docstring": "$a(n) = 0$ for $n = 1$, $6$, $30$ and $54$. Are there any others?"
- },
- {
-  "posizione": 28,
+  "posizione": 31,
   "punteggio": 35,
   "problema": "OeisA109909.conjecture",
   "modulo": "FormalConjectures.OEIS.«109909»",
@@ -384,7 +434,7 @@
   "docstring": "Conjecture: $a(n) > 0$ for $n > 3$."
  },
  {
-  "posizione": 29,
+  "posizione": 32,
   "punteggio": 35,
   "problema": "OeisA37274.home_prime_conjecture",
   "modulo": "FormalConjectures.OEIS.«37274»",
@@ -397,7 +447,7 @@
   "docstring": "Every integer at least two reaches a home prime."
  },
  {
-  "posizione": 30,
+  "posizione": 33,
   "punteggio": 35,
   "problema": "OeisA109908.conjecture",
   "modulo": "FormalConjectures.OEIS.«109908»",
@@ -410,7 +460,7 @@
   "docstring": "Conjecture: $a(n) > 0$ for $n > 3$."
  },
  {
-  "posizione": 31,
+  "posizione": 34,
   "punteggio": 35,
   "problema": "OeisA38552.isA038552_eq_largestNegFundDisc",
   "modulo": "FormalConjectures.OEIS.«38552»",
@@ -423,20 +473,7 @@
   "docstring": "A038552 also gives the largest absolute value of negative fundamental discriminant for each class number."
  },
  {
-  "posizione": 32,
-  "punteggio": 35,
-  "problema": "OeisA38552.mod_24_of_isA038552",
-  "modulo": "FormalConjectures.OEIS.«38552»",
-  "enunciato": "∀ {n k : ℕ}, OeisA38552.IsA038552 n k → k % 24 = 19",
-  "note": [
-   "forma del testimone non riconosciuta",
-   "enunciato corto (51)",
-   "nessun nome celebre"
-  ],
-  "docstring": "All terms of A038552 are congruent to $19 \\pmod{24}$."
- },
- {
-  "posizione": 33,
+  "posizione": 35,
   "punteggio": 35,
   "problema": "OeisA104320.conjecture",
   "modulo": "FormalConjectures.OEIS.«104320»",
@@ -449,7 +486,7 @@
   "docstring": "Conjecture from N. J. A. Sloane: $a(n) > 0$ for $n > 15$."
  },
  {
-  "posizione": 34,
+  "posizione": 36,
   "punteggio": 35,
   "problema": "OeisA56777.comesFromPrimeQuadruple_of_a",
   "modulo": "FormalConjectures.OEIS.«56777»",
@@ -462,7 +499,7 @@
   "docstring": "All members of the sequence A56777 come from prime quadruples."
  },
  {
-  "posizione": 35,
+  "posizione": 37,
   "punteggio": 35,
   "problema": "OeisA109671.conjecture",
   "modulo": "FormalConjectures.OEIS.«109671»",
@@ -475,7 +512,7 @@
   "docstring": "Does the sequence contain every positive integer (cf. A169741)?"
  },
  {
-  "posizione": 36,
+  "posizione": 38,
   "punteggio": 35,
   "problema": "OeisA260194.conjecture",
   "modulo": "FormalConjectures.OEIS.«260194»",
@@ -488,20 +525,7 @@
   "docstring": "Does every positive integer occur as a difference in this sequence?"
  },
  {
-  "posizione": 37,
-  "punteggio": 35,
-  "problema": "OeisA63880.unique_primitive_108",
-  "modulo": "FormalConjectures.OEIS.«63880»",
-  "enunciato": "∀ {n : ℕ}, OeisA63880.IsPrimitiveTerm n → n = 108",
-  "note": [
-   "forma del testimone non riconosciuta",
-   "enunciato corto (49)",
-   "nessun nome celebre"
-  ],
-  "docstring": "$108$ is the only primitive term."
- },
- {
-  "posizione": 38,
+  "posizione": 39,
   "punteggio": 35,
   "problema": "OeisA101779.conjecture",
   "modulo": "FormalConjectures.OEIS.«101779»",
@@ -514,7 +538,7 @@
   "docstring": "It is conjectured k always exists."
  },
  {
-  "posizione": 39,
+  "posizione": 40,
   "punteggio": 25,
   "problema": "OeisA109845.conjecture",
   "modulo": "FormalConjectures.OEIS.«109845»",
@@ -528,7 +552,7 @@
   "docstring": "Conjecture: There are infinitely many primes in this sequence."
  },
  {
-  "posizione": 40,
+  "posizione": 41,
   "punteggio": 25,
   "problema": "OeisA110475.conjecture",
   "modulo": "FormalConjectures.OEIS.«110475»",
@@ -541,7 +565,7 @@
   "docstring": "It is conjectured that $1,2,3,4,5,6,7,9,11$ are the only positive integers which cannot be represented as the sum of two elements of indices $n$ such that $a(n) = 1$."
  },
  {
-  "posizione": 41,
+  "posizione": 42,
   "punteggio": 20,
   "problema": "OeisA281976.conjecture",
   "modulo": "FormalConjectures.OEIS.«281976»",
@@ -554,7 +578,7 @@
   "docstring": "**Zhi-Wei Sun's Conjecture (A281976)**: Any integer $n \\geq 0$ can be written as $x^2 + y^2 + z^2 + w^2$ with $x, y, z, w$ nonnegative integers and $z \\leq w$, such that both $x$ and $x + 24y$ are squares."
  },
  {
-  "posizione": 42,
+  "posizione": 43,
   "punteggio": 20,
   "problema": "OeisA110835.conjecture",
   "modulo": "FormalConjectures.OEIS.«110835»",
@@ -567,7 +591,7 @@
   "docstring": "Sierpinski's conjecture (1958) is precisely that $a(n) >= n$ for all $n$."
  },
  {
-  "posizione": 43,
+  "posizione": 44,
   "punteggio": 20,
   "problema": "OeisA103151.conjecture",
   "modulo": "FormalConjectures.OEIS.«103151»",
@@ -580,7 +604,7 @@
   "docstring": "Conjecture: all items for $n \\ge 4$ are greater than or equal to $1$. This is a stronger conjecture than the Goldbach conjecture."
  },
  {
-  "posizione": 44,
+  "posizione": 45,
   "punteggio": 20,
   "problema": "OeisA287616.conjecture",
   "modulo": "FormalConjectures.OEIS.«287616»",
@@ -593,7 +617,7 @@
   "docstring": "**Zhi-Wei Sun's Conjecture (A287616)**: Any nonnegative integer can be written as the sum of a triangular number $x(x+1)/2$, a generalized pentagonal number $y(3y+1)/2$, and a generalized heptagonal number $z(5z+1)/2$, where $x, y, z$ are nonnegative integers."
  },
  {
-  "posizione": 45,
+  "posizione": 46,
   "punteggio": 20,
   "problema": "OeisA232174.conjecture",
   "modulo": "FormalConjectures.OEIS.«232174»",
@@ -606,7 +630,21 @@
   "docstring": "**Zhi-Wei Sun's Conjecture (A232174)**: Any integer $n > 1$ can be written as $x + y$ with $x, y > 0$ such that both $x + ny$ and $x^2 + ny^2$ are prime."
  },
  {
-  "posizione": 46,
+  "posizione": 47,
+  "punteggio": 20,
+  "problema": "OeisA114137.conjecture1",
+  "modulo": "FormalConjectures.OEIS.«114137»",
+  "enunciato": "True ↔ {n | OeisA114137.a n = 1}.Infinite",
+  "note": [
+   "NESSUN testimone: affermazione di infinita'/limite",
+   "IDENTITA': forma su cui il modello costruisce, non solo calcola",
+   "enunciato corto (41)",
+   "nessun nome celebre"
+  ],
+  "docstring": "In this powers of 2 sequence, does 1 occur infinitely often?"
+ },
+ {
+  "posizione": 48,
   "punteggio": 20,
   "problema": "OeisA280831.conjecture",
   "modulo": "FormalConjectures.OEIS.«280831»",
@@ -619,20 +657,7 @@
   "docstring": "**Zhi-Wei Sun's 1680-Conjecture (A280831)**: Any nonnegative integer can be written as $x^2 + y^2 + z^2 + w^2$ with $x, y, z, w$ nonnegative integers such that $x^4 + 1680 y^3 z$ is a square."
  },
  {
-  "posizione": 47,
-  "punteggio": 10,
-  "problema": "OeisA105210.conjecture_disjoint_starting_values",
-  "modulo": "FormalConjectures.OEIS.«105210»",
-  "enunciato": "∀ (j k : ℕ), j ∈ {1, 393, 412, 668, 932} → k ∈ {1, 393, 412, 668, 932} → j ≠ k → OeisA105210.sequenceSet j ∩ OeisA105210.sequenceSet k = ∅",
-  "note": [
-   "forma del testimone non riconosciuta",
-   "enunciato medio (138)",
-   "ATTENZIONE: congettura con un nome"
-  ],
-  "docstring": "Cormier and Selfridge found 5 starting values for which the sequences appear to not merge. The sequences were checked up to 10^8."
- },
- {
-  "posizione": 48,
+  "posizione": 49,
   "punteggio": 0,
   "problema": "OeisA105020.conjecture",
   "modulo": "FormalConjectures.OEIS.«105020»",
@@ -644,7 +669,7 @@
   "docstring": "A \"Goldbach Conjecture\" for this sequence: when there are $n$ terms between consecutive odd integers $2n+1$ and $2n+3$ for $n > 0$, at least one will be the product of 2 primes (not necessarily distinct). Example: $n=3$ for consecutive odd integers $a(7) = 7$ and $a(11) = 9$ and of the 3 sequence entries $a(8) = 12$, $a(9) = 15$ and $a(10) = 16$ between them, one is the product of 2 primes $a(9) = 15=3*5$. - _Michael Hiebl_, Jul 15 2007"
  },
  {
-  "posizione": 49,
+  "posizione": 50,
   "punteggio": 0,
   "problema": "OeisA1157.conjecture",
   "modulo": "FormalConjectures.OEIS.«1157»",
@@ -656,7 +681,7 @@
   "docstring": "Conjecture: For each k = 2,3,..., all the rational numbers $\\frac{\\sigma_k(n)}{n^k} = \\sum_{d|n} \\frac{1}{d^k}$ (n = 1,2,3,...) have pairwise distinct fractional parts. - Zhi-Wei Sun, Oct 15 2015"
  },
  {
-  "posizione": 50,
+  "posizione": 51,
   "punteggio": -5,
   "problema": "OeisA81091.conjectureA81091",
   "modulo": "FormalConjectures.OEIS.«81091»",
@@ -669,7 +694,7 @@
   "docstring": "**Conjecture (A81091)**: There are infinite primes of the form $2^n + 2^i + 1$, with $0 < i < n$."
  },
  {
-  "posizione": 51,
+  "posizione": 52,
   "punteggio": -5,
   "problema": "OeisA2407.conjecture",
   "modulo": "FormalConjectures.OEIS.«2407»",
@@ -682,7 +707,7 @@
   "docstring": "This sequence is believed to be infinite."
  },
  {
-  "posizione": 52,
+  "posizione": 53,
   "punteggio": -5,
   "problema": "OeisA228828.conjecture",
   "modulo": "FormalConjectures.OEIS.«228828»",
@@ -693,19 +718,6 @@
    "nessun nome celebre"
   ],
   "docstring": "Conjecture: the sequence A228828 is infinite."
- },
- {
-  "posizione": 53,
-  "punteggio": -5,
-  "problema": "OeisA114137.conjecture1",
-  "modulo": "FormalConjectures.OEIS.«114137»",
-  "enunciato": "True ↔ {n | OeisA114137.a n = 1}.Infinite",
-  "note": [
-   "NESSUN testimone: affermazione di infinita'/limite",
-   "enunciato corto (41)",
-   "nessun nome celebre"
-  ],
-  "docstring": "In this powers of 2 sequence, does 1 occur infinitely often?"
  },
  {
   "posizione": 54,
