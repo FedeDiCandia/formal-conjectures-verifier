@@ -181,9 +181,19 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("problemi", nargs="+")
     ap.add_argument("--modello", default="claude-opus-5")
-    ap.add_argument("--effort", default="high")
+    # MISURATO l'11 settembre 2026 sullo stesso problema, con lo stesso ingresso:
+    #   effort high,   tetto 32k -> 32.000 token, TUTTI di ragionamento, zero righe
+    #   effort medium, tetto 24k -> 24.000 token, TUTTI di ragionamento, zero righe
+    #   effort low,    tetto 24k -> 20.402 token (16.353 di ragionamento),
+    #                               7.066 caratteri di matematica vera, end_turn
+    # A effort alto il modello esaurisce lo spazio pensando e non conclude. A
+    # effort basso conclude, e conclude bene: sul primo problema ha dimostrato che
+    # la congettura implica un caso del problema del totiente di Lehmer, che e'
+    # aperto, piu' cinque risultati parziali rigorosi. Il valore predefinito e'
+    # quindi `low`, e non e' un risparmio: e' l'unico che funziona.
+    ap.add_argument("--effort", default="low")
     ap.add_argument("--budget", type=float, required=True)
-    ap.add_argument("--tetto-problema", type=float, default=0.60)
+    ap.add_argument("--tetto-problema", type=float, default=1.20)
     ap.add_argument("--rapporto", default=str(RADICE / "runs" / "informale.json"))
     ap.add_argument("--registro", default=None)
     args = ap.parse_args()
@@ -212,19 +222,30 @@ def main() -> int:
         try:
             prova, _ = una_chiamata(client, args.modello, AUTORE,
                                     messaggio_autore(p, idx), budget,
-                                    args.tetto_problema * 0.6, args.effort)
+                                    args.tetto_problema * 0.7, args.effort)
             voce["prova"] = prova
             voce["fiducia"] = estrai(prova, "CONFIDENCE")
             voce["punto_debole"] = estrai(prova, "WEAKEST STEP")
             print(f"  autore:   {voce['fiducia'] or '(non dichiarata)'}")
             print(f"            punto debole: {voce['punto_debole'][:100]}")
 
-            recensione, _ = una_chiamata(
-                client, args.modello, REVISORE, messaggio_revisore(p, prova),
-                budget, args.tetto_problema - (budget.speso - speso_prima),
-                args.effort)
-            voce["recensione"] = recensione
-            voce["verdetto"] = estrai(recensione, "VERDICT")
+            # Il revisore esiste per rompere una dimostrazione rivendicata. Se
+            # l'autore dichiara di non averne una, non c'e' niente da arbitrare e
+            # la seconda chiamata e' denaro buttato: sui problemi di questo
+            # insieme la maggioranza degli esiti e' PARTIAL o NO-PROOF, quindi
+            # questa condizione e' la differenza fra dodici problemi e venti.
+            fiducia = voce["fiducia"].upper()
+            if fiducia.startswith(("PARTIAL", "NO-PROOF", "NO PROOF")):
+                voce["recensione"] = None
+                voce["verdetto"] = "(non arbitrato: l'autore non rivendica una prova)"
+                print("  revisore: salta, l'autore non rivendica una prova")
+            else:
+                recensione, _ = una_chiamata(
+                    client, args.modello, REVISORE, messaggio_revisore(p, prova),
+                    budget, args.tetto_problema - (budget.speso - speso_prima),
+                    args.effort)
+                voce["recensione"] = recensione
+                voce["verdetto"] = estrai(recensione, "VERDICT")
             voce["difetto"] = estrai(recensione, "THE PROBLEM")
             print(f"  revisore: {voce['verdetto'] or '(non dichiarato)'}")
             print(f"            difetto: {voce['difetto'][:100]}")

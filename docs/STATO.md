@@ -1,6 +1,80 @@
 # Stato del progetto
 
-*Aggiornato: 11 settembre 2026, sera.*
+*Aggiornato: 11 settembre 2026, notte.*
+
+---
+
+## LA SVOLTA DELL'11 SETTEMBRE: si cambia strada
+
+Il piano completo è in [docs/09-piano.md](09-piano.md). In breve, e questo è quello
+che conta per capire tutto il resto del documento:
+
+**Non proviamo più a dimostrare teoremi. Proviamo a esibire oggetti.**
+
+La diagnosi che ha portato al cambio: in 139 chiamate su dieci problemi aperti
+l'agente ha consegnato al verificatore **due** candidati. Non fallisce nel
+dimostrare — **non arriva a provarci**. E la ragione non è il budget (il controllo
+di spesa non è mai scattato: tutti si sono fermati da soli al 6–32% del tetto), non
+sono le istruzioni, non è il modello. È che **una dimostrazione formale è
+indivisibile**: 250 righe che non compilano valgono zero, e un modello competente
+che sa di non poter finire sceglie di non iniziare.
+
+La nuova strada è **divisibile**: migliorare un limite inferiore pubblicato in
+combinatoria estremale. Ogni passo si misura, la verifica è un programma di venti
+righe su aritmetica intera, il calcolo è gratis, i bersagli sono centinaia.
+
+**Va tenuto presente che «risolvere» qui significa un'altra cosa** — un numero che
+cambia in una tabella, non una congettura chiusa. La differenza è scritta nella
+[sezione 0 del piano](09-piano.md#0-che-cosa-vuol-dire-risolvere-per-la-strada-a),
+e va letta prima di chiamare «risultato» qualunque cosa.
+
+### Dove siamo, in numeri misurati
+
+**Fase 1 — riproduzione dei record noti. Superata, in una sessione invece di due
+settimane.** Su A(n,d,w), codici binari a peso costante, tabelle di Brouwer:
+
+| prova | esito |
+|---|---|
+| codici record pubblicati verificati esattamente | **331 su 361** |
+| ottimi **noti** raggiunti dal nostro motore partendo da zero | **23 su 26** |
+| ottimi noti **non** superati (prova di falsificazione) | **26 su 26** |
+| limiti inferiori pubblicati pareggiati, 3000 iterazioni per cella | **78 su 119** |
+| limiti superati | **0** |
+
+Delle tre prove la più importante è la terza: **il motore non ha mai rivendicato
+più di un valore dimostrato ottimo.** È quella che rende credibili le altre.
+
+**Fase 3 — il primo tentativo di superare un limite. In corso.** 34 celle con
+divario aperto (da A(27,8,5), fra 31 e 32, a celle con divari di decine), attaccate
+su otto processi. Le prime sei sono finite **sotto il pareggio** — la più vicina,
+A(17,6,6), a **una sola violazione** dal limite pubblicato di 113. Serve il lavoro
+vero: 30.000 iterazioni sono minuti, non notti.
+
+**Fase D — informale, senza Lean. Ha risposto, e in un modo che non avevo
+previsto.** Il dettaglio è nel piano; il fatto misurato è che a effort `high` e
+`medium` il modello **esaurisce tutto lo spazio ragionando e non scrive niente**
+(32.000 e 24.000 token, $0,81 e $0,61 per zero righe), mentre a effort **`low`**
+scrive matematica vera: sul primo problema ha dimostrato che la congettura
+**implica un caso del problema del totiente di Lehmer**, che è aperto, più cinque
+risultati parziali rigorosi — e ha dichiarato onestamente di non poterla
+dimostrare.
+
+Quest'ultima cosa è la spiegazione più pulita del «due candidati su 139 chiamate»
+che abbiamo trovato: **l'agente non consegnava niente perché non c'era niente da
+consegnare.** Quei problemi sono aperti perché si riducono ad altri problemi
+aperti.
+
+### Che cosa di questo repository serve ancora
+
+| serve | non serve più per la strada A |
+|---|---|
+| `ricerca/` (verificatore esatto dei codici, tabelle, orbite, due motori) | il verificatore Lean + comparator, la sandbox, l'impronta dell'archivio |
+| l'infrastruttura delle ricerche lunghe con checkpoint | l'indice dei 5271 teoremi, la selezione dei 54, le sfide negate |
+| `agent/costi.py` e il registro riga per riga | la sonda degli artefatti |
+| **il protocollo dei ritrovamenti e i test dei falsi positivi** | la scala, i giri, i tetti |
+
+I pezzi della colonna destra restano compilati e funzionanti: sono in archivio, non
+buttati. Tornano utili se si riprende una strada che passa per Lean.
 
 ---
 

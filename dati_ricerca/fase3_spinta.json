@@ -1,0 +1,79 @@
+[
+ {
+  "cella": "A(18,6,5)",
+  "pubblicato": 69,
+  "superiore": 72,
+  "fonte": "ACL",
+  "candidate": 8568,
+  "pareggiato": false,
+  "violazioni_al_pareggio": 17,
+  "superato": false,
+  "secondi": 48.9
+ },
+ {
+  "cella": "A(19,6,5)",
+  "pubblicato": 76,
+  "superiore": 83,
+  "fonte": "BSSS",
+  "candidate": 11628,
+  "pareggiato": false,
+  "violazioni_al_pareggio": 8,
+  "superato": false,
+  "secondi": 73.9
+ },
+ {
+  "cella": "A(20,6,5)",
+  "pubblicato": 90,
+  "superiore": 100,
+  "fonte": "BSSS",
+  "candidate": 15504,
+  "pareggiato": false,
+  "violazioni_al_pareggio": 11,
+  "superato": false,
+  "secondi": 112.3
+ },
+ {
+  "cella": "A(17,6,6)",
+  "pubblicato": 113,
+  "superiore": 124,
+  "fonte": "Ch\u00d6",
+  "candidate": 12376,
+  "pareggiato": false,
+  "violazioni_al_pareggio": 1,
+  "superato": false,
+  "secondi": 110.3
+ },
+ {
+  "cella": "A(16,6,7)",
+  "pubblicato": 109,
+  "superiore": 122,
+  "fonte": "G",
+  "candidate": 11440,
+  "pareggiato": false,
+  "violazioni_al_pareggio": 68,
+  "superato": false,
+  "secondi": 99.2
+ },
+ {
+  "cella": "A(18,8,8)",
+  "pubblicato": 46,
+  "superiore": 49,
+  "fonte": "\u00d6",
+  "candidate": 43758,
+  "pareggiato": false,
+  "violazioni_al_pareggio": 11,
+  "superato": false,
+  "secondi": 174.1
+ },
+ {
+  "cella": "A(18,8,9)",
+  "pubblicato": 48,
+  "superiore": 58,
+  "fonte": "sb\u00d6",
+  "candidate": 48620,
+  "pareggiato": false,
+  "violazioni_al_pareggio": 14,
+  "superato": false,
+  "secondi": 204.6
+ }
+]
