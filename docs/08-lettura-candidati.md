@@ -120,8 +120,12 @@ una o due iterazioni).
 senza un'informazione che sta arrivando gratis.** Due cose sono in corso:
 
 1. la **sonda degli artefatti** su tutti i 1188 candidati (~2 ore). Se segnala
-   un enunciato che cede a una tattica banale, quello diventa il bersaglio: è
-   un risultato quasi certo invece di una scommessa al 10–20%;
+   un enunciato che cede a una tattica banale, quello **non** diventa il
+   bersaglio: diventa un **sospetto di formalizzazione sbagliata**, da
+   confrontare riga per riga con la fonte e da segnalare agli autori. Spendere
+   perché un modello «risolva» un enunciato vacuo è comprare la conferma di un
+   difetto. La regola sta in
+   [docs/04](04-protocollo-ritrovamenti.md#il-caso-più-frequente-e-come-si-riconosce-subito);
 2. la **ricerca di Murthy** fino a 10⁹ (~2 ore). Se trova un controesempio, il
    tentativo da $50 cambia natura: non «risolvi questa congettura» ma
    «formalizza questa confutazione», che è il lavoro in cui l'agente riesce.

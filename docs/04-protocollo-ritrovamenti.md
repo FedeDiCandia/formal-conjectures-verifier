@@ -15,6 +15,52 @@ prima le ipotesi più probabili.
 
 ---
 
+## Il caso più frequente, e come si riconosce subito
+
+**Un enunciato aperto che cade a una tattica banale non è un problema risolto.
+È, quasi con certezza, una formalizzazione sbagliata.**
+
+Per «tattica banale» si intende: `simp`, `decide`, `norm_num`, `omega`,
+`trivial`, `aesop`, o un testimone come `exact ⟨0, by simp⟩`. Se una di queste
+chiude un problema su cui i matematici si sono fermati, l'ipotesi ragionevole
+non è che la tattica sia geniale: è che l'enunciato Lean dica qualcosa di più
+debole, di vacuo, o di diverso rispetto alla fonte.
+
+Non è una supposizione prudente: è documentato nei risultati pubblici del
+benchmark OEIS Open di Epoch AI. Fra le loro soluzioni **accettate dal
+verificatore**:
+
+- `A211420_general_divisibility_conjecture`, dimostrato con
+  `exact ⟨0, fun n => by simp⟩`. L'enunciato diceva «esiste $C$ tale che per
+  ogni $n$, ... divide $C \cdot a(n)$»: con $C = 0$ è vero per niente, perché
+  tutto divide zero. La congettura matematica non era quella;
+- `A262403_conjecture_ii_distinctness`, confutato perché
+  $\pi(T_0) = \pi(T_1) = 0$: l'iniettività cade su due casi al bordo.
+
+Entrambe sono verificate, corrette, e **non sono risultati matematici**: sono
+difetti di traduzione dall'italiano (o dall'inglese) al Lean.
+
+### Che cosa fare, allora
+
+Un enunciato di questo tipo **non diventa il bersaglio di un tentativo
+profondo**. Spendere denaro perché un modello «risolva» un enunciato vacuo è
+comprare una conferma di un difetto. Invece:
+
+1. si classifica come **sospetto**, non come ritrovamento;
+2. si confronta l'enunciato Lean **riga per riga** con la fonte originale — il
+   passo 2 di questo protocollo, che qui diventa il passo *primo*;
+3. si prepara la **segnalazione per gli autori dell'archivio**, con: il nome del
+   teorema, la tattica che lo chiude, il testo della fonte, e in che punto
+   preciso la traduzione si discosta (un quantificatore, un `C = 0` ammesso, la
+   sottrazione troncata di ℕ, un `sInf` su insieme vuoto che vale 0, un caso al
+   bordo $n = 0$ o $n = 1$);
+4. la segnalazione **non viene pubblicata** senza approvazione: resta una bozza.
+
+Il valore di questi casi è reale ma è di un'altra specie: rende l'archivio più
+solido, e va raccontato per quello che è.
+
+---
+
 ## Passo 1 — Ricontrollo con un programma indipendente
 
 **Cosa fare:** riscrivere il controllo da zero, senza guardare il programma che
@@ -101,6 +147,7 @@ caso è **CANDIDATO NUOVO**.
 
 | esito | significato | cosa farne |
 |---|---|---|
+| **SOSPETTO** | una tattica banale chiude l'enunciato, o lo chiude la sua negazione su un caso al bordo | non è un ritrovamento: si va al passo 2 e si prepara la segnalazione. **Non si spende su questi enunciati** |
 | **FORMALIZZAZIONE ERRATA** | l'enunciato Lean non cattura il problema originale | segnalare all'archivio; non è matematica nuova |
 | **GIÀ NOTO** | il fatto è in letteratura | annotarlo; conferma che il sistema funziona |
 | **CANDIDATO NUOVO** | ha superato tutti e quattro i passi | **non è ancora un risultato.** Serve la lettura di un matematico competente nell'area. Il verificatore garantisce che la dimostrazione Lean è corretta, non che l'enunciato Lean sia la congettura |
