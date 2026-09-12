@@ -82,3 +82,22 @@ def test_rapido_su_un_codice_grande_pubblicato():
         pytest.skip("codice pubblicato non scaricato")
     parole, n, _ = espandi(CODICE)
     assert verifica_veloce(parole, n=24, d=6, w=12).ok
+
+
+def test_le_due_semplificazioni_esatte_non_cambiano_il_risultato():
+    """Le scorciatoie del rappresentante devono dare le stesse orbite del calcolo
+    ingenuo su tutte le coppie. Se sbagliassero, la ricerca produrrebbe codici
+    non validi senza accorgersene."""
+    from itertools import combinations
+    from cerca import orbite_e_compatibilita
+    from gruppi import ciclico
+    for n, d, w in ((9, 4, 3), (10, 4, 4), (11, 6, 4), (12, 6, 5)):
+        G = ciclico(n)
+        orbite, pesi, vicini = orbite_e_compatibilita(n, d, w, G)
+        for o in orbite:      # ogni orbita tenuta e' valida a tutte le coppie
+            assert all((a ^ b).bit_count() >= d for a, b in combinations(o, 2))
+        for i, o in enumerate(orbite):
+            for j in vicini[i]:
+                assert all((a ^ b).bit_count() >= d
+                           for a in o for b in orbite[j]), (n, d, w, i, j)
+        assert pesi == [len(o) for o in orbite]

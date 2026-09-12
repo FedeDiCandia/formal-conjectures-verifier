@@ -373,6 +373,113 @@ bottiglia è Lean o è la matematica? Se la risposta è «Lean», la strada C di
 molto più attraente; se è «la matematica», tutte le strade che passano per una
 dimostrazione si chiudono e resta solo A.
 
+### Fase 1: quello che è **misurato**, dopo la prima sessione
+
+Aggiornato l'11 settembre 2026, la sera dello stesso giorno in cui il piano è
+stato approvato. Il punto di verifica della fase 1 era: *«se in due settimane non
+riproduciamo i record di almeno 5 quantità su 8, la strada è chiusa».* Ecco i
+numeri, tutti su A(n,d,w), la prima famiglia della lista.
+
+**Passo zero — sappiamo leggere e controllare i record?**
+
+| | |
+|---|---|
+| codici espliciti pubblicati nelle tabelle | 361 |
+| **confermati esattamente** (dimensione e validità identiche alla tabella) | **331** |
+| non letti (varianti di formato ancora da gestire) | 25 |
+| non validi come li leggiamo noi (quasi certamente formato) | 3 |
+| discordi | 2 |
+
+Per farlo è stato necessario dedurre tre convenzioni che il sito **non documenta**:
+la posizione 0 è il carattere più a destra; nei formati ciclici i blocchi si
+contano da sinistra nella stringa; un resto più corto dell'ultimo blocco è fatto di
+posizioni ferme. Ognuna è stata trovata perché la convenzione sbagliata produceva
+un codice **non valido** — cioè il verificatore ha fatto il suo lavoro tre volte.
+
+**Il metodo, imparato leggendo la fonte.** I record non sono pubblicati come
+elenchi di parole: sono **un gruppo di permutazioni più poche parole seme**. Un
+codice di 5558 parole di lunghezza 24 sta in venticinque righe: gruppo di ordine
+504, 19 semi. Non è solo un formato compatto, è **il metodo con cui questi record
+sono stati trovati** — non si cercano 5558 parole, si cerca un gruppo adatto. È
+l'informazione più utile raccolta finora sulla strada A, e costa zero.
+
+**Passo uno — il nostro motore, da zero.** Due motori, perché il primo ha un limite
+di principio.
+
+*Motore a orbite* (cerca un codice invariante sotto un gruppo): elegante e veloce,
+ma su A(21,10,9) le orbite sotto Z₂₁ hanno taglia 7 o 21 e nessuna somma di 7 e 21
+fa 27, che è il limite pubblicato. **Nessuna quantità di ricerca può arrivarci per
+quella strada:** quel record non è invariante sotto quel gruppo.
+
+*Motore a ricerca locale* (tabu search su scambi di parole, come i lavori recenti
+delle tabelle): non assume niente. Risultati, con **3000 iterazioni per cella,
+pochi secondi ciascuna**:
+
+| prova | esito |
+|---|---|
+| raggiunge gli ottimi **noti** (26 celle con valore esatto) | **23 su 26** |
+| **non** supera un ottimo noto — prova di falsificazione | **26 su 26** |
+| pareggia il limite inferiore pubblicato (119 celle aperte) | **78 pareggiati, 41 sotto** |
+| supera un limite pubblicato | **0** |
+
+**Il punto di verifica è superato largamente, e in una sessione invece di due
+settimane.** Ma va detto con precisione che cosa significa e che cosa no:
+
+- **Significa** che l'infrastruttura c'è, che il verificatore è esatto e
+  indipendente, che il motore è calibrato su ottimi noti, e — la cosa che conta
+  più di tutte — che **non ha mai rivendicato più di un valore dimostrato ottimo**.
+  Delle tre prove, la seconda è quella che rende credibili le altre.
+- **Non significa** che siamo vicini a un record. Zero limiti superati, e i 41
+  «sotto» sono le celle dove servirebbe il lavoro vero: 3000 iterazioni sono
+  secondi, non notti. La fase 3 è precisamente questo, e il punto di verifica
+  della fase 3 resta quello scritto: **dopo un mese, se non abbiamo pareggiato un
+  record in un bersaglio scelto, si smette.**
+
+### Fase D: la risposta, arrivata prima del previsto e a $2
+
+La fase D doveva rispondere a una domanda: **il collo di bottiglia è Lean o è la
+matematica?** Ha risposto subito, in un modo che non avevo previsto.
+
+Misurato su `OeisA108569.conjecture` (dimostrare che una certa successione OEIS ha
+tutti i termini pari), con il problema e tutte le sue definizioni in ingresso, e
+**nessun Lean di mezzo**:
+
+| configurazione | token in uscita | di cui ragionamento | risposta | costo |
+|---|---|---|---|---|
+| effort `high`, tetto 32k | 32.000 | **32.000** | **nessuna** | $0,81 |
+| effort `medium`, tetto 24k | 24.000 | **24.000** | **nessuna** | $0,61 |
+
+Il modello **esaurisce tutto lo spazio pensando e non scrive niente**. Non è un
+caso limite: è successo a tutti e due gli sforzi provati, e nei primi due problemi
+del giro vero — dove il revisore severo si è ritrovato a recensire una pagina
+bianca, e ha giustamente scritto «la dimostrazione rivendicata è vuota».
+
+Due conseguenze, di peso diverso.
+
+1. **Un difetto nostro, corretto.** Lo script pagava e registrava un esito senza
+   accorgersi che la risposta era vuota. Ora si ferma con il motivo esatto
+   (`stop_reason`, token di ragionamento, tetto usato). Pagare e non ricevere
+   nulla non è un esito ammissibile. Costo dell'errore: $0,73.
+2. **Un fatto sul compito, non sullo strumento.** Il tentativo di forzare un
+   bilancio di ragionamento fisso è impossibile su questo modello — l'API risponde
+   che `thinking.type.enabled` non è supportato e che si deve usare `adaptive` con
+   `effort`. Quindi l'unica leva è l'effort, e a due livelli su tre il modello non
+   conclude.
+
+**La stima di costo della fase D era sbagliata di circa sei volte.** Avevo scritto
+$0,37 per problema; il solo autore costa $0,61–0,81 *e può non produrre nulla*. Su
+venti problemi non sono $7,4 ma $25–50, senza garanzia di una riga di output. Con
+$20 di ricarica **la fase D come progettata non si fa**: va ridotta a pochi
+problemi con un tetto alto, oppure abbandonata.
+
+E c'è una lettura più severa, che va detta perché è quella che conta: **su un
+problema aperto, togliendo Lean di mezzo, il modello ragiona per trentaduemila
+token e non arriva a una conclusione da scrivere.** È esattamente la diagnosi della
+[sezione 1](#1-diagnosi-perché-non-ci-siamo-riusciti) vista da un'altra parte — non
+fallisce nel formalizzare, non arriva a una tesi. Se il prossimo test a effort
+basso non produce una dimostrazione leggibile, la risposta alla domanda della fase
+D è **il collo di bottiglia è la matematica**, e va scritta così.
+
 ### Se A fallisce
 
 Nell'ordine: **B** (bbchallenge, gratis, richiede di uscire dal silenzio), poi

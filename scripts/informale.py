@@ -155,6 +155,18 @@ def una_chiamata(client, modello, sistema, testo, budget, tetto, effort,
     budget.registra(risposta.usage, "informale")
     testo_uscita = "\n".join(b.text for b in risposta.content
                              if b.type == "text").strip()
+    if not testo_uscita:
+        # MISURATO l'11 settembre 2026: con effort `high` su questi problemi il
+        # modello ha speso 32.000 token di ragionamento senza scrivere una riga
+        # di risposta, per $0,81 di niente, e il revisore ha poi recensito una
+        # pagina bianca. Pagare e non ricevere nulla non e' un esito ammissibile:
+        # qui si ferma, con il motivo esatto.
+        raise LimiteSpesaSuperato(
+            f"risposta vuota: stop_reason={risposta.stop_reason}, "
+            f"{risposta.usage.output_tokens:,} token in uscita di cui "
+            f"{getattr(risposta.usage.output_tokens_details, 'thinking_tokens', '?')} "
+            f"di ragionamento. Il tetto di max_tokens era {disponibile:,}: "
+            f"serve piu' spazio oppure un effort piu' basso.")
     return testo_uscita, risposta.usage
 
 
