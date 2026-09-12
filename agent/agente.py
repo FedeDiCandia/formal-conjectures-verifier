@@ -397,6 +397,36 @@ def compatta_conversazione(messaggi: list, *, intatti: int = MESSAGGI_INTATTI,
 # Il ciclo
 # ---------------------------------------------------------------------------
 
+class _Doppio:
+    """Scrive su due posti insieme: lo schermo e un file.
+
+    Serve perche' un giro lanciato in sottofondo non mostra niente finche' non
+    finisce, e chi guarda non ha modo di sapere se sta andando. Con il registro
+    su file si puo' fare `tail -f` e vedere le righe arrivare.
+
+    Non usa `print` reindirizzato con `>` perche' quello lo decide chi lancia:
+    il registro deve esserci sempre, anche quando l'output va in una pipe.
+    """
+
+    def __init__(self, flusso, percorso: Path):
+        self.flusso = flusso
+        percorso.parent.mkdir(parents=True, exist_ok=True)
+        self.file = open(percorso, "a", encoding="utf-8", buffering=1)  # riga per riga
+
+    def write(self, testo):
+        self.flusso.write(testo)
+        self.file.write(testo)
+        return len(testo)
+
+    def flush(self):
+        self.flusso.flush()
+        self.file.flush()
+
+    def isatty(self):
+        return getattr(self.flusso, "isatty", lambda: False)()
+
+
+
 def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
             budget: Budget, tetto_problema: float, max_iterazioni: int = 30,
             effort: str = "high", timeout_lean: int | None = None,
@@ -631,8 +661,20 @@ def main() -> int:
     ap.add_argument("--effort", default="high", choices=["low", "medium", "high", "xhigh", "max"])
     ap.add_argument("--timeout-lean", type=int, default=None)
     ap.add_argument("--rapporto", default=None, help="dove salvare il resoconto JSON")
+    ap.add_argument("--registro", default=None,
+                    help="dove scrivere il registro riga per riga (predefinito: "
+                         "runs/lavori/agente-<data>.log). Serve per seguire il "
+                         "lavoro con `tail -f` mentre gira.")
     ap.add_argument("--silenzioso", action="store_true")
     args = ap.parse_args()
+
+    # --- il registro, prima di qualunque stampa
+    percorso_registro = Path(args.registro) if args.registro else (
+        config_verificatore.ROOT / "runs" / "lavori" /
+        f"agente-{time.strftime('%Y%m%d-%H%M%S')}.log")
+    sys.stdout = _Doppio(sys.stdout, percorso_registro)
+    print(f"Registro: {percorso_registro}")
+    print(f"  da un altro terminale:  tail -f {percorso_registro}")
 
     carica_env()
 

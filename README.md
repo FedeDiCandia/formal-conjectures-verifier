@@ -83,7 +83,7 @@ Piu' file insieme, al massimo N processi Lean in parallelo:
 | `stima` | dice quanto costerebbe e quanto durerebbe. **Non spende e non lancia niente.** |
 | `lancia` | avvia in background. Chiede conferma prima di spendere crediti e usa `caffeinate`, così un lavoro di otto ore non si interrompe quando il computer va in sospensione. |
 | `stato` | elenco dei lavori, con quelli attivi in cima e le ultime righe di log. |
-| `guarda` | **che cosa sta facendo l'agente adesso**: da quanto gira, su quale problema è arrivato, se Lean sta verificando in questo istante, e l'ultimo programma Python che il modello ha scritto da sé. Funziona anche quando il lavoro è stato lanciato senza un log da seguire, perché guarda le tracce sul disco invece dell'output. |
+| `guarda [--segui]` | **che cosa sta facendo l'agente adesso**: da quanto gira, su quale problema è arrivato, se Lean sta verificando in questo istante, e l'ultimo programma Python che il modello ha scritto da sé. Funziona anche quando il lavoro è stato lanciato senza un log da seguire, perché guarda le tracce sul disco invece dell'output. Con `--segui` si aggiorna ogni cinque secondi. |
 | `segui` | mostra il log mentre scorre. `Ctrl-C` smette di guardare, **il lavoro continua**. |
 | `ferma` | interrompe con garbo: le ricerche salvano il checkpoint prima di chiudere. |
 | `riprendi` | riparte dall'ultimo checkpoint, non da capo. |
@@ -91,6 +91,20 @@ Piu' file insieme, al massimo N processi Lean in parallelo:
 I lavori disponibili sono `agente` (spende crediti), `caccia` (ricerca di
 controesempi, non spende), `snapshot` (prepara l'archivio da `main`, non spende)
 e `test`.
+
+### Guardare un lavoro mentre gira
+
+L'agente scrive **sempre** un registro riga per riga in `runs/lavori/`, e lo dice
+appena parte. Da un altro terminale:
+
+```bash
+tail -f runs/lavori/agente-*.log      # il flusso delle righe, come arrivano
+./avvia.sh guarda --segui             # la fotografia, aggiornata ogni 5 secondi
+```
+
+Il primo mostra quello che l'agente dice; il secondo mostra quello che *fa* —
+su quale problema è arrivato, se Lean sta verificando, e l'ultimo programma
+Python che ha scritto da sé. `Ctrl-C` smette di guardare: il lavoro continua.
 
 ### Far lavorare l'agente
 

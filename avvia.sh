@@ -6,7 +6,7 @@
 #   ./avvia.sh lancia    <lavoro> [opzioni]   avvia (chiede conferma)
 #   ./avvia.sh stato                          cosa sta girando
 #   ./avvia.sh segui     [nome]               guarda il log che scorre
-#   ./avvia.sh guarda                         che cosa sta facendo l'agente adesso
+#   ./avvia.sh guarda [--segui]               che cosa sta facendo l'agente adesso
 #   ./avvia.sh ferma     [nome]               interrompe
 #   ./avvia.sh riprendi  <nome>               riparte dall'ultimo checkpoint
 #
@@ -176,6 +176,18 @@ cmd_lancia() {
 # Serve quando un lavoro e' stato lanciato senza log da seguire: invece
 # dell'output, guarda le TRACCE che l'agente lascia sul disco mentre lavora.
 cmd_guarda() {
+  # con --segui diventa un flusso: la stessa fotografia ogni cinque secondi.
+  # `watch` non c'e' su macOS, quindi si fa a mano.
+  if [ "${1:-}" = "--segui" ]; then
+    echo "Aggiorno ogni 5 secondi. Ctrl-C per smettere (il lavoro continua)."
+    sleep 1
+    while true; do
+      clear
+      cmd_guarda
+      echo "  ── aggiornamento fra 5 secondi, Ctrl-C per smettere ──"
+      sleep 5
+    done
+  fi
   echo "════════════════════════════════════════════════════════════════"
   echo " CHE COSA STA FACENDO L'AGENTE"
   echo "════════════════════════════════════════════════════════════════"
@@ -335,7 +347,7 @@ case "${1:-}" in
   stima)    shift; cmd_stima "$@" ;;
   lancia)   shift; cmd_lancia "$@" ;;
   stato)    shift; cmd_stato ;;
-  guarda)   shift; cmd_guarda ;;
+  guarda)   shift; cmd_guarda "$@" ;;
   segui)    shift; cmd_segui "$@" ;;
   ferma)    shift; cmd_ferma "$@" ;;
   riprendi) shift; cmd_riprendi "$@" ;;
