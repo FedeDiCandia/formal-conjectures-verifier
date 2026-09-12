@@ -435,6 +435,82 @@ settimane.** Ma va detto con precisione che cosa significa e che cosa no:
   della fase 3 resta quello scritto: **dopo un mese, se non abbiamo pareggiato un
   record in un bersaglio scelto, si smette.**
 
+### Che cosa serviva per l'ultimo passo: non più iterazioni, un'altra formulazione
+
+*Scritto il 12 settembre 2026, dopo aver portato tre celle a una parola dal limite e
+non essere riusciti a coprirla con la ricerca locale.*
+
+La domanda era: **tecnicamente, cosa manca per l'ultimo passo?** La risposta non è
+«più mosse». È che una ricerca locale, per costruzione, non può dire altro che «ho
+trovato» o «non ho trovato» — e su una cella dove il limite pubblicato è già
+raggiunto, «non ho trovato» non vale niente.
+
+**La riformulazione.** Un codice A(n,d,w) con d pari, posto t = w − d/2, è un oggetto
+di teoria dei disegni: **ogni sottoinsieme di t+1 posizioni sta in al massimo una
+parola**. Quindi è un problema di *set packing*, ed è un ILP naturale:
+
+    variabili   z_B ∈ {0,1} per ogni w-sottoinsieme B
+    vincoli     per ogni (t+1)-sottoinsieme S:  Σ_{B ⊇ S} z_B ≤ 1
+    obiettivo   massimizzare Σ z_B
+
+Le dimensioni sono modeste — per A(18,6,5): 8.568 variabili e 816 vincoli; per
+A(17,6,6): 12.376 e 2.380 — e il guadagno non è la velocità, è **il tipo di
+risposta**:
+
+| strumento | può dire |
+|---|---|
+| ricerca locale | «ho trovato un codice di m parole» |
+| ILP esatto | «m è **il massimo**», oppure «un codice di m parole **non esiste**» |
+
+Il secondo esito è quello che chiude una cella. Su A(27,8,5), dove la tabella dice
+«fra 31 e 32», un *Infeasible* a 32 dimostra che il valore è 31 — ed è un risultato
+esattamente come trovarne uno di 32. **Un'euristica non potrà mai dare quel verso.**
+
+**Sì, conviene prendere un solutore libero — ed è già preso.** È il caso che avevo
+descritto nel piano: *un solutore su macchina singola non è una barriera, è un'arma
+che possiamo prendere anche noi.* Concretamente:
+
+| strumento | a cosa serve | come si prende |
+|---|---|---|
+| **HiGHS** (via `highspy`) | l'ILP di set packing, esatto | `pip install highspy`. **Fatto**, è quello che usiamo |
+| **cliquer** (Östergård) | clique/insieme indipendente massimo: è il programma con cui sono stati fatti molti dei record di quelle tabelle | da compilare, C, libero |
+| **KaMIS / CHILS** | insieme indipendente di peso massimo su grafi grandi; **CHILS è lo strumento del lavoro del 2026** che ha alzato A(23,6,10) e A(24,6,10) | da compilare, C++, libero |
+
+L'ordine giusto è quello: prima HiGHS sull'ILP esatto (perché dà teoremi), e i
+solutori dedicati solo per le celle dove l'ILP non chiude.
+
+**E per le celle grandi serve rompere la simmetria, con un conto e non con
+un'euristica.** L'ILP diretto su A(27,8,5) ha 80.730 variabili e il gruppo simmetrico
+S₂₇ agisce su tutte: il solutore consuma il tempo esplorando copie della stessa
+soluzione. La riduzione, che non perde generalità:
+
+1. i blocchi per un punto x sono disgiunti fuori da x, quindi **deg(x) ≤ ⌊26/4⌋ = 6**;
+2. un pacchetto di 32 blocchi ha Σ deg = 160, e 27 punti di grado 6 darebbero 162:
+   la deficienza totale è 2, quindi **almeno 25 punti hanno grado esattamente 6**;
+3. dunque **a meno di rinominare** si può assumere che il punto 0 abbia grado 6 e che
+   i suoi sei blocchi siano `{0,1,2,3,4}`, `{0,5,6,7,8}`, …, `{0,21,22,23,24}`, con i
+   punti 25 e 26 fuori. I candidati scendono da **80.730 a 15.104**;
+4. capienza residua 24·5 + 2·6 = 132 contro 26·5 = 130 incidenze necessarie: **lo
+   slack è 2**, quasi tutti i punti sono saturi;
+5. con A, B, C = blocchi con 0, 1, 2 punti liberi: A+B+C = 26 e 5A+4B+3C ≤ 120, cioè
+   **deg(25) + deg(26) = B + 2C ≥ 10**. È un vincolo che il solutore non deduce da
+   solo;
+6. la coppia {25,26} sta in al massimo un blocco, quindi C ≤ 1 e B ≥ 8: il punto 25
+   sta in almeno 4 blocchi e almeno 3 di essi hanno quattro punti di gruppo, quindi
+   **un altro blocco si può fissare**: `{25,1,5,9,13}`.
+
+Ogni passo è un'implicazione, non un'approssimazione: se un pacchetto di 32 esiste,
+ne esiste uno in questa forma. Quindi un *Infeasible* qui dimostra che non esiste.
+
+**E il gruppo prescritto (Kramer–Mesner) è utile ma non basta su queste celle.** Il
+metodo classico — cercare orbite invece di parole sotto un gruppo fissato — dà
+risposte **esatte e istantanee**: su A(27,8,5) l'ILP dimostra che il massimo codice
+invariante è **27** sotto Z27, sotto F27 additivo e sotto tutti i gruppi più grandi.
+Ma il record pubblicato è 31, e il nostro pacchetto di 31 ha una sequenza di gradi
+irregolare (22 punti di grado 6, tre di 5, due di 4): **quei record non sono
+invarianti**, e nessun gruppo li raggiunge. È una risposta utile — dice dove *non*
+cercare — ed è esattamente il tipo di cosa che una euristica non avrebbe mai detto.
+
 ### Fase D: la risposta, arrivata prima del previsto e a $2
 
 La fase D doveva rispondere a una domanda: **il collo di bottiglia è Lean o è la

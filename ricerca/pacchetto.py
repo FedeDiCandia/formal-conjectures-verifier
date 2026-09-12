@@ -136,6 +136,37 @@ def risolvi(*, blocchi_da_trovare: int = 26, secondi: float = 3600.0,
         if len(colonne):
             h.addRow(-inf, 6.0 - (1.0 if x <= 24 else 0.0),
                      len(colonne), colonne, np.ones(len(colonne)))
+    # --- due deduzioni di conteggio, che stringono molto il modello ---------
+    #
+    # Capienza residua: i 24 punti di gruppo hanno grado <= 6 e ne usano gia' 1, quindi
+    # 5 ciascuno; i due punti liberi 25 e 26 ne hanno 6 ciascuno. Totale 24*5 + 12 =
+    # 132. I 26 blocchi da trovare portano 26*5 = 130 incidenze, quindi lo SLACK
+    # TOTALE E' 2: quasi tutti i punti sono saturi.
+    #
+    # Siano A, B, C i numeri di blocchi con 0, 1, 2 punti liberi. Allora A+B+C = 26 e
+    # le incidenze sui punti di gruppo sono 5A+4B+3C = 130 - (B+2C) <= 120, dunque
+    #
+    #     grado(25) + grado(26) = B + 2C >= 10
+    #
+    # (e <= 12 per i limiti di grado). E' un vincolo che l'LP non deduce da sola.
+    liberi_in = np.array([sum(1 for x in LIBERI if x in B) for B in cand],
+                         dtype=np.float64)
+    nz = np.flatnonzero(liberi_in)
+    h.addRow(10.0, 12.0, len(nz), nz.astype(np.int32), liberi_in[nz])
+
+    # Il blocco che contiene entrambi i punti liberi e' al massimo uno, ed e' gia'
+    # imposto dal vincolo sulla coppia (25,26). Quindi C <= 1 e B >= 8: il punto 25 sta
+    # in almeno 4 blocchi, e almeno 3 di essi hanno quattro punti di gruppo. A meno di
+    # permutare i sei gruppi e i punti dentro ciascuno, uno di quei tre e'
+    # {25, 1, 5, 9, 13}: lo si puo' fissare senza perdere generalita'.
+    fissabile = (1, 5, 9, 13, 25)
+    try:
+        jf = cand.index(tuple(sorted(fissabile)))
+    except ValueError:
+        jf = None
+    if jf is not None:
+        h.changeColBounds(jf, 1.0, 1.0)
+
     # chiediamo esattamente quanti ne mancano: "esiste?" e' molto piu' facile di
     # "qual e' il massimo?"
     h.addRow(float(blocchi_da_trovare), inf, len(idx), idx, np.ones(len(idx)))
