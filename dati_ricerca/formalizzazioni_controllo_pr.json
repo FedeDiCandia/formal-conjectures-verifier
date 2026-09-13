@@ -1,0 +1,55 @@
+{
+ "erdos_180": [],
+ "P_subset_NP": [],
+ "erdos_1084": [
+  "#3320 [closed] 2026-03-03 solve(ErdosProblems): formally solved `erdos_1084.variants.upper_d1`, ",
+  "#2804 [closed] 2026-03-03 solve(ErdosProblems): formally solved `erdos_1084.variants.upper_d1`, "
+ ],
+ "A38771": [],
+ "not_isRegularPrime_37": [
+  "#5448 [open] 2026-09-10 fix(util): decide proof status from transitive dependencies, and keep ",
+  "#5449 [closed, merged] 2026-09-10 docs(FormalConjectures): cross-references, a duplicate declaration, an"
+ ],
+ "not_congruentNumber_1": [],
+ "A3162": [],
+ "erdos_503": [
+  "#3195 [closed] 2026-03-03 solve(ErdosProblems): formally solved erdos_503 R2, R3, upper_bound va",
+  "#2673 [closed] 2026-03-03 solve(ErdosProblems): formally solved erdos_503 R2, R3, upper_bound va",
+  "#659 [closed, merged] 2025-09-07 Erdős Problem 503"
+ ],
+ "erdos_1148": [
+  "#1932 [closed, merged] 2026-01-29 feat(ErdosProblems): 1148",
+  "#2441 [closed] 2026-03-02 solve(ErdosProblems): lower_bound variant in 1148",
+  "#3618 [closed] 2026-03-24 Prove 6 Erdős theorems (problems 18, 138, 400, 1148)",
+  "#3341 [closed] 2026-03-03 solve(ErdosProblems): formally solved `erdos_1148.variants.weaker` in ",
+  "#2825 [closed] 2026-03-03 solve(ErdosProblems): formally solved `erdos_1148.variants.weaker` in ",
+  "#2448 [closed] 2026-03-03 prove(ErdosProblems/1148): lower_bound",
+  "#2433 [closed] 2026-03-02 solve(ErdosProblems): finite bound in 1148"
+ ],
+ "erdos_707": [
+  "#5493 [closed, merged] 2026-09-10 fix(ErdosProblems/707): exclude modulus 0 in the Mian–Chowla and Hall ",
+  "#4289 [closed, merged] 2026-06-18 fix(ErdosProblems/264): type the bounded perturbation b over the integ",
+  "#2952 [closed] 2026-03-03 solve(ErdosProblems): formally solved `erdos_707`, `erdos_707.variants",
+  "#1138 [closed, merged] 2025-10-22 Erdős 707: update solution status and add `0<n` assumption",
+  "#2447 [closed] 2026-03-02 prove(ErdosProblems/707): example_sidon_set",
+  "#289 [closed, merged] 2025-07-01 Erdos Problem 707"
+ ],
+ "erdos_399": [
+  "#5425 [open] 2026-09-10 feat(ErdosProblems/399): prove erdos_399.variants.cambie",
+  "#4407 [open] 2026-07-07 Add formal-proof links and sharpen Erdős #647 candidate reductions",
+  "#4883 [closed, merged] 2026-08-11 ErdosProblems/316,399: use the `formal_conjectures` kind for in-repo p",
+  "#3182 [closed] 2026-03-03 solve(ErdosProblems): formally solved erdos_399, erdos_oblath, pollack",
+  "#2660 [closed] 2026-03-03 solve(ErdosProblems): formally solved erdos_399, erdos_oblath, pollack",
+  "#1623 [closed, merged] 2026-01-11 feat(ErdosProblems): 399"
+ ],
+ "coP_eq_P": [],
+ "erdos_1008": [],
+ "erdos_291": [
+  "#4407 [open] 2026-07-07 Add formal-proof links and sharpen Erdős #647 candidate reductions"
+ ],
+ "noIntegralDiophantineFiveTuple": [],
+ "isDiophantineTuple_of_subset": [],
+ "erdos_1000": [
+  "#5837 [open] 2026-09-11 fix(ErdosProblems/1000): exclude denominators dividing an earlier term"
+ ]
+}

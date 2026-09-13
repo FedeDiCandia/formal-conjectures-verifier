@@ -1,0 +1,144 @@
+{
+ "Erdos180.erdos_180": {
+  "file": "FormalConjectures/ErdosProblems/180.lean",
+  "http": 200,
+  "stato": "identico allo snapshot",
+  "formal_proof_su_main": false,
+  "sorry_su_main": true,
+  "commit_dal_10_settembre": []
+ },
+ "ComplexityTheory.P_subset_NP": {
+  "file": "FormalConjectures/Millenium/PvsNP.lean",
+  "http": 404,
+  "stato": "non scaricabile",
+  "commit_dal_10_settembre": [
+   "bc1d2bc0 2026-09-12 Fix Millennium spelling across source collection (#5849)"
+  ]
+ },
+ "Erdos1084.erdos_1084.variants.easy_upper_d2": {
+  "file": "FormalConjectures/ErdosProblems/1084.lean",
+  "http": 200,
+  "stato": "identico allo snapshot",
+  "formal_proof_su_main": false,
+  "sorry_su_main": true,
+  "commit_dal_10_settembre": []
+ },
+ "OeisA38771.a_n_exists": {
+  "file": "FormalConjectures/OEIS/38771.lean",
+  "http": 200,
+  "stato": "identico allo snapshot",
+  "formal_proof_su_main": false,
+  "sorry_su_main": true,
+  "commit_dal_10_settembre": []
+ },
+ "RegularPrimes.not_isRegularPrime_37": {
+  "file": "FormalConjectures/Wikipedia/RegularPrimes.lean",
+  "http": 200,
+  "stato": "identico allo snapshot",
+  "formal_proof_su_main": false,
+  "sorry_su_main": true,
+  "commit_dal_10_settembre": [
+   "b8a21903 2026-09-10 docs(FormalConjectures): cross-references, a duplicate declaration, an"
+  ]
+ },
+ "CongruentNumber.not_congruentNumber_1": {
+  "file": "FormalConjectures/Wikipedia/CongruentNumber.lean",
+  "http": 200,
+  "stato": "identico allo snapshot",
+  "formal_proof_su_main": false,
+  "sorry_su_main": true,
+  "commit_dal_10_settembre": []
+ },
+ "OeisA3162.a_is_integer": {
+  "file": "FormalConjectures/OEIS/3162.lean",
+  "http": 200,
+  "stato": "identico allo snapshot",
+  "formal_proof_su_main": false,
+  "sorry_su_main": true,
+  "commit_dal_10_settembre": [
+   "b8a21903 2026-09-10 docs(FormalConjectures): cross-references, a duplicate declaration, an"
+  ]
+ },
+ "Erdos503.erdos_503.variants.lower_bound": {
+  "file": "FormalConjectures/ErdosProblems/503.lean",
+  "http": 200,
+  "stato": "identico allo snapshot",
+  "formal_proof_su_main": false,
+  "sorry_su_main": true,
+  "commit_dal_10_settembre": []
+ },
+ "Erdos1148.erdos_1148.variants.weaker": {
+  "file": "FormalConjectures/ErdosProblems/1148.lean",
+  "http": 200,
+  "stato": "identico allo snapshot",
+  "formal_proof_su_main": false,
+  "sorry_su_main": true,
+  "commit_dal_10_settembre": []
+ },
+ "Erdos707.erdos_707.variants.small_sidon_sets": {
+  "file": "FormalConjectures/ErdosProblems/707.lean",
+  "http": 200,
+  "stato": "identico allo snapshot",
+  "formal_proof_su_main": false,
+  "sorry_su_main": true,
+  "commit_dal_10_settembre": [
+   "f1190f84 2026-09-10 fix(ErdosProblems/707): exclude modulus 0 in the Mian–Chowla and Hall "
+  ]
+ },
+ "Erdos399.erdos_399.variants.cambie": {
+  "file": "FormalConjectures/ErdosProblems/399.lean",
+  "http": 200,
+  "stato": "identico allo snapshot",
+  "formal_proof_su_main": false,
+  "sorry_su_main": true,
+  "commit_dal_10_settembre": []
+ },
+ "ComplexityTheory.coP_eq_P": {
+  "file": "FormalConjectures/Millenium/PvsNP.lean",
+  "http": 404,
+  "stato": "non scaricabile",
+  "commit_dal_10_settembre": [
+   "bc1d2bc0 2026-09-12 Fix Millennium spelling across source collection (#5849)"
+  ]
+ },
+ "Erdos1008.erdos_1008.variants.lower_bound": {
+  "file": "FormalConjectures/ErdosProblems/1008.lean",
+  "http": 200,
+  "stato": "identico allo snapshot",
+  "formal_proof_su_main": false,
+  "sorry_su_main": true,
+  "commit_dal_10_settembre": []
+ },
+ "Erdos291.erdos_291.variants.steinerberger_generalization": {
+  "file": "FormalConjectures/ErdosProblems/291.lean",
+  "http": 200,
+  "stato": "identico allo snapshot",
+  "formal_proof_su_main": false,
+  "sorry_su_main": false,
+  "commit_dal_10_settembre": []
+ },
+ "DiophantineTuple.noIntegralDiophantineFiveTuple_of_hasUniqueExtensionOfForall": {
+  "file": "FormalConjectures/Wikipedia/DiophantineTuple.lean",
+  "http": 200,
+  "stato": "identico allo snapshot",
+  "formal_proof_su_main": false,
+  "sorry_su_main": true,
+  "commit_dal_10_settembre": []
+ },
+ "DiophantineTuple.isDiophantineTuple_of_subset": {
+  "file": "FormalConjectures/Wikipedia/DiophantineTuple.lean",
+  "http": 200,
+  "stato": "identico allo snapshot",
+  "formal_proof_su_main": false,
+  "sorry_su_main": true,
+  "commit_dal_10_settembre": []
+ },
+ "Erdos1000.erdos_1000.variants.totient_le": {
+  "file": "FormalConjectures/ErdosProblems/1000.lean",
+  "http": 200,
+  "stato": "identico allo snapshot",
+  "formal_proof_su_main": false,
+  "sorry_su_main": true,
+  "commit_dal_10_settembre": []
+ }
+}

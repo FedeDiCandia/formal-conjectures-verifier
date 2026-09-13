@@ -1,0 +1,14 @@
+[
+ {"rango": 5,  "problema": "Erdos1148.erdos_1148.variants.weaker", "perche": "falsato dalla rete; la PR #3341 (chiusa) cambiava solo l'etichetta, niente prova"},
+ {"rango": 7,  "problema": "Erdos707.erdos_707.variants.small_sidon_sets", "perche": "falsato dalla rete; le prove esterne di 707 non contengono questa variante"},
+ {"rango": 9,  "problema": "ComplexityTheory.coP_eq_P", "perche": "falsato dalla rete; ancora sorry su main (file spostato in Millennium/PvsNP.lean)"},
+ {"rango": 10, "problema": "Erdos1008.erdos_1008.variants.lower_bound", "perche": "falsato dalla rete; la prova esterna di 1008 non contiene questa variante"},
+ {"rango": 11, "problema": "Erdos291.erdos_291.variants.steinerberger_generalization", "perche": "falsato dalla rete; la prova esterna di 291 non contiene questa variante"},
+ {"rango": 14, "problema": "ComplexityTheory.P_subset_NP", "perche": "interrotto dallo stop; ancora sorry su main"},
+ {"rango": 15, "problema": "Erdos1084.erdos_1084.variants.easy_upper_d2", "perche": "mai tentato; la PR #3320 (chiusa) cambiava solo l'etichetta, niente prova"},
+ {"rango": 16, "problema": "OeisA38771.a_n_exists", "perche": "mai tentato; nessuna prova trovata altrove"},
+ {"rango": 17, "problema": "RegularPrimes.not_isRegularPrime_37", "perche": "mai tentato; nessuna prova trovata altrove"},
+ {"rango": 18, "problema": "CongruentNumber.not_congruentNumber_1", "perche": "mai tentato; nessuna prova trovata altrove"},
+ {"rango": 19, "problema": "OeisA3162.a_is_integer", "perche": "mai tentato; nessuna prova trovata altrove"},
+ {"rango": 20, "problema": "Erdos503.erdos_503.variants.lower_bound", "perche": "mai tentato; le PR su 503 riguardano altre varianti"}
+]
