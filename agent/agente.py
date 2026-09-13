@@ -98,6 +98,7 @@ class _UsagePeggiore:
         self.cache_creation = None
 from nascondi import file_senza_dimostrazioni, controlla_che_sia_nascosta  # noqa: E402
 import strumenti                              # noqa: E402
+import veglia                                 # noqa: E402
 
 
 MODELLO_PREDEFINITO = "claude-opus-5"
@@ -401,6 +402,8 @@ class Tentativo:
     compattazioni: int = 0
     #: chiamate interrotte dalla rete, addebitate al costo massimo possibile
     interruzioni_rete: int = 0
+    #: la somma di quegli addebiti: sta nel budget totale, non in `consumo`
+    addebito_rete: float = 0.0
     #: classificazione del fallimento, secondo la regola dichiarata sotto
     causa: str = ""
 
@@ -552,6 +555,9 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
 
     speso_all_inizio = budget.speso
     errori_rete_di_fila = 0
+    #: gli addebiti prudenziali delle chiamate interrotte: contano sul budget
+    #: totale, non sul tetto di questo problema
+    addebiti_rete_qui = 0.0
 
     def stampa(*a):
         if verboso:
@@ -582,7 +588,7 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
                 token_input = conteggio.input_tokens
                 t.compattazioni += 1
 
-        speso_qui = budget.speso - speso_all_inizio
+        speso_qui = budget.speso - speso_all_inizio - addebiti_rete_qui
         residuo_problema = tetto_problema - speso_qui
         max_tokens = budget.max_tokens_sostenibile(
             token_input, MAX_TOKENS, residuo=residuo_problema)
@@ -641,15 +647,21 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
             it.secondi_api = time.time() - t0_api
             peggiore = _UsagePeggiore(token_input, max_tokens)
             prima = budget.speso
-            budget.registra(peggiore, problema.theorem)
-            t.consumo.aggiungi(peggiore)
+            # Il caso peggiore va sul budget TOTALE, che cosi' resta rigido, ma non
+            # sul tetto del problema ne' sul suo costo. La prima versione lo
+            # addebitava anche li': un'interruzione da $0,84 consumava da sola un
+            # tetto da $1, e nella notte del 13 settembre sei tentativi su dodici
+            # sono finiti cosi', senza dire niente sull'agente.
+            budget.registra(peggiore)
             it.costo = budget.speso - prima
+            t.addebito_rete += it.costo
+            addebiti_rete_qui += it.costo
             t.interruzioni_rete += 1
             t.dettaglio.append(it)
             t.secondi_api += it.secondi_api
             errori_rete_di_fila += 1
             stampa(f"     !! connessione interrotta ({type(e).__name__}: {e}); addebitati "
-                   f"${it.costo:.4f}, il caso peggiore della chiamata")
+                   f"${it.costo:.4f} al budget totale (il caso peggiore), non al tetto del problema")
             if errori_rete_di_fila >= MAX_ERRORI_RETE_DI_FILA:
                 t.motivo = (f"errore di rete ripetuto: {errori_rete_di_fila} chiamate "
                             f"interrotte di fila ({type(e).__name__})")
@@ -750,7 +762,7 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
 
         # Il modello si regola meglio se sa quanto gli resta: chi ha misurato
         # OEIS Open dava al modello uno strumento apposta per questo.
-        speso_qui = budget.speso - speso_all_inizio
+        speso_qui = budget.speso - speso_all_inizio - addebiti_rete_qui
         risultati.append({
             "type": "text",
             "text": (f"[budget: spesi ${speso_qui:.2f} dei ${tetto_problema:.2f} "
@@ -795,6 +807,7 @@ def scrivi_rapporto(percorso: Path, *, args, tetto: float, budget: Budget,
             "esplorazioni": t.esplorazioni,
             "esecuzioni_python": t.esecuzioni_python,
             "interruzioni_rete": t.interruzioni_rete,
+            "addebito_rete_prudenziale": t.addebito_rete,
             "secondi_totali": t.secondi,
             "secondi_api": t.secondi_api,
             "secondi_lean": t.secondi_lean,
@@ -846,6 +859,9 @@ def main() -> int:
                          "runs/lavori/agente-<data>.log). Serve per seguire il "
                          "lavoro con `tail -f` mentre gira.")
     ap.add_argument("--silenzioso", action="store_true")
+    ap.add_argument("--senza-veglia", action="store_true",
+                    help="non avviare caffeinate e non controllare l'alimentatore "
+                         "(sconsigliato: vedi agent/veglia.py)")
     args = ap.parse_args()
 
     # --- il registro, prima di qualunque stampa
@@ -880,6 +896,21 @@ def main() -> int:
         print(e, file=sys.stderr)
         return 2
 
+    # --- il Mac deve restare sveglio: si controlla PRIMA di spendere un centesimo
+    processo_veglia = None
+    if not args.senza_veglia and sys.platform == "darwin":
+        processo_veglia = veglia.avvia(os.getpid())
+        motivi = veglia.controlla(processo_veglia)
+        if motivi:
+            processo_veglia.terminate()
+            print("NON PARTO: il Mac deve restare sveglio e alimentato per tutto il giro.\n  - "
+                  + "\n  - ".join(motivi)
+                  + "\nTieni anche il coperchio aperto: a coperchio chiuso il Mac si sospende "
+                    "comunque. Per saltare il controllo: --senza-veglia (sconsigliato).",
+                  file=sys.stderr)
+            return 2
+        print("Veglia: caffeinate attivo, alimentatore collegato. Tieni il coperchio aperto.")
+
     client = anthropic.Anthropic()
     budget = Budget(limite_dollari=args.budget, modello=args.modello)
     tetto = args.tetto_problema or (args.budget / len(elenco))
@@ -900,6 +931,10 @@ def main() -> int:
                             tentativi=tentativi, completo=completo)
 
     for i, p in enumerate(elenco, 1):
+        if processo_veglia is not None and not veglia.alimentatore_collegato():
+            print(f"\n!! Alimentatore scollegato: mi fermo prima di {p.theorem}. "
+                  f"Il rapporto contiene i problemi gia' conclusi.")
+            break
         print(f"\n{'='*78}\n[{i}/{len(elenco)}] {p.theorem}   ({p.category})\n{'='*78}")
         try:
             t = risolvi(p, indice, client=client, modello=args.modello, budget=budget,

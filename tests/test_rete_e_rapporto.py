@@ -1,12 +1,17 @@
 """Una connessione che cade a meta' risposta non deve fermare il giro, far
-sparire il lavoro fatto o rendere il limite di spesa meno rigido.
+sparire il lavoro fatto, rendere meno rigido il limite totale di spesa, ne'
+consumare il tetto del problema.
 
-L'incidente, 12 settembre: un «Connection reset by peer» durante lo streaming
-del terzo problema. L'eccezione era `httpx2.ReadError`, che l'SDK non traduce in
-`anthropic.APIError`: il ciclo principale non la prendeva, il processo e' morto,
-e il rapporto — scritto solo alla fine — non e' mai stato scritto. I due
-tentativi gia' conclusi risultavano solo dal registro, e la spesa del terzo non
-risultava da nessuna parte.
+Gli incidenti:
+  * 12 settembre: un «Connection reset by peer» durante lo streaming del terzo
+    problema. L'eccezione era `httpx2.ReadError`, che l'SDK non traduce in
+    `anthropic.APIError`: il processo e' morto e il rapporto, scritto solo alla
+    fine, non e' mai stato scritto.
+  * notte del 13 settembre: con la prima correzione, ogni chiamata interrotta
+    veniva addebitata al caso peggiore ANCHE sul tetto del problema. Un addebito
+    da $0,84 su un tetto da $1 chiudeva il tentativo da solo: sei problemi su
+    dodici sono finiti cosi'. La causa delle interruzioni era il Mac in
+    sospensione (vedi agent/veglia.py).
 
 Qui si simula il client, senza chiamare l'API.
 """
@@ -23,7 +28,7 @@ sys.path.insert(0, str(RADICE / "agent"))
 sys.path.insert(0, str(RADICE / "verifier"))
 
 import agente
-from costi import Budget
+from costi import Budget, LimiteSpesaSuperato
 
 MODELLO = "claude-opus-5"
 TOKEN_INGRESSO = 1000
@@ -64,6 +69,7 @@ class _Client:
     def __init__(self, esiti):
         self.esiti = list(esiti)
         self.chiamate = 0
+        self.max_tokens = []
         self.messages = self
 
     def count_tokens(self, **kw):
@@ -71,6 +77,7 @@ class _Client:
 
     def stream(self, **kw):
         self.chiamate += 1
+        self.max_tokens.append(kw["max_tokens"])
         return _Flusso(self.esiti.pop(0))
 
 
@@ -95,16 +102,33 @@ def _risolvi(client, budget, tetto):
                           tetto_problema=tetto, verboso=False)
 
 
-def test_una_connessione_caduta_si_ritenta_e_si_addebita_il_caso_peggiore():
+def _peggiore(budget):
+    return budget.costo_massimo_possibile(TOKEN_INGRESSO, agente.MAX_TOKENS)
+
+
+def test_una_connessione_caduta_si_ritenta_e_va_sul_budget_totale():
     client = _Client([_reset(), _Risposta()])
     b = Budget(limite_dollari=20.0, modello=MODELLO)
     t = _risolvi(client, b, tetto=5.0)
     assert client.chiamate == 2, "la chiamata interrotta va rifatta"
     assert t.interruzioni_rete == 1
     assert "smesso di usare gli strumenti" in t.motivo, t.motivo
-    peggiore = b.costo_massimo_possibile(TOKEN_INGRESSO, agente.MAX_TOKENS)
-    assert b.speso >= peggiore - 1e-9, "la chiamata interrotta deve risultare nella spesa"
-    assert t.consumo.costo(MODELLO) >= peggiore - 1e-9, "e nel costo del problema"
+    assert b.speso >= _peggiore(b) - 1e-9, "il budget totale deve contare il caso peggiore"
+    assert t.addebito_rete == pytest.approx(_peggiore(b)), "e il rapporto deve dirlo"
+    assert t.consumo.costo(MODELLO) < 0.01, "ma il costo del problema resta quello vero"
+
+
+def test_l_interruzione_non_consuma_il_tetto_del_problema():
+    """E' il test che la prima correzione avrebbe fatto fallire: con un tetto da
+    $1, due interruzioni da $0,81 non devono impedire la terza chiamata, e la
+    terza deve avere lo stesso spazio della prima."""
+    client = _Client([_reset(), _reset(), _Risposta()])
+    b = Budget(limite_dollari=20.0, modello=MODELLO)
+    t = _risolvi(client, b, tetto=1.0)
+    assert client.chiamate == 3, t.motivo
+    assert "smesso di usare gli strumenti" in t.motivo, t.motivo
+    assert client.max_tokens[2] == client.max_tokens[0], client.max_tokens
+    assert t.addebito_rete > 1.0, "gli addebiti superano il tetto, ed e' giusto: stanno fuori"
 
 
 def test_tre_interruzioni_di_fila_chiudono_il_problema_non_il_giro():
@@ -116,12 +140,12 @@ def test_tre_interruzioni_di_fila_chiudono_il_problema_non_il_giro():
     assert "errore di rete" in t.motivo, t.motivo
 
 
-def test_con_le_interruzioni_il_tetto_del_problema_resta_rigido():
+def test_con_le_interruzioni_il_limite_totale_resta_rigido():
     client = _Client([_reset() for _ in range(10)])
-    b = Budget(limite_dollari=20.0, modello=MODELLO)
-    t = _risolvi(client, b, tetto=1.0)
-    assert b.speso <= 1.0 + 1e-9, f"speso ${b.speso:.4f} con un tetto di $1"
-    assert t.motivo.startswith("budget insufficiente"), t.motivo
+    b = Budget(limite_dollari=1.0, modello=MODELLO)
+    with pytest.raises(LimiteSpesaSuperato):
+        _risolvi(client, b, tetto=5.0)
+    assert b.speso <= 1.0 + 1e-9, f"speso ${b.speso:.4f} con un limite totale di $1"
 
 
 def test_il_rapporto_si_scrive_anche_a_giro_non_finito(tmp_path):
@@ -136,3 +160,4 @@ def test_il_rapporto_si_scrive_anche_a_giro_non_finito(tmp_path):
     assert dati["completo"] is False
     assert dati["speso"] == pytest.approx(b.speso)
     assert dati["tentativi"][0]["interruzioni_rete"] == 1
+    assert dati["tentativi"][0]["addebito_rete_prudenziale"] == pytest.approx(_peggiore(b))
