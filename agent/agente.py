@@ -35,6 +35,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import anthropic
+import httpx2   # il trasporto dell'SDK: i suoi errori a meta' risposta non diventano APIError
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "verifier"))
@@ -68,6 +69,33 @@ MIN_TOKENS_UTILI = 2_000
 #: registro: serve a capire, leggendo un tentativo, se il modello ha smesso
 #: perche' non aveva piu' idee o perche' non aveva piu' spazio.
 TOKENS_STRETTI = 8_000
+
+#: Quante interruzioni di rete di fila si tollerano su un problema prima di
+#: chiuderlo. Il 12 settembre un «Connection reset by peer» a meta' risposta ha
+#: fermato un giro intero al terzo problema: l'errore veniva da httpx2, che l'SDK
+#: non traduce in `anthropic.APIError`, e il `try` del ciclo principale non lo
+#: prendeva.
+MAX_ERRORI_RETE_DI_FILA = 3
+
+#: Le eccezioni che indicano una connessione caduta, non una risposta dell'API.
+ERRORI_DI_RETE = (anthropic.APIConnectionError, anthropic.APITimeoutError,
+                  httpx2.TransportError)
+
+
+class _UsagePeggiore:
+    """Un `usage` finto che costa esattamente `Budget.costo_massimo_possibile`.
+
+    Serve quando una risposta non arriva: il suo costo vero non si conosce, ma
+    l'API puo' averla fatturata in parte. Addebitare il caso peggiore tiene
+    rigido il limite: la spesa registrata puo' risultare piu' alta di quella
+    vera, mai piu' bassa.
+    """
+    def __init__(self, token_input: int, max_tokens: int):
+        self.input_tokens = 0
+        self.output_tokens = max_tokens
+        self.cache_read_input_tokens = 0
+        self.cache_creation_input_tokens = token_input
+        self.cache_creation = None
 from nascondi import file_senza_dimostrazioni, controlla_che_sia_nascosta  # noqa: E402
 import strumenti                              # noqa: E402
 
@@ -371,6 +399,8 @@ class Tentativo:
     secondi_python: float = 0.0
     #: quante volte la conversazione e' stata accorciata per far spazio
     compattazioni: int = 0
+    #: chiamate interrotte dalla rete, addebitate al costo massimo possibile
+    interruzioni_rete: int = 0
     #: classificazione del fallimento, secondo la regola dichiarata sotto
     causa: str = ""
 
@@ -521,6 +551,7 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
     messaggi = [{"role": "user", "content": messaggio_problema(problema, testo_file)}]
 
     speso_all_inizio = budget.speso
+    errori_rete_di_fila = 0
 
     def stampa(*a):
         if verboso:
@@ -592,17 +623,40 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
 
         it = Iterazione(numero=iterazione)
         t0_api = time.time()
-        with client.messages.stream(
-            model=modello,
-            max_tokens=max_tokens,
-            system=sistema,
-            thinking={"type": "adaptive", "display": "summarized"},
-            output_config={"effort": effort},
-            tools=strumenti_api,
-            messages=messaggi,
-            cache_control={"type": "ephemeral"},   # mette in cache anche la conversazione
-        ) as flusso:
-            risposta = flusso.get_final_message()
+        try:
+            with client.messages.stream(
+                model=modello,
+                max_tokens=max_tokens,
+                system=sistema,
+                thinking={"type": "adaptive", "display": "summarized"},
+                output_config={"effort": effort},
+                tools=strumenti_api,
+                messages=messaggi,
+                cache_control={"type": "ephemeral"},   # mette in cache anche la conversazione
+            ) as flusso:
+                risposta = flusso.get_final_message()
+        except ERRORI_DI_RETE as e:
+            # La conversazione non cambia: l'iterazione successiva rifa' la stessa
+            # chiamata, dopo aver ricontrollato il budget con l'addebito fatto qui.
+            it.secondi_api = time.time() - t0_api
+            peggiore = _UsagePeggiore(token_input, max_tokens)
+            prima = budget.speso
+            budget.registra(peggiore, problema.theorem)
+            t.consumo.aggiungi(peggiore)
+            it.costo = budget.speso - prima
+            t.interruzioni_rete += 1
+            t.dettaglio.append(it)
+            t.secondi_api += it.secondi_api
+            errori_rete_di_fila += 1
+            stampa(f"     !! connessione interrotta ({type(e).__name__}: {e}); addebitati "
+                   f"${it.costo:.4f}, il caso peggiore della chiamata")
+            if errori_rete_di_fila >= MAX_ERRORI_RETE_DI_FILA:
+                t.motivo = (f"errore di rete ripetuto: {errori_rete_di_fila} chiamate "
+                            f"interrotte di fila ({type(e).__name__})")
+                break
+            time.sleep(10 * errori_rete_di_fila)
+            continue
+        errori_rete_di_fila = 0
         it.secondi_api = time.time() - t0_api
 
         prima = budget.speso
@@ -724,6 +778,50 @@ def risolvi(problema: Problem, indice: ProblemIndex, *, client, modello: str,
 # Riga di comando
 # ---------------------------------------------------------------------------
 
+def scrivi_rapporto(percorso: Path, *, args, tetto: float, budget: Budget,
+                    tentativi: list, completo: bool) -> None:
+    """Scrive il resoconto JSON. `completo` e' falso finche' il giro non e' finito."""
+    percorso.write_text(json.dumps({
+        "modello": args.modello, "effort": args.effort,
+        "istruzioni": args.istruzioni,
+        "tetto_problema": tetto,
+        "budget": args.budget, "speso": budget.speso,
+        "completo": completo,
+        "consumo_totale": budget.consumo.__dict__,
+        "tentativi": [{
+            "problema": t.problema, "risolto": t.risolto, "motivo": t.motivo,
+            "causa": t.causa,
+            "iterazioni": t.iterazioni, "verifiche": t.verifiche,
+            "esplorazioni": t.esplorazioni,
+            "esecuzioni_python": t.esecuzioni_python,
+            "interruzioni_rete": t.interruzioni_rete,
+            "secondi_totali": t.secondi,
+            "secondi_api": t.secondi_api,
+            "secondi_lean": t.secondi_lean,
+            "secondi_python": t.secondi_python,
+            "costo": t.consumo.costo(args.modello), "consumo": t.consumo.__dict__,
+            "verifiche_per_natura": t.verifiche_per_natura,
+            "iterazioni_dettaglio": [{
+                "numero": it.numero, "costo": it.costo,
+                "token_input": it.token_input, "token_output": it.token_output,
+                "cache_scritta": it.cache_scritta, "cache_letta": it.cache_letta,
+                "secondi_api": it.secondi_api, "secondi_lean": it.secondi_lean,
+                "secondi_python": it.secondi_python,
+                "esecuzioni_python": it.esecuzioni_python,
+                "esplorazioni": it.esplorazioni,
+                "secondi_esplorazione": it.secondi_esplorazione,
+                "verifiche": [{
+                    "caratteri": v.caratteri, "esito": v.esito,
+                    "controllo_fallito": v.controllo_fallito,
+                    "secondi": v.secondi, "natura": v.natura,
+                } for v in it.verifiche],
+                "ragionamento": it.ragionamento,
+            } for it in t.dettaglio],
+            "soluzione": t.soluzione,
+        } for t in tentativi],
+    }, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description="Tenta di dimostrare uno o piu' problemi dell'archivio con l'API di Anthropic.")
@@ -792,6 +890,15 @@ def main() -> int:
     print(f"Problemi: {len(elenco)}")
 
     tentativi: list[Tentativo] = []
+
+    def salva(completo: bool) -> None:
+        # Il rapporto si riscrive dopo OGNI problema. Il 12 settembre un errore di
+        # rete ha fermato un giro al terzo problema e, siccome il rapporto si
+        # scriveva solo alla fine, i due tentativi gia' conclusi sono spariti.
+        if args.rapporto:
+            scrivi_rapporto(Path(args.rapporto), args=args, tetto=tetto, budget=budget,
+                            tentativi=tentativi, completo=completo)
+
     for i, p in enumerate(elenco, 1):
         print(f"\n{'='*78}\n[{i}/{len(elenco)}] {p.theorem}   ({p.category})\n{'='*78}")
         try:
@@ -813,8 +920,10 @@ def main() -> int:
         except anthropic.APIError as e:
             print(f"\n!! Errore dall'API: {e}")
             tentativi.append(Tentativo(problema=p.theorem, motivo=f"errore API: {e}"))
+            salva(completo=False)
             continue
         tentativi.append(t)
+        salva(completo=False)
         esito = "RISOLTO" if t.risolto else "non risolto"
         print(f"\n  => {esito}: {t.motivo}")
         print(f"     {t.iterazioni} iterazioni, {t.esplorazioni} esplorazioni, "
@@ -838,43 +947,7 @@ def main() -> int:
     print(f"  {budget.consumo.riassunto(args.modello)}")
 
     if args.rapporto:
-        Path(args.rapporto).write_text(json.dumps({
-            "modello": args.modello, "effort": args.effort,
-            "istruzioni": args.istruzioni,
-            "tetto_problema": tetto,
-            "budget": args.budget, "speso": budget.speso,
-            "consumo_totale": budget.consumo.__dict__,
-            "tentativi": [{
-                "problema": t.problema, "risolto": t.risolto, "motivo": t.motivo,
-                "causa": t.causa,
-                "iterazioni": t.iterazioni, "verifiche": t.verifiche,
-                "esplorazioni": t.esplorazioni,
-                "esecuzioni_python": t.esecuzioni_python,
-                "secondi_totali": t.secondi,
-                "secondi_api": t.secondi_api,
-                "secondi_lean": t.secondi_lean,
-                "secondi_python": t.secondi_python,
-                "costo": t.consumo.costo(args.modello), "consumo": t.consumo.__dict__,
-                "verifiche_per_natura": t.verifiche_per_natura,
-                "iterazioni_dettaglio": [{
-                    "numero": it.numero, "costo": it.costo,
-                    "token_input": it.token_input, "token_output": it.token_output,
-                    "cache_scritta": it.cache_scritta, "cache_letta": it.cache_letta,
-                    "secondi_api": it.secondi_api, "secondi_lean": it.secondi_lean,
-                    "secondi_python": it.secondi_python,
-                    "esecuzioni_python": it.esecuzioni_python,
-                    "esplorazioni": it.esplorazioni,
-                    "secondi_esplorazione": it.secondi_esplorazione,
-                    "verifiche": [{
-                        "caratteri": v.caratteri, "esito": v.esito,
-                        "controllo_fallito": v.controllo_fallito,
-                        "secondi": v.secondi, "natura": v.natura,
-                    } for v in it.verifiche],
-                    "ragionamento": it.ragionamento,
-                } for it in t.dettaglio],
-                "soluzione": t.soluzione,
-            } for t in tentativi],
-        }, ensure_ascii=False, indent=2), encoding="utf-8")
+        salva(completo=True)
         print(f"\n  Resoconto salvato in {args.rapporto}")
 
     return 0
