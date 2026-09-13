@@ -1,6 +1,16 @@
 # Stato del progetto
 
-*Aggiornato: 11 settembre 2026, notte.*
+*Aggiornato: 11 settembre 2026, notte. Aggiunta in cima: 13 settembre 2026.*
+
+---
+
+## 13 SETTEMBRE: formalizzare dimostrazioni già note
+
+Misura e proiezione in [docs/12-formalizzazioni-prove-note.md](12-formalizzazioni-prove-note.md).
+In breve: 7 tentativi con esito determinato, **3 accettati**, **2 contributi validi** (gli altri
+già formalizzati altrove), 6 tentativi indeterminati perché il Mac si è sospeso durante il giro.
+Bozze di pull request, non inviate, in [docs/contributi/formal-conjectures/](contributi/formal-conjectures/LEGGIMI.md).
+Rilancio preparato e **non lanciato**: servivano $13, sulla Console restano $12 (spesi $33 in tutto).
 
 ---
 
