@@ -287,3 +287,46 @@ abbiamo imparato, e si passa a una cella di esistenza.
 
 Qualunque esito: **niente annunci**, protocollo di docs/04 per intero, e tutto mostrato
 prima di qualunque passo.
+
+---
+
+## 7. Esito delle tre corse (fermate alle 17:10 del 12 settembre 2026)
+
+**Nessuna ha concluso. Nessun limite è stato allungato e nient'altro è stato lanciato.**
+
+| formulazione | come si è fermata | nodi | albero stimato | limite duale | soluzioni trovate |
+|---|---|---|---|---|---|
+| ILP minimo (senza blocco fissato) | limite di 14.400 s | 35.791 | 2,19% | **26 blocchi extra (= 32), mai mosso** | nessuna |
+| ILP con blocco fissato | limite di 14.400 s | 73.142 | 6,98% | **26 (= 32), mai mosso** | nessuna |
+| SAT (CaDiCaL), scritto da zero | fermato dalla guardia esterna alle 17:10:21 | — | — | — | nessuna risposta |
+
+Le due formulazioni ILP **concordano**: nessuna delle due ha trovato un pacchetto da 32 né ha escluso che esista. Non c'è quindi nessun esito da passare al protocollo di docs/04.
+
+### Che cosa ha insegnato il comportamento dei solutori
+
+1. **Il rilassamento lineare ammette 32 senza fatica, e la ramificazione non lo scalfisce.** In
+   quattro ore il limite duale non è mai sceso sotto 26 blocchi extra. Per dimostrare 31 il
+   solutore avrebbe dovuto chiudere quasi tutto l'albero: in queste condizioni è fuori portata.
+2. **La stima dell'albero esplorato non è una barra di avanzamento.** È rimasta fra lo 0 e il 7%,
+   con riavvii dalla radice, per tutta la corsa: estrapolarla non ha senso.
+3. **Nel modello minimo più di metà del tempo è andata nelle euristiche** (8.002 s di sotto-MIP su
+   14.400) **senza trovare una soluzione**. È coerente con quello che aveva già mostrato la
+   ricerca locale: 31 si trova subito, 32 mai. Resta però solo un indizio verso 31, non una prova.
+4. **Fissare il blocco in più raddoppia i nodi esplorati** (73.142 contro 35.791) ma non cambia
+   il quadro.
+5. **Il SAT non dà informazioni intermedie.** Senza certificati parziali, quattro ore di SAT
+   senza risposta non insegnano niente, a parte il costo.
+
+### Che cosa resta sul tavolo, non lanciato
+
+In ordine di rapporto fra costo e informazione, come già scritto nella sezione 5:
+
+1. **forma canonica e grafo residuo insieme**, sulle stesse 16 forme, 100 s ciascuna: se il
+   tempo per forma scende a pochi secondi, l'enumerazione completa diventa questione di un
+   giorno;
+2. **copertura esatta dedicata** (Algorithm X, *dancing links*) sulle stesse forme, contro SAT;
+3. **generazione ordinata** con rigetto degli isomorfi: la via professionale, giorni di lavoro.
+
+**Le tre condizioni della sezione 4 per insistere non sono ancora soddisfatte**: il controllo sul
+Handbook è in corso, e nessun metodo ha ancora mostrato un segnale su scala piccola. Senza un via
+esplicito non si lancia niente.
