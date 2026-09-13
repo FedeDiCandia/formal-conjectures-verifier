@@ -169,3 +169,35 @@ Due vincoli che contano più del budget:
   lo si scopre gratis (PR aperte, repository di prove esterne).
 - **Il lavoro umano per ogni pull request**: CLA, issue, fork, e la frase sull'uso dell'IA che
   Federico deve poter firmare. Ogni contributo richiede la sua lettura.
+
+---
+
+## 4. Rilancio sulla fascia A (13 settembre, pomeriggio)
+
+I 7 problemi rimasti dopo il passo 0 (scartato `Erdos1008…lower_bound`: segue dalla prova esterna
+del teorema principale). Opus 5, effort `low`, tetto $1, budget $7; Mac alimentato, `caffeinate`
+attivo, **nessuna interruzione di rete**: tutti gli esiti sono determinati e il costo è quello vero.
+
+| problema | esito | costo | iterazioni | esplorazioni | verifiche |
+|---|---|---|---|---|---|
+| `Erdos1148…weaker` | **accettato** | $0,22 | 1 | 0 | 1 |
+| `Erdos707…small_sidon_sets` | non chiuso | $0,80 | 10 | 5 | 0 |
+| `ComplexityTheory.coP_eq_P` | **accettato** | $0,32 | 15 | 13 | 2 |
+| `Erdos291…steinerberger_generalization` | non chiuso | $0,78 | 12 | 11 | 0 |
+| `ComplexityTheory.P_subset_NP` | non chiuso | $0,78 | 18 | 17 | 0 |
+| `Erdos1084…easy_upper_d2` | non chiuso | $0,76 | 12 | 11 | 0 |
+| `Erdos503…lower_bound` | non chiuso | $0,57 | 5 | 4 | 0 |
+
+- **Accettati: 2 su 7. Spesa: $4,23 su $7** (70 chiamate), senza addebiti prudenziali.
+- **Costo per prova accettata: $2,11**; i due successi da soli costano $0,22 e $0,32.
+- **I 5 fallimenti hanno la stessa forma:** tetto speso esplorando (da 4 a 17 esplorazioni),
+  **nessun candidato consegnato** al verificatore. Il limite qui è il tetto da $1 rispetto al costo
+  di capire le definizioni in Lean (macchine di Turing, geometria del piano, insiemi di Sidon), non
+  una dimostrazione tentata e sbagliata; ma senza candidati non si può dire di più.
+- **Righe di prova:** `Erdos1148…weaker` 57 righe, sopra la soglia di 25–50 righe di
+  CONTRIBUTING.md: in una PR va valutato se includerla o collegarla da una repository propria;
+  `coP_eq_P` 11 righe, più due lemmi ausiliari brevi.
+
+**Fascia A, tutto insieme** (16 candidati): 14 tentativi con esito determinato, 5 accettati,
+**4 contributi validi** (`DiophantineTuple`, `Erdos1000…totient_le`, `Erdos1148…weaker`,
+`coP_eq_P`) su 12 tentativi determinati di problemi non formalizzati altrove: **33%**.
