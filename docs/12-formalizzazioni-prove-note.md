@@ -92,6 +92,53 @@ Corretto dopo (commit 9f215ca); il giro è stato fermato alle 03:26.
 
 Nessun fallimento determinato è dovuto con certezza all'API di Mathlib; due potrebbero esserlo.
 
+## 2 bis. La fascia B letta a mano (13 settembre)
+
+Le 43 docstring della fascia B, lette una per una insieme all'enunciato e alle definizioni che
+usa. La selezione automatica le metteva tutte nella stessa fascia; lette, si dividono così.
+
+### Da tentare dopo, in quest'ordine
+
+| # | problema | perché | righe stimate |
+|---|---|---|---|
+| 1 | `Erdos261…borwein_loring` | identità finita su ℚ, senza definizioni dell'archivio: per induzione su m, $\sum_{k=n+1}^{n+m} k/2^k = (n+2)/2^n - (n+m+2)/2^{n+m}$, e con $n = 2^{m+1}-m-2$ i due lati coincidono | 20–30 |
+| 2 | `Erdos261…borwein_loring_property` | segue dalla precedente: m termini $a_k = n+1+k$, distinti e ≥ 1; resta da passare dalla somma su `Ioc` a quella su `Fin m` | 20 |
+| 3 | `OeisA108306.a_is_invert_transform_case` | la matrice $[[1,5],[1,2]]$ ha polinomio caratteristico $λ^2-3λ-3$, quindi $m^2 = 3m + 3I$ e le sue potenze seguono la stessa ricorrenza $a(k+2) = 3a(k+1)+3a(k)$ | 15 |
+| 4 | `Jacobson.jacobson_conjecture_of_comm_ring` | Mathlib ha l'intersezione di Krull (`Ideal.iInf_pow_smul_eq_bot_of_le_jacobson`); il lavoro è far combaciare `Ring.jacobson R` con `Ideal.jacobson ⊥`. Rischio: l'API, non la matematica | 5–15 |
+
+### Forse, dopo i primi quattro
+
+| problema | perché | rischio |
+|---|---|---|
+| `OeisA38771.a_n_exists` | Dirichlet è in Mathlib (`Nat.forall_exists_prime_gt_and_eq_mod`): un primo $q \nmid Q_n$ e un primo $p ≡ Q_n \pmod{q^2}$ danno $c = p - Q_n$ multiplo di $q^2$, quindi composto | 40–60 righe con `ZMod` |
+| `OeisA107247.known_prime_and_semiprimes` | puro calcolo: quadrati della successione "nonacci" fino al termine 28, e la primalità di 5 045 088 967 | lentezza del kernel |
+| `OeisA63880.powerful_of_isPrimitiveTerm`, `…a_of_primitive_mul_squarefree` | argomento breve (σ e la somma dei divisori unitari sono moltiplicative), ma `usigma` è definita solo nel file e la moltiplicatività va dimostrata da zero | 50+ righe |
+| `OeisA87719.a_exists` | vero perché quasi tutti i numeri hanno un fattore primo piccolo; serve un conteggio esplicito (per esempio $m = 3(2^n+3^n+3)$) | 50–80 righe di conteggi |
+
+### Da non tentare (34)
+
+- **Già formalizzati (2):** `DiophantineTuple.isDiophantineTuple_of_subset` (nella nostra PR);
+  `Erdos649…sampaio` (plby/lean-proofs, `sampaio_counterexample`).
+- **Teoremi profondi che la selezione non ha riconosciuto (20):** le cinque varianti di Poincaré
+  (dimensioni 2, 4, ≥ 5, versione liscia in 3, implicazione liscia); `RegularPrimes` ×3 (la
+  definizione passa dal numero di classi del campo ciclotomico; il criterio di Kummer);
+  `WolstenholmePrime` ×2 (congruenze sui numeri di Bernoulli); `Mathoverflow17560` ×2 (esponenti
+  reali: differenze finite o trascendenza); `Hilbert17` (polinomio di Motzkin); `MovingSofa`
+  (costanti di Gerver); `Erdos1055` (classi di primi); `Erdos287` (implicazione di ricerca);
+  `Mahler32`; `Green35`; `Erdos945` (equivalenza con O-grande); `Mathoverflow339137` (funzioni
+  generatrici).
+- **Costruzioni lunghe (9):** `CongruentNumber` 1 (discesa infinita di Fermat); `Erdos44` ×2
+  (insiemi di Sidon di taglia √N); `Erdos707…singer_construction` (differenze perfette di Singer);
+  `WeaklyFirstCountable` (lo spazio di Arens); i quattro sui campi quadratici (discriminanti e
+  classificazione: serve l'anello degli interi di ℚ(√d)).
+- **Calcoli fuori portata o prova non indicata (3):** `OeisA108301.primes_in_a` (somma delle cifre
+  di $2^{2048}+1$, 617 cifre: i test dell'archivio usano già `native_decide`); `OeisA105751` (parte
+  intera della parte immaginaria di un prodotto complesso); `OeisA3162.a_is_integer` (problema del
+  Monthly, la fonte non indica la prova).
+
+**In sintesi: 4 da tentare, 5 forse, 34 no.** Passo 0 fatto sui 9: nessuna pull request li cita;
+quello su `sampaio` ha trovato la prova di plby.
+
 ## 3. Proiezione
 
 **Misurato** vale solo per la fascia A, e su 7 tentativi: è un ordine di grandezza, non una stima
