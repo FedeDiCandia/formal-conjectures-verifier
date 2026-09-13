@@ -91,6 +91,26 @@ theorem a_eq_d_mul {c k : ℕ} (hk : k ≤ c) :
 lemma a_triangularNumber (n : ℕ) : a (triangularNumber n) = 2 * n + 1 := by
   simpa using a_triangularNumber_add (Nat.zero_le n)
 
+/-- **Values and factorizations**: `a N = v` exactly when `v = d * e` with `1 ≤ d ≤ e`,
+`d ≡ e (mod 2)`, and `N = T ((d + e) / 2 − 1) + (d − 1)`. -/
+theorem a_eq_iff_exists_factorization (N v : ℕ) :
+    a N = v ↔ ∃ d e, 1 ≤ d ∧ d ≤ e ∧ d % 2 = e % 2 ∧ v = d * e ∧
+      N = triangularNumber ((d + e) / 2 - 1) + (d - 1) := by
+  constructor
+  · intro h
+    obtain ⟨c, k, hk, rfl⟩ := exists_index_decomposition N
+    rw [a_triangularNumber_add hk] at h
+    refine ⟨k + 1, 2 * c + 1 - k, by omega, by omega, by omega, h.symm, ?_⟩
+    have e1 : (k + 1 + (2 * c + 1 - k)) / 2 - 1 = c := by omega
+    rw [e1]
+    omega
+  · rintro ⟨d, e, hd, hde, hpar, rfl, rfl⟩
+    have hk : d - 1 ≤ (d + e) / 2 - 1 := by omega
+    rw [a_triangularNumber_add hk]
+    have e1 : d - 1 + 1 = d := by omega
+    have e2 : 2 * ((d + e) / 2 - 1) + 1 - (d - 1) = e := by omega
+    rw [e1, e2]
+
 /-- **Index lemma**: the hypotheses of the conjecture force the canonical indices. -/
 theorem hypotheses_force_canonical_indices {n i j : ℕ} (hn : 1 ≤ n) (hi : a i = 2 * n + 1)
     (hj : a j = 2 * n + 3) (hij : j = i + n + 1) :
