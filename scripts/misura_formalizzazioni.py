@@ -66,7 +66,10 @@ def ostacolo(t: dict) -> str:
     """Matematica, API di Mathlib, o indeterminato, dal ragionamento e dalle verifiche."""
     if t["risolto"]:
         return "-"
-    testo = " ".join(it.get("ragionamento", "") for it in t["iterazioni_dettaglio"])
+    if not t.get("iterazioni_dettaglio"):
+        return (f"non determinabile dal rapporto ({t.get('fonte', 'niente dettaglio')}); "
+                f"{t['esplorazioni']} esplorazioni, {t['verifiche']} verifiche")
+    testo =" ".join(it.get("ragionamento", "") for it in t["iterazioni_dettaglio"])
     api, mate = len(_API.findall(testo)), len(_MATE.findall(testo))
     nat = t.get("verifiche_per_natura") or {}
     if not t["verifiche"]:
@@ -85,15 +88,23 @@ def ostacolo(t: dict) -> str:
 
 
 def main() -> int:
-    rapporto = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+    # Piu' rapporti si sommano, nell'ordine dato: il giro del 12 settembre e' stato
+    # interrotto da un errore di rete ed e' ripreso in un secondo processo.
+    rapporti = [json.loads(Path(a).read_text(encoding="utf-8")) for a in sys.argv[1:]]
+    rapporto = rapporti[0]
     candidati = json.loads(CANDIDATI.read_text(encoding="utf-8"))
     per_nome = {c["problema"]: c for c in candidati}
-    tentativi = rapporto["tentativi"]
+    tentativi = [t for r in rapporti for t in r["tentativi"]]
+    speso = sum(r["speso"] for r in rapporti)
+    non_registrato = sum(1.0 for r in rapporti if r.get("interruzione"))
 
     print(f"modello {rapporto['modello']}, effort {rapporto['effort']}, istruzioni "
-          f"{rapporto['istruzioni']}, tetto ${rapporto['tetto_problema']:.2f}, "
-          f"budget ${rapporto['budget']:.2f}")
-    print(f"spesa misurata: ${rapporto['speso']:.4f}\n")
+          f"{rapporto['istruzioni']}, tetto ${rapporto['tetto_problema']:.2f}")
+    print(f"spesa misurata: ${speso:.4f}" + (
+        f"  + al massimo ${non_registrato:.2f} non registrati (tentativi interrotti "
+        f"dalla rete: {', '.join(r['interruzione']['problema'] for r in rapporti if r.get('interruzione'))})"
+        if non_registrato else ""))
+    print()
     print(f"{'#':>2} {'fascia':6} {'esito':11} {'costo':>7} {'it':>3} {'ver':>3}  problema")
     for i, t in enumerate(tentativi, 1):
         f = fascia(per_nome[t["problema"]]) if t["problema"] in per_nome else "?"
@@ -104,10 +115,13 @@ def main() -> int:
             print(f"{'':26}ostacolo: {ostacolo(t)}")
 
     risolti = [t for t in tentativi if t["risolto"]]
-    spesa = sum(t["costo"] for t in tentativi)
-    print(f"\nACCETTATI DAL VERIFICATORE: {len(risolti)} su {len(tentativi)} tentati")
+    # la spesa dei tentativi interrotti non e' registrata: si conta al suo massimo
+    spesa = speso + non_registrato
+    print(f"\nACCETTATI DAL VERIFICATORE: {len(risolti)} su {len(set(t['problema'] for t in tentativi))} "
+          f"problemi tentati")
     if risolti:
-        print(f"costo per successo (spesa totale / successi): ${spesa / len(risolti):.3f}")
+        print(f"costo per successo (spesa totale / successi): ${spesa / len(risolti):.3f}"
+              + (" (con la spesa non registrata al massimo)" if non_registrato else ""))
         print(f"costo medio di un successo, da solo: "
               f"${sum(t['costo'] for t in risolti) / len(risolti):.3f}")
     falliti = [t for t in tentativi if not t["risolto"]]
