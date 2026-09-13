@@ -5,7 +5,7 @@ Tre prove verificate in due file. Niente è stato inviato: né issue, né fork, 
 | cartella | teoremi | righe di prova | stato |
 |---|---|---|---|
 | `DiophantineTuple/` | `isDiophantineTuple_of_subset`, `noIntegralDiophantineFiveTuple_of_hasUniqueExtensionOfForall` | 1 e 26 | pronta: issue e PR in `PR.md`, patch in `proofs.patch` |
-| `Erdos1000/` | `erdos_1000.variants.totient_le` | 35 | **da coordinare con la PR aperta #5837**, che cambia l'enunciato: vedi `PR.md` |
+| `Erdos1000/` | `erdos_1000.variants.totient_le` | 35 | pronta sull'enunciato attuale: la PR #5837 è stata unita il 13 settembre; issue e PR in `PR.md`, patch in `totient_le_main.patch` |
 
 `candidati/` contiene i file autonomi sottoposti al verificatore: quello di `DiophantineTuple` usa
 il teorema dell'archivio `isDiophantineTuple_of_subset` al posto del lemma ausiliario scritto
