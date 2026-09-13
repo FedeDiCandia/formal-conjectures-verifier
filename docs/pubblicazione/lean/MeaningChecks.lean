@@ -115,9 +115,9 @@ theorem hiebl_example_at_offset_zero :
   simp only [Nat.choose_two_right]
   norm_num
 
-/-! ## 6. The hypotheses of Lemma 3 are satisfiable, so the lemma is not vacuous -/
+/-! ## 6. The hypotheses of the index lemma are satisfiable, so the lemma is not vacuous -/
 
-theorem lemma3_hypotheses_satisfiable :
+theorem index_lemma_hypotheses_satisfiable :
     1 ≤ 3 ∧ a (triangularNumber 3) = 2 * 3 + 1 ∧ a (triangularNumber 4) = 2 * 3 + 3 ∧
       triangularNumber 4 = triangularNumber 3 + 3 + 1 := by
   have h3 : triangularNumber 3 = 6 := by decide
@@ -137,4 +137,4 @@ end A105020Goldbach.MeaningChecks
 #print axioms A105020Goldbach.MeaningChecks.triangularNumber_values
 #print axioms A105020Goldbach.MeaningChecks.a_values_match_b_file
 #print axioms A105020Goldbach.MeaningChecks.hiebl_example_at_offset_zero
-#print axioms A105020Goldbach.MeaningChecks.lemma3_hypotheses_satisfiable
+#print axioms A105020Goldbach.MeaningChecks.index_lemma_hypotheses_satisfiable

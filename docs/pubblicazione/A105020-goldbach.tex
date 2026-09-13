@@ -1,77 +1,111 @@
 \documentclass[11pt,a4paper]{article}
 
-\usepackage{fontspec}
-\setmonofont{NotoSansMono-Regular.ttf}[BoldFont=NotoSansMono-Bold.ttf, Scale=0.86]
-% Noto Sans Mono draws the arrows very small; the three arrows come from DejaVu Sans Mono.
-\newfontfamily\leanarrowfont{DejaVuSansMono.ttf}[Scale=0.86]
-\usepackage{amsmath,amssymb,amsthm}
-\usepackage[a4paper,margin=2.5cm]{geometry}
+% Compilato con XeLaTeX (tectonic). Rispetto al preambolo proposto, le righe pensate
+% per pdflatex sono sostituite dai loro equivalenti Unicode:
+%   fontenc T1 + inputenc utf8  -> tolti: con XeTeX non servono
+%   newtxmath[libertine]        -> unicode-math con Libertinus Math
+%   beramono                    -> DejaVu Sans Mono, stesso disegno di Bera (Vera) Mono
+%                                  ma con i simboli Unicode del codice Lean
+% Le definizioni dei teoremi stanno dopo cleveref: prima, \cref chiama "theorem"
+% anche lemmi e osservazioni.
+
+% --- font e codifica -------------------------------------------------
+\usepackage{libertine}                          % testo: Linux Libertine (OpenType)
+\setmonofont{DejaVuSansMono.ttf}[Scale=0.85,    % codice: DejaVu Sans Mono,
+  BoldFont=DejaVuSansMono-Bold.ttf,               % dritto anche dentro il corsivo
+  ItalicFont=DejaVuSansMono.ttf]
+% DejaVu Sans Mono non ha ∣ (U+2223): quel solo carattere viene da Noto Sans Mono
+\newfontfamily\leanfallbackfont{NotoSansMono-Regular.ttf}[Scale=0.85]
+
+% --- gabbia ----------------------------------------------------------
+\usepackage[a4paper,margin=1.1in,footskip=0.5in]{geometry}
+\linespread{1.06}
+\setlength{\parskip}{0pt}
 \usepackage{microtype}
-\usepackage{booktabs}
-\usepackage{xcolor}
-\usepackage{listings}
-\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue!45!black]{hyperref}
 \setlength{\emergencystretch}{3em}
-% Justification may not squeeze the space around binary operators to nothing.
-\medmuskip=4mu plus 2mu minus 2mu
+\usepackage{needspace}                          % titoli e listati brevi non separati
 
-\input{build/values.tex}
+% --- matematica ------------------------------------------------------
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{unicode-math}
+\setmathfont{LibertinusMath-Regular.otf}        % matematica coordinata con Libertine
+\medmuskip=4mu plus 2mu minus 2mu               % gli spazi intorno a + e - non si annullano
 
-\newtheorem{lemma}{Lemma}
-\newtheorem{theorem}{Theorem}
-\theoremstyle{remark}
-\newtheorem*{remark}{Remark}
+% --- intestazioni ----------------------------------------------------
+\usepackage[explicit]{titlesec}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{0.7em}{#1}
+\titleformat{\subsection}{\normalfont\bfseries}{\thesubsection}{0.7em}{#1}
+\titlespacing*{\section}{0pt}{1.6\baselineskip}{0.6\baselineskip}
 
-\lstdefinelanguage{Lean}{
-  morekeywords={import,namespace,open,end,theorem,lemma,def,by,fun,let,show,have,
-    at,with,using,in,set_option},
-  sensitive=true,
-  morecomment=[l]{--},
-  morecomment=[s]{/-}{-/},
-  morestring=[b]",
-}
+% --- codice ----------------------------------------------------------
+\usepackage{xcolor}
+\definecolor{rulecol}{gray}{0.75}
+\definecolor{codebg}{gray}{0.975}
+\usepackage{listings}
 \lstset{
-  language=Lean,
   basicstyle=\ttfamily\small,
-  keywordstyle=\bfseries,
-  commentstyle=\color{black!60},
-  columns=fullflexible, keepspaces=true, extendedchars=true,
-  breaklines=true, breakatwhitespace=false,
-  postbreak=\mbox{$\hookrightarrow$}\space,
-  frame=single, rulecolor=\color{black!25}, framesep=4pt,
-  xleftmargin=5pt, xrightmargin=5pt, aboveskip=8pt, belowskip=8pt,
-  upquote=true, showstringspaces=false,
+  backgroundcolor=\color{codebg},
+  frame=leftline, framerule=0.8pt, rulecolor=\color{rulecol},
+  framexleftmargin=6pt, xleftmargin=8pt,
+  breaklines=true, breakatwhitespace=true,
+  showstringspaces=false, columns=fullflexible,
+  keepspaces=true, upquote=true,
+  aboveskip=0.9\baselineskip, belowskip=0.9\baselineskip,
 }
-\lstdefinestyle{inline}{basicstyle=\ttfamily, frame=none, breaklines=false,
-  keywordstyle={}, commentstyle={}}
-% Under XeTeX, listings routes only characters below 256 through its token buffer. Any
-% other character is typeset as soon as it is read, ahead of the pending token, so that
-% "⟨m, rfl⟩" came out as "⟨m, ⟩rfl". The non-ASCII characters of the Lean files are
-% registered here the way listings registers 8-bit characters.
+% Segno di a capo: senza, una riga spezzata sembra una riga nuova con un'altra
+% indentazione, che in Lean ha un significato.
+\lstset{extendedchars=true, postbreak=\mbox{$\hookrightarrow$}\space}
+\lstdefinestyle{inline}{basicstyle=\ttfamily, frame=none, breaklines=false}
+\newcommand{\li}{\lstinline[style=inline]}
+% Con XeTeX, listings fa passare dal suo buffer solo i caratteri sotto 256; gli altri
+% sono stampati appena letti, prima della parola in sospeso ("⟨m, rfl⟩" usciva come
+% "⟨m, ⟩rfl"). Qui i caratteri non ASCII dei file Lean sono registrati come listings
+% registra quelli a 8 bit.
 \makeatletter
 \def\leanchar#1#2{\catcode`#2=\active\lccode`\~=`#2\lccode`\/=`#2\lowercase{\def~{#1/}}}
-\def\leanarrow#1#2{\catcode`#1=\active\lccode`\~=`#1\lowercase{\def~{\lst@ProcessOther#2}}}
-\def\leanR{{\leanarrowfont →}}\def\leanL{{\leanarrowfont ←}}\def\leanLR{{\leanarrowfont ↔}}
+\def\leandivides{{\leanfallbackfont ∣}}
 \lst@AddToHook{SelectCharTable}{%
   \leanchar\lst@ProcessLetter κ\leanchar\lst@ProcessLetter ℕ\leanchar\lst@ProcessLetter ℤ%
   \leanchar\lst@ProcessOther ⟨\leanchar\lst@ProcessOther ⟩\leanchar\lst@ProcessOther ∀%
-  \leanchar\lst@ProcessOther ∃\leanchar\lst@ProcessOther −\leanchar\lst@ProcessOther ∣%
-  \leanchar\lst@ProcessOther ∧\leanchar\lst@ProcessOther ≠\leanchar\lst@ProcessOther ≡%
-  \leanchar\lst@ProcessOther ≤\leanchar\lst@ProcessOther ≥%
-  \leanarrow →\leanR\leanarrow ←\leanL\leanarrow ↔\leanLR}
+  \leanchar\lst@ProcessOther ∃\leanchar\lst@ProcessOther −\leanchar\lst@ProcessOther ∧%
+  \leanchar\lst@ProcessOther ≠\leanchar\lst@ProcessOther ≡\leanchar\lst@ProcessOther ≤%
+  \leanchar\lst@ProcessOther ≥\leanchar\lst@ProcessOther →\leanchar\lst@ProcessOther ←%
+  \leanchar\lst@ProcessOther ↔%
+  \catcode`∣=\active\lccode`\~=`∣\lowercase{\def~{\lst@ProcessOther\leandivides}}}
 \makeatother
-\newcommand{\li}{\lstinline[style=inline]}
+
+% --- tabelle, figure, riferimenti ------------------------------------
+\usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}      % la graffa della figura
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+
+% --- teoremi (dopo cleveref) -----------------------------------------
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% --- piè di pagina ---------------------------------------------------
+\usepackage{fancyhdr}
+\pagestyle{fancy}\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+% --- valori presi dal rapporto di verifica; file allegati al PDF ------
+\input{build/values.tex}
+\newcommand{\attachsource}[2]{%
+  \special{pdf:fstream @#1 (lean/#2) << /Type /EmbeddedFile >>}%
+  \special{pdf:names /EmbeddedFiles (#2)
+    << /Type /Filespec /F (#2) /UF (#2) /EF << /F @#1 >> >>}}
 
 \title{OEIS A105020 and the binary Goldbach conjecture:\\
 an elementary equivalence and its Lean~4 formalization}
 \author{Federico Di Candia}
 \date{12 September 2026}
-
-% Attach a file of the appendices to the PDF as an embedded file (xdvipdfmx specials).
-\newcommand{\attachsource}[2]{%
-  \special{pdf:fstream @#1 (lean/#2) << /Type /EmbeddedFile >>}%
-  \special{pdf:names /EmbeddedFiles (#2)
-    << /Type /Filespec /F (#2) /UF (#2) /EF << /F @#1 >> >>}}
 
 \begin{document}
 \maketitle
@@ -92,28 +126,76 @@ correspondence is implicit in a 2021 formula of W.~I.~Hurt in OEIS A045917
 (Section~\ref{sec:prior}).
 \end{abstract}
 
+\section{Introduction}\label{sec:intro}
+
+The formal-conjectures repository~\cite{fc} collects open conjectures stated in
+Lean~4 with Mathlib~\cite{mathlib}, each tagged with its status. One of them,
+\li{OeisA105020.conjecture}, formalizes a comment added in 2007 by M.~Hiebl to OEIS
+A105020~\cite{oeis-a105020}, which presents it as ``a Goldbach Conjecture for this
+sequence''; the repository marks it as an open research problem. The sequence lists
+the differences of squares $m^2 - n^2$ with $m > n$, arranged in an array and read by
+antidiagonals. The comment asserts that for $n \ge 1$, whenever two odd terms $2n+1$
+and $2n+3$ occur with exactly $n$ terms between them, at least one of those terms is a
+semiprime, that is, a product of two primes, not necessarily distinct.
+
+The name is apt. On antidiagonal $n$ the term at offset $k$ factors as
+$(k+1)(2n+1-k)$, a product of two integers whose sum is $2n+2$ for every $k$
+(Figure~\ref{fig:antidiagonal}). A product $pq$ with $p, q \ge 2$ is a semiprime exactly
+when $p$ and $q$ are both prime, so the semiprimes strictly between the first term
+$2n+1$ of antidiagonal $n$ and the first term $2n+3$ of antidiagonal $n+1$ correspond
+to the ways of writing $2n+2$ as a sum of two primes. This correspondence is not new:
+it underlies a 2021 formula of W.~I.~Hurt in OEIS A045917, discussed in
+Section~\ref{sec:prior}.
+
+The formal statement, however, does not mention antidiagonals. It quantifies over all
+indices $i$ and $j$ with $a(i) = 2n+1$, $a(j) = 2n+3$ and $j = i+n+1$, and odd values
+occur in A105020 at many positions other than the start of an antidiagonal
+(Remark~\ref{rem:values}). The correspondence alone therefore shows only that the
+formal statement implies Goldbach. The converse needs the fact that these hypotheses
+force $i$ and $j$ to be the first indices of antidiagonals $n$ and $n+1$. This is
+Lemma~\ref{lem:index}, an elementary computation with the closed form of the terms.
+With it, \li{OeisA105020.conjecture} is equivalent to the repository's own statement of
+the binary Goldbach conjecture (Theorem~\ref{thm:main}), so a proof or a
+counterexample for either would settle the other.
+
+Every result stated in Sections~\ref{sec:indices}--\ref{sec:equiv} is formalized in Lean
+and checked with comparator~\cite{comparator}, which certifies that a solution proves
+exactly the statements of a challenge file and uses only standard axioms. That
+guarantee is only as good as the challenge file, so we also check separately that its
+statements mean what this note says: that both repository statements elaborate to the
+expected propositions, that the Goldbach side does not depend on \li{sorryAx}, and that
+the definitions agree with the OEIS data. Independently of the proofs, an exhaustive
+search found no index pair other than the canonical ones among all $i < 10^{10}$.
+
+Section~\ref{sec:defs} recalls the definitions and the two statements.
+Section~\ref{sec:indices} describes the indices of A105020 and the closed form of its
+terms, Section~\ref{sec:lemma} proves the index lemma, and Section~\ref{sec:equiv}
+proves the equivalence. Section~\ref{sec:lean} describes the formalization, its
+verification and the meaning checks, and Section~\ref{sec:prior} discusses prior work
+and what this note adds. Appendix~\ref{app:quoted} quotes the repository statements
+and Hurt's formula, Appendix~\ref{app:repro} explains how to reproduce the
+verification, and Appendices~\ref{app:solution}--\ref{app:meaning} contain the Lean
+files, which are also attached to this PDF.
+
 \section{Definitions and statements}\label{sec:defs}
 
 Throughout, $T_c = c(c+1)/2$. The sequence A105020~\cite{oeis-a105020} is the array
 whose row $n \ge 0$ contains the numbers $m^2 - n^2$ for $m \ge n+1$, read by upward
-antidiagonals. The repository~\cite{fc} defines it as follows (file
-\nolinkurl{FormalConjectures/OEIS/105020.lean}):
-\begin{lstlisting}
-def triangularNumber (c : ℕ) : ℕ := Nat.choose (c + 1) 2
-
-def antidiagonalIndex (n : ℕ) : ℕ :=
-  (Nat.sqrt (8 * n + 1) - 1) / 2
-
-def a (n : ℕ) : ℕ :=
-  let c := antidiagonalIndex n
-  let k := n - triangularNumber c
-  let i := c - k
-  let m := c + 1
-  m^2 - i^2
-\end{lstlisting}
-Thus \li{triangularNumber c} is $T_c$, and \li{a} is indexed from $0$, with $a(0)=1$.
-This agrees with the current offset of the OEIS entry, whose b-file also starts at
-$a(0) = 1$.
+antidiagonals. The repository~\cite{fc} defines it in the file
+\nolinkurl{FormalConjectures/OEIS/105020.lean}, quoted in Appendix~\ref{app:defs}.
+With \li{triangularNumber c}, which is $\binom{c+1}{2} = T_c$, and
+\[
+  \operatorname{antidiagonalIndex}(N)
+    = \bigl\lfloor (\lfloor \sqrt{8N+1} \rfloor - 1)/2 \bigr\rfloor,
+\]
+the definition reads
+\[
+  a(N) = (c+1)^2 - (c-k)^2, \qquad \text{where } c = \operatorname{antidiagonalIndex}(N)
+  \text{ and } k = N - T_c,
+\]
+with all operations on $\mathbb{N}$ and truncated subtraction. Thus $a$ is indexed
+from $0$, with $a(0) = 1$. This agrees with the current offset of the OEIS entry, whose
+b-file also starts at $a(0) = 1$.
 
 The comment on A105020 reads:
 \begin{quote}
@@ -124,39 +206,36 @@ of 2 primes (not necessarily distinct). --- M.~Hiebl, Jul 15 2007
 The comment continues with an example for $n = 3$ that names $a(7) = 7$ and
 $a(11) = 9$, with the intermediate terms $a(8) = 12$, $a(9) = 15$ and $a(10) = 16$.
 These indices are shifted by one with respect to the entry's current offset: in the
-b-file, and in the repository's \li{a}, the same terms are $a(6), \dots, a(10)$. The
+b-file, and in the repository's $a$, the same terms are $a(6), \dots, a(10)$. The
 formal statement below involves only values and differences of indices, so the shift
 does not affect it (a machine check is in Appendix~\ref{app:meaning}).
 
-Its formalization in the repository:
-\begin{lstlisting}
-@[category research open, AMS 11]
-theorem conjecture :
-  ∀ (n i j : ℕ), 1 ≤ n →
-    a i = 2 * n + 1 →
-    a j = 2 * n + 3 →
-    j = i + n + 1 →
-    ∃ (k : ℕ),
-      i < k ∧
-      k < j ∧
-      (a k).IsSemiprime := by
-  sorry
-\end{lstlisting}
-Here \li{Nat.IsSemiprime n} is Mathlib's \li{Nat.IsAlmostPrime 2 n}, that is,
-$n \neq 0$ and $\Omega(n) = 2$, where $\Omega(n)$ is the number of prime factors of $n$
+The repository formalizes the comment as \li{OeisA105020.conjecture}
+(Appendix~\ref{app:conj}). It states that for all $n, i, j \in \mathbb{N}$,
+\[
+\begin{aligned}
+  &n \ge 1,\quad a(i) = 2n+1,\quad a(j) = 2n+3,\quad j = i+n+1\\
+  &\qquad \implies \text{there is } k \in \mathbb{N} \text{ with } i < k < j
+    \text{ and } a(k) \text{ a semiprime.}
+\end{aligned}
+\]
+Here \li{Nat.IsSemiprime m} is Mathlib's \li{Nat.IsAlmostPrime 2 m}, that is,
+$m \neq 0$ and $\Omega(m) = 2$, where $\Omega(m)$ is the number of prime factors of $m$
 counted with multiplicity.
 
-The binary Goldbach conjecture in the repository (file
-\nolinkurl{FormalConjectures/Wikipedia/GoldbachConjecture.lean}):
-\begin{lstlisting}[basicstyle=\ttfamily\footnotesize]
-@[category research open, AMS 11]
-theorem goldbach :
-    answer(sorry) ↔ ∀ n : ℕ, 2 < n → Even n → ∃ p q, Prime p ∧ Prime q ∧ n = p + q := by
-  sorry
-\end{lstlisting}
+The binary Goldbach conjecture is \li{GoldbachConjecture.goldbach}, in
+\nolinkurl{FormalConjectures/Wikipedia/GoldbachConjecture.lean}
+(Appendix~\ref{app:goldbach}):
+\[
+\begin{aligned}
+  \texttt{answer(sorry)} \iff{}
+    &\text{for all } n \in \mathbb{N} \text{ with } n > 2 \text{ and } n \text{ even},\\
+    &\text{there are primes } p, q \text{ with } n = p + q.
+\end{aligned}
+\]
 With the repository's default option, \li{answer(sorry)} elaborates to \li{True}. This,
 and the exact elaborated form of both statements, is checked in
-Section~\ref{sec:meaning}; see Section~\ref{sec:repro} for a build-configuration
+Section~\ref{sec:meaning}; Appendix~\ref{app:repro} describes a build-configuration
 caveat.
 
 \section{Indices on antidiagonals}\label{sec:indices}
@@ -164,7 +243,7 @@ caveat.
 \begin{lemma}[Index decomposition]\label{lem:decomp}
 Every $N \ge 0$ can be written in exactly one way as $N = T_c + k$ with
 $0 \le k \le c$. Moreover, if $N = T_c + k$ with $0 \le k \le c$, then $c$ is
-\li{antidiagonalIndex N}.
+$\operatorname{antidiagonalIndex}(N)$.
 \end{lemma}
 
 \begin{proof}
@@ -176,9 +255,9 @@ $N < T_{c+1} = T_c + c + 1$. Conversely, if $N = T_c + k$ with $0 \le k \le c$, 
   (2c+1)^2 \le 8N+1 = (2c+1)^2 + 8k < (2c+3)^2,
 \]
 so $\lfloor \sqrt{8N+1} \rfloor \in \{2c+1,\, 2c+2\}$ and therefore
-$\lfloor (\lfloor \sqrt{8N+1} \rfloor - 1)/2 \rfloor = c$, which is the value of
-\li{antidiagonalIndex N}. In particular $c$, and hence $k = N - T_c$, is determined
-by $N$.
+$\lfloor (\lfloor \sqrt{8N+1} \rfloor - 1)/2 \rfloor = c$, which is
+$\operatorname{antidiagonalIndex}(N)$. In particular $c$, and hence $k = N - T_c$, is
+determined by $N$.
 \end{proof}
 
 \begin{lemma}[Closed form]\label{lem:closed}
@@ -191,17 +270,16 @@ $a(T_n) = 2n+1$ for every $n \ge 0$.
 \end{lemma}
 
 \begin{proof}
-By Lemma~\ref{lem:decomp} the antidiagonal index of $T_c + k$ is $c$, so the local
-variables in the definition of \li{a} take the values $c$, $k$, $i = c-k$ and
-$m = c+1$. Since $k \le c < c+1$, none of the subtractions on $\mathbb{N}$ truncates,
-and
+By Lemma~\ref{lem:decomp} the antidiagonal index of $T_c + k$ is $c$, so the
+definition of $a$ uses $c$ and $k$. Since $k \le c < c+1$, none of the subtractions on
+$\mathbb{N}$ truncates, and
 \[
   a(T_c + k) = (c+1)^2 - (c-k)^2 = (k+1)(2c+1-k).
 \]
 Taking $k = 0$ gives $a(T_n) = 2n+1$.
 \end{proof}
 
-\begin{remark}
+\begin{remark}[Values and factorizations]\label{rem:values}
 The indices at which $a$ takes a given value $v$ correspond to the factorizations of
 $v$: $a(N) = v$ if and only if there are integers $d, e$ with $1 \le d \le e$,
 $d \equiv e \pmod 2$ and $v = de$, such that $N = T_{(d+e)/2-1} + (d-1)$. Different
@@ -210,9 +288,46 @@ Lemma~\ref{lem:decomp}. In particular an odd value occurs once for every factori
 into two factors $d \le e$, and not only at the start of an antidiagonal.
 \end{remark}
 
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[x=15mm, y=8mm,
+    term/.style={draw, minimum width=12.5mm, minimum height=7mm, inner sep=0pt},
+    semi/.style={term, fill=black!13, line width=0.9pt},
+    odd/.style={term, dashed},
+    idx/.style={font=\small},
+    note/.style={font=\footnotesize, text=black!60}]
+  \node[odd] at (0,0) {$13$};
+  \node[odd] at (7,0) {$15$};
+  \foreach \k/\v/\p/\q/\st in {1/24/2/12/term, 2/33/3/11/semi, 3/40/4/10/term,
+                               4/45/5/9/term, 5/48/6/8/term, 6/49/7/7/semi} {
+    \node[\st] at (\k,0) {$\v$};
+    \node[idx] at (\k,1) {$T_6{+}\k$};
+    \node[idx] at (\k,-1) {$\p\cdot\q$};
+  }
+  \node[idx] at (0,1) {$T_6$};
+  \node[idx] at (7,1) {$T_7$};
+  \node[note] at (0,-1) {$2n{+}1$};
+  \node[note] at (7,-1) {$2n{+}3$};
+  \node[note, anchor=east] at (-0.55,1) {index};
+  \node[note, anchor=east] at (-0.55,0) {term};
+  \node[note, anchor=east] at (-0.55,-1) {$p\cdot q$};
+  \draw[decorate, decoration={brace, mirror, amplitude=5pt}]
+    (0.6,-1.45) -- (6.4,-1.45)
+    node[midway, below=7pt, draw, rounded corners=2pt, inner sep=3pt]
+      {$p + q = 2n+2 = 14$};
+\end{tikzpicture}
+\caption{Antidiagonal $n = 6$ of A105020, from index $T_6 = 21$ to $T_6 + 6 = 27$,
+and the first term of antidiagonal $7$, at $T_7 = 28$. By Lemma~\ref{lem:closed} the
+term at $T_6 + k$ is $pq$ with $p = k+1$ and $q = 2n+1-k$, so $p + q = 2n+2 = 14$
+throughout. Dashed: the odd terms $a(T_6) = 13$ and $a(T_7) = 15$, with $n = 6$ terms
+between them. Shaded: the semiprimes among those $n$ terms, $33 = 3 \cdot 11$ and
+$49 = 7 \cdot 7$, one for each Goldbach partition $14 = 3 + 11 = 7 + 7$.}
+\label{fig:antidiagonal}
+\end{figure}
+
 \section{The index lemma}\label{sec:lemma}
 
-\begin{lemma}\label{lem:index}
+\begin{lemma}[Index lemma]\label{lem:index}
 Let $n \ge 1$, and suppose that $a(i) = 2n+1$, $a(j) = 2n+3$ and $j = i+n+1$. Then
 $i = T_n$ and $j = T_{n+1}$.
 \end{lemma}
@@ -318,28 +433,21 @@ Lemma~\ref{lem:decomp} & \texttt{exists\_index\_decomposition}\newline
 Lemma~\ref{lem:closed} & \texttt{a\_triangularNumber\_add}\newline
   \texttt{a\_eq\_d\_mul}\newline
   \texttt{a\_triangularNumber} \\
-Remark after Lemma~\ref{lem:closed} & \texttt{a\_eq\_iff\_exists\_factorization} \\
+Remark~\ref{rem:values} & \texttt{a\_eq\_iff\_exists\_factorization} \\
 Lemma~\ref{lem:index} & \texttt{hypotheses\_force\_canonical\_indices} \\
 Theorem~\ref{thm:main} & \texttt{conjecture\_iff\_goldbach} \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-The definitions are the repository's own, and both conjectures enter only through
-\li{type_of%}, so neither statement is restated:
-\begin{lstlisting}
-theorem conjecture_iff_goldbach :
-    (type_of% @OeisA105020.conjecture) ↔ (type_of% @GoldbachConjecture.goldbach)
-\end{lstlisting}
-The type of \li{GoldbachConjecture.goldbach} is \li{True ↔ P}, where \li{P} is the
-Goldbach statement, so the theorem states the first line below, which is equivalent
-to the second:
-\begin{lstlisting}[language={}]
-OeisA105020.conjecture ↔ (True ↔ P)
-OeisA105020.conjecture ↔ P
-\end{lstlisting}
+The definitions are the repository's own, and the two conjectures enter the last
+statement only through \li{type_of%}, so neither is restated:
+\li{conjecture_iff_goldbach} asserts that the type of \li{OeisA105020.conjecture} is
+equivalent to the type of \li{GoldbachConjecture.goldbach}. The latter type is
+\li{True ↔ P}, where \li{P} is the Goldbach statement, so the theorem says that
+\li{OeisA105020.conjecture} is equivalent to \li{True ↔ P}, and hence to \li{P}.
 
-\subsection{Verification}
+\subsection{Verification}\label{sec:verification}
 
 The formalization was checked with comparator~\cite{comparator}, configured as in
 Appendix~\ref{app:config}. For each listed theorem, comparator guarantees that the
@@ -358,13 +466,13 @@ and (iii)~is accepted by the Lean kernel.
 Component & Version \\
 \midrule
 formal-conjectures & commit \texttt{0a8b856c01b3911c52174ea4d0944097bd398bf7} (2026-09-10), with
-  the \texttt{lakefile.toml} change described in Section~\ref{sec:repro} \\
+  the \texttt{lakefile.toml} change described in Appendix~\ref{app:repro} \\
 Lean & v4.33.1 \\
 Mathlib & commit \texttt{0df444a360eaa60ab8c11dca51a86af692955474} (tag v4.33.1) \\
 comparator & commit \texttt{2312244ac716564a61cc0bf4e107d9abf1757a61} (2026-08-30) \\
 lean4export & commit \texttt{411dce7db58a3afc60ecab2d211acd1042b593dc} (2026-08-25) \\
 Platform & macOS; \texttt{landrun} replaced by a non-sandboxing shim
-  (Section~\ref{sec:repro}) \\
+  (Appendix~\ref{app:repro}) \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -373,7 +481,8 @@ We ran comparator through a local wrapper that also performs a syntactic pre-che
 the solution (no \li{sorry}, \li{admit}, \li{axiom} or \li{native_decide}; imports
 restricted to Mathlib and the two repository modules), runs the build under macOS
 \texttt{sandbox-exec}, and checks that the repository files are unchanged after the
-run. None of this is needed to reproduce the result.
+run. None of this is needed to reproduce the result; Appendix~\ref{app:repro} explains
+how to do so.
 
 \subsection{Meaning of the challenge}\label{sec:meaning}
 
@@ -383,7 +492,7 @@ it does not certify that those statements mean what this note says. That is chec
 repository using only standard axioms:
 \begin{itemize}
 \item Both repository statements elaborate, by \li{rfl}, to the forms quoted in
-  Section~\ref{sec:defs}. In particular the Goldbach side is definitionally
+  Appendix~\ref{app:quoted}. In particular the Goldbach side is definitionally
   \li{True ↔ P} (and not \li{False ↔ P}), and \li{goldbach_statement_elaborates}
   depends only on \li{propext}: the elaborated statement contains no \li{sorryAx}.
 \item \li{Prime}, \li{Even} and \li{Nat.IsSemiprime} have their usual meaning on
@@ -423,22 +532,19 @@ sums of two primes, contains the formula
   \mathrm{A045917}(n) = \sum_{k = n(n-1)/2 + 2}^{n(n+1)/2}
     \mathrm{A064911}\bigl(\mathrm{A105020}(k-1)\bigr)
 \]
-(W.~I.~Hurt, Sep 11 2021), which in the entry, where $a(n)$ stands for
-$\mathrm{A045917}(n)$, reads
-\begin{lstlisting}[language={}]
-a(n) = Sum_{k=n*(n-1)/2+2..n*(n+1)/2} A064911(A105020(k-1))
-\end{lstlisting}
-Here A064911~\cite{oeis-a064911} is the characteristic function of the semiprimes. The
-indices $k-1$ run over $T_{n-1}+1, \dots, T_n - 1$, that is, over positions
-$1, \dots, n-1$ of antidiagonal $n-1$ of A105020, which are the terms strictly
-between the odd terms $2n-1$ and $2n+1$. The formula therefore says that the number
-of semiprimes strictly between these consecutive odd terms equals the number of
-Goldbach partitions of $2n$, and the equivalence of Hiebl's conjecture with Goldbach
-at the canonical indices follows at once. We checked the formula numerically for
-$2 \le n \le 1500$. Two further entries by the same author rest on the same
-correspondence: A228553~\cite{oeis-a228553} and A350419~\cite{oeis-a350419}. The
-underlying identity $(n+1)^2 - m^2 = (n+1-m)(n+1+m)$, which turns Goldbach partitions
-of $2n+2$ into semiprimes written as differences of squares, is classical.
+(W.~I.~Hurt, Sep 11 2021; Appendix~\ref{app:hurt} quotes it as written in the entry,
+where $a(n)$ stands for $\mathrm{A045917}(n)$). Here A064911~\cite{oeis-a064911} is the
+characteristic function of the semiprimes. The indices $k-1$ run over
+$T_{n-1}+1, \dots, T_n - 1$, that is, over positions $1, \dots, n-1$ of antidiagonal
+$n-1$ of A105020, which are the terms strictly between the odd terms $2n-1$ and $2n+1$.
+The formula therefore says that the number of semiprimes strictly between these
+consecutive odd terms equals the number of Goldbach partitions of $2n$, and the
+equivalence of Hiebl's conjecture with Goldbach at the canonical indices follows at
+once. We checked the formula numerically for $2 \le n \le 1500$. Two further entries by
+the same author rest on the same correspondence: A228553~\cite{oeis-a228553} and
+A350419~\cite{oeis-a350419}. The underlying identity
+$(n+1)^2 - m^2 = (n+1-m)(n+1+m)$, which turns Goldbach partitions of $2n+2$ into
+semiprimes written as differences of squares, is classical.
 
 \paragraph{Not ours.}
 The correspondence between semiprimes in A105020 and Goldbach partitions, and with it
@@ -464,17 +570,98 @@ proofs in this note and the Lean formalization were produced in working sessions
 the same model under the author's direction, and were checked as described in
 Section~\ref{sec:lean}. This note was drafted with AI assistance.
 
-\section{Reproducing the verification}\label{sec:repro}
+\begin{thebibliography}{9}
+\raggedright
+\bibitem{fc} Google DeepMind, \emph{formal-conjectures},
+  \url{https://github.com/google-deepmind/formal-conjectures}, commit \texttt{0a8b856c}.
+\bibitem{oeis-a105020} OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer
+  Sequences}, sequence A105020, \url{https://oeis.org/A105020}, accessed 12 September
+  2026.
+\bibitem{oeis-a045917} OEIS, sequence A045917, \url{https://oeis.org/A045917}.
+\bibitem{comparator} \emph{comparator}, \url{https://github.com/leanprover/comparator},
+  commit \texttt{2312244a}.
+\bibitem{oeis-a064911} OEIS, sequence A064911, \url{https://oeis.org/A064911}.
+\bibitem{oeis-a228553} OEIS, sequence A228553, \url{https://oeis.org/A228553}.
+\bibitem{oeis-a350419} OEIS, sequence A350419, \url{https://oeis.org/A350419}.
+\bibitem{mathlib} The mathlib Community, \emph{The Lean mathematical library},
+  \url{https://github.com/leanprover-community/mathlib4}, commit \texttt{0df444a3}.
+\end{thebibliography}
+
+\clearpage
+\appendix
+
+\section{Quoted statements}\label{app:quoted}
+
+The excerpts below are copied from the repository at the commit listed in
+Section~\ref{sec:verification}, and from OEIS as accessed on 12 September 2026.
+
+\subsection{Definitions of A105020}\label{app:defs}
+
+From \nolinkurl{FormalConjectures/OEIS/105020.lean}, with the docstrings of the
+last two definitions omitted:
+\begin{lstlisting}
+def triangularNumber (c : ℕ) : ℕ := Nat.choose (c + 1) 2
+
+def antidiagonalIndex (n : ℕ) : ℕ :=
+  (Nat.sqrt (8 * n + 1) - 1) / 2
+
+def a (n : ℕ) : ℕ :=
+  let c := antidiagonalIndex n
+  let k := n - triangularNumber c
+  let i := c - k
+  let m := c + 1
+  m^2 - i^2
+\end{lstlisting}
+
+\needspace{15\baselineskip}
+\subsection{The formal conjecture}\label{app:conj}
+
+From the same file:
+\begin{lstlisting}
+@[category research open, AMS 11]
+theorem conjecture :
+  ∀ (n i j : ℕ), 1 ≤ n →
+    a i = 2 * n + 1 →
+    a j = 2 * n + 3 →
+    j = i + n + 1 →
+    ∃ (k : ℕ),
+      i < k ∧
+      k < j ∧
+      (a k).IsSemiprime := by
+  sorry
+\end{lstlisting}
+
+\needspace{8\baselineskip}
+\subsection{The binary Goldbach conjecture}\label{app:goldbach}
+
+From \nolinkurl{FormalConjectures/Wikipedia/GoldbachConjecture.lean}:
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize]
+@[category research open, AMS 11]
+theorem goldbach :
+    answer(sorry) ↔ ∀ n : ℕ, 2 < n → Even n → ∃ p q, Prime p ∧ Prime q ∧ n = p + q := by
+  sorry
+\end{lstlisting}
+
+\needspace{6\baselineskip}
+\subsection{Hurt's formula in A045917}\label{app:hurt}
+
+From OEIS A045917~\cite{oeis-a045917}:
+\begin{lstlisting}
+a(n) = Sum_{k=n*(n-1)/2+2..n*(n+1)/2} A064911(A105020(k-1))
+\end{lstlisting}
+
+\section{Reproducing the verification}\label{app:repro}
 
 The four files reproduced in Appendices~\ref{app:solution}--\ref{app:meaning} are
 attached to this PDF as embedded files. Some PDF viewers, such as Adobe Acrobat Reader
-and Firefox, list them in an attachments panel; \texttt{pdfdetach -saveall} (from
-Poppler) extracts them. Use the attached
-files rather than text copied from the appendices: copying from a PDF loses
-indentation, which is significant in Lean.
+and Firefox, list them in an attachments panel; \mbox{\texttt{pdfdetach -saveall}} (from
+Poppler) extracts them. Use the attached files rather than text copied from the
+appendices: copying from a PDF loses indentation, which is significant in Lean.
 
+\needspace{8\baselineskip}
 \subsection{Repository and build configuration}
 
+Clone the repository at the commit used for the verification:
 \begin{lstlisting}[language=bash]
 git clone https://github.com/google-deepmind/formal-conjectures.git
 cd formal-conjectures
@@ -528,16 +715,17 @@ standard axioms only, with \li{goldbach_statement_elaborates} depending on
   \nolinkurl{FormalConjectures/A105020Goldbach/}, and \texttt{config.json} in the
   repository root.
 \item Build the challenge with
-  \texttt{lake build} \nolinkurl{FormalConjectures.A105020Goldbach.Challenge}. Per the comparator
-  README, the challenge is trusted, and the solution should not be built beforehand
-  outside comparator.
+  \texttt{lake build} \nolinkurl{FormalConjectures.A105020Goldbach.Challenge}. Per the
+  comparator README, the challenge is trusted, and the solution should not be built
+  beforehand outside comparator.
 \item Run comparator as in its README, with \texttt{lean4export} and \texttt{landrun}
   in \texttt{PATH} (or with \texttt{COMPARATOR\_LEAN4EXPORT} and
   \texttt{COMPARATOR\_LANDRUN} set):
 \end{enumerate}
 \begin{lstlisting}[language=bash]
-systemd-run --property=RestrictAddressFamilies=~AF_UNIX --user --pty -E PATH="$PATH" \
-  --working-directory "$(pwd)" -- bash -c 'lake env /path/to/comparator config.json'
+systemd-run --property=RestrictAddressFamilies=~AF_UNIX --user --pty \
+  -E PATH="$PATH" --working-directory "$(pwd)" -- \
+  bash -c 'lake env /path/to/comparator config.json'
 \end{lstlisting}
 The expected final line is \li{Your solution is okay!}.
 
@@ -546,25 +734,6 @@ On macOS \texttt{landrun} is not available. comparator provides
 used an equivalent shim. The logical guarantees of Section~\ref{sec:lean} are
 unaffected. What is lost is protection against a solution file that executes arbitrary
 code during compilation.
-
-\begin{thebibliography}{9}
-\raggedright
-\bibitem{fc} Google DeepMind, \emph{formal-conjectures},
-  \url{https://github.com/google-deepmind/formal-conjectures}, commit \texttt{0a8b856c}.
-\bibitem{oeis-a105020} OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer
-  Sequences}, sequence A105020, \url{https://oeis.org/A105020}, accessed 12 September
-  2026.
-\bibitem{oeis-a045917} OEIS, sequence A045917, \url{https://oeis.org/A045917}.
-\bibitem{comparator} \emph{comparator}, \url{https://github.com/leanprover/comparator},
-  commit \texttt{2312244a}.
-\bibitem{oeis-a064911} OEIS, sequence A064911, \url{https://oeis.org/A064911}.
-\bibitem{oeis-a228553} OEIS, sequence A228553, \url{https://oeis.org/A228553}.
-\bibitem{oeis-a350419} OEIS, sequence A350419, \url{https://oeis.org/A350419}.
-\bibitem{mathlib} The mathlib Community, \emph{The Lean mathematical library},
-  \url{https://github.com/leanprover-community/mathlib4}, commit \texttt{0df444a3}.
-\end{thebibliography}
-
-\appendix
 
 \section{\texorpdfstring{\texttt{Solution.lean}}{Solution.lean}}\label{app:solution}
 \lstinputlisting[basicstyle=\ttfamily\footnotesize]{lean/Solution.lean}

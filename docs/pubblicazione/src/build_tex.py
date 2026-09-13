@@ -65,11 +65,12 @@ def check_attachments(pdf: Path) -> list[str]:
 
 def check_listings(pdf: Path, tex: str) -> list[str]:
     """Check that every listing reads back from the PDF text in the right order.
-    Text extraction drops indentation and marks broken lines with ',→', so the
-    comparison ignores whitespace, those marks and the page numbers."""
+    Text extraction drops indentation and marks broken lines with ',→' or '↪'
+    (depending on the math font), so the comparison ignores whitespace, those marks
+    and the page numbers."""
     text = subprocess.run(["pdftotext", str(pdf), "-"], capture_output=True, text=True,
                           check=True).stdout
-    lines = [re.sub(r"^\s*,→", "", line) for line in text.replace("\f", "\n").split("\n")
+    lines = [re.sub(r"^\s*(,→|↪)", "", line) for line in text.replace("\f", "\n").split("\n")
              if not re.fullmatch(r"\s*\d+\s*", line)]
     blob = re.sub(r"\s+", "", "".join(lines))
     squeeze = lambda s: re.sub(r"\s+", "", s)
