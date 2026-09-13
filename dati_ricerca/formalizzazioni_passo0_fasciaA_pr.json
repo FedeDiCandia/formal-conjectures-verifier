@@ -1,0 +1,44 @@
+{
+ "erdos_1148": [
+  "#3618 [closed] 2026-03-24 @XC0R: Prove 6 Erdős theorems (problems 18, 138, 400, 1148)",
+  "#3341 [closed] 2026-03-03 @theaustinhatfield: solve(ErdosProblems): formally solved `erdos_1148.variants.weaker` in 1148",
+  "#2825 [closed] 2026-03-03 @theaustinhatfield: solve(ErdosProblems): formally solved `erdos_1148.variants.weaker` in 1148",
+  "#2448 [closed] 2026-03-03 @theaustinhatfield: prove(ErdosProblems/1148): lower_bound",
+  "#2441 [closed] 2026-03-02 @theaustinhatfield: solve(ErdosProblems): lower_bound variant in 1148",
+  "#2433 [closed] 2026-03-02 @theaustinhatfield: solve(ErdosProblems): finite bound in 1148",
+  "#1932 [closed] 2026-01-29 @danielchin: feat(ErdosProblems): 1148"
+ ],
+ "small_sidon_sets": [
+  "#289 [closed] 2025-07-01 @saurabhraghuvanshii: Erdos Problem 707"
+ ],
+ "erdos_707": [
+  "#5493 [closed] 2026-09-10 @Deicyde: fix(ErdosProblems/707): exclude modulus 0 in the Mian–Chowla and Hall counterexa",
+  "#4289 [closed] 2026-06-18 @Isthisreel: fix(ErdosProblems/264): type the bounded perturbation b over the integers",
+  "#2952 [closed] 2026-03-03 @theaustinhatfield: solve(ErdosProblems): formally solved `erdos_707`, `erdos_707.variants.prime_pow",
+  "#2447 [closed] 2026-03-02 @theaustinhatfield: prove(ErdosProblems/707): example_sidon_set",
+  "#1138 [closed] 2025-10-22 @mo271: Erdős 707: update solution status and add `0<n` assumption",
+  "#289 [closed] 2025-07-01 @saurabhraghuvanshii: Erdos Problem 707"
+ ],
+ "coP_eq_P": [],
+ "erdos_1008": [],
+ "steinerberger_generalization": [],
+ "erdos_291": [
+  "#4407 [open] 2026-07-07 @Mnehmos: Add formal-proof links and sharpen Erdős #647 candidate reductions"
+ ],
+ "P_subset_NP": [],
+ "PvsNP": [
+  "#4007 [closed] 2026-05-15 @PaulCharlton: feat(Millenium): Navier–Stokes existence and smoothness"
+ ],
+ "easy_upper_d2": [
+  "#2504 [closed] 2026-03-03 @theaustinhatfield: solve(ErdosProblems): formally solved unit distance bounds for separated points "
+ ],
+ "erdos_1084": [
+  "#3320 [closed] 2026-03-03 @theaustinhatfield: solve(ErdosProblems): formally solved `erdos_1084.variants.upper_d1`, `erdos_108",
+  "#2804 [closed] 2026-03-03 @theaustinhatfield: solve(ErdosProblems): formally solved `erdos_1084.variants.upper_d1`, `erdos_108"
+ ],
+ "erdos_503": [
+  "#3195 [closed] 2026-03-03 @theaustinhatfield: solve(ErdosProblems): formally solved erdos_503 R2, R3, upper_bound variants in ",
+  "#2673 [closed] 2026-03-03 @theaustinhatfield: solve(ErdosProblems): formally solved erdos_503 R2, R3, upper_bound variants in ",
+  "#659 [closed] 2025-09-07 @rao107: Erdős Problem 503"
+ ]
+}

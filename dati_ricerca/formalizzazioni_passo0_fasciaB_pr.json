@@ -1,0 +1,14 @@
+{
+ "borwein_loring": [],
+ "a_is_invert_transform_case": [],
+ "sampaio": [],
+ "jacobson_conjecture_of_comm_ring": [],
+ "powerful_of_isPrimitiveTerm": [],
+ "a_of_primitive_mul_squarefree": [],
+ "a_n_exists": [],
+ "known_prime_and_semiprimes": [],
+ "A87719": [
+  "#1960 [closed] 2026-02-01 correct `FormalProofKind` for A87719",
+  "#3378 [closed] 2026-03-03 solve(OEIS): formally solved a_formula in OEIS A87719"
+ ]
+}

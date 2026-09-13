@@ -1,0 +1,9 @@
+[
+ {"rango": 5,  "problema": "Erdos1148.erdos_1148.variants.weaker", "passo0": "nessuna prova esterna della variante; il teorema principale (plby) vale solo per n grande, la variante per ogni n"},
+ {"rango": 7,  "problema": "Erdos707.erdos_707.variants.small_sidon_sets", "passo0": "plby dimostra la confutazione principale (not_erdos_707), non questa variante positiva"},
+ {"rango": 9,  "problema": "ComplexityTheory.coP_eq_P", "passo0": "nessuna PR, nessuna prova esterna; file spostato su main in Millennium/PvsNP.lean"},
+ {"rango": 11, "problema": "Erdos291.erdos_291.variants.steinerberger_generalization", "passo0": "plby dimostra erdos_291, non questa variante"},
+ {"rango": 14, "problema": "ComplexityTheory.P_subset_NP", "passo0": "nessuna PR, nessuna prova esterna"},
+ {"rango": 15, "problema": "Erdos1084.erdos_1084.variants.easy_upper_d2", "passo0": "PR #3320/#2804 chiuse: cambiavano solo l'etichetta, niente prova"},
+ {"rango": 20, "problema": "Erdos503.erdos_503.variants.lower_bound", "passo0": "le PR su 503 riguardano altre varianti"}
+]
