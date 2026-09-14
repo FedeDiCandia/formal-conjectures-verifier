@@ -100,7 +100,10 @@ gh pr create --repo google-deepmind/formal-conjectures --base main \
   --body-file /Users/fededicandia/Documents/Math/docs/contributi/formal-conjectures/Erdos1000/pr_body.md
 ```
 
-`gh pr create` chiede conferma prima di aprire la PR e stampa l'indirizzo.
+Attenzione: con `--title` e `--body-file` la PR **viene aperta subito**, senza chiedere conferma.
+Per rivederla prima, sostituisci `--title … --body-file …` con `--web`: si apre la pagina di
+creazione nel browser, incolli il titolo e il testo di `pr_body.md` e premi tu il pulsante.
+Se `gh pr create --help` elenca `--dry-run`, puoi anche provarla senza crearla.
 
 **Senza `gh`:** fai il fork dal pulsante «Fork» su GitHub, poi `git remote add fork …` come sopra,
 il `git push`, e apri le PR da
