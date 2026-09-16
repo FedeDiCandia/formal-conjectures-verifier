@@ -1,15 +1,14 @@
-"""I cinque falsi positivi della probe, one test per ciascuno.
+"""The probe's five false positives, one test each.
 
-Cinque «ritrovamenti» annunciati e all_items falsi, per cinque meccanismi diversi.
-La cause common è one sola, e vale la pena scriverla: **la probe giudicava il
-proprio output.** Ogni strato di giudizio che le avevo aggiunto — «il file
-compila», «which lines portano errors», «which axioms risultano» — era one
-imitazione più povera di quello che `verify.py` fa per davvero, e ognuna aveva un
-buco diverso.
+Five "findings" announced and all five false, by five different mechanisms. The
+common cause is a single one, and it is worth writing down: **the probe was judging
+its own output.** Every layer of judgement I had added to it — "the file compiles",
+"which lines carry errors", "which axioms come out" — was a poorer imitation of what
+`verify.py` really does, and each had a different hole.
 
-La correzione strutturale è che la probe **propone** e `verify.py` **giudica**.
-Questi test proteggono i cinque buchi in way che, se qualcuno rimette un
-verdict inside la probe, si rompano.
+The structural fix is that the probe **proposes** and `verify.py` **judges**. These
+tests protect the five holes in such a way that, if anyone puts a verdict back inside
+the probe, they break.
 """
 import sys
 from pathlib import Path
@@ -28,63 +27,63 @@ class FakeProblem:
     module = "FormalConjectures.Foo"
 
 
-# --- 1. `plausible` lascia un `sorry` e il file compila ----------------------
+# --- 1. `plausible` leaves a `sorry` and the file compiles -------------------
 
 def test_1_plausible_without_a_counterexample_proved_nothing():
-    """Primo falso positivo. `plausible`, quando non trova controesempi, scrive
-    «Unable to find a counter-example» e lascia un `sorry`: il file compila con un
-    avviso. Il verdict guardava only se compilava."""
+    """First false positive. When `plausible` finds no counterexample it writes
+    "Unable to find a counter-example" and leaves a `sorry`: the file compiles with a
+    warning. The verdict only looked at whether it compiled."""
     result, _ = probe_lean.classify(
         "Unable to find a counter-example\n"
         "E0.lean:5:0: warning: declaration uses 'sorry'", ok=True)
-    assert result == "aperta"
-    # e con il criterio degli axioms, la stessa cosa
+    assert result == "open"
+    # and under the axiom criterion, the same thing
     r = probe.read("'sonda_plausible' depends on axioms: [sorryAx]",
                     {"sonda_plausible": ("plausible", False)})
-    assert r["trials"][0]["result"] == "aperta"
+    assert r["trials"][0]["result"] == "open"
 
 
-# --- 2. two explorations che si scambiano i messages ------------------------
+# --- 2. two explorations swapping each other's messages ---------------------
 
 def test_2_exploration_slots_are_exclusive():
-    """Secondo falso positivo. Il file di inspection aveva un name fisso
-    (`E0.lean`), quindi two explorations concorrenti si sovrascrivevano il file e
-    ognuna leggeva i messages dell'altra: one tactic banale sembrava aver chiuso
-    un problem di topologia, e i messages erano di un problem di grafi."""
+    """Second false positive. The inspection file had a fixed name (`E0.lean`), so two
+    concurrent explorations overwrote it and each read the other's messages: a trivial
+    tactic appeared to have closed a topology problem, and the messages belonged to a
+    graph problem."""
     import explore
     assert hasattr(explore, "_exclusive_slot"), (
-        "il meccanismo del lock è state rimosso: two explorations "
+        "the locking mechanism has been removed: two explorations "
         "concorrenti tornerebbero a mescolarsi")
     assert explore.AVAILABLE_SLOTS >= 2
     import inspect
     assert "flock" in inspect.getsource(explore._exclusive_slot), (
-        "il lock deve valere FRA PROCESSI, non only fra thread")
+        "the lock has to hold BETWEEN PROCESSES, not only between threads")
 
 
-# --- 3. il verdict letto dalle lines di error -----------------------------
+# --- 3. the verdict read off the error lines --------------------------------
 
 def test_3_the_verdict_is_read_by_name_not_by_line():
-    """Terzo falso positivo. Il lettore attribuiva gli errors di Lean alla
-    declaration sbagliata, e arrivava a dire che un statement E la sua negation
-    erano entrambi dimostrati — cosa logicamente impossibile."""
-    output = ("E0.lean:9:2: error: qualcosa non va qui\n"
+    """Third false positive. The reader attributed Lean's errors to the wrong
+    declaration, and went as far as saying that a statement AND its negation were both
+    proved — a logical impossibility."""
+    output = ("E0.lean:9:2: error: something is wrong here\n"
               "'sonda_decide' depends on axioms: [sorryAx]\n"
               "'sonda_decide_neg' does not depend on any axioms")
     mapping = {"sonda_decide": ("decide", False), "sonda_decide_neg": ("decide", True)}
     results = {(p["tactic"], p["negated"]): p["result"]
              for p in probe.read(output, mapping)["trials"]}
-    # la line di error non deve spostare nessun verdict: contano i names
-    assert results[("decide", False)] == "aperta"
-    assert results[("decide", True)] == "confutata"
+    # the error line must not move any verdict: the names are what count
+    assert results[("decide", False)] == "open"
+    assert results[("decide", True)] == "refuted"
 
 
-# --- 4. `type_of%` senza `@` trial un statement diverso ---------------------
+# --- 4. `type_of%` without `@` tries a different statement -------------------
 
 def test_4_type_of_has_to_be_written_with_the_at_sign():
-    """Quarto falso positivo. `type_of% Foo` senza `@` fa istanziare a Lean gli
-    arguments impliciti come metavariabili: la probe provava un statement DIVERSO
-    da quello dell'archive, e `aesop` «confutava» la congettura di Agrawal
-    mentre il verifier vero rifiutava la stessa dimostrazione."""
+    """Fourth false positive. `type_of% Foo` without `@` makes Lean instantiate the
+    implicit arguments as metavariables: the probe was trying a DIFFERENT statement
+    from the archive's, and `aesop` "refuted" Agrawal's conjecture while the real
+    verifier rejected the same proof."""
     code, _ = probe.build(FakeProblem(), 200000)
     assert "type_of% @Foo.bar" in code
     assert "type_of% Foo.bar" not in code.replace("type_of% @Foo.bar", "")
@@ -93,42 +92,42 @@ def test_4_type_of_has_to_be_written_with_the_at_sign():
 # --- 5. l'environment sbagliato -----------------------------------------------
 
 def test_5_it_refuses_to_run_against_the_wrong_archive(tmp_path):
-    """Quinto falso positivo. La probe girava con l'index predefinito
-    (bench-v1) mentre i targets erano chosen su `main`: gli import fallivano, i
-    messages erano spazzatura, e il lettore ci leggeva inside dei successi."""
+    """Fifth false positive. The probe was running with the default index (bench-v1)
+    while the targets had been chosen on `main`: the imports failed, the messages were
+    rubbish, and the reader read successes into them."""
     import json
     import config
     targets = tmp_path / "targets.json"
     targets.write_text(json.dumps(
         {"snapshot": "external/fc-main 0a8b856c", "candidates": []}), encoding="utf-8")
     if "fc-main" in str(config.ARCHIVE):
-        pytest.skip("questo test vale quando l'archive in uso NON è fc-main")
+        pytest.skip("this test applies when the archive in use is NOT fc-main")
     with pytest.raises(SystemExit) as e:
         probe.check_environment(targets)
     assert "AMBIENTE SBAGLIATO" in str(e.value)
 
 
-# --- la correzione strutturale ---------------------------------------------
+# --- the structural fix -----------------------------------------------------
 
 def test_the_probe_does_not_flag_without_the_verifier():
-    """Il vincolo che rende impossibile un sesto falso positivo della stessa
-    famiglia: il flag di segnalazione si accende SOLO after un ACCEPTED che
+    """The constraint that makes a sixth false positive of the same family
+    impossible: the flag is raised ONLY after an ACCEPTED that
     arriva da `verify.py`."""
     import inspect
     src = inspect.getsource(probe.main)
     assert "confirm_with_verifier" in src, (
-        "la probe deve passare i candidates al verifier")
-    # ogni assegnazione del flag deve stare in un branch che controlla ACCEPTED
-    pieces = src.split('entry["ATTENZIONE"]')
+        "the probe has to pass its candidates to the verifier")
+    # every assignment of the flag has to sit in a branch that checks ACCEPTED
+    pieces = src.split('entry["ATTENTION"]')
     for before in pieces[:-1]:
         assert "ACCEPTED" in before[-400:], (
-            "un ATTENZIONE viene acceso senza passare dal verifier")
+            "an ATTENTION is raised without going through the verifier")
 
 
 def test_confirming_with_the_verifier_builds_the_right_candidate():
-    """Nella forma negata deve usare la modalità confutazione e il `@`."""
+    """In the negated form it has to use refutation mode and the `@`."""
     import inspect
     src = inspect.getsource(probe.confirm_with_verifier)
     assert "type_of% @{problem.theorem}" in src
     assert "REFUTATION" in src and "STRICT" in src
-    assert "run_guard=False" in src   # il candidato importa il module di proposito
+    assert "run_guard=False" in src   # the candidate imports the module on purpose

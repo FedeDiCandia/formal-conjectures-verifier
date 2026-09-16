@@ -1,13 +1,12 @@
-"""Con un cap low l'agent deve fare PIÙ DI UNA call.
+"""With a low cap the agent has to make MORE THAN ONE call.
 
-Il finding che questi test fissano ha invalidato un esperimento intero. Il
-controllo del budget si fermava quando `max_tokens` scendeva below 6000, che con
-i prices di Fable 5.1 vale $0,30 di margine per call: con un cap da $0,50
-per problem l'agent aveva one call sola, e su two problems su undici ne ha
-avute zero. Il result sembrava «il model si arrende» ed era «il contabile
-non lo lascia lavorare».
+The defect these tests pin down invalidated a whole experiment. The budget check
+stopped when `max_tokens` fell below 6000, which at Fable 5.1's prices means $0.30 of
+headroom per call: with a $0.50 per-problem cap the agent got one single call, and on
+two problems out of eleven it got none. The result looked like "the model gives up"
+and was "the accountant will not let it work".
 
-Qui si simula l'aritmetica del ciclo, senza chiamare l'API.
+Here the loop's arithmetic is simulated; the API is never called.
 """
 import sys
 from pathlib import Path
@@ -22,7 +21,7 @@ from costs import Budget, Usage
 
 def _possible_calls(model: str, cap: float, input_tokens: int,
                         cost_per_call: float) -> int:
-    """Quante calls riesce a fare, con la rule vera del ciclo."""
+    """How many calls it manages, under the loop's real rule."""
     b = Budget(dollar_limit=cap * 10, model=model)
     spent_here = 0.0
     calls = 0
@@ -34,7 +33,7 @@ def _possible_calls(model: str, cap: float, input_tokens: int,
             break
         calls += 1
         spent_here += cost_per_call
-        # il budget globale deve seguire, altrimenti il residue non scende
+        # the global budget has to follow, or what is left never falls
         b.record(_fake_usage(cost_per_call, model), "trial")
     return calls
 
@@ -54,36 +53,36 @@ def _fake_usage(cost: float, model: str):
 
 
 def test_with_a_low_cap_and_fable_it_makes_more_than_one_call():
-    """È il test che il finding avrebbe fatto fallire: con $0,50 di cap e
+    """This is the test the defect would have failed: with a $0.50 cap and
     calls da 5 centesimi, di calls ce ne stanno parecchie."""
     n = _possible_calls("claude-fable-5-1", cap=0.50,
                             input_tokens=8000, cost_per_call=0.05)
-    assert n >= 5, f"only {n} calls con $0,50 di cap"
+    assert n >= 5, f"only {n} calls with a $0.50 cap"
 
 
 def test_the_old_threshold_stopped_the_attempt_before_it_began():
-    """I numbers real_list dell'incidente, presi dal log della variant B.
+    """The real numbers from the incident, taken from variant B's log.
 
     `SidorenkoConjecture...non_bipartite_necessary`: 16 287 token in ingresso,
-    cap $0,50, spent $0,00. Con la threshold previous il attempt non partiva
-    nemmeno; con quella new fa la sua call.
+    cap $0.50, spent $0.00. With the previous threshold the attempt did not even
+    start; with the new one it makes its call.
     """
     previous = 6_000
     b = Budget(dollar_limit=5.0, model="claude-fable-5-1")
     max_tokens = b.affordable_max_tokens(16_287, agent.MAX_TOKENS, residue=0.50)
-    assert max_tokens < previous, "questi sono i numbers che fermavano il attempt"
+    assert max_tokens < previous, "these are the numbers that stopped the attempt"
     assert max_tokens >= agent.MIN_USEFUL_TOKENS, (
-        "con la threshold new lo stesso attempt deve poter partire")
+        "with the new threshold the same attempt has to be able to start")
 
 
 def test_the_limit_stays_hard():
-    """L'invariante vero, e vale la pena scriverlo per esteso.
+    """The real invariant, worth writing out in full.
 
-    Non è «il caso worst sta sempre nel residue»: quando il residue non copre
-    nemmeno il cost dell'INGRESSO, la funzione restituisce 0 e il ciclo si
-    ferma. L'invariante è: **se il ciclo procede, il caso worst sta nel
-    residue.** Scritto male, questo test dichiarava rigido un limit che non lo
-    era; scritto così, dice la cosa giusta.
+    It is not "the worst case always fits in what is left": when what is left does
+    not even cover the INPUT cost, the function returns 0 and the loop stops. The
+    invariant is: **if the loop proceeds, the worst case fits in what is left.**
+    Written badly, this test declared a limit hard when it was not; written this way,
+    it says the right thing.
     """
     b = Budget(dollar_limit=5.0, model="claude-fable-5-1")
     for residue in (0.02, 0.05, 0.12, 0.30, 0.50, 1.40, 2.00):
@@ -91,34 +90,34 @@ def test_the_limit_stays_hard():
             mt = b.affordable_max_tokens(input_tokens, agent.MAX_TOKENS,
                                           residue=residue)
             if mt < agent.MIN_USEFUL_TOKENS:
-                continue          # il ciclo si fermerebbe qui: niente da garantire
+                continue          # the loop would stop here: nothing to guarantee
             worst = b.max_possible_cost(input_tokens, mt)
             assert worst <= residue + 1e-9, (
-                f"residue ${residue}, ingresso {input_tokens}: il caso worst "
-                f"e' ${worst:.4f} e supera il residue")
+                f"left ${residue}, input {input_tokens}: the worst case is "
+                f"${worst:.4f} and exceeds what is left")
 
 
 def test_below_the_minimum_threshold_it_stops():
-    """Se non c'è spazio nemmeno per one answer minima, il attempt finisce."""
+    """If there is no room even for a minimal response, the attempt ends."""
     b = Budget(dollar_limit=5.0, model="claude-fable-5-1")
     mt = b.affordable_max_tokens(10_000, agent.MAX_TOKENS, residue=0.02)
     assert mt < agent.MIN_USEFUL_TOKENS
 
 
 def test_opus_5_copes_with_a_lower_cap_than_fable():
-    """A parità di cap Opus 5 fa più calls: costa metà per token."""
+    """At the same cap Opus 5 makes more calls: it costs half as much per token."""
     o = _possible_calls("claude-opus-5", 0.50, 8000, 0.05)
     f = _possible_calls("claude-fable-5-1", 0.50, 8000, 0.05)
     assert o >= f, f"Opus {o} calls, Fable {f}"
 
 
 def test_an_attempt_stopped_by_the_budget_does_not_lose_the_work_done():
-    """Quando il budget TOTALE finisce a metà di un problem, quel problem
-    finiva nel report con $0,00 e zero checks.
+    """When the GLOBAL budget runs out half-way through a problem, that problem used
+    to end up in the report with $0.00 and zero verifications.
 
-    E' successo nel giro 0 bis: il settimo problem risultava a cost zero
-    mentre il log mostrava one check consegnata. Un report che
-    sottostima la spesa e' un problem di sicurezza, non di cosmetica: il
+    It happened in round 0-bis: the seventh problem came out at zero cost while the
+    log showed one verification submitted. A report that understates the spend is a
+    safety problem, not a cosmetic one: the
     limit rigido si controlla proprio su quei numbers.
     """
     from costs import SpendLimitExceeded
@@ -127,6 +126,6 @@ def test_an_attempt_stopped_by_the_budget_does_not_lose_the_work_done():
     t.checks = 1
     e = SpendLimitExceeded("finito")
     e.attempt = t
-    # e' il meccanismo che main() usa: l'eccezione porta con se' il attempt
+    # this is the mechanism main() uses: the exception carries the attempt with it
     assert getattr(e, "attempt", None) is t
     assert e.attempt.checks == 1

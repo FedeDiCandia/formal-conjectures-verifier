@@ -269,17 +269,17 @@ def main() -> int:
                          "verifier": result, "detail": detail})
                     print(f"    -> verifier: {result}", flush=True)
                     if result == "ACCEPTED":
-                        entry["ATTENZIONE"] = (
+                        entry["ATTENTION"] = (
                             f"{x['tactic']}{' (negata)' if x['negated'] else ''} "
                             f"ACCETTATA DAL VERIFICATORE")
-                if "ATTENZIONE" in entry:
+                if "ATTENTION" in entry:
                     notable += 1
-                    print(f"  !!! {p.theorem}: {entry['ATTENZIONE']}", flush=True)
+                    print(f"  !!! {p.theorem}: {entry['ATTENTION']}", flush=True)
         results.append(entry)
         output.write_text(json.dumps(results, ensure_ascii=False, indent=1),
                           encoding="utf-8")
         print(f"[{i}/{len(chosen)}] {p.theorem[:54]:54} "
-              f"{'NOTEVOLE' if 'ATTENZIONE' in entry else '.':9} {entry['seconds']:6.0f}s",
+              f"{'NOTABLE' if 'ATTENTION' in entry else '.':9} {entry['seconds']:6.0f}s",
               flush=True)
 
     print(f"\n{'='*70}\nEsaminati {len(chosen)}. Notevoli: {notable}\nRisultati in {output}")

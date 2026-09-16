@@ -1,16 +1,16 @@
-"""
-Test dello strumento di exploration (verifier/explore.py).
+"""Tests of the exploration tool.
 
-PERCHE' ESISTE QUESTO STRUMENTO
--------------------------------
-Nel first shakedown l'agent ha spent NOVE checks su nove per ispezionare
-l'API di Mathlib, non per consegnare one dimostrazione — e ci e' succeeded only
-provocando errors di kind di proposito, perche' il verifier non gli
-restituiva i messages informativi di Lean. Quelle nove checks sono costate
-$1,81 e 740 seconds senza produrre un only attempt vero.
+WHY THIS TOOL EXISTS
+--------------------
+In the first shakedown the agent spent NINE verifications out of nine inspecting
+Mathlib's API rather than submitting a proof — and it only managed that by provoking
+type errors on purpose, because the verifier did not return Lean's informational
+messages. Those nine verifications cost $1.81 and 740 seconds without producing a
+single real attempt.
 
-`lean_explore` fa la parte utile a capire: compila e riporta tutto, senza
-comparator, senza confronto degli enunciati, senza riesecuzione nel kernel.
+`lean_explore` does the part that is useful for understanding: it compiles and reports
+everything, with no comparator, no comparison of statements, no replay through the
+kernel.
 """
 import sys
 from pathlib import Path
@@ -28,24 +28,24 @@ import guard
 
 def setup_module(module):
     if config.check_installation():
-        pytest.skip("environment non installato", allow_module_level=True)
+        pytest.skip("environment not installed", allow_module_level=True)
 
 
-# --- il guard vale also in exploration ------------------------------------
+# --- the guard applies in exploration too -----------------------------------
 
 def test_in_exploration_the_problems_module_may_be_imported():
-    """E' l'unica rule allentata: serve per fare `#print` sulle definizioni
-    dell'archive. In one solution resta vietato, perche' dichiarerebbe un
-    name che esiste gia'."""
+    """This is the one rule that is relaxed: it is needed to run `#print` on the
+    archive's definitions. In a solution it stays forbidden, because it would declare
+    a name that already exists."""
     src = "import FormalConjectures.Wikipedia.Selfridge\n#print Selfridge.IsSelfridge\n"
     assert guard.check_source(src, exploration=True).ok
     assert not guard.check_source(src, exploration=False).ok, \
-        "in one solution l'import del module del problem deve restare vietato"
+        "in a solution, importing the problem's module has to stay forbidden"
 
 
 def test_in_exploration_executable_code_stays_forbidden():
-    """Un file di inspection viene compilato come qualunque other, quindi puo'
-    eseguire code allo stesso way: le rules sul code non si allentano."""
+    """An inspection file is compiled like any other, so it can execute code in just
+    the same way: the rules about code are not relaxed."""
     for src in ['#eval IO.println "x"',
                 'run_meta Lean.logInfo "x"',
                 'def f : IO Unit := pure ()',
@@ -58,7 +58,7 @@ def test_a_forbidden_file_is_not_even_compiled():
         'import FormalConjectures.Util.ProblemImports\n#eval IO.println "x"\n'))
     assert not r.ok
     assert r.rejected_by_guard
-    assert r.seconds < 1.0, "non deve nemmeno far partire Lean"
+    assert r.seconds < 1.0, "it must not even start Lean"
     assert "command:#eval" in r.rejected_by_guard
 
 
@@ -66,7 +66,7 @@ def test_a_forbidden_file_is_not_even_compiled():
 
 @pytest.fixture(scope="module")
 def inspection():
-    """Una sola compilazione, riusata da piu' test: dura circa 10 seconds."""
+    """A single compilation, reused by several tests: it takes about 10 seconds."""
     return explore_module.explore(common.adapt("""import FormalConjectures.Util.ProblemImports
 import FormalConjectures.Wikipedia.Selfridge
 
@@ -82,25 +82,25 @@ example (n : ℕ) (h : 3 < n) : n = 7 := by
 
 
 def test_print_of_an_archive_structure_arrives_complete(inspection):
-    """Il caso che nel first shakedown l'agent non riusciva a ottenere."""
+    """The case the agent could not obtain in the first shakedown."""
     m = inspection.messages
     assert "structure Selfridge.IsPseudoSelfridge" in m
-    # all_items e quattro i fields, non only il first
+    # all four fields, not only the first
     for field in ["is_odd", "mod_5", "pow_2", "fib"]:
-        assert field in m, f"manca il field {field}"
-    assert "constructor:" in m, "also il costruttore deve comparire"
+        assert field in m, f"the field {field} is missing"
+    assert "constructor:" in m, "the constructor has to appear too"
 
 
 def test_print_of_a_mathlib_definition_shows_the_body(inspection):
     assert "def Nat.Perfect" in inspection.messages
     assert "properDivisors" in inspection.messages, \
-        "il body della definition, non only il name"
+        "the body of the definition, not only its name"
 
 
 def test_check_shows_the_type_with_implicits(inspection):
     assert "@Nat.floor :" in inspection.messages
     assert "FloorSemiring" in inspection.messages, \
-        "gli arguments impliciti di istanza servono per usare il lemma"
+        "the instance-implicit arguments are needed in order to use the lemma"
 
 
 def test_exact_suggests_a_lemma(inspection):
@@ -108,11 +108,11 @@ def test_exact_suggests_a_lemma(inspection):
 
 
 def test_errors_arrive_with_the_goal_state(inspection):
-    """Senza lo state degli obiettivi un error non dice cosa fare."""
+    """Without the goal state an error does not say what to do."""
     assert "error" in inspection.messages
     assert "omega could not trials the goal" in inspection.messages
     assert "4 ≤ a ≤ 6" in inspection.messages, \
-        "il counterexample found da omega e' l'informazione utile"
+        "the counterexample omega found is the useful information"
 
 
 def test_the_messages_are_not_truncated(inspection):
@@ -120,27 +120,26 @@ def test_the_messages_are_not_truncated(inspection):
 
 
 def test_l_esplorazione_gira_isolata(inspection):
-    assert inspection.isolated, "deve girare inside sandbox-exec"
+    assert inspection.isolated, "it has to run inside sandbox-exec"
 
 
-#: Quanto dura one check COMPLETA, misurata su ciascuno snapshot. Serve a
-#: dare un senso alla threshold qui below: l'exploration ha ragione di esistere
+#: How long a COMPLETE verification takes, measured on each snapshot. It gives
+#: meaning to the threshold below: exploration is worth having
 #: only se costa one frazione di one check.
-#:   bench-v1 (Lean 4.27):  32,9 s  — misurato con `time`
+#:   bench-v1 (Lean 4.27):  32.9 s  — measured with `time`
 #:   main     (Lean 4.33):  47-114 s — misurato su 13 checks d'archive
 FULL_VERIFICATION = {"FormalConjectures.Util.ProblemImports": 33.0,
                      "FormalConjecturesUtil": 47.0}
 
 
 def test_exploration_is_faster_than_a_verification(inspection):
-    """Il reason per cui esiste: se l'exploration non fosse sensibilmente piu'
-    rapida di one check complete, non servirebbe a niente.
+    """The reason it exists: if exploration were not appreciably faster than a full
+    verification, it would be pointless.
 
-    Si prende il MIGLIORE di two misure. Non e' per far passare il test: la
-    grandezza da misurare e' quanto costa un'exploration su questa macchina,
-    e la before misura include la cache fredda e l'eventuale carico di altri
-    jobs in corso. Misurare il caso worst below carico misurerebbe il
-    carico, non lo strumento.
+    The BEST of two measurements is taken. Not to make the test pass: the quantity to
+    be measured is what an exploration costs on this machine, and the first
+    measurement includes a cold cache and whatever other work is in progress.
+    Measuring the worst case under load would measure the load, not the tool.
     """
     import config
     piena = FULL_VERIFICATION.get(config.utility_module(), 33.0)
@@ -152,7 +151,7 @@ def test_exploration_is_faster_than_a_verification(inspection):
         seconds = min(seconds, again.seconds)
     assert seconds < piena * 0.7, (
         f"troppo lenta: {seconds:.1f}s against i {piena:.0f}s di one "
-        f"check complete su questo snapshot")
+        f"full verification on this snapshot")
 
 
 def test_the_timeout_interrupts_a_non_terminating_tactic():
@@ -162,22 +161,21 @@ example : True := by
   have : ∀ n : ℕ, n = n := fun n => rfl
   trivial
 """), timeout=5)
-    # non ci aspettiamo che questo specifico file scada: verifichiamo only che
-    # il parametro sia rispettato e non faccia saltare la funzione
+    # this particular file is not expected to time out: we only check that
+    # the parameter is honoured and does not break the function
     assert r.seconds < 60
 
 
-# --- gli slot: two explorations insieme non devono mescolarsi ----------------
+# --- the slots: two explorations at once must not get mixed up ---------------
 
 def test_two_explorations_at_once_do_not_get_mixed_up():
-    """Il finding che questo test fix era della specie worst.
+    """The defect this test fixes was of the worst kind.
 
-    Il file di inspection vive nell'albero dell'archive e il suo name E' il name
-    del module Lean, quindi era fisso: `E0.lean`. Due explorations insieme si
-    sovrascrivevano il file e ognuna leggeva i messages dell'altra. Nella caccia
-    agli artefacts questo ha fatto sembrare che one tactic banale avesse chiuso
-    un problem aperto di topologia: i messages che arrivavano erano di un other
-    problem, compilato da un other processo.
+    The inspection file lives inside the archive's tree and its name IS the Lean
+    module's name, so it was fixed: `E0.lean`. Two explorations at once overwrote the
+    file and each read the other's messages. During the artefact hunt this made it
+    look as though a trivial tactic had closed an open topology problem: the messages
+    arriving belonged to a different problem, compiled by a different process.
     """
     import threading
     results = {}
@@ -195,7 +193,7 @@ def test_two_explorations_at_once_do_not_get_mixed_up():
         f.start()
     for f in threads:
         f.join()
-    # ognuna deve parlare del PROPRIO file, e i two file devono essere diversi
+    # each has to speak about ITS OWN file, and the two files have to differ
     import re
     file_a = set(re.findall(r"E(\d+)\.lean", results["A"].messages))
     file_b = set(re.findall(r"E(\d+)\.lean", results["B"].messages))
