@@ -161,7 +161,7 @@ try:
     result = "WRITE SUCCEEDED"
 except Exception as e:
     result = type(e).__name__
-print(json.dumps({"event": "progress", "position": 0, "write_op": result}), flush=True)
+print(json.dumps({"event": "progress", "position": 0, "write": result}), flush=True)
 with open(os.environ["SEARCH_STATE"], "w") as f:
     json.dump({"position": 0, "examined": 0, "found": [result]}, f)
 '''

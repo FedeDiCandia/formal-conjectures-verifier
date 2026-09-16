@@ -218,10 +218,10 @@ def test_the_guard_does_not_disturb_the_archives_real_files():
         # It is not a false alarm: it is why a problem "already solved in the
         # archive" is not necessarily solvable under our rules.
 
-        new_items = [x for x in r.findings
-                 if x.rule.startswith(("metaprogramming:", "attribute:"))
-                 or x.rule in ("command:meta", "command:simproc", "command:run_meta",
-                               "command:notation3")]
-        if new_items:
-            culprits.append((f.name, [x.rule for x in new_items]))
-    assert not culprits, f"falsi allarmi su file real_list: {culprits[:5]}"
+        flagged = [x for x in r.findings
+                   if x.rule.startswith(("metaprogramming:", "attribute:"))
+                   or x.rule in ("command:meta", "command:simproc", "command:run_meta",
+                                 "command:notation3")]
+        if flagged:
+            culprits.append((f.name, [x.rule for x in flagged]))
+    assert not culprits, f"false alarms on real archive files: {culprits[:5]}"
