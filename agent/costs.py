@@ -1,19 +1,19 @@
 """
-Calcolo dei costi e limit di spesa.
+Cost arithmetic and the spending limit.
 
-I numbers vengono dai fields `usage` che l'API restituisce in OGNI answer:
-non sono stime, sono i token effettivamente fatturati.
+The numbers come from the `usage` fields the API returns with EVERY response: they
+are not estimates, they are the tokens actually billed.
 
-Il limit viene fatto rispettare in DUE momenti:
+The limit is enforced at TWO moments:
 
-  * a posteriori, sommando quanto e' state spent;
-  * a priori, PRIMA di ogni call: si count esattamente how_many token
-    entreranno nella richiesta (con l'endpoint di count, che e' gratuito) e
-    si compute il cost MASSIMO possibile di quella call. Se non ci sta nel
-    residue, la call non parte.
+  * after the fact, by summing what has been spent;
+  * beforehand, BEFORE every call: the exact number of tokens that will enter the
+    request is counted (with the count endpoint, which is free) and the MAXIMUM
+    possible cost of that call is computed. If it does not fit in what is left, the
+    call does not start.
 
-Il second controllo e' quello che rende il limit davvero rigido: senza, one
-singola answer lunga potrebbe sforare di parecchio before che ce ne accorgiamo.
+The second check is what makes the limit genuinely hard: without it, a single long
+response could overshoot considerably before anyone noticed.
 """
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ from dataclasses import dataclass, field
 
 @dataclass(frozen=True)
 class Prices:
-    """Dollari per MILIONE di token."""
+    """Dollars per MILLION tokens."""
     input: float
     output: float
     cache_write_5m: float
@@ -30,28 +30,20 @@ class Prices:
     cache_read: float
 
 
-#: Listino ufficiale (platform.claude.com/docs — Prompt caching, tabella prices;
-#: verificato il 2026-09-10).
+#: Prices in dollars per million tokens, VERIFIED against the official page
+#: <https://platform.claude.com/docs/en/about-claude/pricing> on 11 September 2026.
 #:
-#: I moltiplicatori NON sono uguali per all_items i modelli, quindi qui sono scritti
-#: i prices assoluti invece di calcolarli:
-#:   - write_op in cache a 5 minuti: 1,25 volte l'input;
-#:   - write_op in cache a 1 now:    2 volte l'input  (non 1,25!);
-#:   - lettura da cache:              0,1 volte l'input,
-#:     TRANNE Fable 5.1 e Mythos 5.1, che usano 0,025 volte.
-#: Prices in dollari per milione di token, VERIFICATI sulla pagina ufficiale
-#: <https://platform.claude.com/docs/en/about-claude/pricing> l'11 settembre 2026.
-#: Si tengono in forma assoluta e non come moltiplicatori perche' i moltiplicatori
-#: NON sono universali: la lettura dalla cache costa 0,1x il prezzo d'ingresso su
-#: all_items i modelli tranne Fable 5.1 e Mythos 5.1, dove costa 0,025x. Con un
-#: moltiplicatore unico il budget di Fable 5.1 sarebbe sbagliato di quattro volte
-#: sulla entry che in one sessione lunga pesa piu' di all_items.
+#: They are kept in absolute form rather than as multipliers because the
+#: multipliers are NOT universal: a cache read costs 0.1x the input price on every
+#: model except Fable 5.1 and Mythos 5.1, where it costs 0.025x. With a single
+#: multiplier, Fable 5.1's budget would be wrong by a factor of four on the entry
+#: that weighs most in a long session.
 #:
-#: Nota sul confronto fra modelli: Fable 5.1 costa il doppio di Opus 5 in ingresso
-#: e in output, ma la sua lettura dalla cache costa la META' in value assoluto
-#: ($0,25 against $0,50). Sul profile di token di un attempt lungo — MISURATO da
-#: Epoch AI: 36,9 milioni di token read_count dalla cache against 685 mila in output —
-#: il report reale non e' 2x ma 1,45x.
+#: A note on comparing models: Fable 5.1 costs twice Opus 5 on input and on output,
+#: but its cache reads cost HALF as much in absolute terms ($0.25 against $0.50).
+#: On the token profile of a long attempt — MEASURED by Epoch AI: 36.9 million
+#: tokens read from cache against 685 thousand on output — the real ratio is not 2x
+#: but 1.45x.
 PRICE_LIST: dict[str, Prices] = {
     "claude-opus-5":    Prices(input=5.00,  output=25.00, cache_write_5m=6.25,
                                cache_write_1h=10.00, cache_read=0.50),
@@ -72,15 +64,15 @@ def prices(model: str) -> Prices:
     if model in PRICE_LIST:
         return PRICE_LIST[model]
     raise KeyError(
-        f"Prices sconosciuti per il model '{model}'. Aggiungili in agent/costs.py "
-        f"before di usarlo: senza prices il limit di spesa non puo' essere fatto "
-        f"rispettare, ed e' meglio fermarsi che far finta. "
-        f"Modelli noti: {', '.join(PRICE_LIST)}")
+        f"Unknown prices for the model '{model}'. Add them to agent/costs.py before "
+        f"using it: without prices the spending limit cannot be enforced, and it is "
+        f"better to stop than to pretend. "
+        f"Known models: {', '.join(PRICE_LIST)}")
 
 
 @dataclass
 class Usage:
-    """Token consumati, sommati su piu' calls."""
+    """Tokens consumed, summed over several calls."""
     input_tokens: int = 0
     output_tokens: int = 0
     cache_write_5m: int = 0
@@ -93,11 +85,10 @@ class Usage:
         self.output_tokens += getattr(usage, "output_tokens", 0) or 0
         self.cache_read += getattr(usage, "cache_read_input_tokens", 0) or 0
 
-        # L'API distingue le scritture in cache a 5 minuti da quelle a 1 now,
-        # che costano il doppio. Se il detail non c'e' (risposte vecchie o
-        # altri fornitori), si usa il total e lo si count come 5 minuti — e'
-        # la tariffa piu' bassa, quindi il field dettagliato va preferito
-        # quando c'e', per non SOTTOstimare.
+        # The API distinguishes 5-minute cache writes from 1-hour ones, which cost
+        # twice as much. If the detail is absent (older responses, or other
+        # providers), the total is used and counted as 5 minutes — the cheaper rate,
+        # so the detailed field is preferred when present, to avoid UNDERestimating.
         detail = getattr(usage, "cache_creation", None)
         if detail is not None:
             self.cache_write_5m += getattr(detail, "ephemeral_5m_input_tokens", 0) or 0
@@ -114,17 +105,17 @@ class Usage:
                 + self.cache_write_1h * p.cache_write_1h
                 + self.cache_read * p.cache_read) / 1_000_000
 
-    def riassunto(self, model: str) -> str:
-        cache = f"cache scritta {self.cache_write_5m:,}"
+    def summary(self, model: str) -> str:
+        cache = f"cache written {self.cache_write_5m:,}"
         if self.cache_write_1h:
-            cache += f" (+{self.cache_write_1h:,} a 1h)"
+            cache += f" (+{self.cache_write_1h:,} at 1h)"
         return (f"{self.calls} calls | input {self.input_tokens:,} | {cache} | "
-                f"cache letta {self.cache_read:,} | output {self.output_tokens:,} | "
+                f"cache read {self.cache_read:,} | output {self.output_tokens:,} | "
                 f"cost ${self.cost(model):.4f}")
 
 
 class SpendLimitExceeded(RuntimeError):
-    """Sollevata quando il budget non basta piu'. Ferma tutto."""
+    """Raised when the budget no longer suffices. It stops everything."""
 
 
 @dataclass
@@ -155,43 +146,43 @@ class Budget:
         if problem:
             self.per_problem.setdefault(problem, Usage()).add(usage)
 
-    # --- il controllo a priori, quello che rende rigido il limit -----------
+    # --- the check beforehand, which is what makes the limit hard ----------
 
     def max_possible_cost(self, input_tokens: int, max_tokens: int) -> float:
-        """Il cost worst che one call puo' avere.
+        """The worst-case cost a call can have.
 
-        Peggiore davvero:
-          * ogni token di ingresso viene contato alla tariffa di SCRITTURA in
-            cache, che e' la piu' cara delle three possibilita' (1,25 volte
-            l'input). In pratica one parte sara' letta dalla cache e costera'
-            dieci volte meno, ma qui non si scommette;
-          * l'output viene contata come se il model riempisse tutto lo spazio
-            concessogli da `max_tokens`.
+        Genuinely worst-case:
+          * every input token is counted at the cache-WRITE rate, the dearest of the
+            three possibilities (1.25x the input price). In practice some of it will
+            be read from the cache and cost ten times less, but no bets are placed
+            here;
+          * the output is counted as though the model filled all the room
+            `max_tokens` allows it.
         """
         p = self.prices
         return (input_tokens * p.cache_write_5m + max_tokens * p.output) / 1_000_000
 
     def check_before_calling(self, input_tokens: int, max_tokens: int) -> None:
-        """Da chiamare PRIMA di ogni richiesta. Solleva se non ci sta."""
+        """To be called BEFORE every request. Raises if it does not fit."""
         if self.exhausted:
             raise SpendLimitExceeded(
-                f"Limite di spesa reached: ${self.spent:.4f} su "
-                f"${self.dollar_limit:.2f}. Mi fermo.")
+                f"Spending limit reached: ${self.spent:.4f} of "
+                f"${self.dollar_limit:.2f}. Stopping.")
         worst = self.max_possible_cost(input_tokens, max_tokens)
         if worst > self.residue:
             raise SpendLimitExceeded(
-                f"Non parto: questa call puo' costare fino a ${worst:.4f} "
-                f"({input_tokens:,} token in ingresso, fino a {max_tokens:,} in output) "
-                f"ma restano only ${self.residue:.4f} "
-                f"(spesi ${self.spent:.4f} su ${self.dollar_limit:.2f}).")
+                f"Not starting: this call could cost up to ${worst:.4f} "
+                f"({input_tokens:,} input tokens, up to {max_tokens:,} on output) "
+                f"but only ${self.residue:.4f} is left "
+                f"(${self.spent:.4f} spent of ${self.dollar_limit:.2f}).")
 
     def affordable_max_tokens(self, input_tokens: int, cap: int,
                                residue: float | None = None) -> int:
-        """Quanti token di output ci si possono ancora permettere.
+        """How many output tokens can still be afforded.
 
-        Serve per ridurre `max_tokens` invece di fermarsi, quando il residue e'
-        poco ma non nullo. `residue` permette di passare un limit piu' tight
-        di quello globale, per example il cap di spesa di un singolo problem.
+        This is for reducing `max_tokens` instead of stopping, when what is left is
+        little but not nothing. `residue` allows a tighter limit than the global one
+        to be passed in — for instance a single problem's spending cap.
         """
         p = self.prices
         available = self.residue if residue is None else min(self.residue, residue)
@@ -201,6 +192,6 @@ class Budget:
             return 0
         return min(cap, int(leftover * 1_000_000 / p.output))
 
-    def riga_stato(self) -> str:
+    def status_line(self) -> str:
         pct = 100 * self.spent / self.dollar_limit if self.dollar_limit else 0
-        return f"[spesa ${self.spent:.4f} / ${self.dollar_limit:.2f}  ({pct:.0f}%)]"
+        return f"[spend ${self.spent:.4f} / ${self.dollar_limit:.2f}  ({pct:.0f}%)]"

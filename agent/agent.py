@@ -1,27 +1,26 @@
-#!/usr/bin/env python3
 """
-Un agent minimum che tenta di dimostrare un problem dell'archive.
+A minimal agent that tries to prove a problem from the archive.
 
-COME FUNZIONA
--------------
-E' un ciclo semplice:
+HOW IT WORKS
+------------
+It is a simple loop:
 
-  1. si manda al model l'statement da dimostrare e le rules;
-  2. il model risponde, eventualmente chiedendo di usare one strumento;
-  3. si esegue lo strumento e gli si restituisce il result;
-  4. si ripete finche' il model smette di chiedere tools, oppure finche'
-     `lean_check` accetta one dimostrazione, oppure finche' finiscono i soldi
-     o i attempts.
+  1. the statement to prove and the rules are sent to the model;
+  2. the model answers, possibly asking to use a tool;
+  3. the tool is run and its result is handed back;
+  4. this repeats until the model stops asking for tools, or `lean_check`
+     accepts a proof, or the money or the attempts run out.
 
-Gli tools disponibili sono two (vedi agent/tools.py):
-  * `lean_check`  — sottopone un file Lean al verifier;
-  * `run_python`  — esegue code Python isolated, senza rete, con timeout.
+There are three tools available (see agent/tools.py):
+  * `lean_explore` — compiles a scratch Lean file and returns every message;
+  * `lean_check`   — submits a Lean file to the verifier;
+  * `run_python`   — runs isolated Python code, with no network and a timeout.
 
-IL LIMIT DI SPESA
+THE SPENDING LIMIT
 ------------------
-E' un limit RIGIDO, calcolato dai fields `usage` che l'API restituisce a ogni
-answer — quindi dai token davvero fatturati, non da one estimate. Prima di ogni
-call si controlla il saldo: se e' exhausted, l'agent si ferma e lo dice.
+It is a HARD limit, computed from the `usage` fields the API returns with every
+response — so from the tokens actually billed, not from an estimate. Before each
+call the balance is checked: if it is exhausted, the agent stops and says so.
 """
 from __future__ import annotations
 
@@ -35,7 +34,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import anthropic
-import httpx2   # il trasporto dell'SDK: i suoi errors a meta' answer non diventano APIError
+import httpx2   # the SDK's transport: its mid-response errors do not become APIError
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "verifier"))
@@ -45,50 +44,48 @@ import config as verifier_config          # noqa: E402
 from index import ProblemIndex, Problem       # noqa: E402
 from costs import Budget, SpendLimitExceeded, Usage   # noqa: E402
 
-#: Spazio maximum concesso a one answer. Serve high perche' il reasoning
-#: esteso ci rientra inside; il controllo del budget lo riduce se serve.
+#: The maximum room allowed for one response. It has to be high because extended
+#: reasoning is counted inside it; the budget check reduces it when necessary.
 MAX_TOKENS = 32_000
 
-#: Sotto questa threshold one answer non puo' essere utile nemmeno per dire
-#: qualcosa di breve: allora, e only allora, il attempt si ferma.
+#: Below this threshold a response cannot be useful even for saying something
+#: short: then, and only then, the attempt stops.
 #:
-#: PERCHE' 2000 E NON 6000. Il controllo del budget riduce `max_tokens` a quanto
-#: sta nel residue, e si arrende quando quel number scende below questa threshold.
-#: Con 6000 e i prices di Fable 5.1 ($50 per milione in output) servivano $0,30
-#: di margine per ogni call, oltre al cost dell'ingresso: un cap da $0,50
-#: per problem permetteva UNA call, e two problems su undici ne hanno avute
-#: ZERO. Non era il model ad arrendersi, era il nostro contabile. Con 2000 la
-#: threshold costa $0,10 e un cap low resta utilizzabile.
+#: WHY 2000 AND NOT 6000. The budget check reduces `max_tokens` to what fits in
+#: what is left, and gives up when that number falls below this threshold. With
+#: 6000 and Fable 5.1's prices ($50 per million on output) every call needed $0.30
+#: of headroom on top of the input cost: a $0.50 per-problem cap allowed ONE call,
+#: and two problems out of eleven got ZERO. It was not the model giving up, it was
+#: our accountant. With 2000 the threshold costs $0.10 and a low cap stays usable.
 #:
-#: Il limit resta RIGIDO: nessuna call parte se il suo cost maximum
-#: possibile supera il residue. Cambia only dove sta il confine fra «riduci la
-#: answer» e «stopped».
+#: The limit stays HARD: no call starts if its maximum possible cost exceeds what
+#: is left. What changes is only where the line falls between "shorten the answer"
+#: and "stop".
 MIN_USEFUL_TOKENS = 2_000
 
-#: Sotto questa threshold la answer e' cosi' stretta che vale segnalarlo nel
-#: log: serve a capire, leggendo un attempt, se il model ha smesso
-#: perche' non aveva piu' idee o perche' non aveva piu' spazio.
+#: Below this threshold the response is so cramped that it is worth noting in the
+#: log: it makes it possible to tell, reading an attempt back, whether the model
+#: stopped because it had run out of ideas or out of room.
 TIGHT_TOKENS = 8_000
 
-#: Quante interruzioni di rete di fila si tollerano su un problem before di
-#: chiuderlo. Il 12 settembre un «Connection reset by peer» a meta' answer ha
-#: fermato un giro intero al terzo problem: l'error veniva da httpx2, che l'SDK
-#: non traduce in `anthropic.APIError`, e il `try` del ciclo principale non lo
-#: prendeva.
+#: How many consecutive network interruptions are tolerated on one problem before
+#: closing it. On 12 September a "Connection reset by peer" mid-response stopped a
+#: whole run at the third problem: the error came from httpx2, which the SDK does
+#: not translate into `anthropic.APIError`, so the main loop's `try` did not catch
+#: it.
 MAX_CONSECUTIVE_NETWORK_ERRORS = 3
 
-#: Le eccezioni che indicano one connessione caduta, non one answer dell'API.
+#: The exceptions that mean a dropped connection rather than an API response.
 NETWORK_ERRORS = (anthropic.APIConnectionError, anthropic.APITimeoutError,
                   httpx2.TransportError)
 
 
 class _WorstCaseUsage:
-    """Un `usage` finto che costa esattamente `Budget.max_possible_cost`.
+    """A fake `usage` that costs exactly `Budget.max_possible_cost`.
 
-    Serve quando one answer non arriva: il suo cost vero non si conosce, ma
-    l'API puo' averla fatturata in parte. Addebitare il caso worst tiene
-    rigido il limit: la spesa registrata puo' risultare piu' alta di quella
-    vera, mai piu' bassa.
+    It is needed when a response never arrives: its real cost is unknown, but the
+    API may have billed part of it. Charging the worst case keeps the limit hard:
+    the spend recorded can come out higher than the real one, never lower.
     """
     def __init__(self, input_tokens: int, max_tokens: int):
         self.input_tokens = 0
@@ -105,11 +102,11 @@ DEFAULT_MODEL = "claude-opus-5"
 
 
 def load_env() -> None:
-    """Legge il file `.env` del progetto e ne mette le variables nell'environment.
+    """Read the project's `.env` file and put its variables in the environment.
 
-    Serve per la key API. Il file e' escluso da git (vedi .gitignore), cosi'
-    la key non finisce per sbaglio in un commit. Le variables gia' presenti
-    nell'environment hanno la precedenza e non vengono sovrascritte.
+    This is for the API key. The file is excluded from git (see .gitignore), so the
+    key cannot end up in a commit by accident. Variables already present in the
+    environment take precedence and are not overwritten.
     """
     path = ROOT / ".env"
     if not path.is_file():
@@ -126,9 +123,9 @@ def load_env() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Il text di system (istruzioni fisse). Va tenuto STABILE fra one call e
-# l'altra: e' la parte che viene messa in cache, e qualunque byte diverso
-# invaliderebbe la cache facendo pagare tutto a prezzo pieno.
+# The system text (the fixed instructions). It has to be kept STABLE between
+# calls: it is the part that gets cached, and any different byte would invalidate
+# the cache and make everything cost full price.
 # ---------------------------------------------------------------------------
 
 INSTRUCTIONS = """You are working on the `formal-conjectures` benchmark (Google DeepMind), \
@@ -241,19 +238,19 @@ patching it.
 is beyond you, say so plainly instead of submitting a proof you know is broken."""
 
 
-#: La variant «insistente» delle istruzioni.
+#: The "insistent" variant of the instructions.
 #:
-#: PERCHE' ESISTE. Nel first giro sui problems open_problems l'agent ha failed dieci
-#: volte su dieci nello stesso way: esplorava, calcolava, concludeva di non
-#: farcela e si fermava — spendendo in media $0,23 di un cap da $2 e senza
-#: consegnare NEMMENO UNA volta un candidato a `lean_check`. Le istruzioni
-#: attuali gliela offrono, quella away d'output: «se ti convinci che il problem
-#: e' oltre le tue forze, dillo chiaramente». Chi ha misurato il benchmark OEIS
-#: Open aveva invece agenti che arrivavano al cap nel 70% dei cases.
+#: WHY IT EXISTS. On the first round of open problems the agent failed ten times
+#: out of ten in the same way: it explored, computed, concluded it could not manage
+#: and stopped — spending on average $0.23 of a $2 cap and submitting NOT ONE
+#: candidate to `lean_check`. The current instructions offer it that way out: "if
+#: you become convinced the problem is beyond you, say so plainly". Whoever
+#: measured the OEIS Open benchmark had agents that reached the cap 70% of the
+#: time.
 #:
-#: Questa variant toglie l'invito ad arrendersi e dice che il budget e' li' per
-#: essere consumato. Serve a rispondere a one domanda precisa: lo zero su dieci
-#: viene dalla difficolta' dei problems o dal way in cui l'agent si arrende?
+#: This variant removes the invitation to give up and says the budget is there to
+#: be spent. It exists to answer one precise question: does the zero out of ten
+#: come from the difficulty of the problems or from the way the agent gives up?
 INSISTENT_INSTRUCTIONS = INSTRUCTIONS.replace(
     """- Stop when `lean_check` reports ACCEPTED. If you become convinced the problem \
 is beyond you, say so plainly instead of submitting a proof you know is broken.""",
@@ -275,57 +272,57 @@ route.""")
 
 
 def chosen_instructions(variant: str) -> str:
-    """Il text di system, second la variant chiesta."""
-    if variant == "insistenti":
+    """The system text, according to the variant asked for."""
+    if variant == "insistent":
         base = INSISTENT_INSTRUCTIONS
-    elif variant == "attuali":
+    elif variant == "current":
         base = INSTRUCTIONS
     else:
-        raise SystemExit(f"variant di istruzioni sconosciuta: {variant!r} "
-                         f"(sono 'attuali' e 'insistenti')")
+        raise SystemExit(f"unknown instruction variant: {variant!r} "
+                         f"(they are 'current' and 'insistent')")
     return base.replace("{UTILITY_MODULE}", verifier_config.utility_module())
 
 
 def _verification_kind(report: str, accepted: bool) -> tuple[str, str]:
-    """Ritorna (controllo failed, kind), leggendo il report di verify.py."""
+    """Return (the failed check, the kind), reading verify.py's report."""
     if accepted:
         return "", "accepted"
     failed = ""
     for line in report.split("\n"):
-        if line.strip().startswith("[FALLITO]"):
+        if line.strip().startswith("[FAILED]"):
             failed = line.split("]", 1)[1].split("—")[0].strip()
             break
     text = report.lower()
-    if "non dichiara" in text or "not found in solution" in text:
+    if "does not declare" in text or "not found in solution" in text:
         return failed, "exploration"
-    if "non compila" in text or "compila senza errors" in failed:
-        return failed, "errore_tecnico"
-    if "assiom" in failed:
-        return failed, "buco_o_assioma"
-    if "kind identico" in failed or "definizioni dell" in failed:
-        return failed, "enunciato_sbagliato"
-    return failed, "errore_tecnico"
+    if "does not compile" in text or "compiles without errors" in failed:
+        return failed, "technical_error"
+    if "axiom" in failed:
+        return failed, "hole_or_axiom"
+    if "type identical" in failed or "archive definitions" in failed:
+        return failed, "wrong_statement"
+    return failed, "technical_error"
 
 
-def istruzioni() -> str:
-    """Le istruzioni, con il name del module di utility' di QUESTO snapshot.
+def instructions() -> str:
+    """The instructions, with THIS snapshot's utility module name.
 
-    Cambia fra le versioni dell'archive: `FormalConjectures.Util.ProblemImports`
-    nel tag bench-v1, `FormalConjecturesUtil` nel branch main. Scriverlo fisso
-    faceva fallire ogni attempt sul second snapshot.
+    It changes between versions of the archive: `FormalConjectures.Util.ProblemImports`
+    in the bench-v1 tag, `FormalConjecturesUtil` on the main branch. Hard-coding it
+    made every attempt on the second snapshot fail.
     """
     return INSTRUCTIONS.replace("{UTILITY_MODULE}", verifier_config.utility_module())
 
 
 def problem_message(problem: Problem, file_text: str) -> str:
-    descrizione = (problem.docstring or "").strip()
+    description = (problem.docstring or "").strip()
     return f"""# The problem
 
 **Theorem to trials:** `{problem.theorem}`
 **Module it lives in:** `{problem.module}` (do NOT import this)
 **Category:** {problem.category}
 
-{"**Informal statement:** " + descrizione if descrizione else ""}
+{"**Informal statement:** " + description if description else ""}
 
 Below is the problem's source file, with every proof replaced by `sorry`.
 Everything else — imports, `open` commands, definitions, notation — is exactly
@@ -341,29 +338,29 @@ Produce a complete Lean file proving `{problem.theorem}`, and check it with
 
 
 # ---------------------------------------------------------------------------
-# Risultato di un attempt
+# The result of one attempt
 # ---------------------------------------------------------------------------
 
 @dataclass
 class LeanCheck:
-    """Una singola call a lean_check, con il suo result misurato."""
+    """One call to lean_check, with its measured outcome."""
     chars: int
     result: str                  # ACCEPTED / REJECTED / ERROR / TIMEOUT
-    failed_check: str      # which controllo non e' passato
-    seconds: float              # tempo di computation LOCALE (Lean), non dell'API
-    #: come classifichiamo il attempt. Regola dichiarata:
-    #:   exploration        -> il file non dichiarava il theorem richiesto
-    #:                          (il model stava ispezionando, non tentando)
-    #:   errore_tecnico      -> il file non compila
-    #:   buco_o_assioma      -> compila ma la dimostrazione ha un buco
-    #:   enunciato_sbagliato -> compila ma dimostra un'altra cosa
-    #:   accepted           -> exceeded
+    failed_check: str            # which check did not pass
+    seconds: float               # LOCAL computation time (Lean), not the API's
+    #: how the attempt is classified. A declared rule:
+    #:   exploration      -> the file did not declare the requested theorem
+    #:                       (the model was inspecting, not attempting)
+    #:   technical_error  -> the file does not compile
+    #:   hole_or_axiom    -> it compiles but the proof has a hole
+    #:   wrong_statement  -> it compiles but proves something else
+    #:   accepted         -> passed
     kind: str
 
 
 @dataclass
 class Iteration:
-    """Una passata del ciclo: one call all'API piu' gli tools usati."""
+    """One pass of the loop: one API call plus the tools used."""
     number: int
     input_tokens: int = 0
     output_tokens: int = 0
@@ -393,18 +390,18 @@ class Attempt:
     usage: Usage = field(default_factory=Usage)
     solution: str = ""
     transcript: list = field(default_factory=list)
-    #: misurazioni per iteration
+    #: measurements per iteration
     detail: list = field(default_factory=list)      # list[Iteration]
     api_seconds: float = 0.0
     lean_seconds: float = 0.0
     python_seconds: float = 0.0
-    #: how_many volte la conversazione e' stata accorciata per far spazio
+    #: how many times the conversation was shortened to make room
     compactions: int = 0
-    #: calls interrotte dalla rete, addebitate al cost maximum possibile
+    #: calls interrupted by the network, charged at the maximum possible cost
     network_interruptions: int = 0
-    #: la total_sum di quegli addebiti: sta nel budget total, non in `usage`
+    #: the total of those charges: it sits in the global budget, not in `usage`
     network_charge: float = 0.0
-    #: classificazione del failure, second la rule dichiarata below
+    #: classification of the failure, per the rule declared below
     cause: str = ""
 
     @property
@@ -416,57 +413,56 @@ class Attempt:
         return count
 
     def classify_failure(self) -> str:
-        """Distingue un failure MATEMATICO da one di SISTEMA.
+        """Tell a MATHEMATICAL failure from a SYSTEM one.
 
-        Regola dichiarata, non a sensazione:
-          * se non c'e' state nessun attempt vero (all_items le checks erano
-            explorations), il failure e' di SISTEMA: l'agent non e' arrivato
-            a provarci, ha spent tutto a capire gli tools e l'API di Mathlib;
-          * se i attempts real_list sono finiti only con errors di compilazione, e'
-            TECNICO: sapeva cosa fare ma non come scriverlo in Lean;
-          * se almeno un attempt e' arrivato a compilare e ha failed per un
-            buco o per l'statement sbagliato, e' MATEMATICO: la dimostrazione
-            non c'era.
+        A declared rule, not a feeling:
+          * if there was no real attempt at all (every verification was an
+            exploration), the failure is SYSTEMIC: the agent never got as far as
+            trying, it spent everything working out the tools and Mathlib's API;
+          * if the real attempts ended only in compilation errors, it is TECHNICAL:
+            it knew what to do but not how to write it in Lean;
+          * if at least one attempt compiled and failed for a hole or for the wrong
+            statement, it is MATHEMATICAL: the proof was not there.
         """
         if self.solved:
             return "solved"
         n = self.verifications_by_kind
-        real_list = n.get("errore_tecnico", 0) + n.get("buco_o_assioma", 0) + \
-            n.get("enunciato_sbagliato", 0)
-        if real_list == 0:
-            return "system: nessun attempt vero, tutto spent in exploration"
-        if n.get("buco_o_assioma", 0) or n.get("enunciato_sbagliato", 0):
-            return "matematico: ha compilato ma la dimostrazione non c'era"
-        return "tecnico: sapeva cosa dimostrare ma non e' succeeded a scriverlo in Lean"
+        real = n.get("technical_error", 0) + n.get("hole_or_axiom", 0) + \
+            n.get("wrong_statement", 0)
+        if real == 0:
+            return "systemic: no real attempt, everything spent exploring"
+        if n.get("hole_or_axiom", 0) or n.get("wrong_statement", 0):
+            return "mathematical: it compiled but the proof was not there"
+        return "technical: it knew what to prove but could not write it in Lean"
 
 
-#: Oltre questa threshold di token in ingresso la conversazione viene compattata.
-#: Serve per i attempts lunghi: chi ha misurato il benchmark OEIS Open spendeva
-#: $50 per problem, cioe' dell'order di 200 iterations. Senza compattazione la
-#: conversazione supera la finestra del model e il attempt muore per
-#: esaurimento di context invece che di idee.
+#: Above this input-token threshold the conversation is compacted. It is needed
+#: for long attempts: whoever measured the OEIS Open benchmark spent $50 per
+#: problem, that is of the order of 200 iterations. Without compaction the
+#: conversation outgrows the model's window and the attempt dies of exhausted
+#: context rather than of exhausted ideas.
 COMPACTION_THRESHOLD = 120_000
 
-#: Quanti messages in queue restano intact quando si compatta. Il model deve
-#: vedere per intero il suo job recente; quello old gli serve come traccia.
+#: How many trailing messages stay intact when compacting. The model has to see
+#: its recent work in full; the older work only serves as a trace.
 MESSAGES_UNTOUCHED = 8
 
-#: A how_many chars si riducono i results degli tools piu' vecchi.
+#: How many characters the older tool results are reduced to.
 OLD_RESULTS_QUEUE = 600
 
-_CUT_MARK = "\n… [result accorciato per far spazio nel context; "\
-                "se ti serve di new_item, richiedilo]"
+_CUT_MARK = "\n… [result shortened to make room in the context; "\
+            "ask again if you still need it]"
 
 
 def compact_conversation(messages: list, *, intact: int = MESSAGES_UNTOUCHED,
-                           queue: int = OLD_RESULTS_QUEUE) -> int:
-    """Accorcia i results degli tools piu' vecchi. Ritorna how_many ne accorcia.
+                         tail: int = OLD_RESULTS_QUEUE) -> int:
+    """Shorten the older tool results. Return how many were shortened.
 
-    Il first message (l'statement del problem) e gli latest_items `intact` non si
-    toccano mai. Si accorciano only i `tool_result`, perche' sono il grosso: un
-    error di Lean arriva a 40 000 chars, e in duecento iterations sono
-    milioni. Il code che il model ha scritto (i `tool_use`) resta intero: e'
-    il suo job, e ricostruirlo costerebbe piu' di quanto occupa.
+    The first message (the problem's statement) and the last `intact` ones are never
+    touched. Only `tool_result` blocks are shortened, because they are the bulk: one
+    Lean error can reach 40,000 characters, and over two hundred iterations that is
+    millions. The code the model wrote (the `tool_use` blocks) is kept whole: it is
+    its work, and rebuilding it would cost more than it occupies.
     """
     if len(messages) <= intact + 1:
         return 0
@@ -479,34 +475,35 @@ def compact_conversation(messages: list, *, intact: int = MESSAGES_UNTOUCHED,
             if not isinstance(block, dict) or block.get("type") != "tool_result":
                 continue
             text = block.get("content")
-            if not isinstance(text, str) or len(text) <= queue:
+            if not isinstance(text, str) or len(text) <= tail:
                 continue
             if text.endswith(_CUT_MARK):
                 continue
-            block["content"] = text[:queue] + _CUT_MARK
+            block["content"] = text[:tail] + _CUT_MARK
             cut += 1
     return cut
 
 
 # ---------------------------------------------------------------------------
-# Il ciclo
+# The loop
 # ---------------------------------------------------------------------------
 
-class _Doppio:
-    """Scrive su two posti insieme: lo schermo e un file.
+class _Tee:
+    """Writes to two places at once: the screen and a file.
 
-    Serve perche' un giro lanciato in sottofondo non mostra niente finche' non
-    finisce, e chi guarda non ha way di sapere se sta andando. Con il log
-    su file si puo' fare `tail -f` e vedere le lines arrivare.
+    It is needed because a run launched in the background shows nothing until it
+    finishes, and whoever is watching has no way of knowing whether it is getting
+    anywhere. With the log on a file one can `tail -f` and watch the lines arrive.
 
-    Non usa `print` reindirizzato con `>` perche' quello lo decide chi lancia:
-    il log deve esserci sempre, also quando l'output va in one pipe.
+    It does not rely on `print` redirected with `>`, because that is the launcher's
+    choice: the log has to be there always, including when the output goes into a
+    pipe.
     """
 
     def __init__(self, stream, path: Path):
         self.stream = stream
         path.parent.mkdir(parents=True, exist_ok=True)
-        self.file = open(path, "a", encoding="utf-8", buffering=1)  # line per line
+        self.file = open(path, "a", encoding="utf-8", buffering=1)  # line by line
 
     def write(self, text):
         self.stream.write(text)
@@ -525,29 +522,29 @@ class _Doppio:
 def solve(problem: Problem, index: ProblemIndex, *, client, model: str,
             budget: Budget, problem_cap: float, max_iterations: int = 30,
             effort: str = "high", lean_timeout: int | None = None,
-            verbose: bool = True, instruction_variant: str = "attuali") -> Attempt:
+            verbose: bool = True, instruction_variant: str = "current") -> Attempt:
 
     start = time.time()
     t = Attempt(problem=problem.theorem)
 
     file_text = file_without_proofs(problem, index)
     try:
-        # Il shakedown dev'essere onesto: se la dimostrazione non e' stata
-        # nascosta, il problem si SALTA. Prima interrompeva tutta l'esecuzione,
-        # e one calibrazione da undici problems si fermava al terzo.
+        # The exercise has to be honest: if the proof has not been hidden, the
+        # problem is SKIPPED. Earlier this aborted the whole run, and an
+        # eleven-problem calibration stopped at the third.
         check_it_is_hidden(problem, file_text)
     except AssertionError as e:
-        t.reason = f"saltato: {e}"
-        t.cause = "system: la dimostrazione dell'archive non si riesce a nascondere"
+        t.reason = f"skipped: {e}"
+        t.cause = "systemic: the archive's proof cannot be hidden"
         t.seconds = time.time() - start
         return t
 
     api_tools = [tools.SCHEMA_LEAN_EXPLORE, tools.SCHEMA_LEAN_CHECK,
                      tools.SCHEMA_RUN_PYTHON]
 
-    # Una folder di job per problem, che sopravvive alle calls: serve
-    # perche' one ricerca in piu' steps possa salvare un checkpoint. Il name e'
-    # ripulito perche' i names dei theorems contengono points e chars strani.
+    # One working directory per problem, surviving between calls: this is what lets
+    # a multi-step search save a checkpoint. The name is sanitised because theorem
+    # names contain dots and awkward characters.
     clean_name = re.sub(r"[^A-Za-z0-9_.-]", "_", problem.theorem)[:80]
     work_dir = verifier_config.ROOT / "runs" / "job" / clean_name
     work_dir.mkdir(parents=True, exist_ok=True)
@@ -555,8 +552,8 @@ def solve(problem: Problem, index: ProblemIndex, *, client, model: str,
 
     spent_at_start = budget.spent
     consecutive_network_errors = 0
-    #: gli addebiti prudenziali delle calls interrotte: contano sul budget
-    #: total, non sul cap di questo problem
+    #: the precautionary charges for interrupted calls: they count against the
+    #: global budget, not against this problem's cap
     network_charges_here = 0.0
 
     def show(*a):
@@ -566,25 +563,25 @@ def solve(problem: Problem, index: ProblemIndex, *, client, model: str,
     for iteration in range(1, max_iterations + 1):
         t.iterations = iteration
 
-        # --- il controllo del portafoglio, PRIMA di spendere -------------
-        # Non basta guardare quanto si e' spent: bisogna sapere quanto puo'
-        # costare la prossima call. Il count dei token e' exact e
-        # gratuito, quindi il cost maximum lo sappiamo in anticipo.
+        # --- the wallet check, BEFORE spending ---------------------------
+        # Looking at what has been spent is not enough: what matters is how much the
+        # next call can cost. Counting the tokens is exact and free, so the maximum
+        # cost is known in advance.
         system = [{"type": "text", "text": chosen_instructions(instruction_variant),
                     "cache_control": {"type": "ephemeral"}}]
         count = client.messages.count_tokens(
             model=model, system=system, tools=api_tools, messages=messages)
         input_tokens = count.input_tokens
 
-        # --- se il context e' troppo grande, si accorcia il passato
+        # --- if the context has grown too large, shorten the past
         if input_tokens > COMPACTION_THRESHOLD:
             cut = compact_conversation(messages)
             if cut:
                 count = client.messages.count_tokens(
                     model=model, system=system, tools=api_tools,
                     messages=messages)
-                show(f"     [context compattato: {cut} results accorciati, "
-                       f"{input_tokens:,} -> {count.input_tokens:,} token]")
+                show(f"     [context compacted: {cut} results shortened, "
+                     f"{input_tokens:,} -> {count.input_tokens:,} tokens]")
                 input_tokens = count.input_tokens
                 t.compactions += 1
 
@@ -595,36 +592,36 @@ def solve(problem: Problem, index: ProblemIndex, *, client, model: str,
 
         if max_tokens < MIN_USEFUL_TOKENS:
             worst = budget.max_possible_cost(input_tokens, MIN_USEFUL_TOKENS)
-            reason = (f"budget insufficiente per continuare: {input_tokens:,} token in "
-                      f"ingresso, la prossima call costerebbe fino a "
-                      f"${worst:.4f} ma restano ${min(budget.residue, problem_residue):.4f} "
-                      f"(${budget.residue:.4f} sul total, ${problem_residue:.4f} su "
-                      f"questo problem)")
+            reason = (f"not enough budget to continue: {input_tokens:,} input tokens, "
+                      f"the next call would cost up to ${worst:.4f} but "
+                      f"${min(budget.residue, problem_residue):.4f} is left "
+                      f"(${budget.residue:.4f} globally, ${problem_residue:.4f} on this "
+                      f"problem)")
             if budget.residue <= worst:
-                # Il attempt va allegato all'eccezione: senza, il job fatto
-                # su QUESTO problem sparisce dal report — cost, iterations e
-                # checks comprese. E' successo davvero: nel giro 0 bis il
-                # settimo problem risultava con $0,00 e zero checks mentre nel
-                # log aveva one check consegnata e mezzo dollaro spent.
-                # Un report che sottostima la spesa e' un problem di sicurezza,
-                # non di cosmetica.
+                # The attempt has to be attached to the exception: without it, the
+                # work done on THIS problem vanishes from the report — cost,
+                # iterations and verifications included. It really happened: in round
+                # 0-bis the seventh problem came out with $0.00 and zero
+                # verifications while the log showed one verification submitted and
+                # half a dollar spent. A report that understates the spend is a
+                # safety problem, not a cosmetic one.
                 t.reason = reason
                 t.cause = t.classify_failure()
                 t.seconds = time.time() - start
                 e = SpendLimitExceeded(reason)
                 e.attempt = t
                 raise e
-            t.reason = reason                        # only questo problem si ferma
+            t.reason = reason                        # only this problem stops
             break
 
-        # doppia sicurezza: se also cosi' non ci sta, non parte
+        # belt and braces: if even that does not fit, it does not start
         budget.check_before_calling(input_tokens, max_tokens)
 
-        tight = ("  ← SPAZIO STRETTO: la answer e' limitata dal budget, non "
-                   "dal model" if max_tokens < TIGHT_TOKENS else "")
-        show(f"\n  ── iteration {iteration}  {budget.riga_stato()}  "
-               f"[{input_tokens:,} token in ingresso, fino a {max_tokens:,} in output, "
-               f"al maximum ${budget.max_possible_cost(input_tokens, max_tokens):.4f}]"
+        tight = ("  ← CRAMPED: the response is limited by the budget, not by the "
+                 "model" if max_tokens < TIGHT_TOKENS else "")
+        show(f"\n  ── iteration {iteration}  {budget.status_line()}  "
+               f"[{input_tokens:,} input tokens, up to {max_tokens:,} on output, "
+               f"at most ${budget.max_possible_cost(input_tokens, max_tokens):.4f}]"
                f"{tight}")
 
         it = Iteration(number=iteration)
@@ -638,20 +635,20 @@ def solve(problem: Problem, index: ProblemIndex, *, client, model: str,
                 output_config={"effort": effort},
                 tools=api_tools,
                 messages=messages,
-                cache_control={"type": "ephemeral"},   # mette in cache also la conversazione
+                cache_control={"type": "ephemeral"},   # cache the conversation too
             ) as stream:
                 answer = stream.get_final_message()
         except NETWORK_ERRORS as e:
-            # La conversazione non cambia: l'iteration successiva rifa' la stessa
-            # call, after aver ricontrollato il budget con l'addebito fatto qui.
+            # The conversation does not change: the next iteration repeats the same
+            # call, after re-checking the budget with the charge made here.
             it.api_seconds = time.time() - t0_api
             worst = _WorstCaseUsage(input_tokens, max_tokens)
             before = budget.spent
-            # Il caso worst va sul budget TOTALE, che cosi' resta rigido, ma non
-            # sul cap del problem ne' sul suo cost. La before versione lo
-            # addebitava also li': un'interruzione da $0,84 consumava da sola un
-            # cap da $1, e nella notte del 13 settembre sei attempts su dodici
-            # sono finiti cosi', senza dire niente sull'agent.
+            # The worst case goes against the GLOBAL budget, which therefore stays
+            # hard, but not against the problem's cap nor its cost. The first version
+            # charged it there too: a $0.84 interruption consumed a $1 cap on its
+            # own, and on the night of 13 September six attempts out of twelve ended
+            # that way, saying nothing about the agent.
             budget.record(worst)
             it.cost = budget.spent - before
             t.network_charge += it.cost
@@ -660,11 +657,11 @@ def solve(problem: Problem, index: ProblemIndex, *, client, model: str,
             t.detail.append(it)
             t.api_seconds += it.api_seconds
             consecutive_network_errors += 1
-            show(f"     !! connessione interrupted ({type(e).__name__}: {e}); addebitati "
-                   f"${it.cost:.4f} al budget total (il caso worst), non al cap del problem")
+            show(f"     !! connection interrupted ({type(e).__name__}: {e}); ${it.cost:.4f} "
+                 f"charged to the global budget (the worst case), not to the problem's cap")
             if consecutive_network_errors >= MAX_CONSECUTIVE_NETWORK_ERRORS:
-                t.reason = (f"error di rete ripetuto: {consecutive_network_errors} calls "
-                            f"interrotte di fila ({type(e).__name__})")
+                t.reason = (f"repeated network error: {consecutive_network_errors} calls "
+                            f"interrupted in a row ({type(e).__name__})")
                 break
             time.sleep(10 * consecutive_network_errors)
             continue
@@ -682,10 +679,10 @@ def solve(problem: Problem, index: ProblemIndex, *, client, model: str,
         it.cost = budget.spent - before
 
         if answer.stop_reason == "refusal":
-            t.reason = "il model ha rifiutato la richiesta"
+            t.reason = "the model refused the request"
             break
 
-        # mostra il reasoning e il text
+        # show the reasoning and the text
         for block in answer.content:
             if block.type == "thinking" and getattr(block, "thinking", ""):
                 show(f"     [reasoning] {block.thinking.strip()[:400]}")
@@ -699,7 +696,7 @@ def solve(problem: Problem, index: ProblemIndex, *, client, model: str,
         messages.append({"role": "assistant", "content": answer.content})
 
         if not calls:
-            t.reason = "il model ha smesso di usare gli tools senza one trial accepted"
+            t.reason = "the model stopped using the tools without an accepted proof"
             text = " ".join(b.text for b in answer.content if b.type == "text")
             t.transcript.append({"kind": "end", "text": text})
             t.detail.append(it)
@@ -719,8 +716,8 @@ def solve(problem: Problem, index: ProblemIndex, *, client, model: str,
                     code, timeout=lean_timeout or 240)
                 duration = time.time() - t0
                 it.exploration_seconds += duration
-                before = output.splitlines()[0] if output else "(vuoto)"
-                show(f"        {before}  [{duration:.0f}s]")
+                first_line = output.splitlines()[0] if output else "(empty)"
+                show(f"        {first_line}  [{duration:.0f}s]")
                 results.append({"type": "tool_result", "tool_use_id": call.id,
                                   "content": output})
             elif call.name == "lean_check":
@@ -734,10 +731,10 @@ def solve(problem: Problem, index: ProblemIndex, *, client, model: str,
                 it.lean_seconds += duration
                 failed, kind = _verification_kind(report, ok)
                 it.checks.append(LeanCheck(
-                    chars=len(code), result=report.split("\n")[0].replace("ESITO: ", ""),
+                    chars=len(code), result=report.split("\n")[0].replace("VERDICT: ", ""),
                     failed_check=failed, seconds=duration, kind=kind))
-                prima_riga = report.split("\n")[0]
-                show(f"        {prima_riga}  [{kind}, {duration:.0f}s]")
+                headline = report.split("\n")[0]
+                show(f"        {headline}  [{kind}, {duration:.0f}s]")
                 if ok:
                     accepted = True
                     t.solution = code
@@ -757,17 +754,17 @@ def solve(problem: Problem, index: ProblemIndex, *, client, model: str,
                                   "content": output})
             else:
                 results.append({"type": "tool_result", "tool_use_id": call.id,
-                                  "content": f"Strumento sconosciuto: {call.name}",
+                                  "content": f"Unknown tool: {call.name}",
                                   "is_error": True})
 
-        # Il model si rule meglio se sa quanto gli resta: chi ha misurato
-        # OEIS Open dava al model one strumento apposta per questo.
+        # The model paces itself better if it knows what is left: whoever measured
+        # OEIS Open gave the model a tool specifically for this.
         spent_here = budget.spent - spent_at_start - network_charges_here
         results.append({
             "type": "text",
-            "text": (f"[budget: spesi ${spent_here:.2f} dei ${problem_cap:.2f} "
-                     f"disponibili per questo problem; iteration {iteration} "
-                     f"di {max_iterations}]")})
+            "text": (f"[budget: ${spent_here:.2f} spent of the ${problem_cap:.2f} "
+                     f"available for this problem; iteration {iteration} "
+                     f"of {max_iterations}]")})
         messages.append({"role": "user", "content": results})
         t.detail.append(it)
         t.api_seconds += it.api_seconds
@@ -776,10 +773,10 @@ def solve(problem: Problem, index: ProblemIndex, *, client, model: str,
 
         if accepted:
             t.solved = True
-            t.reason = "dimostrazione accepted dal verifier"
+            t.reason = "proof accepted by the verifier"
             break
     else:
-        t.reason = f"esaurite le {max_iterations} iterations disponibili"
+        t.reason = f"ran out of the {max_iterations} iterations available"
 
     t.seconds = time.time() - start
     t.cause = t.classify_failure()
@@ -787,19 +784,19 @@ def solve(problem: Problem, index: ProblemIndex, *, client, model: str,
 
 
 # ---------------------------------------------------------------------------
-# Riga di command
+# Command line
 # ---------------------------------------------------------------------------
 
 def write_report(path: Path, *, args, cap: float, budget: Budget,
-                    attempts: list, full: bool) -> None:
-    """Scrive il resoconto JSON. `full` e' falso finche' il giro non e' finito."""
+                 attempts: list, full: bool) -> None:
+    """Write the JSON report. `full` is false until the run has finished."""
     path.write_text(json.dumps({
         "model": args.model, "effort": args.effort,
-        "istruzioni": args.istruzioni,
+        "instructions": args.instructions,
         "problem_cap": cap,
         "budget": args.budget, "spent": budget.spent,
         "full": full,
-        "consumo_totale": budget.usage.__dict__,
+        "total_usage": budget.usage.__dict__,
         "attempts": [{
             "problem": t.problem, "solved": t.solved, "reason": t.reason,
             "cause": t.cause,
@@ -807,14 +804,14 @@ def write_report(path: Path, *, args, cap: float, budget: Budget,
             "explorations": t.explorations,
             "python_runs": t.python_runs,
             "network_interruptions": t.network_interruptions,
-            "addebito_rete_prudenziale": t.network_charge,
-            "secondi_totali": t.seconds,
+            "precautionary_network_charge": t.network_charge,
+            "total_seconds": t.seconds,
             "api_seconds": t.api_seconds,
             "lean_seconds": t.lean_seconds,
             "python_seconds": t.python_seconds,
             "cost": t.usage.cost(args.model), "usage": t.usage.__dict__,
             "verifications_by_kind": t.verifications_by_kind,
-            "iterazioni_dettaglio": [{
+            "iteration_detail": [{
                 "number": it.number, "cost": it.cost,
                 "input_tokens": it.input_tokens, "output_tokens": it.output_tokens,
                 "cache_written": it.cache_written, "cache_read": it.cache_read,
@@ -837,55 +834,55 @@ def write_report(path: Path, *, args, cap: float, budget: Budget,
 
 def main() -> int:
     ap = argparse.ArgumentParser(
-        description="Tenta di dimostrare one o piu' problems dell'archive con l'API di Anthropic.")
-    ap.add_argument("problems", nargs="*", help="names dei theorems da tentare")
+        description="Try to prove one or more of the archive's problems with the Anthropic API.")
+    ap.add_argument("problems", nargs="*", help="names of the theorems to attempt")
     ap.add_argument("--model", default=DEFAULT_MODEL,
-                    help=f"model da usare (default: {DEFAULT_MODEL})")
+                    help=f"the model to use (default: {DEFAULT_MODEL})")
     ap.add_argument("--budget", type=float, default=5.0,
-                    help="limit di spesa RIGIDO in dollari per l'intera esecuzione (default: 5)")
-    ap.add_argument("--cap-problem", type=float, default=None,
-                    help="spesa massima per singolo problem (default: budget diviso il number di problems)")
+                    help="HARD spending limit in dollars for the whole run (default: 5)")
+    ap.add_argument("--problem-cap", type=float, default=None,
+                    help="maximum spend per problem (default: the budget divided by the number of problems)")
     ap.add_argument("--max-iterations", type=int, default=30)
     ap.add_argument("--effort", default="high", choices=["low", "medium", "high", "xhigh", "max"])
-    ap.add_argument("--timeout-lean", type=int, default=None)
-    ap.add_argument("--report", default=None, help="dove salvare il resoconto JSON")
-    ap.add_argument("--istruzioni", default="attuali",
-                    choices=["attuali", "insistenti"],
-                    help="which variant del prompt di system usare. "
-                         "'insistenti' toglie l'invito ad arrendersi e dice che "
-                         "il budget e' da consumare (vedi INSISTENT_INSTRUCTIONS)")
+    ap.add_argument("--lean-timeout", type=int, default=None)
+    ap.add_argument("--report", default=None, help="where to save the JSON report")
+    ap.add_argument("--instructions", default="current",
+                    choices=["current", "insistent"],
+                    help="which variant of the system prompt to use. "
+                         "'insistent' removes the invitation to give up and says the "
+                         "budget is there to be spent (see INSISTENT_INSTRUCTIONS)")
     ap.add_argument("--log", default=None,
-                    help="dove scrivere il log line per line (predefinito: "
-                         "runs/jobs/agent-<data>.log). Serve per seguire il "
-                         "job con `tail -f` mentre gira.")
-    ap.add_argument("--silenzioso", action="store_true")
-    ap.add_argument("--senza-awake", action="store_true",
-                    help="non avviare caffeinate e non controllare l'alimentatore "
-                         "(sconsigliato: vedi agent/awake.py)")
+                    help="where to write the line-by-line log (default: "
+                         "runs/jobs/agent-<date>.log). It is what makes it possible to "
+                         "follow the run with `tail -f` while it works.")
+    ap.add_argument("--quiet", action="store_true")
+    ap.add_argument("--no-awake", action="store_true",
+                    help="do not start caffeinate and do not check mains power "
+                         "(not recommended: see agent/awake.py)")
     args = ap.parse_args()
 
-    # --- il log, before di qualunque show
+    # --- the log, before anything is printed
     log_path = Path(args.log) if args.log else (
         verifier_config.ROOT / "runs" / "jobs" /
         f"agent-{time.strftime('%Y%m%d-%H%M%S')}.log")
-    sys.stdout = _Doppio(sys.stdout, log_path)
-    print(f"Registro: {log_path}")
-    print(f"  da un other terminale:  tail -f {log_path}")
+    sys.stdout = _Tee(sys.stdout, log_path)
+    print(f"Log: {log_path}")
+    print(f"  from another terminal:  tail -f {log_path}")
 
     load_env()
 
     if not args.problems:
-        ap.error("indica almeno un theorem da tentare")
+        ap.error("name at least one theorem to attempt")
 
     environment_problems = verifier_config.check_installation()
     if environment_problems:
-        print("Ambiente non ready:\n  - " + "\n  - ".join(environment_problems), file=sys.stderr)
+        print("Environment not ready:\n  - " + "\n  - ".join(environment_problems), file=sys.stderr)
         return 2
     if not os.environ.get("ANTHROPIC_API_KEY") and not os.environ.get("ANTHROPIC_AUTH_TOKEN"):
-        print("Manca la key API.\n"
-              f"Crea il file {ROOT / '.env'} con inside one line:\n"
+        print("The API key is missing.\n"
+              f"Create the file {ROOT / '.env'} with one line in it:\n"
               "  ANTHROPIC_API_KEY=sk-ant-...\n"
-              "(il file e' gia' escluso da git, quindi la key non verra' mai committata)",
+              "(the file is already excluded from git, so the key can never be committed)",
               file=sys.stderr)
         return 2
 
@@ -896,94 +893,95 @@ def main() -> int:
         print(e, file=sys.stderr)
         return 2
 
-    # --- il Mac deve restare sveglio: si controlla PRIMA di spendere un centesimo
+    # --- the Mac has to stay awake: checked BEFORE spending a cent
     awake_process = None
-    if not args.senza_veglia and sys.platform == "darwin":
+    if not args.no_awake and sys.platform == "darwin":
         awake_process = awake.start_job(os.getpid())
-        reasons = awake.controlla(awake_process)
+        reasons = awake.check(awake_process)
         if reasons:
             awake_process.terminate()
-            print("NON PARTO: il Mac deve restare sveglio e alimentato per tutto il giro.\n  - "
+            print("NOT STARTING: the Mac has to stay awake and on mains power for the "
+                  "whole run.\n  - "
                   + "\n  - ".join(reasons)
-                  + "\nTieni also il coperchio aperto: a coperchio chiuso il Mac si sospende "
-                    "comunque. Per saltare il controllo: --senza-awake (sconsigliato).",
+                  + "\nKeep the lid open too: with the lid closed the Mac sleeps anyway. "
+                    "To skip the check: --no-awake (not recommended).",
                   file=sys.stderr)
             return 2
-        print("Veglia: caffeinate attivo, alimentatore collegato. Tieni il coperchio aperto.")
+        print("Keep-awake: caffeinate running, on mains power. Keep the lid open.")
 
     client = anthropic.Anthropic()
     budget = Budget(dollar_limit=args.budget, model=args.model)
     cap = args.problem_cap or (args.budget / len(listing))
 
-    print(f"Modello: {args.model} | effort: {args.effort} | "
-          f"istruzioni: {args.istruzioni}")
-    print(f"Budget total: ${args.budget:.2f}  (cap per problem: ${cap:.2f})")
-    print(f"Problemi: {len(listing)}")
+    print(f"Model: {args.model} | effort: {args.effort} | "
+          f"instructions: {args.instructions}")
+    print(f"Total budget: ${args.budget:.2f}  (cap per problem: ${cap:.2f})")
+    print(f"Problems: {len(listing)}")
 
     attempts: list[Attempt] = []
 
-    def salva(full: bool) -> None:
-        # Il report si riscrive after OGNI problem. Il 12 settembre un error di
-        # rete ha fermato un giro al terzo problem e, siccome il report si
-        # scriveva only alla end, i two attempts gia' conclusi sono vanished.
+    def save(full: bool) -> None:
+        # The report is rewritten after EVERY problem. On 12 September a network
+        # error stopped a run at the third problem and, because the report was only
+        # written at the end, the two attempts already finished vanished.
         if args.report:
             write_report(Path(args.report), args=args, cap=cap, budget=budget,
                             attempts=attempts, full=full)
 
     for i, p in enumerate(listing, 1):
         if awake_process is not None and not awake.on_mains_power():
-            print(f"\n!! Alimentatore scollegato: mi fermo before di {p.theorem}. "
-                  f"Il report contiene i problems gia' conclusi.")
+            print(f"\n!! Unplugged from mains: stopping before {p.theorem}. "
+                  f"The report holds the problems already finished.")
             break
         print(f"\n{'='*78}\n[{i}/{len(listing)}] {p.theorem}   ({p.category})\n{'='*78}")
         try:
             t = solve(p, index, client=client, model=args.model, budget=budget,
                         problem_cap=cap, max_iterations=args.max_iterations,
                         effort=args.effort, lean_timeout=args.lean_timeout,
-                        verbose=not args.silenzioso,
-                        instruction_variant=args.istruzioni)
+                        verbose=not args.quiet,
+                        instruction_variant=args.instructions)
         except SpendLimitExceeded as e:
             print(f"\n!! {e}")
             partial = getattr(e, "attempt", None)
             attempts.append(partial if partial is not None
                              else Attempt(problem=p.theorem, reason=str(e)))
             if partial is not None:
-                print(f"     job svolto before di fermarsi: "
+                print(f"     work done before stopping: "
                       f"{partial.iterations} iterations, {partial.checks} "
-                      f"checks, ${partial.usage.cost(args.model):.4f}")
+                      f"verifications, ${partial.usage.cost(args.model):.4f}")
             break
         except anthropic.APIError as e:
-            print(f"\n!! Errore dall'API: {e}")
-            attempts.append(Attempt(problem=p.theorem, reason=f"error API: {e}"))
-            salva(full=False)
+            print(f"\n!! Error from the API: {e}")
+            attempts.append(Attempt(problem=p.theorem, reason=f"API error: {e}"))
+            save(full=False)
             continue
         attempts.append(t)
-        salva(full=False)
-        result = "RISOLTO" if t.solved else "non solved"
+        save(full=False)
+        result = "SOLVED" if t.solved else "not solved"
         print(f"\n  => {result}: {t.reason}")
         print(f"     {t.iterations} iterations, {t.explorations} explorations, "
-              f"{t.checks} checks Lean, "
-              f"{t.python_runs} esecuzioni Python, {t.seconds:.0f}s, "
+              f"{t.checks} Lean verifications, "
+              f"{t.python_runs} Python runs, {t.seconds:.0f}s, "
               f"${t.usage.cost(args.model):.4f}")
-        print(f"     tempo: {t.api_seconds:.0f}s in waited dell'API, "
-              f"{t.lean_seconds:.0f}s di Lean in local, "
-              f"{t.python_seconds:.0f}s di Python in local")
-        print(f"     kind delle checks: {t.verifications_by_kind or 'nessuna'}")
+        print(f"     time: {t.api_seconds:.0f}s waiting for the API, "
+              f"{t.lean_seconds:.0f}s of Lean locally, "
+              f"{t.python_seconds:.0f}s of Python locally")
+        print(f"     kinds of verification: {t.verifications_by_kind or 'none'}")
         print(f"     cause: {t.cause}")
 
-    # --- resoconto
-    print(f"\n{'='*78}\nRESOCONTO\n{'='*78}")
+    # --- summary
+    print(f"\n{'='*78}\nSUMMARY\n{'='*78}")
     solved = sum(1 for t in attempts if t.solved)
     for t in attempts:
-        print(f"  [{'RISOLTO    ' if t.solved else 'non solved'}] {t.problem}"
+        print(f"  [{'SOLVED    ' if t.solved else 'not solved'}] {t.problem}"
               f"   ${t.usage.cost(args.model):.4f}   {t.reason}")
-    print(f"\n  Risolti: {solved}/{len(attempts)}")
-    print(f"  Spesa total: ${budget.spent:.4f} su ${args.budget:.2f} disponibili")
-    print(f"  {budget.usage.riassunto(args.model)}")
+    print(f"\n  Solved: {solved}/{len(attempts)}")
+    print(f"  Total spend: ${budget.spent:.4f} of ${args.budget:.2f} available")
+    print(f"  {budget.usage.summary(args.model)}")
 
     if args.report:
-        salva(full=True)
-        print(f"\n  Resoconto salvato in {args.report}")
+        save(full=True)
+        print(f"\n  Report saved to {args.report}")
 
     return 0
 

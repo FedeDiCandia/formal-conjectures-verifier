@@ -1,14 +1,14 @@
 """
-Nasconde le dimostrazioni gia' presenti nell'archive.
+Hide the proofs the archive already contains.
 
-Per collaudare onestamente un agent su un problem gia' solved bisogna
-togliergli la answer. Questo module prende il file source_text di un problem e
-sostituisce OGNI dimostrazione con `sorry`, ottenendo esattamente l'aspetto che
-il file avrebbe se il problem fosse ancora aperto.
+To exercise an agent honestly on a problem that is already solved, the answer has
+to be taken away from it. This module takes a problem's source file and replaces
+EVERY proof with `sorry`, producing exactly the file it would be if the problem
+were still open.
 
-Si sostituiscono all_items le dimostrazioni del file, non only quella del theorem
-target: i lemmi neighbours sono spesso i passaggi intermedi della solution e
-lasciarli sarebbe come lasciare mezzo compito svolto.
+All the proofs in the file are replaced, not only the target theorem's: the
+neighbouring lemmas are often the intermediate steps of the solution, and leaving
+them would be like leaving half the exercise done.
 """
 from __future__ import annotations
 
@@ -20,32 +20,33 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "verifier"))
 from index import ProblemIndex, Problem   # noqa: E402
 
 
-#: Coppie di delimitatori: inside di esse un `:=` non separa la dimostrazione.
+#: Delimiter pairs: inside them, a `:=` does not separate the proof.
 _OPENERS = "([{⟨"
 _CLOSERS = ")]}⟩"
 
 
 def _separator_position(text: str) -> int | None:
-    """Indice del `:=` che separa l'statement dalla dimostrazione.
+    """Index of the `:=` that separates the statement from the proof.
 
-    Va cercato al level esterno: in `theorem f (n : ℕ := 3) : P := trial` il
-    first `:=` sta inside le parentesi e non c'enters.
+    It has to be looked for at the outer level: in
+    `theorem f (n : ℕ := 3) : P := proof` the first `:=` is inside the brackets and
+    is nothing to do with it.
 
-    E vanno saltati i COMMENTI. Le positions che Lean riporta per one
-    declaration partono dal docstring, non dalla word `theorem`, e un
-    docstring puo' contenere code di example con inside un `:=`. Senza questo
-    accorgimento il cut finirebbe inside la documentazione.
+    And COMMENTS have to be skipped. The positions Lean reports for a declaration
+    start at the docstring, not at the word `theorem`, and a docstring can contain
+    example code with a `:=` inside it. Without this precaution the cut would land
+    inside the documentation.
     """
     depth = 0
     i, n = 0, len(text)
     while i < n - 1:
         c = text[i]
-        # commento di line
+        # line comment
         if c == "-" and text[i + 1] == "-":
             while i < n and text[i] != "\n":
                 i += 1
             continue
-        # commento a block, annidabile; comprende i docstring /-- ... -/
+        # block comment, nestable; this includes docstrings /-- ... -/
         if c == "/" and text[i + 1] == "-":
             level = 0
             while i < n - 1:
@@ -58,7 +59,7 @@ def _separator_position(text: str) -> int | None:
                     continue
                 i += 1
             continue
-        # stringa
+        # string
         if c == '"':
             i += 1
             while i < n:
@@ -79,32 +80,31 @@ def _separator_position(text: str) -> int | None:
     return None
 
 
-#: Parole che introducono one LEGATURA, non la dimostrazione. Un `:=` che le
-#: segue appartiene a loro.
+#: Words that introduce a BINDER, not the proof. A `:=` that follows one of them
+#: belongs to it.
 _BINDERS = ("let", "have", "set", "obtain", "suffices", "calc", "fun", "where",
              "if", "then", "else", "with", "do", "match")
 
 
 def _is_binder(text: str, pos: int) -> bool:
-    """Dice se il `:=` a `pos` appartiene a un `let`, un `have` e simili.
+    """Say whether the `:=` at `pos` belongs to a `let`, a `have` or the like.
 
-    Serve perche' un statement puo' contenere un `let A : Set α := ...` al
-    level esterno delle parentesi, e prenderlo per l'start della
-    dimostrazione TRONCA l'statement. E' successo davvero, su
-    WrittenOnTheWallII.GraphConjecture65.conjecture65, e il controllo di
-    onesta' l'ha intercettato.
+    This is needed because a statement can contain a `let A : Set α := ...` at the
+    outer bracket level, and taking that for the start of the proof TRUNCATES the
+    statement. It really happened, on
+    WrittenOnTheWallII.GraphConjecture65.conjecture65, and the honesty check caught
+    it.
     """
     line_start = text.rfind("\n", 0, pos) + 1
     segment = text[line_start:pos]
     words = segment.replace("(", " ").replace(")", " ").split()
     if not words:
-        # il `:=` sta a start line: si guarda la line precedente
+        # the `:=` is at the start of a line: look at the previous one
         prec = text.rfind("\n", 0, max(0, line_start - 1)) + 1
         words = text[prec:line_start].replace("(", " ").replace(")", " ").split()
-    # Si guarda a ritroso la before word significativa. Un punto e virgola
-    # CHIUDE la legatura (`let a := 1; resto`), quindi la scansione si ferma li':
-    # senza, il `:=` finale di `theorem t : (let a := 1; a = 1) := by rfl`
-    # veniva scambiato per quello del `let`.
+    # Look backwards for the first significant word. A semicolon CLOSES the binder
+    # (`let a := 1; rest`), so the scan stops there: without that, the final `:=` of
+    # `theorem t : (let a := 1; a = 1) := by rfl` was mistaken for the `let`'s.
     for word in reversed(words):
         if ";" in word:
             return False
@@ -116,7 +116,7 @@ def _is_binder(text: str, pos: int) -> bool:
 
 
 def replace_proof(declaration: str) -> str:
-    """`theorem f : P := <trial>`  ->  `theorem f : P := by\\n  sorry`"""
+    """`theorem f : P := <proof>`  ->  `theorem f : P := by\\n  sorry`"""
     pos = _separator_position(declaration)
     if pos is None:
         return declaration
@@ -124,68 +124,66 @@ def replace_proof(declaration: str) -> str:
 
 
 def file_without_proofs(problem: Problem, index: ProblemIndex) -> str:
-    """Il file del problem con all_items le dimostrazioni sostituite da `sorry`."""
+    """The problem's file with every proof replaced by `sorry`."""
     text = problem.source_file.read_text(encoding="utf-8")
     lines = text.split("\n")
 
-    # Tutti i theorems che stanno in questo file, dal fondo verso l'high, cosi'
-    # le substitutions non spostano le positions di quelli ancora da trattare.
-    nel_file = [p for p in index.problems if p.module == problem.module and p.range]
-    nel_file.sort(key=lambda p: (p.range["startLine"], p.range["startCol"]), reverse=True)
+    # Every theorem in this file, from the bottom upwards, so that the
+    # substitutions do not move the positions of those still to be handled.
+    in_file = [p for p in index.problems if p.module == problem.module and p.range]
+    in_file.sort(key=lambda p: (p.range["startLine"], p.range["startCol"]), reverse=True)
 
-    for p in nel_file:
+    for p in in_file:
         r = p.range
         line_start, line_end = r["startLine"] - 1, r["endLine"] - 1
         block = lines[line_start:line_end + 1]
         if not block:
             continue
-        # ritaglia esattamente la declaration
-        queue = block[-1][r["endCol"]:]
+        # cut out exactly the declaration
+        tail = block[-1][r["endCol"]:]
         block[-1] = block[-1][:r["endCol"]]
         head = block[0][:r["startCol"]]
         block[0] = block[0][r["startCol"]:]
         new_item = replace_proof("\n".join(block))
-        new_lines = (head + new_item + queue).split("\n")
+        new_lines = (head + new_item + tail).split("\n")
         lines[line_start:line_end + 1] = new_lines
 
     return "\n".join(lines)
 
 
 def check_it_is_hidden(problem: Problem, hidden_text: str) -> None:
-    """Verifica che la dimostrazione del theorem BERSAGLIO sia stata sostituita.
+    """Check that the TARGET theorem's proof has really been replaced.
 
-    Un shakedown in cui la answer trapela non misura niente, quindi questo
-    controllo deve esserci. Ma va fatto sulla DICHIARAZIONE GIUSTA: la before
-    versione cercava il text della dimostrazione in tutto il file, e dava
-    falso allarme quando un other theorem dello stesso file aveva la stessa
-    dimostrazione di one line. E' successo con
-    DiophantineTuple.fermat_4_tuple, dove three theorems condividono
-    `by norm_num [IsDiophantineTuple]`: il shakedown si e' interrotto pur
-    essendo tutto in order.
+    An exercise in which the answer leaks measures nothing, so this check has to be
+    here. But it has to be done on the RIGHT declaration: the first version looked
+    for the proof's text anywhere in the file, and raised a false alarm when another
+    theorem in the same file had the same one-line proof. It happened with
+    DiophantineTuple.fermat_4_tuple, where three theorems share
+    `by norm_num [IsDiophantineTuple]`: the run stopped even though everything was
+    in order.
     """
     short = problem.theorem.split(".")[-1]
-    # la declaration del target inside il text nascosto
+    # the target's declaration inside the hidden text
     m = re.search(rf"(?:theorem|lemma)\s+[\w'.«»]*{re.escape(short)}(?![\w']) ?[\s\S]*?"
                   rf"(?=\n(?:@\[|/--|theorem |lemma |def |abbrev |instance |end |namespace |"
                   rf"variable |open |section )|\Z)",
                   hidden_text)
     if m is None:
         raise AssertionError(
-            f"Nel text consegnato all'agent non trovo la declaration di "
-            f"{problem.theorem}: il problem non sarebbe proponibile.")
+            f"The declaration of {problem.theorem} cannot be found in the text handed "
+            f"to the agent: the problem could not be posed.")
     declaration = m.group(0)
     pos = _separator_position(declaration)
     if pos is None:
         raise AssertionError(
-            f"Non riesco a individuare la dimostrazione di {problem.theorem} "
-            f"nel text nascosto.")
-    # Si togliono i commenti: la declaration estratta puo' portarsi dietro
-    # one line di commento che segue (per example "-- Sanity checks"), e
-    # confrontarla come se fosse dimostrazione dava un falso allarme.
+            f"Cannot locate the proof of {problem.theorem} in the hidden text.")
+    # Comments are stripped: the extracted declaration can drag along a following
+    # comment line (for instance "-- Sanity checks"), and comparing that as though
+    # it were the proof raised a false alarm.
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "verifier"))
     from guard import strip_comments_and_strings
-    trial = " ".join(strip_comments_and_strings(declaration[pos + 2:]).split())
-    if trial not in ("by sorry", "sorry"):
+    proof = " ".join(strip_comments_and_strings(declaration[pos + 2:]).split())
+    if proof not in ("by sorry", "sorry"):
         raise AssertionError(
-            f"La dimostrazione di {problem.theorem} NON e' stata nascosta: al "
-            f"suo slot c'e' ancora {trial[:120]!r}. Il shakedown non sarebbe valid.")
+            f"The proof of {problem.theorem} has NOT been hidden: in its place there "
+            f"is still {proof[:120]!r}. The exercise would not be valid.")

@@ -193,7 +193,7 @@ def main() -> int:
     # quindi `low`, e non e' un risparmio: e' l'unico che funziona.
     ap.add_argument("--effort", default="low")
     ap.add_argument("--budget", type=float, required=True)
-    ap.add_argument("--cap-problem", type=float, default=1.20)
+    ap.add_argument("--problem-cap", type=float, default=1.20)
     ap.add_argument("--report", default=str(ROOT / "runs" / "informale.json"))
     ap.add_argument("--log", default=None)
     args = ap.parse_args()

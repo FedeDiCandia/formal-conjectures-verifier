@@ -1,23 +1,22 @@
 """
-I two tools che l'agent puo' usare.
+The tools the agent can use.
 
-  * `lean_explore` — compila un file Lean di trial e restituisce TUTTI i
-                     messages. Serve a ispezionare: `#print`, `#check`,
-                     `exact?`, errors completi. Non e' un giudizio.
-  * `lean_check`   — sottopone un file Lean al verifier e riporta l'result.
-                     E' l'unico giudizio che count.
-  * `run_python`   — esegue code Python in un environment isolated (niente rete,
-                     niente scritture outside dalla sua folder, con timeout).
+  * `lean_explore` — compiles a trial Lean file and returns ALL of Lean's
+                     messages. It is for inspection: `#print`, `#check`,
+                     `exact?`, full errors. It is not a judgement.
+  * `lean_check`   — submits a Lean file to the verifier and reports the verdict.
+                     It is the only judgement that counts.
+  * `run_python`   — runs Python code in an isolated environment (no network, no
+                     writes outside its own directory, with a timeout).
 
-Perche' `lean_explore` esiste separato: nel first shakedown l'agent ha usato
-NOVE checks su nove per ispezionare l'API di Mathlib, non per consegnare one
-dimostrazione. Usare il giudice per quello costa 33 seconds invece di 8 e
-restituisce un verdict ("rifiutato: il theorem non c'e'") che non e'
-l'informazione cercata.
+Why `lean_explore` exists separately: in the first shakedown the agent used NINE
+verifications out of nine to inspect Mathlib's API, not to submit a proof. Using
+the judge for that costs 33 seconds instead of 8 and returns a verdict ("rejected:
+the theorem is not there") that is not the information wanted.
 
-Perche' `run_python`: cercare one dimostrazione spesso richiede di fare conti
-(controllare un'ipotesi su piccoli cases, cercare un counterexample, calcolare one
-costante). Farli "a mente" e' il way piu' fast per sbagliare.
+Why `run_python`: looking for a proof often means doing arithmetic (checking a
+hypothesis on small cases, looking for a counterexample, computing a constant).
+Doing it in one's head is the fastest way to get it wrong.
 """
 from __future__ import annotations
 
@@ -32,41 +31,41 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "verifier"))
 
-import explore as esploratore   # noqa: E402
+import explore as explorer   # noqa: E402
 import verify as verifier   # noqa: E402
 
 
 # ---------------------------------------------------------------------------
-# Strumento 0: lean_explore
+# Tool 0: lean_explore
 # ---------------------------------------------------------------------------
 
 SCHEMA_LEAN_EXPLORE = {
     "name": "lean_explore",
     "description": (
-        "Compila un file Lean 4 di trial e restituisce TUTTI i messages di Lean, "
-        "non troncati. Serve a ISPEZIONARE, non a consegnare one dimostrazione: "
-        "non e' un giudizio e non count come attempt.\n\n"
-        "Funziona tutto quello che show qualcosa:\n"
-        "  #print NomeDefinizione     - il body di one definition o i fields di "
-        "one struttura\n"
-        "  #check @nomeLemma          - il kind, con all_items gli arguments impliciti\n"
-        "  example ... := by exact?   - search_for un lemma che chiuda l'goal\n"
-        "  example ... := by apply?   - idem, per applicazione\n"
-        "  #reduce e                  - riduce un termine (attenzione ai tempi)\n"
-        "e gli errors arrivano completi, con lo state degli obiettivi.\n\n"
-        "A differenza di lean_check, qui PUOI importare il module del problem "
-        "(per example `import FormalConjectures.Wikipedia.Selfridge`) e ispezionare "
-        "le sue definizioni.\n\n"
-        "Circa 8-10 seconds, against i 30 di lean_check. Usa questo per capire, "
-        "quello per consegnare."
+        "Compiles a trial Lean 4 file and returns ALL of Lean's messages, "
+        "untruncated. It is for INSPECTION, not for submitting a proof: it is not a "
+        "judgement and does not count as an attempt.\n\n"
+        "Anything that prints something works:\n"
+        "  #print DefinitionName      - the body of a definition or the fields of a "
+        "structure\n"
+        "  #check @lemmaName          - the type, with all the implicit arguments\n"
+        "  example ... := by exact?   - search for a lemma that closes the goal\n"
+        "  example ... := by apply?   - the same, for application\n"
+        "  #reduce e                  - reduce a term (mind how long it takes)\n"
+        "and errors come back in full, with the goal state.\n\n"
+        "Unlike lean_check, here you MAY import the problem's module (for instance "
+        "`import FormalConjectures.Wikipedia.Selfridge`) and inspect its "
+        "definitions.\n\n"
+        "About 8-10 seconds, against 30 for lean_check. Use this one to understand, "
+        "that one to submit."
     ),
     "input_schema": {
         "type": "object",
         "properties": {
             "lean_code": {
                 "type": "string",
-                "description": "Il file Lean di trial. Non serve che contenga il "
-                               "theorem del problem.",
+                "description": "The trial Lean file. It need not contain the "
+                               "problem's theorem.",
             }
         },
         "required": ["lean_code"],
@@ -76,41 +75,40 @@ SCHEMA_LEAN_EXPLORE = {
 
 
 def run_lean_explore(lean_code: str, timeout: int = 240,
-                        slot: int | None = None) -> str:
-    r = esploratore.explore(lean_code, timeout=timeout, slot=slot)
+                     slot: int | None = None) -> str:
+    r = explorer.explore(lean_code, timeout=timeout, slot=slot)
     return r.render()
 
 
 # ---------------------------------------------------------------------------
-# Strumento 1: lean_check
+# Tool 1: lean_check
 # ---------------------------------------------------------------------------
 
 SCHEMA_LEAN_CHECK = {
     "name": "lean_check",
     "description": (
-        "Sottopone un file Lean 4 full al verifier ufficiale e riporta "
-        "l'result. Il file deve essere autosufficiente: import, namespace, "
-        "eventuali definizioni ausiliarie e il theorem richiesto con one "
-        "dimostrazione complete.\n\n"
-        "Il verifier accetta SOLO se: il file compila; non contiene sorry, "
-        "admit, dichiarazioni axiom o native_decide; il kind del theorem e' "
-        "IDENTICO a quello dell'statement original; le definizioni "
-        "dell'archive non sono state ridefinite; gli unique axioms usati sono "
-        "propext, Classical.choice e Quot.sound.\n\n"
-        "Usalo all_items le volte che vuoi: e' l'unico giudice che count. "
-        "Una check richiede circa 30 seconds.\n\n"
-        "Puoi usarlo also per ESPLORARE, non only per consegnare: i messages "
-        "informativi di Lean ti vengono restituiti, quindi funzionano "
-        "`#check nomeCostante`, `#print nomeDefinizione`, `example ... := by exact?` "
-        "e `open ... in #check ...`. Il file verra' rifiutato (manca il theorem "
-        "richiesto) ma riceverai comunque cio' che hai chiesto di ispezionare."
+        "Submits a complete Lean 4 file to the official verifier and reports the "
+        "verdict. The file has to be self-contained: imports, namespace, any "
+        "auxiliary definitions, and the requested theorem with a complete proof.\n\n"
+        "The verifier accepts ONLY if: the file compiles; it contains no sorry, "
+        "admit, axiom declarations or native_decide; the theorem's type is IDENTICAL "
+        "to the original statement's; the archive's definitions have not been "
+        "redefined; and the only axioms used are propext, Classical.choice and "
+        "Quot.sound.\n\n"
+        "Use it as often as you like: it is the only judge that counts. One "
+        "verification takes about 30 seconds.\n\n"
+        "You can use it to EXPLORE as well, not only to submit: Lean's informational "
+        "messages are returned to you, so `#check constantName`, "
+        "`#print definitionName`, `example ... := by exact?` and "
+        "`open ... in #check ...` all work. The file will be rejected (the requested "
+        "theorem is missing) but you will still get back what you asked to inspect."
     ),
     "input_schema": {
         "type": "object",
         "properties": {
             "lean_code": {
                 "type": "string",
-                "description": "Il content full del file Lean da verificare.",
+                "description": "The full content of the Lean file to verify.",
             }
         },
         "required": ["lean_code"],
@@ -120,7 +118,7 @@ SCHEMA_LEAN_CHECK = {
 
 
 def run_lean_check(problem: str, lean_code: str, timeout: int | None = None) -> tuple[str, bool]:
-    """Ritorna (report testuale per il model, accepted)."""
+    """Return (a textual report for the model, accepted)."""
     with tempfile.NamedTemporaryFile("w", suffix=".lean", delete=False, encoding="utf-8") as f:
         f.write(lean_code)
         path = Path(f.name)
@@ -129,50 +127,47 @@ def run_lean_check(problem: str, lean_code: str, timeout: int | None = None) -> 
     finally:
         path.unlink(missing_ok=True)
 
-    lines = [f"ESITO: {r.status}"]
+    lines = [f"VERDICT: {r.status}"]
     for c in r.checks:
-        lines.append(f"  [{'ok' if c.passed else 'FALLITO'}] {c.name}"
+        lines.append(f"  [{'ok' if c.passed else 'FAILED'}] {c.name}"
                      + (f" — {c.detail}" if c.detail and not c.passed else ""))
     if r.message:
         lines.append("")
         lines.append(r.message)
     if r.errors:
         lines.append("")
-        lines.append("Messaggi di Lean / comparator:")
-        # NON si tronca qui: il message di Lean e' l'informazione piu' utile
-        # che questo strumento restituisce, e un `unsolved goals` con lo state
-        # degli obiettivi puo' essere lungo. Il limit vero e' in
-        # verify._lean_errors, dichiarato e ampio.
+        lines.append("Messages from Lean / comparator:")
+        # NOT truncated here: Lean's message is the most useful information this
+        # tool returns, and an `unsolved goals` with the goal state can be long.
+        # The real limit is in verify._lean_errors, declared and generous.
         lines.append(r.errors)
     return "\n".join(lines), r.accepted
 
 
 # ---------------------------------------------------------------------------
-# Strumento 2: run_python
+# Tool 2: run_python
 # ---------------------------------------------------------------------------
 
 SCHEMA_RUN_PYTHON = {
     "name": "run_python",
     "description": (
-        "Esegue code Python 3 in un environment isolated e restituisce quello che "
-        "il code show. Utile per fare conti, cercare controesempi, "
-        "verificare un'ipotesi su cases piccoli.\n\n"
-        "Librerie disponibili: la libreria standard piu' `numpy`, `sympy` e "
-        "`numba`. Per la teoria dei numbers `sympy` ha `isprime`, `factorint`, "
-        "`nextprime`, `divisors`, `totient`.\n\n"
-        "La CARTELLA DI LAVORO SOPRAVVIVE fra le calls: i file che scrivi "
-        "restano, quindi one ricerca lunga puo' salvare un checkpoint in un "
-        "file JSON e la call successiva puo' riprenderlo. Le variables in "
-        "memoria invece no: ogni esecuzione e' un processo new_item.\n\n"
-        "Limiti: nessun accesso alla rete; puoi scrivere only nella folder di "
-        "job; c'e' un tempo maximum per ogni esecuzione, quindi per one "
-        "ricerca lunga conviene procedere a blocks salvando il punto "
-        "reached. Stampa i results con print()."
+        "Runs Python 3 code in an isolated environment and returns whatever the code "
+        "prints. Useful for doing arithmetic, looking for counterexamples, and "
+        "checking a hypothesis on small cases.\n\n"
+        "Libraries available: the standard library plus `numpy`, `sympy` and "
+        "`numba`. For number theory, `sympy` has `isprime`, `factorint`, "
+        "`nextprime`, `divisors` and `totient`.\n\n"
+        "THE WORKING DIRECTORY SURVIVES between calls: the files you write stay, so a "
+        "long search can save a checkpoint to a JSON file and the next call can pick "
+        "it up. Variables in memory do not: every run is a new process.\n\n"
+        "Limits: no network access; you may write only in the working directory; "
+        "there is a time limit per run, so a long search should proceed in blocks, "
+        "saving how far it has got. Print results with print()."
     ),
     "input_schema": {
         "type": "object",
         "properties": {
-            "code": {"type": "string", "description": "Il code Python da eseguire."},
+            "code": {"type": "string", "description": "The Python code to run."},
         },
         "required": ["code"],
         "additionalProperties": False,
@@ -180,15 +175,15 @@ SCHEMA_RUN_PYTHON = {
 }
 
 
-#: Profilo della sandbox di macOS. `sandbox-exec` e' deprecato ma funzionante
-#: ed e' l'unico isolamento a level di kernel available senza container.
+#: The macOS sandbox profile. `sandbox-exec` is deprecated but working, and it is
+#: the only kernel-level isolation available without containers.
 _SANDBOX_PROFILE = """(version 1)
 (allow default)
 
-; --- niente rete: e' il requisito principale
+; --- no network: this is the main requirement
 (deny network*)
 
-; --- niente scritture, tranne nella folder di job
+; --- no writes, except in the working directory
 (deny file-write*)
 (allow file-write*
   (subpath "{job}")
@@ -197,35 +192,35 @@ _SANDBOX_PROFILE = """(version 1)
   (literal "/dev/random")
   (literal "/dev/dtracehelper"))
 
-; --- niente lettura dei segreti
+; --- no reading of secrets
 (deny file-read*
   (subpath "{home}/.ssh")
   (subpath "{home}/.aws")
   (subpath "{home}/.gnupg")
   (subpath "{home}/.config/anthropic")
   (subpath "{home}/.anthropic")
-  (literal "{progetto}/.env"))
+  (literal "{project}/.env"))
 """
 
 
 def _python_interpreter() -> str:
-    """Il Python da usare inside la sandbox.
+    """The Python to use inside the sandbox.
 
-    Si usa l'environment di CALCOLO (`.venv-compute`), che ha `numpy`, `sympy` e
-    `numba`, non quello del progetto: il code generato non deve vedere le
-    librerie dell'agent ne' la sua key. L'isolamento non viene dalla
-    poverta' dell'environment — viene da `sandbox-exec` (niente rete, write_op
-    only nella folder di job), dall'environment ridotto senza key API e
-    dall'opzione `-I`. Chi ha misurato il benchmark OEIS Open dava al model
-    perfino SageMath: senza librerie di computation un problem da confutare non si
-    affronta.
+    It uses the COMPUTATION environment (`.venv-compute`), which has `numpy`,
+    `sympy` and `numba`, rather than the project's: the generated code must not see
+    the agent's libraries nor its key. The isolation does not come from the
+    environment being poor — it comes from `sandbox-exec` (no network, writes only
+    in the working directory), from the reduced environment without the API key,
+    and from the `-I` option. Whoever measured the OEIS Open benchmark gave the
+    model SageMath: without computation libraries a problem to refute cannot be
+    tackled at all.
 
-    Si evita `/usr/bin/python3` perche' e' il wrapper `xcrun`, che inside la
-    sandbox show errors spuri.
+    `/usr/bin/python3` is avoided because it is the `xcrun` wrapper, which prints
+    spurious errors inside the sandbox.
     """
-    computation = ROOT / ".venv-compute" / "bin" / "python"
-    if computation.is_file():
-        return str(computation)
+    compute = ROOT / ".venv-compute" / "bin" / "python"
+    if compute.is_file():
+        return str(compute)
     base = Path(sys.base_prefix) / "bin" / "python3"
     if base.is_file():
         return str(base)
@@ -233,39 +228,38 @@ def _python_interpreter() -> str:
 
 
 def run_python_tool(code: str, timeout: int = 30, max_output: int = 20_000,
-                      folder: Path | str | None = None) -> str:
-    """Esegue il code inside la sandbox e ne restituisce l'output.
+                    folder: Path | str | None = None) -> str:
+    """Run the code inside the sandbox and return its output.
 
-    Se `folder` e' data, quella folder NON viene distrutta all'output: i
-    file scritti dal program restano disponibili alla call successiva.
-    Serve per le ricerche in piu' steps — senza persistenza un program non
-    puo' salvare un checkpoint, e ogni call ricomincia da zero.
+    If `folder` is given, that directory is NOT destroyed afterwards: the files the
+    program wrote stay available to the next call. This is for searches that take
+    several steps — without persistence a program cannot save a checkpoint, and
+    every call starts from nothing.
     """
     if not shutil.which("sandbox-exec"):
-        return ("ERROR: `sandbox-exec` non e' available su questo system, "
-                "quindi non posso eseguire il code in isolamento. "
-                "Lo strumento run_python e' disattivato.")
+        return ("ERROR: `sandbox-exec` is not available on this system, so the code "
+                "cannot be run in isolation. The run_python tool is disabled.")
 
     if folder is not None:
-        fix = Path(folder).resolve()
-        fix.mkdir(parents=True, exist_ok=True)
-        context = contextlib.nullcontext(str(fix))
+        fixed = Path(folder).resolve()
+        fixed.mkdir(parents=True, exist_ok=True)
+        context = contextlib.nullcontext(str(fixed))
     else:
         context = tempfile.TemporaryDirectory(prefix="fcs_py_")
 
     with context as job:
-        real_work = str(Path(job).resolve())
-        script = Path(real_work) / "program.py"
+        work_dir = str(Path(job).resolve())
+        script = Path(work_dir) / "program.py"
         script.write_text(code, encoding="utf-8")
-        profile = Path(real_work) / "sandbox.sb"
+        profile = Path(work_dir) / "sandbox.sb"
         profile.write_text(_SANDBOX_PROFILE.format(
-            job=real_work, home=str(Path.home()), progetto=str(ROOT)), encoding="utf-8")
+            job=work_dir, home=str(Path.home()), project=str(ROOT)), encoding="utf-8")
 
-        # Ambiente ridotto: soprattutto NIENTE key API.
+        # A reduced environment: above all, NO API key.
         environment = {
             "PATH": "/usr/bin:/bin",
-            "HOME": real_work,
-            "TMPDIR": real_work,
+            "HOME": work_dir,
+            "TMPDIR": work_dir,
             "LANG": "C.UTF-8",
             "PYTHONDONTWRITEBYTECODE": "1",
             "PYTHONUNBUFFERED": "1",
@@ -273,11 +267,12 @@ def run_python_tool(code: str, timeout: int = 30, max_output: int = 20_000,
         try:
             p = subprocess.run(
                 ["sandbox-exec", "-f", str(profile), _python_interpreter(), "-I", str(script)],
-                cwd=real_work, env=environment, capture_output=True, text=True,
+                cwd=work_dir, env=environment, capture_output=True, text=True,
                 timeout=timeout, start_new_session=True,
             )
         except subprocess.TimeoutExpired:
-            return f"ERROR: il code ha exceeded il tempo maximum di {timeout} seconds ed e' state interrotto."
+            return (f"ERROR: the code exceeded the time limit of {timeout} seconds and "
+                    f"was interrupted.")
 
         parts = []
         if p.stdout:
@@ -285,15 +280,15 @@ def run_python_tool(code: str, timeout: int = 30, max_output: int = 20_000,
         if p.stderr:
             parts.append("--- stderr ---\n" + p.stderr)
         if p.returncode != 0:
-            parts.append(f"--- il program e' terminato con code {p.returncode} ---")
-        result = "\n".join(parts) if parts else "(il code non ha stampato nulla)"
+            parts.append(f"--- the program exited with code {p.returncode} ---")
+        result = "\n".join(parts) if parts else "(the code printed nothing)"
         if folder is not None:
-            residues = sorted(p.name for p in Path(real_work).iterdir()
-                           if p.name not in ("program.py", "sandbox.sb"))
-            if residues:
-                result += ("\n--- file nella folder di job (restano "
-                              "disponibili alla prossima call) ---\n"
-                              + ", ".join(residues[:40]))
+            leftovers = sorted(q.name for q in Path(work_dir).iterdir()
+                               if q.name not in ("program.py", "sandbox.sb"))
+            if leftovers:
+                result += ("\n--- files in the working directory (they stay available "
+                           "to the next call) ---\n"
+                           + ", ".join(leftovers[:40]))
         if len(result) > max_output:
-            result = result[:max_output] + f"\n... [output truncated a {max_output} chars]"
+            result = result[:max_output] + f"\n... [output truncated at {max_output} characters]"
         return result

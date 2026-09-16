@@ -6,7 +6,7 @@ del punto 2 (misura) e del punto 3 (proiezione).
 Ogni number viene dal report JSON scritto da agent/agent.py o dall'listing dei
 candidates di scripts/select_formalisations.py: niente ricopiato a mano.
 
-LIMIT DICHIARATO DI QUESTO GIRO: e' state lanciato con `--silenzioso`, quindi
+LIMIT DICHIARATO DI QUESTO GIRO: e' state lanciato con `--quiet`, quindi
 il log non contiene i messages di error di Lean. La diagnosi dei fallimenti
 si fa sulla kind delle checks consegnate (non compila / compila con un buco /
 statement diverso) e sul riassunto del reasoning del model, iteration per
@@ -66,10 +66,10 @@ def ostacolo(t: dict) -> str:
     """Matematica, API di Mathlib, o indeterminato, dal reasoning e dalle checks."""
     if t["solved"]:
         return "-"
-    if not t.get("iterazioni_dettaglio"):
+    if not t.get("iteration_detail"):
         return (f"non determinabile dal report ({t.get('source', 'niente detail')}); "
                 f"{t['explorations']} explorations, {t['checks']} checks")
-    text =" ".join(it.get("reasoning", "") for it in t["iterazioni_dettaglio"])
+    text =" ".join(it.get("reasoning", "") for it in t["iteration_detail"])
     api, mate = len(_API.findall(text)), len(_MATE.findall(text))
     nat = t.get("verifications_by_kind") or {}
     if not t["checks"]:
@@ -99,7 +99,7 @@ def main() -> int:
     non_registrato = sum(1.0 for r in reports if r.get("interruzione"))
 
     print(f"model {report['model']}, effort {report['effort']}, istruzioni "
-          f"{report['istruzioni']}, cap ${report['problem_cap']:.2f}")
+          f"{report['instructions']}, cap ${report['problem_cap']:.2f}")
     print(f"spesa misurata: ${spent:.4f}" + (
         f"  + al maximum ${non_registrato:.2f} non registrati (attempts interrotti "
         f"dalla rete: {', '.join(r['interruzione']['problem'] for r in reports if r.get('interruzione'))})"

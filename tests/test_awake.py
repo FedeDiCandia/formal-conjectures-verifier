@@ -25,9 +25,9 @@ ASSERTIONS = """   pid 96678(caffeinate): [0x00004d5200019da6] 00:00:04 PreventU
 
 
 def test_riconosce_la_fonte_di_alimentazione():
-    assert awake.power_source(POWER_AC) == "alimentatore"
-    assert awake.power_source(POWER_BATTERY) == "batteria"
-    assert awake.power_source("") == "sconosciuta"
+    assert awake.power_source(POWER_AC) == "mains"
+    assert awake.power_source(POWER_BATTERY) == "battery"
+    assert awake.power_source("") == "unknown"
 
 
 def test_riconosce_il_proprio_caffeinate_e_non_quello_di_altri():
@@ -39,7 +39,7 @@ def test_riconosce_il_proprio_caffeinate_e_non_quello_di_altri():
 
 def test_a_batteria_non_si_parte_e_il_motivo_e_chiaro():
     reasons = awake.problems(POWER_BATTERY, ASSERTIONS, 96678)
-    assert len(reasons) == 1 and "alimentatore" in reasons[0], reasons
+    assert len(reasons) == 1 and "not plugged in" in reasons[0], reasons
 
 
 def test_senza_caffeinate_non_si_parte():

@@ -1,19 +1,19 @@
 """
-Il Mac deve restare sveglio e alimentato per tutto un giro dell'agent.
+The Mac has to stay awake and on mains power for a whole agent run.
 
-PERCHE'
--------
-Nella notte fra il 12 e il 13 settembre il giro sulle trials note ha subito otto
-interruzioni di rete in dodici problems. Non era la rete: il log di system
-(`pmset -g log`) mostra il Mac in «Maintenance Sleep» a cicli di 8-13 minuti e,
-alle 03:17, in «Clamshell Sleep». Ogni sospensione chiudeva la connessione in
-streaming con l'API; le calls finite normalmente duravano da 2 a 64 seconds,
-quelle interrotte da 11 minuti a oltre un'now.
+WHY
+---
+On the night of 12–13 September the run on known proofs suffered eight network
+interruptions across twelve problems. It was not the network: the system log
+(`pmset -g log`) shows the Mac in "Maintenance Sleep" on 8–13 minute cycles and,
+at 03:17, in "Clamshell Sleep". Every sleep closed the streaming connection to the
+API; calls that finished normally lasted 2 to 64 seconds, the interrupted ones from
+11 minutes to over an hour.
 
-`caffeinate -i -s -m -w PID` impedisce la sospensione finche' il processo vive.
-L'opzione `-s` vale only con l'alimentatore collegato, per questo si controlla
-also la source di alimentazione. Nessuna opzione impedisce la sospensione a
-coperchio chiuso senza un monitor esterno: quella va detta a chi lancia.
+`caffeinate -i -s -m -w PID` prevents sleep as long as the process lives. The `-s`
+option only applies on mains power, which is why the power source is checked too.
+No option prevents sleep with the lid closed and no external monitor: that has to
+be said to whoever launches the run.
 """
 from __future__ import annotations
 
@@ -24,16 +24,16 @@ import time
 
 
 def power_source(power_text: str) -> str:
-    """Da `pmset -g batt`: 'alimentatore', 'batteria' o 'sconosciuta'."""
+    """From `pmset -g batt`: 'mains', 'battery' or 'unknown'."""
     if "'AC Power'" in power_text:
-        return "alimentatore"
+        return "mains"
     if "'Battery Power'" in power_text:
-        return "batteria"
-    return "sconosciuta"
+        return "battery"
+    return "unknown"
 
 
 def caffeinate_running(assertions_text: str, caffeinate_pid: int | None) -> bool:
-    """Da `pmset -g assertions`: il processo caffeinate indicato impedisce la sospensione."""
+    """From `pmset -g assertions`: the given caffeinate process is preventing sleep."""
     if caffeinate_pid is None:
         return False
     return re.search(rf"pid {caffeinate_pid}\(caffeinate\):.*Prevent(UserIdle)?SystemSleep",
@@ -41,15 +41,15 @@ def caffeinate_running(assertions_text: str, caffeinate_pid: int | None) -> bool
 
 
 def problems(power_text: str, assertions_text: str, caffeinate_pid: int | None) -> list[str]:
-    """Le ragioni per NON partire, in words chiare. Lista vuota: si puo' partire."""
+    """The reasons NOT to start, in plain words. An empty list means: go ahead."""
     reasons = []
     source = power_source(power_text)
-    if source != "alimentatore":
-        reasons.append(f"il Mac non e' collegato all'alimentatore (source current_one: {source}). "
-                      f"Collega il caricatore: a batteria caffeinate non impedisce la sospensione.")
+    if source != "mains":
+        reasons.append(f"the Mac is not plugged in (current source: {source}). "
+                       f"Connect the charger: on battery, caffeinate does not prevent sleep.")
     if not caffeinate_running(assertions_text, caffeinate_pid):
-        reasons.append("caffeinate non risulta attivo: il Mac potrebbe sospendersi a meta' "
-                      "di one call, come nella notte del 13 settembre.")
+        reasons.append("caffeinate does not appear to be running: the Mac could go to sleep "
+                       "half-way through a call, as it did on the night of 13 September.")
     return reasons
 
 
@@ -59,17 +59,17 @@ def _pmset(*arguments: str) -> str:
 
 
 def start_job(pid_to_protect: int) -> subprocess.Popen:
-    """Avvia caffeinate legato al processo indicato: terminate quando lui terminate."""
+    """Start caffeinate bound to the given process: it ends when that process ends."""
     return subprocess.Popen(["caffeinate", "-i", "-s", "-m", "-w", str(pid_to_protect)])
 
 
-def controlla(caffeinate_process: subprocess.Popen | None) -> list[str]:
-    """Controlla alimentatore e caffeinate sul system vero. Fuori da macOS: niente."""
+def check(caffeinate_process: subprocess.Popen | None) -> list[str]:
+    """Check mains power and caffeinate on the real system. Outside macOS: nothing."""
     if sys.platform != "darwin":
         return []
     pid = caffeinate_process.pid if caffeinate_process is not None else None
     assertions = ""
-    for _ in range(15):       # l'asserzione compare after qualche decimo di second
+    for _ in range(15):       # the assertion appears after a few tenths of a second
         assertions = _pmset("-g", "assertions")
         if caffeinate_running(assertions, pid):
             break
@@ -78,5 +78,5 @@ def controlla(caffeinate_process: subprocess.Popen | None) -> list[str]:
 
 
 def on_mains_power() -> bool:
-    """Per il controllo before di ogni problem."""
-    return sys.platform != "darwin" or power_source(_pmset("-g", "batt")) == "alimentatore"
+    """For the check before each problem."""
+    return sys.platform != "darwin" or power_source(_pmset("-g", "batt")) == "mains"

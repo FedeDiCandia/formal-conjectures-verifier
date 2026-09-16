@@ -61,7 +61,7 @@ def test_i_moltiplicatori_della_cache_non_sono_uguali_per_tutti():
 
 def test_un_modello_senza_prezzi_fa_fallire_subito():
     """Meglio rifiutarsi di partire che far rispettare un limit sbagliato."""
-    with pytest.raises(KeyError, match="Prices sconosciuti"):
+    with pytest.raises(KeyError, match="Unknown prices"):
         Budget(dollar_limit=5, model="claude-inventato").spent
 
 
@@ -103,7 +103,7 @@ def test_il_limite_blocca_quando_e_esaurito():
     b = Budget(dollar_limit=0.10, model="claude-opus-5")
     b.record(_Usage(out=10_000))          # 10k output = $0.25 > $0.10
     assert b.exhausted
-    with pytest.raises(SpendLimitExceeded, match="Limite di spesa reached"):
+    with pytest.raises(SpendLimitExceeded, match="Spending limit reached"):
         b.check_before_calling(1_000, 1_000)
 
 
@@ -120,7 +120,7 @@ def test_una_chiamata_che_potrebbe_sforare_non_parte():
     lunga sforerebbe before che ce ne accorgiamo."""
     b = Budget(dollar_limit=0.50, model="claude-opus-5")
     assert b.max_possible_cost(20_000, 32_000) > 0.50
-    with pytest.raises(SpendLimitExceeded, match="Non parto"):
+    with pytest.raises(SpendLimitExceeded, match="Not starting"):
         b.check_before_calling(20_000, 32_000)
 
 

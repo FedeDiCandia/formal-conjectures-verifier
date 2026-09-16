@@ -90,7 +90,7 @@ on six problems that charge closed the attempt on its own. Fixed afterwards
 
 | problem | obstacle | with what certainty |
 |---|---|---|
-| `Erdos770` (two variants) | probably the Lean engineering: `h` is an `sInf` in `ℕ∞` of a gcd over the image of a `Finset`; 18 explorations in all, no candidate | **not determinable**: the run was launched with `--silenzioso`, so the log has no messages |
+| `Erdos770` (two variants) | probably the Lean engineering: `h` is an `sInf` in `ℕ∞` of a gcd over the image of a `Finset`; 18 explorations in all, no candidate | **not determinable**: the run was launched with `--quiet`, so the log has no messages |
 | `Erdos295.exists_k` | mathematics: the model was looking for a construction of Egyptian fractions with denominators ≥ N and spent 32,000 reasoning tokens in one call without reaching Lean | from the reasoning summary |
 | `Erdos180.erdos_180` | mathematics: it needs a known, large counterexample (plby formalises it in eight files); the model recognised this and said it could not write it within the budget | from the reasoning summary |
 

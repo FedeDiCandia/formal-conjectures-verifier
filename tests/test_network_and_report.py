@@ -1,19 +1,18 @@
-"""Una connessione che cade a meta' answer non deve fermare il giro, far
-sparire il job fatto, rendere meno rigido il limit total di spesa, ne'
-consumare il cap del problem.
+"""A connection that drops mid-response must not stop the run, make the work done
+disappear, soften the global spending limit, or consume the problem's cap.
 
-Gli incidenti:
-  * 12 settembre: un «Connection reset by peer» durante lo streaming del terzo
-    problem. L'eccezione era `httpx2.ReadError`, che l'SDK non traduce in
-    `anthropic.APIError`: il processo e' morto e il report, scritto only alla
-    end, non e' mai state scritto.
-  * notte del 13 settembre: con la before correzione, ogni call interrupted
-    veniva addebitata al caso worst ANCHE sul cap del problem. Un addebito
-    da $0,84 su un cap da $1 chiudeva il attempt da only: sei problems su
-    dodici sono finiti cosi'. La cause delle interruzioni era il Mac in
-    sospensione (vedi agent/awake.py).
+The incidents:
+  * 12 September: a "Connection reset by peer" while streaming the third problem.
+    The exception was `httpx2.ReadError`, which the SDK does not translate into
+    `anthropic.APIError`: the process died and the report, written only at the end,
+    was never written at all.
+  * the night of 13 September: with the first fix, every interrupted call was
+    charged at its worst case AGAINST THE PROBLEM'S CAP as well. A $0.84 charge on
+    a $1 cap closed the attempt on its own: six problems out of twelve ended that
+    way. The cause of the interruptions was the Mac going to sleep (see
+    agent/awake.py).
 
-Qui si simula il client, senza chiamare l'API.
+Here the client is simulated; the API is never called.
 """
 import json
 import sys
@@ -30,7 +29,7 @@ sys.path.insert(0, str(ROOT / "verifier"))
 import agent
 from costs import Budget, SpendLimitExceeded
 
-TEMPLATE = "claude-opus-5"
+MODEL = "claude-opus-5"
 INPUT_TOKENS = 1000
 
 
@@ -43,8 +42,8 @@ class _Usage:
 
 
 class _Answer:
-    """Una answer senza tools: il attempt finisce li'."""
-    content = [SimpleNamespace(type="text", text="mi fermo")]
+    """A response with no tool calls: the attempt ends there."""
+    content = [SimpleNamespace(type="text", text="stopping")]
     stop_reason = "end_turn"
     usage = _Usage()
 
@@ -81,8 +80,8 @@ class _Client:
         return _Stream(self.results.pop(0))
 
 
-_PROBLEMA = SimpleNamespace(theorem="Prova.rete", module="FormalConjectures.Prova",
-                            category="test", docstring="")
+_PROBLEM = SimpleNamespace(theorem="Trial.network", module="FormalConjectures.Trial",
+                           category="test", docstring="")
 
 
 @pytest.fixture(autouse=True)
@@ -98,66 +97,65 @@ def _reset():
 
 
 def _solve(client, budget, cap):
-    return agent.solve(_PROBLEMA, None, client=client, model=TEMPLATE, budget=budget,
-                          problem_cap=cap, verbose=False)
+    return agent.solve(_PROBLEM, None, client=client, model=MODEL, budget=budget,
+                       problem_cap=cap, verbose=False)
 
 
 def _worst(budget):
     return budget.max_possible_cost(INPUT_TOKENS, agent.MAX_TOKENS)
 
 
-def test_una_connessione_caduta_si_ritenta_e_va_sul_budget_totale():
+def test_a_dropped_connection_is_retried_and_charged_to_the_global_budget():
     client = _Client([_reset(), _Answer()])
-    b = Budget(dollar_limit=20.0, model=TEMPLATE)
+    b = Budget(dollar_limit=20.0, model=MODEL)
     t = _solve(client, b, cap=5.0)
-    assert client.calls == 2, "la call interrupted va rifatta"
+    assert client.calls == 2, "the interrupted call has to be made again"
     assert t.network_interruptions == 1
-    assert "smesso di usare gli tools" in t.reason, t.reason
-    assert b.spent >= _worst(b) - 1e-9, "il budget total deve contare il caso worst"
-    assert t.network_charge == pytest.approx(_worst(b)), "e il report deve dirlo"
-    assert t.usage.cost(TEMPLATE) < 0.01, "ma il cost del problem resta quello vero"
+    assert "stopped using the tools" in t.reason, t.reason
+    assert b.spent >= _worst(b) - 1e-9, "the global budget has to count the worst case"
+    assert t.network_charge == pytest.approx(_worst(b)), "and the report has to say so"
+    assert t.usage.cost(MODEL) < 0.01, "but the problem's cost stays the real one"
 
 
-def test_l_interruzione_non_consuma_il_tetto_del_problema():
-    """E' il test che la before correzione avrebbe fatto fallire: con un cap da
-    $1, two interruzioni da $0,81 non devono impedire la terza call, e la
-    terza deve avere lo stesso spazio della before."""
+def test_an_interruption_does_not_consume_the_problems_cap():
+    """This is the test the first fix would have failed: with a $1 cap, two $0.81
+    interruptions must not prevent the third call, and the third must have the same
+    room as the first."""
     client = _Client([_reset(), _reset(), _Answer()])
-    b = Budget(dollar_limit=20.0, model=TEMPLATE)
+    b = Budget(dollar_limit=20.0, model=MODEL)
     t = _solve(client, b, cap=1.0)
     assert client.calls == 3, t.reason
-    assert "smesso di usare gli tools" in t.reason, t.reason
+    assert "stopped using the tools" in t.reason, t.reason
     assert client.max_tokens[2] == client.max_tokens[0], client.max_tokens
-    assert t.network_charge > 1.0, "gli addebiti superano il cap, ed e' giusto: stanno outside"
+    assert t.network_charge > 1.0, "the charges exceed the cap, rightly: they sit outside it"
 
 
-def test_tre_interruzioni_di_fila_chiudono_il_problema_non_il_giro():
+def test_three_interruptions_in_a_row_close_the_problem_not_the_run():
     client = _Client([_reset() for _ in range(10)])
-    b = Budget(dollar_limit=20.0, model=TEMPLATE)
-    t = _solve(client, b, cap=5.0)          # nessuna eccezione deve uscire da qui
+    b = Budget(dollar_limit=20.0, model=MODEL)
+    t = _solve(client, b, cap=5.0)          # no exception may escape from here
     assert client.calls == agent.MAX_CONSECUTIVE_NETWORK_ERRORS
     assert t.network_interruptions == agent.MAX_CONSECUTIVE_NETWORK_ERRORS
-    assert "error di rete" in t.reason, t.reason
+    assert "repeated network error" in t.reason, t.reason
 
 
-def test_con_le_interruzioni_il_limite_totale_resta_rigido():
+def test_with_interruptions_the_global_limit_stays_hard():
     client = _Client([_reset() for _ in range(10)])
-    b = Budget(dollar_limit=1.0, model=TEMPLATE)
+    b = Budget(dollar_limit=1.0, model=MODEL)
     with pytest.raises(SpendLimitExceeded):
         _solve(client, b, cap=5.0)
-    assert b.spent <= 1.0 + 1e-9, f"spent ${b.spent:.4f} con un limit total di $1"
+    assert b.spent <= 1.0 + 1e-9, f"spent ${b.spent:.4f} against a global limit of $1"
 
 
-def test_il_rapporto_si_scrive_anche_a_giro_non_finito(tmp_path):
+def test_the_report_is_written_even_when_the_run_is_unfinished(tmp_path):
     client = _Client([_reset(), _Answer()])
-    b = Budget(dollar_limit=20.0, model=TEMPLATE)
+    b = Budget(dollar_limit=20.0, model=MODEL)
     t = _solve(client, b, cap=5.0)
-    args = SimpleNamespace(model=TEMPLATE, effort="low", istruzioni="insistenti", budget=20.0)
+    args = SimpleNamespace(model=MODEL, effort="low", instructions="insistent", budget=20.0)
     path = tmp_path / "report.json"
-    agent.write_report(path, args=args, cap=5.0, budget=b, attempts=[t],
-                           full=False)
+    agent.write_report(path, args=args, cap=5.0, budget=b, attempts=[t], full=False)
     data = json.loads(path.read_text(encoding="utf-8"))
     assert data["full"] is False
     assert data["spent"] == pytest.approx(b.spent)
     assert data["attempts"][0]["network_interruptions"] == 1
-    assert data["attempts"][0]["addebito_rete_prudenziale"] == pytest.approx(_worst(b))
+    assert data["attempts"][0]["precautionary_network_charge"] == pytest.approx(_worst(b))
