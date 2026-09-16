@@ -22,7 +22,7 @@ Quello che resta fuori dalla sandbox e' il codice del candidato che tentasse di
 riscrivere i file compilati dell'archivio: e' esattamente l'attacco descritto
 nell'assunto 2 del README di comparator ("non devi aver gia' compilato file
 potenzialmente ostili, perche' potrebbero aver alterato il tuo Challenge").
-Come seconda rete di sicurezza, `verifier/impronta.py` confronta l'impronta
+Come seconda rete di sicurezza, `verifier/fingerprint.py` confronta l'fingerprint
 dell'archivio prima e dopo ogni verifica.
 """
 from __future__ import annotations

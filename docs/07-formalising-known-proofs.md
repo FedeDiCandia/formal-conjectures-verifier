@@ -11,7 +11,7 @@ the proof is short.
 
 ## 1. Selection (free)
 
-`scripts/scegli_formalizzazioni.py` finds **1209 candidates** out of 1790 solved or
+`scripts/select_formalisations.py` finds **1209 candidates** out of 1790 solved or
 textbook problems (excluding those already proved in the archive, those using
 `native_decide`, those whose proof depends on a lemma containing `sorry`, and
 those with `answer(sorry)`).

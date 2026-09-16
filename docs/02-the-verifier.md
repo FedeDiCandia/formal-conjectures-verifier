@@ -210,7 +210,7 @@ false and unprovable. Whoever found the refutation would have no way to have it
 verified: they would have to change the statement to `answer(False) ↔ P`, and the
 verifier would reject it — rightly, because that is a different statement.
 
-So `verifier/negazione.py` generates a second, **trusted** challenge: the same
+So `verifier/negation.py` generates a second, **trusted** challenge: the same
 archive file with `answer(sorry)` replaced by `answer(False)` in the target
 theorem's declaration only. Every open problem therefore has two:
 

@@ -97,7 +97,7 @@ negated form, 60 s timeout per attempt, no API spend.
 
 One apparent case — `Arxiv.«2107.12475».CollatzLike` — was `plausible` failing to
 find a counterexample and leaving a `sorry`: the file compiled with a warning and
-the verdict reader took it as "closed". Fixed in `scripts/sonda_lean.py`, with
+the verdict reader took it as "closed". Fixed in `scripts/probe_lean.py`, with
 five tests in `tests/test_sonda.py`.
 
 ## M8 — Speed of the local computation
@@ -133,7 +133,7 @@ Opus 4.8.
 | | |
 |---|---|
 | cost Epoch AI paid | $50.0049 |
-| cost computed by `agent/costi.py` | **$50.00** |
+| cost computed by `agent/costs.py` | **$50.00** |
 | the same profile with Fable 5.1 | $72.30, that is **1.45×**, not 2× |
 
 It is the strongest check we have on the spending arithmetic, because it comes

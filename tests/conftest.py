@@ -1,4 +1,4 @@
-"""Configurazione comune ai test: rende importabili i moduli di verifier/."""
+"""Configurazione common ai test: rende importabili i moduli di verifier/."""
 import sys
 from pathlib import Path
 

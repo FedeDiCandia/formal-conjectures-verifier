@@ -57,8 +57,8 @@ from typing import Optional
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import config
 import guard
-import impronta as modulo_impronta
-import negazione
+import fingerprint as fingerprint_module
+import negation
 import sandbox
 from index import ProblemIndex, Problem
 
@@ -72,7 +72,7 @@ from index import ProblemIndex, Problem
 #:   stretta      -> si verifica l'enunciato dell'archivio come e' scritto.
 #:   confutazione -> si verifica la NEGAZIONE di un problema con `answer(sorry)`
 #:                   proposizionale, contro una sfida generata da noi (fidata).
-#:                   Vedi verifier/negazione.py.
+#:                   Vedi verifier/negation.py.
 STRETTA = "stretta"
 CONFUTAZIONE = "confutazione"
 
@@ -101,7 +101,7 @@ class Result:
     status: str
     checks: list[Check] = field(default_factory=list)
     message: str = ""
-    #: errori di compilazione o messaggi di comparator, utili all'agente
+    #: errori di compilazione o messaggi di comparator, utili all'agent
     errors: str = ""
     duration_s: float = 0.0
     raw_output: str = ""
@@ -152,7 +152,7 @@ _pool_lock = threading.Lock()
 
 #: Moduli di sfida gia' portati in pari, e il lucchetto che serializza l'operazione.
 #: Serve perche' portare in pari un modulo MODIFICA l'archivio, e se lo facesse
-#: una verifica mentre un'altra ne sta prendendo l'impronta la seconda
+#: una verifica mentre un'altra ne sta prendendo l'fingerprint la seconda
 #: segnalerebbe (giustamente) che l'archivio e' cambiato. Succedeva davvero.
 _sfide_pronte: set[str] = set()
 _lucchetto_sfide = threading.Lock()
@@ -381,11 +381,11 @@ def _errore_di_strumenti(output: str) -> str | None:
     4.33.1) con il `lean4export` per Lean 4.27, comparator si e' fermato con
     `failed to read file ... incompatible header`, e il rapporto diceva «la
     compilazione e' fallita» con esito RIFIUTATO. Era falso: il candidato non era mai
-    stato giudicato. Un guasto degli strumenti deve risultare ERRORE, con la causa.
+    stato giudicato. Un guasto degli tools deve risultare ERRORE, con la causa.
     """
     if "incompatible header" in output:
         return ("LA VERIFICA NON E' AVVENUTA: comparator ha trovato file .olean compilati "
-                "con una versione di Lean diversa da quella dei suoi strumenti "
+                "con una versione di Lean diversa da quella dei suoi tools "
                 "(`incompatible header`). Non dice niente sul candidato.\n\n"
                 "Per lo snapshot `main` (Lean 4.33.1) serve "
                 "FCS_LEAN4EXPORT=external/lean4export-433/.lake/build/bin/lean4export.")
@@ -405,7 +405,7 @@ def verify(problem_id: str, candidate: Path | str, *,
     problema: serve per i 107 problemi aperti formalizzati con `answer(sorry)`
     proposizionale, per i quali l'enunciato dell'archivio afferma che la
     risposta e' "si'" e una confutazione non avrebbe altro modo di essere
-    verificata. Vedi verifier/negazione.py.
+    verificata. Vedi verifier/negation.py.
 
     `run_guard=False` salta il controllo sintattico preventivo. Serve SOLO ai
     test, per dimostrare che anche comparator — cioe' il giudice vero, non il
@@ -447,11 +447,11 @@ def verify(problem_id: str, candidate: Path | str, *,
     bersaglio = problem.theorem      # il teorema che comparator deve confrontare
     modulo_permesso = None           # un import in piu', solo per la via type_of%
     if modalita == CONFUTAZIONE:
-        ok, _perche = negazione.puo_essere_negato(problem)
+        ok, _perche = negation.puo_essere_negato(problem)
         try:
-            sfida_negata = (negazione.genera(problem) if ok
-                            else negazione.genera_per_tipo(problem))
-        except negazione.NonNegabile as e:
+            sfida_negata = (negation.genera(problem) if ok
+                            else negation.genera_per_tipo(problem))
+        except negation.NonNegabile as e:
             checks.append(Check("il problema ammette una confutazione", False, str(e)))
             return done(ERROR, f"Non si puo' costruire la sfida negata: {e}")
         bersaglio = sfida_negata.bersaglio or problem.theorem
@@ -576,10 +576,10 @@ def verify(problem_id: str, candidate: Path | str, *,
                             "compilazione, non del candidato.",
                             errors=_lean_errors(uscita_prep), raw=uscita_prep)
 
-            # --- impronta dell'archivio PRIMA della verifica
+            # --- fingerprint dell'archivio PRIMA della verifica
             impronta_prima = None
             if config.CONTROLLA_IMPRONTA:
-                impronta_prima = modulo_impronta.calcola(
+                impronta_prima = fingerprint_module.calcola(
                     config.ARCHIVE, escludi=Path(config.SANDBOX_SUBDIR).name)
 
             ambiente = config.lean_env()
@@ -591,11 +591,11 @@ def verify(problem_id: str, candidate: Path | str, *,
                 profilo_sandbox=profilo,
             )
 
-            # --- impronta DOPO: l'archivio deve essere intatto
+            # --- fingerprint DOPO: l'archivio deve essere intatto
             if impronta_prima is not None:
-                differenze = modulo_impronta.confronta(
+                differenze = fingerprint_module.confronta(
                     impronta_prima,
-                    modulo_impronta.calcola(config.ARCHIVE,
+                    fingerprint_module.calcola(config.ARCHIVE,
                                             escludi=Path(config.SANDBOX_SUBDIR).name))
                 if differenze:
                     checks.append(Check("archivio intatto dopo la verifica", False,
@@ -685,7 +685,7 @@ def verify(problem_id: str, candidate: Path | str, *,
 
     guasto = _errore_di_strumenti(output)
     if guasto:
-        checks.append(Check("strumenti coerenti con l'archivio", False,
+        checks.append(Check("tools coerenti con l'archivio", False,
                             "file .olean con intestazione incompatibile"))
         return done(ERROR, guasto, errors=_lean_errors(output), raw=output)
     nome_controllo, spiegazione = _classify(output)
@@ -712,7 +712,7 @@ def verify_libera(testo_sfida: str, candidate: Path | str, teoremi: list[str], *
     enunciati dei teoremi `teoremi`, con `sorry` come dimostrazione. Il candidato deve
     dichiarare gli stessi teoremi e dimostrarli. Il resto e' la stessa catena di
     `verify`: controllo sintattico, compilazione isolata, confronto degli enunciati
-    elaborati, assiomi ammessi, riesecuzione nel kernel, impronta dell'archivio.
+    elaborati, assiomi ammessi, riesecuzione nel kernel, fingerprint dell'archivio.
 
     `moduli_permessi` sono i moduli dell'archivio che il candidato puo' importare per
     leggere definizioni ed enunciati. Appoggiarsi alle loro dimostrazioni, che per i
@@ -814,7 +814,7 @@ def verify_libera(testo_sfida: str, candidate: Path | str, teoremi: list[str], *
 
             impronta_prima = None
             if config.CONTROLLA_IMPRONTA:
-                impronta_prima = modulo_impronta.calcola(
+                impronta_prima = fingerprint_module.calcola(
                     config.ARCHIVE, escludi=Path(config.SANDBOX_SUBDIR).name)
             ambiente = config.lean_env()
             ambiente["TMPDIR"] = str(tmp_dir)
@@ -824,9 +824,9 @@ def verify_libera(testo_sfida: str, candidate: Path | str, teoremi: list[str], *
                 profilo_sandbox=profilo,
             )
             if impronta_prima is not None:
-                differenze = modulo_impronta.confronta(
+                differenze = fingerprint_module.confronta(
                     impronta_prima,
-                    modulo_impronta.calcola(config.ARCHIVE,
+                    fingerprint_module.calcola(config.ARCHIVE,
                                             escludi=Path(config.SANDBOX_SUBDIR).name))
                 if differenze:
                     checks.append(Check("archivio intatto dopo la verifica", False,
@@ -875,7 +875,7 @@ def verify_libera(testo_sfida: str, candidate: Path | str, teoremi: list[str], *
                     "Va letta.", raw=output)
     guasto = _errore_di_strumenti(output)
     if guasto:
-        checks.append(Check("strumenti coerenti con l'archivio", False,
+        checks.append(Check("tools coerenti con l'archivio", False,
                             "file .olean con intestazione incompatibile"))
         return done(ERROR, guasto, errors=_lean_errors(output), raw=output)
     nome_controllo, spiegazione = _classify(output)
@@ -896,7 +896,7 @@ def verify_many(jobs: list[tuple[str, Path]], *, jobs_parallel: Optional[int] = 
 
     # Tutte le sfide si portano in pari PRIMA di cominciare: e' l'unico passo
     # che modifica l'archivio, e farlo mentre le verifiche girano in parallelo
-    # falsa il controllo dell'impronta.
+    # falsa il controllo dell'fingerprint.
     for problema_id, _ in jobs:
         try:
             prepara_sfida(index.get(problema_id).module, timeout or config.TIMEOUT_SECONDS)

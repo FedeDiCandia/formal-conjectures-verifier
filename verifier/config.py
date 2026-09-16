@@ -74,8 +74,8 @@ TIMEOUT_SECONDS = int(os.environ.get("FCS_TIMEOUT", "900"))
 #: gira senza isolamento durante la compilazione.
 USA_SANDBOX = os.environ.get("FCS_SANDBOX", "1") not in ("0", "false", "no")
 
-#: Se confrontare l'impronta dei file compilati dell'archivio prima e dopo ogni
-#: verifica. Vedi verifier/impronta.py.
+#: Se confrontare l'fingerprint dei file compilati dell'archivio prima e dopo ogni
+#: verifica. Vedi verifier/fingerprint.py.
 CONTROLLA_IMPRONTA = os.environ.get("FCS_IMPRONTA", "1") not in ("0", "false", "no")
 
 #: Gli unici assiomi ammessi. Sono i tre della logica di Lean/Mathlib:

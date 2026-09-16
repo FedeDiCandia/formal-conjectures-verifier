@@ -52,7 +52,7 @@ Exercising the agent needs problems that are **already solved** — otherwise a
 failure could not be attributed to the agent rather than the problem. But a
 solved problem has its answer written in the archive.
 
-`agent/nascondi.py` takes the source file and replaces **every** proof with
+`agent/hide.py` takes the source file and replaces **every** proof with
 `sorry`, producing exactly the file the problem would have if it were still open.
 All proofs in the file are replaced, not only the target's: the neighbouring
 lemmas are often the intermediate steps of the solution.
@@ -95,7 +95,7 @@ Two corrections came out of running it for real:
   but the problem keeps its cap: otherwise a flaky connection turns into a
   fabricated "the model gave up".
 - **The machine must stay awake.** A laptop that goes to sleep mid-run kills the
-  connection and voids the attempts. `agent/veglia.py` refuses to start unless
+  connection and voids the attempts. `agent/awake.py` refuses to start unless
   the machine is on mains power with `caffeinate` holding it awake.
 
 ---

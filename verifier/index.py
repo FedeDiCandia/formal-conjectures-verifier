@@ -46,7 +46,7 @@ class Problem:
         con una cifra si scrive fra guillemet — il modulo delle voci OEIS si chiama
         `FormalConjectures.OEIS.«109074»` — ma il file sul disco si chiama
         `109074.lean`. Senza questa riga nessuno dei 209 problemi OEIS era
-        leggibile dal sorgente: l'agente non poteva riceverli, l'estrattore non
+        leggibile dal sorgente: l'agent non poteva riceverli, l'estrattore non
         poteva estrarli e la sfida negata non si poteva generare.
         """
         pezzi = self.module.replace("«", "").replace("»", "")

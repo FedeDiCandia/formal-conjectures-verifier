@@ -24,7 +24,7 @@ attempt. It costs about **fifty cents** and one API call.
 
 **What to ask.** Send the problem to a model, low effort, no tools, with this
 request: *do not prove it — tell me which known problem it reduces to, or which
-known problem implies it.* The phase-D prompt (`scripts/informale.py`) already
+known problem implies it.* The phase-D prompt (`scripts/informal.py`) already
 does this as a side effect, since it asks for a proof and accepts "this cannot be
 done, and here is why" as an honest answer.
 

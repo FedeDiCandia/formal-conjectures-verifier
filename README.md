@@ -310,19 +310,35 @@ probes — was free, and there was far more of it than there was API spend.
 | `agent/` | the agent, its tools, the cost accounting, the keep-awake check |
 | `tests/` | 158 tests; the adversarial ones are the point |
 | `scripts/` | setup, target selection, searches, probes, analysis |
-| `ricerca/` | the coding-theory search and the reproduction of published records |
-| `docs/` | the full write-up, in Italian, including the finding protocol |
+| `search/` | the coding-theory search and the reproduction of published records |
 | `docs/paper/` | the A105020 note: PDF, LaTeX source, Lean files |
 | `docs/contributions/` | the proofs prepared for the archive, with patches and reports |
 | `docs/data/` | every raw report, so the numbers above can be checked |
 
-Most documentation is in Italian; [`README.it.md`](README.it.md) is the Italian
-version of this page. The code, the Lean files and the published note are in
-English.
+## Documentation
+
+1. [How the archive works](docs/01-the-archive.md) — the `category` and
+   `formal_proof` attributes, the `answer( )` elaborator and its most important
+   subtlety.
+2. [How the verifier works](docs/02-the-verifier.md) — why comparator, the
+   Challenge/Solution architecture, and an explicit list of **what the verifier
+   does not guarantee**.
+3. [The agent](docs/03-the-agent.md) — the two tools, hiding the archive's proofs,
+   controlling the spend.
+4. [What to do about a finding](docs/04-finding-protocol.md) — what to do if
+   something looks like a counterexample, before believing it.
+5. [Calibration](docs/05-calibration.md) — how an honest problem is chosen to
+   measure the agent on.
+6. [The cost model](docs/06-cost-model.md) — what an attempt costs, how many
+   targets there are, and what cannot be estimated.
+7. [Formalising known proofs](docs/07-formalising-known-proofs.md) — the selection
+   of 1209 candidates, the measurement, and the projection.
+8. [Measurements](docs/data/measurements.md) — the register of everything
+   observed, with the provenance of every number.
 
 ## Known limits
 
-Set out in full in [docs/02-verificatore.md](docs/02-verificatore.md). In short:
+Set out in full in [the verifier's documentation](docs/02-the-verifier.md). In short:
 
 - **The sandbox on macOS is `sandbox-exec`, which Apple has deprecated.** It works,
   and a test proves it (a candidate that tries to rewrite an archive `.olean` is
@@ -354,7 +370,7 @@ attribution, which in summary is:
   Lean's kernel is what "verified" means in this repository.
 - [**LeanOpenProblems**](https://github.com/epoch-research/LeanOpenProblems),
   Epoch AI — MIT. Their published results were read and counted, not modified.
-- [**The OEIS**](https://oeis.org/) — the entries mirrored under `dati_ricerca/`
+- [**The OEIS**](https://oeis.org/) — the entries mirrored under `research_data/`
   and quoted in the note are OEIS content, under CC BY-SA 4.0.
 - **Andries E. Brouwer's** [tables of bounds for binary codes](https://aeb.win.tue.nl/codes/)
   — his pages carry no licence notice, so they are not redistributed here: the
