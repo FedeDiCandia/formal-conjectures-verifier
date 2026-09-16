@@ -20,8 +20,9 @@ repository.
 **A note on language.** The files the programs here read and rewrite carry English
 field names, the same ones the code uses today: a data file whose keys the code no
 longer knows is a defect waiting to happen, and renaming the keys changes no number.
-The recorded verifier outputs (`*_verification_*.json`) are the exception: their
-`detail` strings are what comparator and Lean printed during the run — in
-September 2026 our own messages around them were still in Italian — and they are
-kept exactly as they were, because a log rewritten afterwards is evidence of
-nothing.
+The two verifier reports (`a105020_verification.json`,
+`erdos1000_after_pr5837_verification.json`) were not translated but **re-run**: the
+verifier was pointed at the same files again and wrote its report afresh, so what
+is recorded there is a real verification and not an edited one. Both come back
+ACCEPTED. The raw logs under `docs/data/` are a different matter and are kept
+exactly as they were produced — see the note there.

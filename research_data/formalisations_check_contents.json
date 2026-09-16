@@ -2,35 +2,35 @@
  "plby/lean-proofs/src/latest/ErdosProblems/Erdos180.lean": {
   "http": 200,
   "lines": 26,
-  "occorrenze": {
+  "occurrences": {
    "erdos_180": [
     ":=   not_erdos_180_source  #print axioms not_erdos_180 -- 'E",
     "?",
     "?"
    ]
   },
-  "sorry_nel_file": 0
+  "sorry_in_the_file": 0
  },
  "plby/lean-proofs/src/latest/ErdosProblems/Erdos707.lean": {
   "http": 200,
   "lines": 6210,
-  "occorrenze": {
+  "occurrences": {
    "small_sidon_sets": []
   },
-  "sorry_nel_file": 0
+  "sorry_in_the_file": 0
  },
  "plby/lean-proofs/src/latest/ErdosProblems/Erdos1008.lean": {
   "http": 200,
   "lines": 678,
-  "occorrenze": {
+  "occurrences": {
    "lower_bound": []
   },
-  "sorry_nel_file": 0
+  "sorry_in_the_file": 0
  },
  "plby/lean-proofs/src/latest/ErdosProblems/Erdos291b.lean": {
   "http": 200,
   "lines": 2608,
-  "occorrenze": {
+  "occurrences": {
    "steinerberger": [],
    "erdos_291": [
     ":= by       intro N;       -- By Lemma `periodic_bounded`, t",
@@ -38,12 +38,12 @@
     "?"
    ]
   },
-  "sorry_nel_file": 0
+  "sorry_in_the_file": 0
  },
  "plby/lean-proofs/src/latest/ErdosProblems/Erdos1000.lean": {
   "http": 200,
   "lines": 1109,
-  "occorrenze": {
+  "occurrences": {
    "totient_le": [
     ":= (Finset.range t).prod (fun i => Nat.nth Nat.Prime i)  lem",
     ":= (Finset.range t).prod (fun i => Nat.nth Nat.Prime i)  lem"
@@ -54,12 +54,12 @@
     ":= _root_.Erdos1000.erdos_1000 "
    ]
   },
-  "sorry_nel_file": 0
+  "sorry_in_the_file": 0
  },
  "plby/lean-proofs/src/latest/ErdosProblems/Erdos1148.lean": {
   "http": 200,
   "lines": 248,
-  "occorrenze": {
+  "occurrences": {
    "weaker": [],
    "erdos_1148": [
     ":= by   rcases h_duke with ⟨N, hN⟩   use max N 1   intro n h",
@@ -67,50 +67,50 @@
     ":= _root_.Erdos1148.erdos_1148 "
    ]
   },
-  "sorry_nel_file": 0
+  "sorry_in_the_file": 0
  },
  "Jayyhk/erdos-lean/problems/707/Erdos707.lean": {
   "http": 200,
   "lines": 6361,
-  "occorrenze": {
+  "occurrences": {
    "small_sidon_sets": []
   },
-  "sorry_nel_file": 0
+  "sorry_in_the_file": 0
  },
  "Jayyhk/erdos-lean/problems/399/Erdos399.lean": {
   "http": 200,
   "lines": 17,
-  "occorrenze": {
+  "occurrences": {
    "cambie": []
   },
-  "sorry_nel_file": 0
+  "sorry_in_the_file": 0
  },
  "Jayyhk/erdos-lean/problems/1000/Erdos1000.lean": {
   "http": 200,
   "lines": 1140,
-  "occorrenze": {
+  "occurrences": {
    "totient_le": [
     ":= (Finset.range t).prod (fun i => Nat.nth Nat.Prime i)  lem",
     ":= (Finset.range t).prod (fun i => Nat.nth Nat.Prime i)  lem"
    ]
   },
-  "sorry_nel_file": 0
+  "sorry_in_the_file": 0
  },
  "williamjblair/lean-proofs/ErdosProblems/Erdos399.lean": {
   "http": 200,
   "lines": 88,
-  "occorrenze": {
+  "occurrences": {
    "cambie": [
     "?",
     ":= by   intro hcop hprod heq   have hprodpos : 0 < x * y := "
    ]
   },
-  "sorry_nel_file": 0
+  "sorry_in_the_file": 0
  },
  "google-deepmind/formal-conjectures/FormalConjectures/Millennium/PvsNP.lean": {
   "http": 200,
   "lines": 84,
-  "occorrenze": {
+  "occurrences": {
    "P_subset_NP": [
     ":= by   sorry  /-- The theorem that P is a subset of coNP. -",
     "?"
@@ -120,12 +120,12 @@
     "?"
    ]
   },
-  "sorry_nel_file": 4
+  "sorry_in_the_file": 4
  },
  "mo271/formal-conjectures/FormalConjectures/Wikipedia/DiophantineTuple.lean": {
   "http": 200,
   "lines": 196,
-  "occorrenze": {
+  "occurrences": {
    "noIntegralDiophantineFiveTuple_of": [
     ":= by sorry  /-- If every integral Diophantine triple has a ",
     ":= by sorry  /-- `HasUniqueExtension` is known to hold for c"
@@ -134,12 +134,12 @@
     ":= by    sorry  /- Conjectures / theorems about existence of"
    ]
   },
-  "sorry_nel_file": 8
+  "sorry_in_the_file": 8
  },
  "mzhorvath1/formal-conjectures/FormalConjectures/Wikipedia/DiophantineTuple.lean": {
   "http": 200,
   "lines": 196,
-  "occorrenze": {
+  "occurrences": {
    "noIntegralDiophantineFiveTuple_of": [
     ":= by sorry  /-- If every integral Diophantine triple has a ",
     ":= by sorry  /-- `HasUniqueExtension` is known to hold for c"
@@ -148,67 +148,67 @@
     ":= by    sorry  /- Conjectures / theorems about existence of"
    ]
   },
-  "sorry_nel_file": 8
+  "sorry_in_the_file": 8
  },
  "mo271/formal-conjectures/FormalConjectures/Wikipedia/RegularPrimes.lean": {
   "http": 200,
   "lines": 83,
-  "occorrenze": {
+  "occurrences": {
    "not_isRegularPrime_37": [
     ":= by   sorry  /-- The set of regular primes. -/ def regular",
     ":= by   sorry  /-- An equivalent definition of a regular pri"
    ]
   },
-  "sorry_nel_file": 6
+  "sorry_in_the_file": 6
  },
  "mo271/formal-conjectures/FormalConjectures/Wikipedia/CongruentNumber.lean": {
   "http": 200,
   "lines": 125,
-  "occorrenze": {
+  "occurrences": {
    "not_congruentNumber_1": [
     ":= by   sorry  /-- The rational right triangle with side len"
    ]
   },
-  "sorry_nel_file": 5
+  "sorry_in_the_file": 5
  },
  "mzhorvath1/formal-conjectures/FormalConjectures/ErdosProblems/1084.lean": {
   "http": 200,
   "lines": 78,
-  "occorrenze": {
+  "occurrences": {
    "easy_upper_d2": [
     ":= by   sorry  /-- Erdős showed that there is some constant "
    ]
   },
-  "sorry_nel_file": 5
+  "sorry_in_the_file": 5
  },
  "mzhorvath1/formal-conjectures/FormalConjectures/ErdosProblems/503.lean": {
   "http": 200,
   "lines": 84,
-  "occorrenze": {
+  "occurrences": {
    "lower_bound": [
     ":= by   sorry  end Erdos503 "
    ]
   },
-  "sorry_nel_file": 6
+  "sorry_in_the_file": 6
  },
  "Marti2203/formal-conjectures/FormalConjectures/ErdosProblems/1084.lean": {
   "http": 200,
   "lines": 78,
-  "occorrenze": {
+  "occurrences": {
    "easy_upper_d2": [
     ":= by   sorry  /-- Erdős showed that there is some constant "
    ]
   },
-  "sorry_nel_file": 5
+  "sorry_in_the_file": 5
  },
  "XC0R/formal-conjectures/FormalConjectures/ErdosProblems/503.lean": {
   "http": 200,
   "lines": 84,
-  "occorrenze": {
+  "occurrences": {
    "lower_bound": [
     ":= by   sorry  end Erdos503 "
    ]
   },
-  "sorry_nel_file": 6
+  "sorry_in_the_file": 6
  }
 }

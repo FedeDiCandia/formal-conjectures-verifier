@@ -1,62 +1,62 @@
 [
  {
-  "rango": 5,
+  "rank": 5,
   "problem": "Erdos1148.erdos_1148.variants.weaker",
-  "perche": "falsato dalla rete; la PR #3341 (chiusa) cambiava solo l'etichetta, niente prova"
+  "why": "spoiled by the network; PR #3341 (closed) changed only the label, no proof"
  },
  {
-  "rango": 7,
+  "rank": 7,
   "problem": "Erdos707.erdos_707.variants.small_sidon_sets",
-  "perche": "falsato dalla rete; le prove esterne di 707 non contengono questa variante"
+  "why": "spoiled by the network; the external proofs of 707 do not contain this variant"
  },
  {
-  "rango": 9,
+  "rank": 9,
   "problem": "ComplexityTheory.coP_eq_P",
-  "perche": "falsato dalla rete; ancora sorry su main (file spostato in Millennium/PvsNP.lean)"
+  "why": "spoiled by the network; still sorry on main (the file moved to Millennium/PvsNP.lean)"
  },
  {
-  "rango": 10,
+  "rank": 10,
   "problem": "Erdos1008.erdos_1008.variants.lower_bound",
-  "perche": "falsato dalla rete; la prova esterna di 1008 non contiene questa variante"
+  "why": "spoiled by the network; the external proof of 1008 does not contain this variant"
  },
  {
-  "rango": 11,
+  "rank": 11,
   "problem": "Erdos291.erdos_291.variants.steinerberger_generalization",
-  "perche": "falsato dalla rete; la prova esterna di 291 non contiene questa variante"
+  "why": "spoiled by the network; the external proof of 291 does not contain this variant"
  },
  {
-  "rango": 14,
+  "rank": 14,
   "problem": "ComplexityTheory.P_subset_NP",
-  "perche": "interrotto dallo stop; ancora sorry su main"
+  "why": "interrupted by the stop; still sorry on main"
  },
  {
-  "rango": 15,
+  "rank": 15,
   "problem": "Erdos1084.erdos_1084.variants.easy_upper_d2",
-  "perche": "mai tentato; la PR #3320 (chiusa) cambiava solo l'etichetta, niente prova"
+  "why": "never attempted; PR #3320 (closed) changed only the label, no proof"
  },
  {
-  "rango": 16,
+  "rank": 16,
   "problem": "OeisA38771.a_n_exists",
-  "perche": "mai tentato; nessuna prova trovata altrove"
+  "why": "never attempted; no proof found elsewhere"
  },
  {
-  "rango": 17,
+  "rank": 17,
   "problem": "RegularPrimes.not_isRegularPrime_37",
-  "perche": "mai tentato; nessuna prova trovata altrove"
+  "why": "never attempted; no proof found elsewhere"
  },
  {
-  "rango": 18,
+  "rank": 18,
   "problem": "CongruentNumber.not_congruentNumber_1",
-  "perche": "mai tentato; nessuna prova trovata altrove"
+  "why": "never attempted; no proof found elsewhere"
  },
  {
-  "rango": 19,
+  "rank": 19,
   "problem": "OeisA3162.a_is_integer",
-  "perche": "mai tentato; nessuna prova trovata altrove"
+  "why": "never attempted; no proof found elsewhere"
  },
  {
-  "rango": 20,
+  "rank": 20,
   "problem": "Erdos503.erdos_503.variants.lower_bound",
-  "perche": "mai tentato; le PR su 503 riguardano altre varianti"
+  "why": "never attempted; the PRs on 503 concern other variants"
  }
 ]

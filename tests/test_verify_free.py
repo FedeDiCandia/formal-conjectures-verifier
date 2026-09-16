@@ -128,7 +128,7 @@ def test_leaning_on_an_open_problems_sorry_is_rejected(tmp_path):
 def test_an_incompatible_olean_is_a_tool_error_not_a_rejection():
     """The fault of 12 September 2026: REJECTED instead of ERROR."""
     from verify import _tool_error
-    output = ("uncaught exception: failed to read file '/x/Sfida0.olean', "
+    output = ("uncaught exception: failed to read file '/x/Challenge0.olean', "
               "incompatible header")
     assert _tool_error(output) is not None
     assert "lean4export-433" in _tool_error(output)

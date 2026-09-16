@@ -1,14 +1,14 @@
 [
  {
   "problem": "Erdos399.erdos_399.variants.cambie",
-  "prova_altrove": "PR aperta #5425 (herakles-dev, 2026-09-10) che la dimostra; anche williamjblair/lean-proofs ErdosProblems/Erdos399.lean"
+  "proof_elsewhere": "open PR #5425 (herakles-dev, 2026-09-10) proving it; also williamjblair/lean-proofs ErdosProblems/Erdos399.lean"
  },
  {
   "problem": "Erdos180.erdos_180",
-  "prova_altrove": "plby/lean-proofs src/latest/ErdosProblems/Erdos180.lean (not_erdos_180)"
+  "proof_elsewhere": "plby/lean-proofs src/latest/ErdosProblems/Erdos180.lean (not_erdos_180)"
  },
  {
   "problem": "Erdos649.erdos_649",
-  "prova_altrove": "plby/lean-proofs, link gia' nell'attributo formal_proof dell'archivio"
+  "proof_elsewhere": "plby/lean-proofs, the link is already in the archive's formal_proof attribute"
  }
 ]
