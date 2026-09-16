@@ -760,7 +760,7 @@ def main() -> int:
     r = report_part_two(data, r)
     r = report_part_three(data, r)
     text = "\n".join(r) + "\n"
-    output = ROOT / "docs/06-model-costs.md"
+    output = ROOT / "docs/06-cost-model.md"
     output.write_text(text, encoding="utf-8")
     print(text)
     print(f"(scritto in {output})", file=sys.stderr)
