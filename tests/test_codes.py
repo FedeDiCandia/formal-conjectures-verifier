@@ -45,7 +45,7 @@ def test_permutation_and_group():
     assert apply(p, 0b00001) == 0b00010       # bit 0 moves to position 1
 
 
-CODE = ROOT / "research_data" / "codici" / "i24.12a"
+CODE = ROOT / "research_data" / "codes" / "i24.12a"
 
 
 @pytest.mark.skipif(not CODE.is_file(), reason="published code not downloaded")

@@ -45,7 +45,7 @@ def select(bounds: dict, *, max_words: int, max_combinations: int,
 
 
 def main() -> int:
-    bounds = json.loads((DATA_DIR / "limiti_cwc.json").read_text())
+    bounds = json.loads((DATA_DIR / "bounds_cwc.json").read_text())
     cells = select(bounds, max_words=400, max_combinations=300_000,
                    how_many=int(sys.argv[1]) if len(sys.argv) > 1 else 12)
     print(f"{len(cells)} cells in the first round.\n")

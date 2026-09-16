@@ -43,7 +43,7 @@ DATA_DIR = ROOT / "research_data"
 
 
 def targets(max_combinations: int, how_many: int) -> list[tuple]:
-    bounds = json.loads((DATA_DIR / "limiti_cwc.json").read_text())
+    bounds = json.loads((DATA_DIR / "bounds_cwc.json").read_text())
     outside = []
     for k, v in bounds.items():
         n, d, w = (int(x) for x in k.split(","))

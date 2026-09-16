@@ -23,8 +23,8 @@ The list below says which files, and under which terms.
      docs/contributi/formal-conjectures/**/*.patch
                                         diffs against archive files
      docs/pubblicazione/lean/*.lean     files that import and restate archive
-     ricerca/lean/*.lean                  declarations
-     dati_ricerca/formalizzazioni_candidati.json
+     search/lean/*.lean                  declarations
+     research_data/formalisation_candidates.json
                                         docstrings and statements of 1209 problems
 
    The copied files keep the archive's own copyright header. The proofs written
@@ -65,9 +65,9 @@ The list below says which files, and under which terms.
    These files are verbatim OEIS entries, downloaded unmodified, and are
    distributed under CC BY-SA 4.0 rather than the Apache licence:
 
-     dati_ricerca/oeis/*.txt
-     dati_ricerca/oeis-2026-09-12/*.txt
-     dati_ricerca/oeis-2026-09-12/A045917.html
+     research_data/oeis/*.txt
+     research_data/oeis-2026-09-12/*.txt
+     research_data/oeis-2026-09-12/A045917.html
 
    The note in docs/pubblicazione/ quotes two OEIS entries (A105020, A045917)
    with attribution to their authors and to the OEIS.
@@ -76,13 +76,13 @@ The list below says which files, and under which terms.
    Andries E. Brouwer, https://aeb.win.tue.nl/codes/
 
    His pages carry no licence notice, so they are **not redistributed here**:
-   dati_ricerca/Andw.html, dati_ricerca/binary-1.html and the 362 explicit codes
-   under dati_ricerca/codici/ are excluded by .gitignore. ricerca/tabelle.py and
-   ricerca/riproduci.py download them from the original site when they are
+   research_data/Andw.html, research_data/binary-1.html and the 362 explicit codes
+   under research_data/codes/ are excluded by .gitignore. search/tables.py and
+   search/reproduce.py download them from the original site when they are
    missing, so the reproduction can still be run and checked. (Commits made
    before 15 September 2026 do still contain those files.)
 
    The numbers derived from those tables — which record is claimed, by whom, and
-   whether an explicit code exists — are in dati_ricerca/limiti_cwc.json and in
+   whether an explicit code exists — are in research_data/bounds_cwc.json and in
    docs/. Attribution is to Brouwer and, for individual codes, to the
    constructors named in the tables.

@@ -30,10 +30,10 @@ runs/
 build/
 
 # Dati di terzi senza licenza dichiarata (tabelle di A. E. Brouwer):
-# restano sul disco, li riscarica ricerca/riproduci.py
-dati_ricerca/codici/
-dati_ricerca/Andw.html
-dati_ricerca/binary-1.html
+# restano sul disco, li riscarica search/reproduce.py
+research_data/codes/
+research_data/Andw.html
+research_data/binary-1.html
 
 # Note di lavoro interne, non pubblicate
 interno/

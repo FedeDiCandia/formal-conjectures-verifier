@@ -131,7 +131,7 @@ def _pagina(name: str) -> Path:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     result = subprocess.run(
         ["curl", "-sS", "-L", "--max-time", "45", "-A",
-         "ricerca-codici/1.0 (check indipendente di bounds pubblicati)",
+         "code-search/1.0 (independent check of published bounds)",
          "-o", str(local), BASE + name],
         capture_output=True, text=True)
     if result.returncode != 0 or not local.is_file() or local.stat().st_size == 0:
@@ -209,8 +209,8 @@ def main() -> None:
     cwc = constant_weight()
     gen = general()
     DATA_DIR.mkdir(exist_ok=True)
-    (DATA_DIR / "limiti_cwc.json").write_text(json.dumps(cwc, indent=1, sort_keys=True))
-    (DATA_DIR / "limiti_generali.json").write_text(json.dumps(gen, indent=1, sort_keys=True))
+    (DATA_DIR / "bounds_cwc.json").write_text(json.dumps(cwc, indent=1, sort_keys=True))
+    (DATA_DIR / "bounds_general.json").write_text(json.dumps(gen, indent=1, sort_keys=True))
 
     open_list = [k for k, v in cwc.items()
               if v["upper"] and v["upper"] > v["lower"]]

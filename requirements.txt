@@ -1,13 +1,13 @@
-# Dipendenze Python del progetto.
-# Installazione:  python3 -m venv .venv && ./.venv/bin/pip install -r requirements.txt
-# (scripts/setup.sh lo fa da solo)
+# The project's Python dependencies.
+# Install with:  python3 -m venv .venv && ./.venv/bin/pip install -r requirements.txt
+# (scripts/setup.sh does it for you)
 pytest>=8
 anthropic>=1.0
 numpy>=2
 
-# Facoltativi, solo per alcune ricerche in ricerca/ e scripts/:
-#   numba      ricerca/a105020_indici.py     (compilazione JIT)
-#   networkx   ricerca/residui_d27.py
-#   sympy      scripts/caccia_programmi.py
-#   highspy    la ricerca sui codici, quando usa la programmazione lineare
-# Non servono per i test ne' per il verificatore.
+# Optional, only for some of the searches in search/ and scripts/:
+#   numba      search/a105020_indices.py    (JIT compilation)
+#   networkx   the residue-cover search
+#   sympy      scripts/hunt_programs.py
+#   highspy    the code search, when it uses integer programming
+# None of these is needed for the tests or for the verifier.

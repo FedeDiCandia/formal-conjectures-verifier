@@ -24,7 +24,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-CANDIDATES = ROOT / "research_data" / "formalizzazioni_candidati.json"
+CANDIDATES = ROOT / "research_data" / "formalisation_candidates.json"
 
 #: signs, in the model's reasoning, of an API obstacle rather than a mathematical one
 _API = re.compile(r"unknown (identifier|constant)|not found|doesn't exist|does not exist|"

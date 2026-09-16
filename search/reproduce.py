@@ -17,7 +17,7 @@ Three outcomes are possible, and all three are information:
   INVALID      the code does not satisfy the constraints (almost certainly our
                fault: a format we cannot read)
 
-I file si scaricano one volta sola e restano in `research_data/codici/`.
+The files are downloaded once and stay in `research_data/codes/`.
 """
 from __future__ import annotations
 
@@ -34,7 +34,7 @@ from codes import Result, read, check, fast_check   # noqa: E402
 from orbits import expand, expand_cyclic                  # noqa: E402
 
 DATA_DIR = ROOT / "research_data"
-CACHE = DATA_DIR / "codici"
+CACHE = DATA_DIR / "codes"
 BASE = "https://aeb.win.tue.nl/codes/"
 PAUSE = 0.4      # courtesy towards a university server
 
@@ -48,7 +48,7 @@ def download(relative: str) -> Path:
     # every https fails with CERTIFICATE_VERIFY_FAILED.
     result = subprocess.run(
         ["curl", "-sS", "-L", "--max-time", "45", "-A",
-         "ricerca-codici/1.0 (check indipendente di bounds pubblicati)",
+         "code-search/1.0 (independent check of published bounds)",
          "-o", str(local), BASE + relative],
         capture_output=True, text=True)
     if result.returncode != 0 or not local.is_file() or local.stat().st_size == 0:
@@ -118,7 +118,7 @@ def one(key: str, entry: dict) -> dict:
 
 
 def main() -> int:
-    bounds = json.loads((DATA_DIR / "limiti_cwc.json").read_text())
+    bounds = json.loads((DATA_DIR / "bounds_cwc.json").read_text())
     to_do = {k: v for k, v in bounds.items() if v["code"]}
     print(f"{len(to_do)} cells with a published explicit code.\n")
     results = []
@@ -135,11 +135,11 @@ def main() -> int:
               f"found {str(e.get('found', '-')):>6}  "
               f"{e.get('format', '')}  {e.get('note', '')}")
         sys.stdout.flush()
-    (DATA_DIR / "riproduzione.json").write_text(json.dumps(results, indent=1))
+    (DATA_DIR / "reproduction.json").write_text(json.dumps(results, indent=1))
     print("\n" + "=" * 70)
     for state, how_many in sorted(count.items(), key=lambda kv: -kv[1]):
         print(f"  {state:<14} {how_many}")
-    print(f"\nRapporto in {DATA_DIR / 'riproduzione.json'}")
+    print(f"\nRapporto in {DATA_DIR / 'reproduction.json'}")
     return 0
 
 

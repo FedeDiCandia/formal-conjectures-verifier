@@ -123,22 +123,22 @@ def valuta(p, local_names: list[str], di_fcfm: list[str]) -> tuple[float, list[s
         reasons.append(reason)
 
     if _SHORT.search(doc):
-        add(-6, "source: trial corta")
+        add(-6, "source: short proof")
     citata = bool(_CITATION.search(doc) and _PROVED.search(doc))
     if citata:
-        add(+4, "source: articolo")
+        add(+4, "source: a paper")
     if _DEEP.search(doc):
-        add(+6, "source: theorem profondo")
+        add(+6, "source: a deep theorem")
     if _HARD_STATEMENT.search(p.statement):
-        add(+5, "statement: infinito/analisi")
+        add(+5, "statement: infinity/analysis")
     if _LARGE_POWER.search(p.statement):
-        add(+4, "computation grande")
+        add(+4, "large computation")
     if p.category == "textbook":
         add(-2, "textbook")
     if not (subjects and subjects <= ELEMENTARY):
-        add(+1 if subjects & ELEMENTARY else +3, "outside da AMS 5/11")
+        add(+1 if subjects & ELEMENTARY else +3, "outside AMS 5/11")
     if local_names or di_fcfm:
-        add(0.5 * len(local_names) + 1.0 * len(di_fcfm), "definizioni outside Mathlib")
+        add(0.5 * len(local_names) + 1.0 * len(di_fcfm), "definitions outside Mathlib")
     if p.formal_proof_kind in ("lean4", "other_system"):
         add(+1, "proof already elsewhere")
     points += len(p.statement) / 80
@@ -148,7 +148,7 @@ def valuta(p, local_names: list[str], di_fcfm: list[str]) -> tuple[float, list[s
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--mostra", type=int, default=30)
-    ap.add_argument("--output", default=str(ROOT / "research_data" / "formalizzazioni_candidati.json"))
+    ap.add_argument("--output", default=str(ROOT / "research_data" / "formalisation_candidates.json"))
     args = ap.parse_args()
 
     idx = ProblemIndex.load()

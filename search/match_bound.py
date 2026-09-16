@@ -30,7 +30,7 @@ DATA_DIR = ROOT / "research_data"
 
 
 def main() -> int:
-    bounds = json.loads((DATA_DIR / "limiti_cwc.json").read_text())
+    bounds = json.loads((DATA_DIR / "bounds_cwc.json").read_text())
     word_cap = int(sys.argv[1]) if len(sys.argv) > 1 else 80
     tetto_comb = int(sys.argv[2]) if len(sys.argv) > 2 else 80_000
     iterations = int(sys.argv[3]) if len(sys.argv) > 3 else 3_000
