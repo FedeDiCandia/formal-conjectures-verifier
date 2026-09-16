@@ -1,26 +1,16 @@
 """
-Espansione dei codici pubblicati dal format `$EXEC orbit`.
+Expanding the published codes from the `$EXEC orbit` format.
 
-PERCHÉ SERVE, E COSA CI INSEGNA
--------------------------------
-I codici record delle tables di Brouwer non sono pubblicati come elenchi di
-words: sono pubblicati come **generators di un group di permutazioni più alcune
-words seed**, e il code è l'unione delle orbits dei seeds below il group. Un
-code di 5558 words sta in venticinque lines.
+WHY IT IS NEEDED, AND WHAT IT TEACHES
+-------------------------------------
+Brouwer's record codes are not published as lists of words: they are published as
+**generators of a permutation group plus a few seed words**, and the code is the union
+of the seeds' orbits under the group.
 
-Questo non è only un format: è il **method** con cui quasi all_items questi record
-sono stati found. Non si cercano 5558 words one per one — si search_for un group
-adatto e poche words seed, e il group fa il resto. È l'informazione più utile
-che abbiamo raccolto sulla strada A, e viene gratis dal leggere la source.
-
-FORMATO
--------
-    $EXEC orbit
-    (23,2,8)(22,1,7)...        <- un generatore per line, in notazione ciclica
-    ...
-    ..                         <- separatore
-    000111111111111000000000   <- words seed, one per line
-    ...
+This is not only a format: it is the **method** by which nearly all these records were
+found. Nobody looks for 5558 words one at a time — one looks for a suitable group and
+a few seed words, and the group does the rest. It is the most useful thing we have
+gathered about this route, and it comes free from reading the source.
 """
 from __future__ import annotations
 
@@ -31,7 +21,7 @@ _CICLO = re.compile(r"\(([^)]*)\)")
 
 
 def read_permutation(line: str, n: int) -> tuple[int, ...]:
-    """Da notazione ciclica a one tupla `p` con `p[i]` = immagine di `i`."""
+    """From cycle notation to a tuple `p` with `p[i]` = the image of `i`."""
     p = list(range(n))
     for body in _CICLO.findall(line):
         points = [int(x) for x in body.replace(",", " ").split()]
@@ -44,7 +34,7 @@ def read_permutation(line: str, n: int) -> tuple[int, ...]:
 
 def closure(generators: list[tuple[int, ...]], n: int,
              maximum: int = 2_000_000) -> list[tuple[int, ...]]:
-    """Il group generato, per visita in ampiezza. Include l'identità."""
+    """The group generated, by breadth-first search. It includes the identity."""
     ident = tuple(range(n))
     seen = {ident}
     frontier = [ident]
@@ -63,13 +53,13 @@ def closure(generators: list[tuple[int, ...]], n: int,
 
 
 def apply(p: tuple[int, ...], word: int) -> int:
-    """Permuta le positions di one word: il bit in `i` finisce in `p[i]`.
+    """Permute a word's positions: the bit at `i` ends up at `p[i]`.
 
-    La position 0 e' il carattere **piu' a destra** della stringa di bit: e' la
-    lettura binaria normale, ed e' la convenzione dei file di Brouwer. Provate
-    all_items e quattro le combinazioni (stringa diritta o rovesciata, permutazione o
-    inversa), only questa riproduce il record pubblicato A(24,6,12) >= 5558; le
-    other_items danno 8750 words con pairs a distance 4. La convenzione non e'
+    Position 0 is the **rightmost** character of the bit string: that is the
+    ordinary binary reading, and it is the convention of Brouwer's files. All four
+    combinations were tried (string as written or reversed, permutation or its
+    inverse), and only this one reproduces the published record A(24,6,12) >= 5558;
+    the others give 8750 words with pairs at distance 4. The convention is not
     documentata sul sito: e' stata dedotta verificando.
     """
     outside = 0
@@ -80,37 +70,37 @@ def apply(p: tuple[int, ...], word: int) -> int:
 
 
 def blocks(n: int, declared: list[int]) -> list[int]:
-    """Le sizes dei blocks, completate fino a coprire `n`.
+    """The block sizes, completed until they cover `n`.
 
-    L'header `$EXEC cycle k1 k2 ...` list_them le sizes dei blocks
-    consecutivi, e la loro total_sum deve fare n. Quando ne e' elencata one sola (o
-    poche) e la total_sum e' minore di n, l'latest si ripete fino a riempire: e' il
-    caso di `$EXEC cycle 16` con n=32, che vuol dire 16+16. Un resto piu' piccolo
-    dell'latest size diventa un block a se'. Senza arguments: un only block
-    lungo n, cioe' la rotation ciclica di tutta la word.
+    The header `$EXEC cycle k1 k2 ...` lists the sizes of consecutive blocks, and
+    they have to sum to n. When only one (or a few) are listed and the sum is less
+    than n, the last one repeats until it fills up: that is the case of
+    `$EXEC cycle 16` with n=32, which means 16+16. A remainder smaller than the last
+    size becomes a block of its own. With no arguments: a single block of length n,
+    that is the cyclic rotation of the whole word.
     """
     if not declared:
         return [n]
     sizes = list(declared)
     if sum(sizes) > n:
-        raise ValueError(f"blocks {sizes} piu' lunghi di n={n}")
+        raise ValueError(f"blocks {sizes} longer than n={n}")
     latest = sizes[-1]
     while n - sum(sizes) >= latest:
         sizes.append(latest)
-    # il resto, piu' short dell'latest size, e' fatto di positions ferme: e'
-    # cosi' che tornano A(22,10,7) e A(23,10,9), che con un block short finale
-    # davano orbits troppo grandi e non valide.
+    # the remainder, shorter than the last size, is made of fixed positions: this
+    # is what makes A(22,10,7) and A(23,10,9) come out right, which with a short
+    # final block gave orbits that were too large and invalid.
     sizes.extend([1] * (n - sum(sizes)))
     return sizes
 
 
 def rotation(n: int, sizes: list[int]) -> tuple[int, ...]:
-    """Ruota di one, contemporaneamente, ogni block. I blocks di 1 sono fermi.
+    """Rotate every block by one, simultaneously. Blocks of size 1 stay fixed.
 
-    I blocks si contano da **sinistra nella stringa di bit**, cioe' dalle
-    positions alte: `cycle 1 24` su n=25 vuol dire che il first carattere scritto
+    Blocks are counted from the **left of the bit string**, that is from the high
+    positions: `cycle 1 24` on n=25 means that the first character written
     e' fisso e i 24 seguenti ruotano. Contandoli dall'altra parte i conteggi
-    tornano ma i codici risultano non validi — e' cosi' che l'error e' venuto
+    come out right but the codes turn out invalid — that is how the error came
     outside.
     """
     p = list(range(n))
@@ -124,10 +114,10 @@ def rotation(n: int, sizes: list[int]) -> tuple[int, ...]:
 
 
 def expand_cyclic(path: str | Path) -> tuple[list[int], int, dict]:
-    """Il format `$EXEC cycle k1 k2 ...`: orbit below la rotation a blocks.
+    """The `$EXEC cycle k1 k2 ...` format: the orbit under block rotation.
 
-    Le words sono scritte a groups separati da spazi (`11100 10010 ... 00`), che
-    sono proprio i blocks: gli spazi vanno tolti, non ignorati per caso.
+    The words are written in groups separated by spaces (`11100 10010 ... 00`), and
+    those groups are exactly the blocks: the spaces have to be stripped deliberately.
     """
     lines = [r.rstrip() for r in Path(path).read_text().splitlines()]
     lines = [r for r in lines if r.strip()]
@@ -136,7 +126,7 @@ def expand_cyclic(path: str | Path) -> tuple[list[int], int, dict]:
                   if r.strip() and r.strip() != ".."]
     seed_text = [r for r in seed_text if r and all(c in "01" for c in r)]
     if not seed_text:
-        raise ValueError(f"{path}: nessun seed leggibile")
+        raise ValueError(f"{path}: no readable seed")
     n = max(len(r) for r in seed_text)
     discarded = [r for r in seed_text if len(r) != n]
     seed_text = [r for r in seed_text if len(r) == n]
@@ -153,20 +143,20 @@ def expand_cyclic(path: str | Path) -> tuple[list[int], int, dict]:
 
 
 def expand(path: str | Path) -> tuple[list[int], int, dict]:
-    """Legge un file `$EXEC orbit` e restituisce (words, n, informazioni)."""
+    """Read an `$EXEC orbit` file and return (words, n, info)."""
     lines = [r.rstrip() for r in Path(path).read_text().splitlines()]
     lines = [r for r in lines if r.strip()]
     if not lines or not lines[0].lower().startswith("$exec"):
-        raise ValueError(f"{path}: non è un file $EXEC")
+        raise ValueError(f"{path}: not an $EXEC file")
     try:
         sep = next(i for i, r in enumerate(lines) if r.strip() == "..")
     except StopIteration:
-        raise ValueError(f"{path}: manca il separatore '..'") from None
+        raise ValueError(f"{path}: the '..' separator is missing") from None
 
-    # un second `..` in fondo e' only un terminatore: si ignora
+    # a second `..` at the end is only a terminator: it is ignored
     seed_text = [r.strip() for r in lines[sep + 1:] if r.strip() and r.strip() != ".."]
     if not seed_text or any(c not in "01" for c in seed_text[0]):
-        raise ValueError(f"{path}: i seeds non sono stringhe di bit")
+        raise ValueError(f"{path}: the seeds are not bit strings")
     n = len(seed_text[0])
     seeds = []
     for r in seed_text:

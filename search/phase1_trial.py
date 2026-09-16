@@ -32,15 +32,15 @@ def select(bounds: dict, *, max_words: int, max_combinations: int,
     candidate = []
     for k, v in bounds.items():
         n, d, w = (int(x) for x in k.split(","))
-        if v["inferiore"] > max_words or d % 2:
+        if v["lower"] > max_words or d % 2:
             continue
         from math import comb
         if comb(n, w) > max_combinations:
             continue
         candidate.append((k, v))
-    candidate.sort(key=lambda kv: (-int(kv[1]["superiore"] is not None
-                                       and kv[1]["superiore"] > kv[1]["inferiore"]),
-                                   kv[1]["inferiore"]))
+    candidate.sort(key=lambda kv: (-int(kv[1]["upper"] is not None
+                                       and kv[1]["upper"] > kv[1]["lower"]),
+                                   kv[1]["lower"]))
     return candidate[:how_many]
 
 
@@ -59,19 +59,19 @@ def main() -> int:
         t0 = time.time()
         r = search_for(n, d, w, group_names(n), restarts=60)
         mio = r["best"]["size"]
-        if mio > v["inferiore"]:
+        if mio > v["lower"]:
             state = "SOPRA"
-        elif mio == v["inferiore"]:
+        elif mio == v["lower"]:
             state = "PAREGGIATO"
         else:
             state = "SOTTO"
         count[state] += 1
         dt = time.time() - t0
         print(f"A({n},{d},{w})".ljust(14)
-              + f"{v['inferiore']:>8}{mio:>8}{state:>12}  "
+              + f"{v['lower']:>8}{mio:>8}{state:>12}  "
               + f"{str(r['best']['group']):<14}{v['source']:<8}{dt:>6.1f}s")
         sys.stdout.flush()
-        entry = {"cell": f"A({n},{d},{w})", "pubblicato": v["inferiore"],
+        entry = {"cell": f"A({n},{d},{w})", "published": v["lower"],
                 "nostro": mio, "state": state, "source": v["source"],
                 "group": r["best"]["group"], "seconds": round(dt, 1),
                 "per_gruppo": r["per_gruppo"]}

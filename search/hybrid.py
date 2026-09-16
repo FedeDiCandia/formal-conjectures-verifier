@@ -1,34 +1,34 @@
 """
-Il motore ibrido: **si parte dal group, si ripara a mano.**
+The hybrid engine: **start from the group, repair by hand.**
 
-PERCHÉ, MISURATO L'11-12 SETTEMBRE 2026
----------------------------------------
-Sulle 34 cells con divario aperto, i two motori presi da soli falliscono in modi
-opposti e complementari:
+WHY
+---
+On the 34 cells with an open gap, the two engines taken separately fail in different
+ways:
 
-  * la **ricerca local da words casuali** ha pareggiato 1 cell su 34, con residui
-    di 69–441 violations: non è vicina, è nella regione sbagliata. Lo spazio è
-    troppo grande per partire dal nulla;
-  * il **motore a orbits** pareggia subito dove il record è invariante (A(19,6,5) in
-    0,8 s, A(22,6,5) in 48 s) ma si blocca below dove non lo è: A(17,6,6) arriva a
-    85 against 113, perché nessuna total_sum di sizes di orbits fa 113.
+  * the **local search from random words** matched 1 cell of 34, with residuals of
+    69-441 violations: it is not close, it is in the wrong region. The space is too
+    large to start from nothing;
+  * the **orbit engine** matches at once where the record is invariant (A(19,6,5) in
+    0.8 s, A(22,6,5) in 48 s) but stalls below where it is not: A(17,6,6) reaches 85
+    against 113, because no sum of orbit sizes makes 113.
 
-I record real_list stanno nel mezzo, ed è esattamente come sono stati costruiti: **un
-group dà la struttura, e poche moves local_names la aggiustano.** Un code di 5558
-words è un group di order 504 più 19 seeds *chosen a mano*.
+The real records sit in between, and that is exactly how they were built: **a group
+gives the structure, and a few local moves adjust it.** A code of 5558 words is a
+group of order 504 plus 19 seeds *chosen by hand*.
 
-COME
-----
-  1. il motore a orbits dà il miglior code invariante below un group;
-  2. lo si **estende** avidamente con ogni word compatibile (spesso poche o
-     nessuna: il code invariante è già massimale nella sua classe);
-  3. si aggiungono words fino alla size goal, accettando violations;
-  4. la ricerca local **ripara**, partendo da lì invece che dal caso.
+HOW
+---
+  1. the orbit engine gives the best invariant code under a group;
+  2. it is **extended** greedily with every compatible word (often few or none: the
+     invariant code is usually already maximal in its class);
+  3. words are added in steps up to the target;
+  4. the local search **repairs**, starting from there instead of from chance.
 
-Il step 4 ha now also one walk casuale: con probabilità fix sostituisce
-one word in conflitto **a caso** invece della worst. Senza quella la ricerca
-cicla fra le stesse two configurazioni, ed è la ragione per cui i residui erano
-grandi e costanti.
+Step 4 now also has a random walk: with a fixed probability it replaces a word in
+conflict **at random** instead of the worst one. Without that the search cycles
+between the same two configurations, and that is why the residuals were what they
+were.
 """
 from __future__ import annotations
 
@@ -46,13 +46,13 @@ def word_index(all_items: np.ndarray) -> dict[int, int]:
 
 def best_invariant(n: int, d: int, w: int, *, restarts: int = 300,
                        max_orbits: int = 4_000) -> tuple[list[int], str]:
-    """Il miglior code invariante below one dei groups del repertorio.
+    """The best invariant code under one of the repertoire's groups.
 
-    Il cap sulle orbits e' 4.000 e non 40.000 per one ragione misurata: la
-    ricerca di clique costa circa m^2 per completamento, quindi con 27.000 orbits
-    (il caso di `blocchi9x3` su A(27,8,5), group di order 3) un only riavvio e'
-    mezzo miliardo di operazioni e la funzione non ritorna piu'. E i groups piccoli
-    non servono: tutto il vantaggio del method sta nell'avere POCHE orbits grandi.
+    The cap on orbits is 4,000 and not 40,000 for a measured reason: the clique
+    search costs about m^2 per completion, so with 27,000 orbits (the case of
+    `blocks9x3` on A(27,8,5), a group of order 3) a single restart is half a billion
+    operations and the function never returns. And small groups are no use: the whole
+    advantage of the method lies in having FEW large orbits.
     """
     from math import comb
     from search_core import weighted_clique
@@ -72,7 +72,7 @@ def best_invariant(n: int, d: int, w: int, *, restarts: int = 300,
 
 
 def extend(words: list[int], all_items: np.ndarray, d: int) -> list[int]:
-    """Aggiunge avidamente ogni word compatibile con all_items quelle già inside."""
+    """Greedily add every word compatible with all those already inside."""
     inside = list(words)
     if not inside:
         return inside
@@ -82,7 +82,7 @@ def extend(words: list[int], all_items: np.ndarray, d: int) -> list[int]:
         permitted = np.flatnonzero((dist >= d).all(axis=1))
         if len(permitted) == 0:
             return [int(x) for x in choices]
-        # la before ammessa, poi si ricontrolla: cosi' resta valid a ogni step
+        # the first admitted one, then re-checked: so it stays valid at every step
         choices = np.append(choices, all_items[permitted[0]])
 
 
@@ -98,7 +98,7 @@ def da_gruppo(n: int, d: int, w: int, goal: int, *, iterations: int = 30_000,
     if len(word_seed) >= goal:
         words = sorted(word_seed)[:goal]
         result.update({"violations": 0, "words": words,
-                      "note": "il code invariante bastava"})
+                      "note": "the invariant code was enough"})
         return result
 
     base = [position[p] for p in word_seed]
@@ -127,17 +127,17 @@ def sali_a_gradini(n: int, d: int, w: int, goal: int, *,
                    pazienza: int = 3) -> dict:
     """Dal code invariante all'goal, **one word alla volta**.
 
-    PERCHÉ A GRADINI, E NON IN UN SALTO
+    WHY IN STEPS, AND NOT IN ONE LEAP
     -----------------------------------
-    Misurato: partire dal code invariante e aggiungere in un colpo le words che
-    mancano fino all'goal lascia molte violations che la riparazione non
-    smaltisce — su A(17,6,6) il salto da 85 a 113 lascia 63 violations. Aggiungendo
-    one word per volta, ogni riparazione parte da one configurazione **valida** e
-    deve sistemare pochissimo. È la differenza fra risolvere un problem e
+    Measured: starting from the invariant code and adding in one go the words
+    missing up to the target leaves many violations the repair cannot clear — on
+    A(17,6,6) the leap from 85 to 113 leaves 63 violations. Adding one word at a
+    time, every repair starts from a **valid** configuration and has very little to
+    fix. It is the difference between solving a problem and
     risolverne ventotto insieme.
 
     Si sale finché si riesce; after `pazienza` steps failed di fila si smette e si
-    restituisce il miglior code valid reached.
+    returns the best valid code reached.
     """
     all_items = _all_words(n, w)
     position = word_index(all_items)

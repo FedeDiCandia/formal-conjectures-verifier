@@ -1,25 +1,25 @@
 """
-Il second motore: ricerca local diretta sulle words.
+The second engine: a local search directly on the words.
 
-PERCHÉ SERVE UN SECONDO MOTORE
+WHY A SECOND ENGINE IS NEEDED
 ------------------------------
-Il first motore (`search_core.py`) search_for codici **invarianti below un group**. È
-elegante e veloce, ma ha un limit di principio che si è visto subito: per
-A(21,10,9) le orbits below Z21 hanno size 7 o 21, e nessuna total_sum di 7 e 21 fa
-27, che è il limit pubblicato. Nessuna quantità di ricerca può arrivarci per
-quella strada: **il record non è invariante below quel group.**
+The first engine (`search_core.py`) looks for codes **invariant under a group**. It
+is elegant and fast, but it has a limit of principle that showed at once: for
+A(21,10,9) the orbits under Z21 have size 7 or 21, and no sum of 7s and 21s makes
+27, the published bound. No amount of search can get there that way: **the record
+is not invariant under that group.**
 
-Questo motore non assume niente. Fissa un goal m (how_many words vogliamo),
-parte da m words qualunque, e minimizza il number di pairs che violano la
-distance scambiando one word alla volta. Se arriva a zero violations, abbiamo un
-code di m words. È la tabu search «a level di scambi» con cui sono stati
+This engine assumes nothing. It fixes a target m (how many words are wanted),
+starts from any m words, and minimises the number of pairs that violate the
+distance by swapping one word at a time. If it reaches zero violations, we have a
+code of m words. It is the swap-level tabu search with which
 ottenuti i miglioramenti recenti nelle tables di Brouwer.
 
 STRATEGIA
 ---------
-Si parte da m = limit pubblicato e si tenta. Se riesce, si trial m+1: è lì che un
-record cadrebbe. Se non riesce, si scende. Il cost della funzione goal è
-tenuto low ricalcolando only la line della word che cambia.
+One starts at m = the published bound and tries. If it succeeds, m+1 is tried: that
+is where a record would fall. If it fails, one goes down. The cost of the objective
+function is kept low by recomputing only the row of the word that changes.
 """
 from __future__ import annotations
 
@@ -36,7 +36,7 @@ def _all_words(n: int, w: int) -> np.ndarray:
 
 
 def _conflicts(words: np.ndarray, choices: np.ndarray, d: int) -> np.ndarray:
-    """Per ogni word scelta, how_many delle other_items choices sono troppo neighbours."""
+    """For each chosen word, how many of the other chosen ones are too close."""
     x = words[choices]
     dist = np.bitwise_count(np.bitwise_xor(x[:, None], x[None, :]))
     bad_list = (dist < d)
@@ -47,7 +47,7 @@ def _conflicts(words: np.ndarray, choices: np.ndarray, d: int) -> np.ndarray:
 def size_trial(n: int, d: int, w: int, m: int, *, iterations: int = 60_000,
                      seed: int = 0, words: np.ndarray | None = None,
                      start: list[int] | None = None) -> tuple[list[int], int]:
-    """Cerca un code di esattamente m words. Restituisce (words, violations)."""
+    """Look for a code of exactly m words. Returns (words, violations)."""
     rng = np.random.default_rng(seed)
     all_items = _all_words(n, w) if words is None else words
     N = len(all_items)
@@ -65,10 +65,10 @@ def size_trial(n: int, d: int, w: int, m: int, *, iterations: int = 60_000,
     for step in range(iterations):
         if total == 0:
             break
-        # Si sostituisce one delle words piu' in conflitto -- ma non sempre: con
-        # probabilita' fix si prende one word in conflitto QUALUNQUE. Senza
-        # questa walk casuale la ricerca cicla fra le stesse two
-        # configurazioni, ed e' la ragione misurata per cui sulle cells con divario
+        # One of the words most in conflict is replaced -- but not always: with a
+        # fixed probability ANY word in conflict is taken instead. Without this
+        # random walk the search cycles between the same two configurations, and
+        # that is the measured reason why on the cells with a gap
         # aperto i residui restavano grandi e costanti (69-441 violations).
         if rng.random() < 0.25:
             in_conflict = np.flatnonzero(conf > 0)
@@ -79,14 +79,14 @@ def size_trial(n: int, d: int, w: int, m: int, *, iterations: int = 60_000,
         previous = int(choices[slot])
         other_items = np.delete(choices, slot)
         x = all_items[other_items]
-        # how_many violations porterebbe ogni possibile sostituta
+        # how many violations each possible replacement would bring
         cost = np.zeros(N, dtype=np.int32)
         block = 4096
         for i in range(0, N, block):
             slice = all_items[i:i + block]
             dist = np.bitwise_count(np.bitwise_xor(slice[:, None], x[None, :]))
             cost[i:i + block] = (dist < d).sum(axis=1)
-        cost[other_items] = 10_000                      # gia' nel code
+        cost[other_items] = 10_000                      # already in the code
         for word, fino in list(tabu.items()):
             if fino > step:
                 cost[word] += 50

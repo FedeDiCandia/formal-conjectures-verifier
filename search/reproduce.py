@@ -1,21 +1,21 @@
 """
-Passo zero della fase 1: **verificare in way indipendente i record pubblicati.**
+Step zero: **verify the published records independently.**
 
-PERCHÉ QUESTO PRIMA DI CERCARE
+WHY THIS BEFORE SEARCHING
 ------------------------------
-Prima di provare a battere un record bisogna essere capaci di leggerlo e di
-controllarlo. Se non riusciamo a verificare un code che qualcuno ha già
-pubblicato, non siamo in condizione di dire niente su one che troviamo noi — ed è
-esattamente l'error che questo progetto ha già fatto cinque volte.
+Before trying to beat a record one has to be able to read it and to check it. If we
+cannot verify a code someone has already published, we are in no position to say
+anything about one we find ourselves — and that is exactly the error this project
+has already made five times.
 
-Questo script download i codici espliciti delle tables di Brouwer, li espande, li
-check con il nostro giudice e compare la size con il limit inferiore
-che la tabella rivendica. Tre results possibili, e all_items e three sono informazione:
+This script downloads the explicit codes from Brouwer's tables, expands them, checks
+them with our judge and compares the size with the lower bound the table claims.
+Three outcomes are possible, and all three are information:
 
-  CONFERMATO   la size e la validità corrispondono alla tabella
-  DISCORDE     il code è valid ma di size diversa da quella dichiarata
-  NON VALIDO   il code non soddisfa i vincoli (quasi certamente colpa nostra:
-               un format che non sappiamo leggere)
+  CONFIRMED    the size and the validity match the table
+  MISMATCH     the code is valid but of a different size from the one declared
+  INVALID      the code does not satisfy the constraints (almost certainly our
+               fault: a format we cannot read)
 
 I file si scaricano one volta sola e restano in `research_data/codici/`.
 """
@@ -36,7 +36,7 @@ from orbits import expand, expand_cyclic                  # noqa: E402
 DATA_DIR = ROOT / "research_data"
 CACHE = DATA_DIR / "codici"
 BASE = "https://aeb.win.tue.nl/codes/"
-PAUSE = 0.4      # cortesia verso un server universitario
+PAUSE = 0.4      # courtesy towards a university server
 
 
 def download(relative: str) -> Path:
@@ -44,8 +44,8 @@ def download(relative: str) -> Path:
     if local.is_file() and local.stat().st_size > 0:
         return local
     CACHE.mkdir(parents=True, exist_ok=True)
-    # `curl` e non urllib: il Python di questo Mac non ha i certificati di
-    # system e ogni https fallisce con CERTIFICATE_VERIFY_FAILED.
+    # `curl` rather than urllib: this Mac's Python has no system certificates and
+    # every https fails with CERTIFICATE_VERIFY_FAILED.
     result = subprocess.run(
         ["curl", "-sS", "-L", "--max-time", "45", "-A",
          "ricerca-codici/1.0 (check indipendente di bounds pubblicati)",
@@ -60,7 +60,7 @@ def download(relative: str) -> Path:
 
 
 def load(path: Path) -> tuple[list[int], int, str]:
-    """Legge un code in qualunque dei formati in cui è pubblicato."""
+    """Read a code in any of the formats it is published in."""
     raw = path.read_text(errors="replace").lstrip()
     head = raw[:200].lower()
     if head.startswith("$base=16"):
@@ -68,8 +68,8 @@ def load(path: Path) -> tuple[list[int], int, str]:
         words = [int(r.strip(), 16) for r in raw.splitlines()[1:] if r.strip()]
         width = max((len(r.strip()) for r in raw.splitlines()[1:] if r.strip()),
                         default=0)
-        # la width in digits esadecimali non dice n: gli zeri in head si
-        # perdono. Si restituisce 0 e chi chiama usa l'n della cell.
+        # the width in hexadecimal digits does not give n: the leading zeros are
+        # lost. 0 is returned and the caller uses the cell's n.
         del width
         return words, 0, "listing esadecimale"
     if head.startswith("$exec orbit"):
@@ -80,14 +80,14 @@ def load(path: Path) -> tuple[list[int], int, str]:
         return words, n, (f"cicli {info['blocks']} (|G|={info['ordine_gruppo']}, "
                            f"{info['seeds']} seeds)")
     if head.startswith("$exec"):
-        raise ValueError(f"command $EXEC non gestito: {head.splitlines()[0]!r}")
+        raise ValueError(f"unhandled $EXEC command: {head.splitlines()[0]!r}")
     words, n = read(path)
     return words, n, "listing di words"
 
 
 def one(key: str, entry: dict) -> dict:
     n, d, w = (int(x) for x in key.split(","))
-    result = {"cell": f"A({n},{d},{w})", "expected": entry["inferiore"],
+    result = {"cell": f"A({n},{d},{w})", "expected": entry["lower"],
              "source": entry["source"], "file": entry["code"]}
     try:
         path = download(entry["code"])
@@ -100,19 +100,19 @@ def one(key: str, entry: dict) -> dict:
         v = fast_check(words, n, d, w)
         result["found"] = v.size
         if not v.ok:
-            result["state"] = "NON VALIDO"
+            result["state"] = "INVALID"
             result["note"] = v.findings[0]
-        elif v.size != entry["inferiore"]:
+        elif v.size != entry["lower"]:
             result["state"] = "DISCORDE"
             result["note"] = (f"valid ma {v.size} words invece di "
-                             f"{entry['inferiore']}")
+                             f"{entry['lower']}")
         else:
             result["state"] = "CONFERMATO"
     except OSError as e:
-        result["state"] = "NON SCARICATO"
+        result["state"] = "NOT DOWNLOADED"
         result["note"] = str(e)[:120]
     except Exception as e:                                   # noqa: BLE001
-        result["state"] = "NON LETTO"
+        result["state"] = "NOT READ"
         result["note"] = f"{type(e).__name__}: {e}"[:160]
     return result
 
@@ -120,15 +120,15 @@ def one(key: str, entry: dict) -> dict:
 def main() -> int:
     bounds = json.loads((DATA_DIR / "limiti_cwc.json").read_text())
     to_do = {k: v for k, v in bounds.items() if v["code"]}
-    print(f"{len(to_do)} cells con code esplicito pubblicato.\n")
+    print(f"{len(to_do)} cells with a published explicit code.\n")
     results = []
     count: dict[str, int] = {}
     for i, (k, v) in enumerate(sorted(to_do.items(),
-                                      key=lambda kv: kv[1]["inferiore"]), 1):
+                                      key=lambda kv: kv[1]["lower"]), 1):
         e = one(k, v)
         results.append(e)
         count[e["state"]] = count.get(e["state"], 0) + 1
-        mark = {"CONFERMATO": "ok", "DISCORDE": "??", "NON VALIDO": "XX"}.get(
+        mark = {"CONFIRMED": "ok", "MISMATCH": "??", "INVALID": "XX"}.get(
             e["state"], "--")
         print(f"[{i:3d}/{len(to_do)}] {mark} {e['cell']:<14} "
               f"expected {e['expected']:>6}  "

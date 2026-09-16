@@ -1,22 +1,22 @@
 """
-La ricerca: un code invariante below un group, di size massima.
+The search: a code invariant under a group, of maximum size.
 
-IL PROBLEM, RIDOTTO
+THE PROBLEM, REDUCED
 --------------------
-Fissati n, d, w e un group G di permutazioni delle n positions:
+With n, d, w and a group G of permutations of the n positions fixed:
 
-  1. le words di weight w si spezzano in orbits below G;
-  2. un'orbit è **utilizzabile** se le sue words sono a two a two a distance
-     ≥ d (altrimenti il code non può contenerla tutta);
-  3. two orbits utilizzabili sono **compatibili** se ogni word dell'one dista
-     ≥ d da ogni word dell'altra;
-  4. il più grande code G-invariante è l'insieme di orbits a two a two
-     compatibili di weight total maximum: one **clique massima pesata**.
+  1. the words of weight w split into orbits under G;
+  2. an orbit is **usable** if its words are pairwise at distance >= d (otherwise the
+     code cannot contain all of it);
+  3. two usable orbits are **compatible** if every word of one is at distance >= d
+     from every word of the other;
+  4. the largest G-invariant code is the set of pairwise compatible orbits of maximum
+     total weight.
 
-Il step 4 è NP-difficile in generale, ma qui i grafi sono piccoli perché il
-group ha già fatto il job. Si usa un greedy con restarts casuali più one
-ricerca local (strip k orbits, riempi con le best_list permitted): è lo stesso kind
-di euristica con cui sono stati found i record in tabella, e su un Mac basta.
+Step 4 is NP-hard in general, but here the graphs are small because the group has
+already done the work. A greedy with random restarts plus a local search (strip k
+orbits, refill with the best permitted ones) is used: the same kind of heuristic with
+which the records in the tables were found, and on a Mac it suffices.
 """
 from __future__ import annotations
 
@@ -29,24 +29,24 @@ from codes import fast_check
 
 
 # ---------------------------------------------------------------------------
-# DUE SEMPLIFICAZIONI ESATTE, non euristiche, che rendono il computation possibile
+# TWO EXACT SIMPLIFICATIONS, not heuristics, that make the computation possible
 #
-# 1. Un'orbit e' utilizzabile se e only se **un suo rappresentante** dista >= d
-#    da all_items le other_items words dell'orbit. Non serve controllare all_items le pairs:
+# 1. An orbit is usable if and only if **one of its representatives** is at distance
+#    >= d from all the other words of the orbit. There is no need to check every
 #    se a' = g(a), allora dist(g(a), b) = dist(a, g^-1(b)) e g^-1(b) sta ancora
-#    nell'orbit, quindi le pairs che coinvolgono a' sono le stesse che
+#    pair: the group acts transitively on the orbit, so the pairs involving a'
 #    coinvolgono a, riordinate.
 #
-# 2. Per lo stesso reason, two orbits sono compatibili se e only se **un
-#    rappresentante della before** dista >= d da all_items le words della seconda.
+# 2. For the same reason, two orbits are compatible if and only if **one
+#    representative of the first** is at distance >= d from every word of the second.
 #
-# Insieme fanno risparmiare un factor even alla size dell'orbit -- da decine a
-# centinaia. Il resto lo fa numpy: un only XOR fra il rappresentante e l'intero
-# vettore delle words, e `bitwise_count` per i weights.
+# Together they save a factor equal to the orbit size -- from tens to hundreds. The
+# rest is numpy: a single XOR between the representative and the whole vector of
+# words, and `bitwise_count` for the weights.
 
 
 def _orbit_table(n: int, w: int, group):
-    """Tutte le words di weight w, l'orbit di ognuna, e un rappresentante."""
+    """Every word of weight w, the orbit of each, and a representative."""
     import numpy as np
     words = np.fromiter((sum(1 << i for i in c)
                           for c in combinations(range(n), w)),
@@ -74,10 +74,10 @@ def _orbit_table(n: int, w: int, group):
 
 
 def orbits_and_compatibility(n: int, d: int, w: int, group):
-    """Le orbits utilizzabili, i loro weights e il grafo di compatibilita."""
+    """The usable orbits, their weights and the compatibility graph."""
     import numpy as np
     words, orbit_of, rapp, members = _orbit_table(n, w, group)
-    # 1. utilizzabilita: il rappresentante against i suoi compagni di orbit
+    # 1. usability: the representative against its orbit-mates
     good_list = []
     for o, r in enumerate(rapp):
         idx = np.array(members[o], dtype=np.int64)
@@ -90,7 +90,7 @@ def orbits_and_compatibility(n: int, d: int, w: int, group):
     orbits = [tuple(sorted(int(words[i]) for i in members[o])) for o in good_list]
     weights = [len(o) for o in orbits]
 
-    # 2. compatibilita: il rappresentante against all_items le words, in un colpo
+    # 2. compatibility: the representative against every word, in one go
     neighbours = [set(range(len(good_list))) - {i} for i in range(len(good_list))]
     for i, o in enumerate(good_list):
         dist = np.bitwise_count(np.bitwise_xor(words, np.uint64(rapp[o])))
@@ -104,7 +104,7 @@ def orbits_and_compatibility(n: int, d: int, w: int, group):
 
 
 def orbite_utilizzabili(n: int, d: int, w: int, group) -> list[tuple[int, ...]]:
-    """Le orbits di weight w che al loro interno rispettano la distance d."""
+    """The orbits of weight w that respect distance d internally."""
     t = w - d // 2
     seen = set()
     outside = []
@@ -127,7 +127,7 @@ def orbite_utilizzabili(n: int, d: int, w: int, group) -> list[tuple[int, ...]]:
 
 
 def compatibilita(orbits: list[tuple[int, ...]], d: int) -> list[set[int]]:
-    """Per ogni orbit, l'insieme delle orbits con cui può convivere."""
+    """For each orbit, the set of orbits it can coexist with."""
     m = len(orbits)
     neighbours: list[set[int]] = [set() for _ in range(m)]
     for i in range(m):
@@ -141,7 +141,7 @@ def compatibilita(orbits: list[tuple[int, ...]], d: int) -> list[set[int]]:
 def weighted_clique(weights: list[int], neighbours: list[set[int]], *,
                   restarts: int = 200, seed: int = 0,
                   local_steps: int = 60) -> list[int]:
-    """Greedy con restarts casuali e ricerca local. Restituisce gli indices chosen."""
+    """Greedy with random restarts and a local search. Returns the chosen indices."""
     rng = random.Random(seed)
     m = len(weights)
     best: list[int] = []
@@ -151,7 +151,7 @@ def weighted_clique(weights: list[int], neighbours: list[set[int]], *,
         chosen = list(chosen)
         permitted = set(permitted)
         while permitted:
-            # preferisci il weight high, a parità chi lascia più opzioni
+            # prefer the high weight, and on a tie whoever leaves more options
             candidates = sorted(permitted, key=lambda i: (-weights[i], -len(neighbours[i] & permitted)))
             head = candidates[:3]
             pick = rng.choice(head) if len(head) > 1 and rng.random() < 0.3 else candidates[0]
@@ -180,12 +180,12 @@ def weighted_clique(weights: list[int], neighbours: list[set[int]], *,
 
 def search_for(n: int, d: int, w: int, groups: dict, *, restarts: int = 200,
           seed: int = 0, max_orbits: int = 8_000) -> dict:
-    """Prova ogni group e restituisce il best code found.
+    """Try every group and return the best code found.
 
-    I groups troppo piccoli si scartano: con |G| piccolo le orbits sono tante
-    how_many le words, il grafo di compatibilita' diventa enorme e il method perde
-    il suo vantaggio. Il caso che ha fatto sbattere il naso: `blocchi7x3` su n=21
-    ha order 3, quindi 98 mila orbits e 29 miliardi di confronti.
+    Groups that are too small are discarded: with a small |G| there are as many
+    orbits as words, the compatibility graph becomes enormous and the method loses
+    its advantage. The case that taught this: `blocks7x3` on n=21 has order 3, hence
+    98 thousand orbits and 29 billion comparisons.
     """
     from math import comb
     results = {}
@@ -201,7 +201,7 @@ def search_for(n: int, d: int, w: int, groups: dict, *, restarts: int = 200,
         chosen = weighted_clique(weights, neigh, restarts=restarts, seed=seed)
         words = [x for i in chosen for x in orb[i]]
         v = fast_check(words, n, d, w)
-        assert v.ok, f"la ricerca ha prodotto un code non valid: {v.findings[:2]}"
+        assert v.ok, f"the search produced an invalid code: {v.findings[:2]}"
         results[name] = {"orbits": len(orb), "order": len(G),
                        "size": len(words)}
         if len(words) > best["size"]:

@@ -38,11 +38,11 @@ def main() -> int:
     exact_ones, open_list = [], []
     for k, v in bounds.items():
         n, d, w = (int(x) for x in k.split(","))
-        if d % 2 or v["inferiore"] > word_cap or comb(n, w) > tetto_comb:
+        if d % 2 or v["lower"] > word_cap or comb(n, w) > tetto_comb:
             continue
         (exact_ones if v["exact"] else open_list).append((k, v))
-    exact_ones.sort(key=lambda kv: kv[1]["inferiore"])
-    open_list.sort(key=lambda kv: kv[1]["inferiore"])
+    exact_ones.sort(key=lambda kv: kv[1]["lower"])
+    open_list.sort(key=lambda kv: kv[1]["lower"])
     print(f"{len(exact_ones)} cells con value exact noto (shakedown), "
           f"{len(open_list)} cells open_list (targets).\n")
 
@@ -56,9 +56,9 @@ def main() -> int:
         n, d, w = (int(x) for x in k.split(","))
         all_items = _all_words(n, w)
         t0 = time.time()
-        a, va = size_trial(n, d, w, v["inferiore"], iterations=iterations,
+        a, va = size_trial(n, d, w, v["lower"], iterations=iterations,
                                  seed=11, words=all_items)
-        b, vb = size_trial(n, d, w, v["inferiore"] + 1,
+        b, vb = size_trial(n, d, w, v["lower"] + 1,
                                  iterations=iterations, seed=11, words=all_items)
         reached = va == 0 and fast_check(a, n, d, w).ok
         broken_through = vb == 0
@@ -71,13 +71,13 @@ def main() -> int:
                     if g.ok else "  (il giudice slow lo rifiuta: ok)")
             if g.ok:
                 note = "  ALLARME: il giudice slow lo accetta. Da capire."
-        print(f"  A({n},{d},{w}):  ottimo {v['inferiore']:>3}  "
+        print(f"  A({n},{d},{w}):  ottimo {v['lower']:>3}  "
               f"reached {'si' if reached else 'NO':<3}  "
               f"exceeded {'SI' if broken_through else 'no':<3}  "
               f"{time.time() - t0:>5.1f}s{note}")
         sys.stdout.flush()
         results.append({"cell": f"A({n},{d},{w})", "kind": "exact",
-                      "value": v["inferiore"], "reached": reached,
+                      "value": v["lower"], "reached": reached,
                       "exceeded": broken_through})
     print(f"\n  raggiunti {r1}/{len(exact_ones)}   non passed {r2}/{len(exact_ones)}")
 
@@ -89,26 +89,26 @@ def main() -> int:
         n, d, w = (int(x) for x in k.split(","))
         all_items = _all_words(n, w)
         t0 = time.time()
-        a, va = size_trial(n, d, w, v["inferiore"], iterations=iterations,
+        a, va = size_trial(n, d, w, v["lower"], iterations=iterations,
                                  seed=11, words=all_items)
         if va != 0:
             state, extra = "SOTTO", ""
             below += 1
         else:
-            b, vb = size_trial(n, d, w, v["inferiore"] + 1,
+            b, vb = size_trial(n, d, w, v["lower"] + 1,
                                      iterations=iterations, seed=11, words=all_items)
             if vb == 0 and check(b, n, d, w).ok:
-                state, extra = "SOPRA", f"  +1 sul limit ({v['inferiore'] + 1})"
+                state, extra = "SOPRA", f"  +1 sul limit ({v['lower'] + 1})"
                 above += 1
             else:
                 state, extra = "PAREGGIATO", ""
                 even += 1
-        print(f"  A({n},{d},{w}):  pubblicato {v['inferiore']:>3} "
-              f"(sup {v['superiore']})  {state:<11} {time.time() - t0:>5.1f}s"
+        print(f"  A({n},{d},{w}):  pubblicato {v['lower']:>3} "
+              f"(sup {v['upper']})  {state:<11} {time.time() - t0:>5.1f}s"
               f"  source {v['source']}{extra}")
         sys.stdout.flush()
         entry = {"cell": f"A({n},{d},{w})", "kind": "aperto",
-                "pubblicato": v["inferiore"], "superiore": v["superiore"],
+                "published": v["lower"], "upper": v["upper"],
                 "state": state, "source": v["source"]}
         if state == "SOPRA":
             entry["words"] = sorted(b)

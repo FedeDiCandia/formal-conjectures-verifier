@@ -1,23 +1,23 @@
 """
-Le tables dei bounds, lette dalla source e messe in forma leggibile da un
+The tables of bounds, read from the source and put into a form a program can read.
 program.
 
 PERCHÉ
 ------
-Per battere un record bisogna sapere **qual è**, **chi l'ha fatto** e **se esiste
-un code esplicito**. Le tables di Brouwer contengono all_items e three le cose, ma in
-HTML fatto a mano. Questo file le trasforma in JSON, e conserva le attribuzioni:
-senza l'attribuzione non sappiamo se stiamo sfidando un job del 1990 su
-hardware del 1990 o un job del 2026 con un solutore moderno.
+To beat a record one has to know **what it is**, **who set it** and **whether an
+explicit code exists**. Brouwer's tables contain all three, but in hand-written
+HTML. This file turns them into JSON and keeps the attributions: without the
+attribution we cannot tell whether we are challenging work from 1990 on 1990
+hardware or work from 2026 with a modern solver.
 
-COSA CONSERVA PER OGNI CELLA
+WHAT IT KEEPS FOR EACH CELL
 ----------------------------
-  inferiore, superiore   i bounds noti (superiore assente nella tabella d=4)
-  exact                 vero se la tabella segna un punto (value ottimo noto)
-  source                  la tag in esponente: vuota = [BSSS] 1990
+  lower, upper       the known bounds (upper absent in the d=4 table)
+  exact              true if the table marks a dot (the optimum is known)
+  source             the superscript tag: empty = [BSSS] 1990
   construction            c = circolante, g = group di automorfismi, s = accorciato
-  code                 il path relative del code esplicito, se c'è
-  perduto                vero se il limit è in rosso: rivendicato ma **il listato
+  code               the relative path of the explicit code, if there is one
+  lost               true if the bound is in red: claimed but **the listing
                          del code è andato perduto** e nessuno l'ha ricostruito
 """
 from __future__ import annotations
@@ -35,7 +35,7 @@ CONSTRUCTIONS = set("cgs")
 
 
 class _Tabella(HTMLParser):
-    """Estrae le cells di ogni tabella, conservando esponenti, link e classi."""
+    """Extract the cells of each table, keeping superscripts, links and classes."""
 
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
@@ -52,14 +52,14 @@ class _Tabella(HTMLParser):
         elif tag == "tr" and self._t is not None:
             self._r = []
         elif tag in ("td", "th") and self._r is not None:
-            self._c = {"text": "", "sup": "", "link": "", "perduto": False,
+            self._c = {"text": "", "sup": "", "link": "", "lost": False,
                        "header": tag == "th"}
         elif tag == "sup":
             self._in_sup = True
         elif tag == "a" and self._c is not None and "href" in a:
             self._c["link"] = a["href"]
         elif tag == "span" and self._c is not None and a.get("class") == "lost":
-            self._c["perduto"] = True
+            self._c["lost"] = True
 
     def handle_endtag(self, tag):
         if tag == "sup":
@@ -87,7 +87,7 @@ _NUM = re.compile(r"\d+")
 
 
 def _limiti(text: str) -> tuple[int | None, int | None, bool]:
-    """Legge one cell come `232-276`, `80.`, `5616`, `≥ 40`."""
+    """Read a cell such as `232-276`, `80.`, `5616`, `≥ 40`."""
     text = text.replace("–", "-").replace("−", "-").strip()
     exact = text.endswith(".")
     numbers = [int(x) for x in _NUM.findall(text)]
@@ -103,27 +103,27 @@ def _entry(cell: dict) -> dict | None:
     if inf is None:
         return None
     tag = cell["sup"] or ""
-    # nella tabella generale un esponente numerico e' one potenza: `2` con sup `19`
-    # vuol dire 2^19. Senza questo si legge 2 e si crede che la cell sia vuota.
+    # in the general table a numeric superscript is a power: `2` with sup `19`
+    # means 2^19. Without this one reads 2 and believes the cell is empty.
     if tag.isdigit() and inf is not None and inf <= 9:
         inf = inf ** int(tag)
         tag = ""
     construction = "".join(ch for ch in tag if ch in CONSTRUCTIONS and len(tag) <= 2)
     source = tag if not construction else tag.replace(construction, "")
-    return {"inferiore": inf, "superiore": sup, "exact": exact,
+    return {"lower": inf, "upper": sup, "exact": exact,
             "source": source or "BSSS", "construction": construction,
-            "code": cell["link"], "perduto": cell["perduto"]}
+            "code": cell["link"], "lost": cell["lost"]}
 
 
 BASE = "https://aeb.win.tue.nl/codes/"
 
 
 def _pagina(name: str) -> Path:
-    """La pagina di Brouwer, scaricandola se non c'e'.
+    """Brouwer's page, downloading it if it is not there.
 
-    Le pagine non sono versionate (non dichiarano one licenza): un clone clean
-    non le ha, e questa funzione le rimette dov'erano. `curl` e non urllib
-    perche' il Python di questo Mac non ha i certificati di system.
+    The pages are not versioned (they declare no licence): a clean clone does not
+    have them, and this function puts them back. `curl` rather than urllib because
+    this Mac's Python has no system certificates.
     """
     local = DATA_DIR / name
     if local.is_file() and local.stat().st_size > 0:
@@ -136,21 +136,21 @@ def _pagina(name: str) -> Path:
         capture_output=True, text=True)
     if result.returncode != 0 or not local.is_file() or local.stat().st_size == 0:
         local.unlink(missing_ok=True)
-        raise OSError(f"non riesco a scaricare {BASE + name}: "
+        raise OSError(f"cannot download {BASE + name}: "
                       f"{result.stderr.strip()[:120]}")
     return local
 
 
 def constant_weight(path: Path | None = None) -> dict:
-    """A(n,d,w): one tabella per ogni d, lines n, columns w."""
+    """A(n,d,w): one table per d, rows n, columns w."""
     path = path or _pagina("Andw.html")
     text = path.read_text(errors="replace")
-    # i titoli <h1><a name="dK"> dicono a which d appartiene la tabella che segue
+    # the <h1><a name="dK"> headings say which d the following table belongs to
     marcatori = [(m.start(), int(m.group(1)))
                  for m in re.finditer(r'<a name="d(\d+)"', text)]
     p = _Tabella()
     p.feed(text)
-    # ricalcolo la position di ogni <table> per associarla al suo d
+    # recompute each <table>'s position in order to pair it with its d
     positions = [m.start() for m in re.finditer(r"<table", text)]
     assert len(positions) == len(p.tables), (len(positions), len(p.tables))
 
@@ -164,7 +164,7 @@ def constant_weight(path: Path | None = None) -> dict:
             continue
         header = tab[0]
         if not header or "n\\w" not in header[0]["text"]:
-            continue   # non è la tabella dei bounds (per es. quella del code perduto)
+            continue   # not the bounds table (e.g. the lost-code one)
         weights = [int(c["text"]) for c in header[1:] if _NUM.search(c["text"])]
         for line in tab[1:]:
             if not line or not _NUM.search(line[0]["text"]):
@@ -188,7 +188,7 @@ def general(path: Path | None = None) -> dict:
         if not tab:
             continue
         # l'header e' `["", "", "d=4", "d=6", ...]`: one colonna vuota di
-        # spaziatura fra l'label della line e i data, presente also nei data.
+        # spacing between the row's label and the data, present in the data too.
         head = [c["text"].strip() for c in tab[0]]
         first = next((i for i, t in enumerate(head) if t.startswith("d=")), None)
         if first is None:
@@ -213,18 +213,18 @@ def main() -> None:
     (DATA_DIR / "limiti_generali.json").write_text(json.dumps(gen, indent=1, sort_keys=True))
 
     open_list = [k for k, v in cwc.items()
-              if v["superiore"] and v["superiore"] > v["inferiore"]]
-    print(f"A(n,d,w): {len(cwc)} cells, {len(open_list)} con divario aperto")
-    print(f"  con code esplicito scaricabile: "
+              if v["upper"] and v["upper"] > v["lower"]]
+    print(f"A(n,d,w): {len(cwc)} cells, {len(open_list)} with an open gap")
+    print(f"  with a downloadable explicit code: "
           f"{sum(1 for v in cwc.values() if v['code'])}")
-    print(f"  bounds perduti (nessun code ricostruito): "
-          f"{[k for k, v in cwc.items() if v['perduto']]}")
+    print(f"  lost bounds (no code reconstructed): "
+          f"{[k for k, v in cwc.items() if v['lost']]}")
     from collections import Counter
-    print("  fonti dei bounds inferiori:",
+    print("  sources of the lower bounds:",
           dict(Counter(v["source"] for v in cwc.values()).most_common(12)))
     apg = [k for k, v in gen.items()
-           if v["superiore"] and v["superiore"] > v["inferiore"]]
-    print(f"A(n,d): {len(gen)} cells, {len(apg)} con divario aperto")
+           if v["upper"] and v["upper"] > v["lower"]]
+    print(f"A(n,d): {len(gen)} cells, {len(apg)} with an open gap")
 
 
 if __name__ == "__main__":

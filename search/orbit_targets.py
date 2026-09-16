@@ -42,12 +42,12 @@ def one(arguments) -> dict:
     t0 = time.time()
     r = search_for(n, d, w, group_names(n), restarts=restarts, max_orbits=40_000)
     mio = r["best"]["size"]
-    result = {"cell": f"A({n},{d},{w})", "pubblicato": entry["inferiore"],
-             "superiore": entry["superiore"], "source": entry["source"],
+    result = {"cell": f"A({n},{d},{w})", "published": entry["lower"],
+             "upper": entry["upper"], "source": entry["source"],
              "nostro": mio, "group": r["best"]["group"],
              "candidate": comb(n, w), "seconds": round(time.time() - t0, 1),
              "per_gruppo": {k: v for k, v in r["per_gruppo"].items()}}
-    if mio > entry["inferiore"]:
+    if mio > entry["lower"]:
         g = check(r["best"]["words"], n, d, w)
         result["giudice_lento"] = g.ok
         if g.ok:
@@ -67,26 +67,26 @@ def main() -> int:
     with Pool(processes=min(8, os.cpu_count() or 1)) as pool:
         for e in pool.imap_unordered(one, jobs):
             results.append(e)
-            discard = e["nostro"] - e["pubblicato"]
+            discard = e["nostro"] - e["published"]
             mark = ("SUPERATO" if discard > 0 else
-                     "pareggiato" if discard == 0 else f"{discard:+d}")
-            print(f"{mark:>11}  {e['cell']:<13} pubbl {e['pubblicato']:>5} "
-                  f"nostro {e['nostro']:>5}  (sup {e['superiore']:>5})  "
+                     "matched" if discard == 0 else f"{discard:+d}")
+            print(f"{mark:>11}  {e['cell']:<13} pubbl {e['published']:>5} "
+                  f"nostro {e['nostro']:>5}  (sup {e['upper']:>5})  "
                   f"group {str(e['group']):<14} {e['seconds']:>7.1f}s")
             sys.stdout.flush()
             (DATA_DIR / "fase3_orbite.json").write_text(json.dumps(results, indent=1))
-    won = [e for e in results if e["nostro"] > e["pubblicato"]]
-    even = sum(1 for e in results if e["nostro"] == e["pubblicato"])
+    won = [e for e in results if e["nostro"] > e["published"]]
+    even = sum(1 for e in results if e["nostro"] == e["published"])
     print(f"\n{'=' * 70}\npareggiati {even}/{len(results)}   passed {len(won)}")
     for e in won:
-        print(f"  {e['cell']}: {e['nostro']} invece di {e['pubblicato']}. "
+        print(f"  {e['cell']}: {e['nostro']} invece di {e['published']}. "
               f"Giudice slow: {e.get('giudice_lento')}. APPLICARE docs/04.")
     if not won:
-        best_list = sorted(results, key=lambda e: e["pubblicato"] - e["nostro"])[:5]
+        best_list = sorted(results, key=lambda e: e["published"] - e["nostro"])[:5]
         print("Nessun limit exceeded. Le cinque cells piu' neighbours:")
         for e in best_list:
-            print(f"  {e['cell']}: {e['nostro']} against {e['pubblicato']} "
-                  f"({e['nostro'] - e['pubblicato']:+d}), group {e['group']}")
+            print(f"  {e['cell']}: {e['nostro']} against {e['published']} "
+                  f"({e['nostro'] - e['published']:+d}), group {e['group']}")
     return 0
 
 

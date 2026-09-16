@@ -3,25 +3,25 @@ Fase 3: pareggiare e poi **superare** i bounds inferiori pubblicati.
 
 BERSAGLI
 --------
-Le cells A(n,d,w) con un **divario ancora aperto** fra limit inferiore e
-superiore. Su one cell dal value exact noto non c'e' niente da superare; su one
-senza limit superiore in tabella non sapremmo dire quanto spazio resta. Restano
-274 cells, e le prime sono piccole: A(27,8,5) sta fra 31 e 32, A(18,6,5) fra 69 e
+The A(n,d,w) cells with a **gap still open** between the lower and upper bounds. On
+a cell whose exact value is known there is nothing to beat; on one with no upper
+bound in the table we could not say how much room is left. That leaves
+274 cells, and the first are small: A(27,8,5) lies between 31 and 32, A(18,6,5)
 72, A(22,6,5) fra 132 e 136.
 
 COME
 ----
-Per ogni cell, two domande in fila:
-  1. riusciamo a **pareggiare** il limit pubblicato? (threshold di ammissione)
-  2. riusciamo a fare **+1**? (e' qui che cadrebbe un record)
-Molte iterations, piu' seeds, e le cells distribuite sui core del Mac.
+For each cell, two questions in a row:
+  1. can we **match** the published bound? (the admission threshold)
+  2. can we do **+1**? (this is where a record would fall)
+Many iterations, several seeds, and the cells spread over the Mac's cores.
 
-Un successo non e' un result finche' non passa (a) dal giudice slow di
-`codes.py` e (b) dal protocollo di `docs/04` per intero -- in particolare dal
-controllo che la tabella pubblicata sia ancora quella che abbiamo scaricato oggi.
+A success is not a result until it passes (a) the slow judge in `codes.py` and (b)
+the whole protocol in `docs/04-finding-protocol.md` -- in particular the check that
+the published table is still the one downloaded today.
 
-Nessun successo e' un result normale, e va scritto: significa che quei bounds
-reggono a un attacco moderno su hardware moderno.
+No success is an ordinary outcome, and it should be written down: it means those
+bounds hold against a modern attack on modern hardware.
 """
 from __future__ import annotations
 
@@ -47,15 +47,15 @@ def targets(max_combinations: int, how_many: int) -> list[tuple]:
     outside = []
     for k, v in bounds.items():
         n, d, w = (int(x) for x in k.split(","))
-        if d % 2 or not v["superiore"] or v["superiore"] <= v["inferiore"]:
+        if d % 2 or not v["upper"] or v["upper"] <= v["lower"]:
             continue
         c = comb(n, w)
         if c > max_combinations:
             continue
         outside.append((c, n, d, w, v))
-    # before le cells piccole con divario strettissimo: sono quelle dove un +1 e'
-    # plausibile e dove la check costa meno
-    outside.sort(key=lambda b: (b[4]["superiore"] - b[4]["inferiore"], b[0]))
+    # first the small cells with the narrowest gap: those are where a +1 is
+    # plausible and where the verification costs least
+    outside.sort(key=lambda b: (b[4]["upper"] - b[4]["lower"], b[0]))
     return outside[:how_many]
 
 
@@ -63,28 +63,28 @@ def single_cell(arguments) -> dict:
     n, d, w, entry, iterations, seeds = arguments
     all_items = _all_words(n, w)
     t0 = time.time()
-    result = {"cell": f"A({n},{d},{w})", "pubblicato": entry["inferiore"],
-             "superiore": entry["superiore"], "source": entry["source"],
+    result = {"cell": f"A({n},{d},{w})", "published": entry["lower"],
+             "upper": entry["upper"], "source": entry["source"],
              "candidate": comb(n, w)}
     # 1. pareggio
     even_residue = []
     even = None
     for seed in range(seeds):
-        p, viol = size_trial(n, d, w, entry["inferiore"],
+        p, viol = size_trial(n, d, w, entry["lower"],
                                    iterations=iterations, seed=200 + seed,
                                    words=all_items)
         even_residue.append(viol)
         if viol == 0:
             even = p
             break
-    result["pareggiato"] = even is not None
+    result["matched"] = even is not None
     result["violazioni_al_pareggio"] = min(even_residue)
-    # 2. +1, only se abbiamo pareggiato: chi non pareggia non supera
+    # 2. +1, only if we matched: whoever does not match does not beat it
     if even is not None:
         residue_on = []
         won = None
         for seed in range(seeds):
-            p, viol = size_trial(n, d, w, entry["inferiore"] + 1,
+            p, viol = size_trial(n, d, w, entry["lower"] + 1,
                                        iterations=iterations, seed=300 + seed,
                                        words=all_items, start=None)
             residue_on.append(viol)
@@ -109,11 +109,11 @@ def main() -> int:
     how_many = int(sys.argv[3]) if len(sys.argv) > 3 else 40
     maximum = int(sys.argv[4]) if len(sys.argv) > 4 else 120_000
     items = targets(maximum, how_many)
-    print(f"{len(items)} cells con divario aperto, {iterations:,} iterations "
+    print(f"{len(items)} cells with an open gap, {iterations:,} iterations "
           f"x {seeds} seeds, su {min(8, os.cpu_count() or 1)} processi.\n")
     for c, n, d, w, v in items:
-        print(f"  A({n},{d},{w}): fra {v['inferiore']} e {v['superiore']} "
-              f"(divario {v['superiore'] - v['inferiore']}), "
+        print(f"  A({n},{d},{w}): fra {v['lower']} e {v['upper']} "
+              f"(divario {v['upper'] - v['lower']}), "
               f"{c:,} words candidate, source {v['source']}")
     print()
     jobs = [(n, d, w, v, iterations, seeds) for _, n, d, w, v in items]
@@ -122,23 +122,23 @@ def main() -> int:
         for e in pool.imap_unordered(single_cell, jobs):
             results.append(e)
             mark = ("SUPERATO" if e["exceeded"]
-                     else "pareggiato" if e["pareggiato"] else "below")
-            print(f"{mark:>11}  {e['cell']:<13} pubbl {e['pubblicato']:>5} "
-                  f"sup {e['superiore']:>5}  "
+                     else "matched" if e["matched"] else "below")
+            print(f"{mark:>11}  {e['cell']:<13} pubbl {e['published']:>5} "
+                  f"sup {e['upper']:>5}  "
                   f"violations: pareggio {e['violazioni_al_pareggio']}, "
                   f"+1 {e.get('violazioni_al_piu_uno', '-')}  "
                   f"{e['seconds']:>7.1f}s")
             sys.stdout.flush()
             (DATA_DIR / "fase3_spinta.json").write_text(json.dumps(results, indent=1))
     won = [e for e in results if e["exceeded"]]
-    even = sum(1 for e in results if e["pareggiato"])
+    even = sum(1 for e in results if e["matched"])
     print(f"\n{'=' * 70}\npareggiati {even}/{len(results)}   passed {len(won)}")
     for e in won:
-        print(f"  {e['cell']}: {e['pubblicato'] + 1} words invece di "
-              f"{e['pubblicato']}. APPLICARE docs/04 PER INTERO.")
+        print(f"  {e['cell']}: {e['published'] + 1} words invece di "
+              f"{e['published']}. APPLY docs/04-finding-protocol.md IN FULL.")
     if not won:
-        print("Nessun limit exceeded. E' un result e va scritto: questi bounds "
-              "reggono a un attacco moderno su hardware moderno.")
+        print("No bound beaten. That is a result and should be written down: these "
+              "bounds hold against a modern attack on modern hardware.")
     return 0
 
 

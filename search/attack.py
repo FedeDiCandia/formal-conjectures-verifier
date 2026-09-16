@@ -43,8 +43,8 @@ DATA_DIR = ROOT / "research_data"
 def one(arguments) -> dict:
     n, d, w, entry, moves, restarts = arguments
     t0 = time.time()
-    result = {"cell": f"A({n},{d},{w})", "pubblicato": entry["inferiore"],
-             "superiore": entry["superiore"], "source": entry["source"],
+    result = {"cell": f"A({n},{d},{w})", "published": entry["lower"],
+             "upper": entry["upper"], "source": entry["source"],
              "candidate": comb(n, w)}
     N = comb(n, w)
     if N * ((N + 7) // 8) > MEMORY_CAP_BYTES:
@@ -55,12 +55,12 @@ def one(arguments) -> dict:
         all_items = _all_words(n, w)
         seed = extend(seed, all_items, d)
         result.update({"invariante": len(seed), "group": group})
-        r = climb(n, d, w, seed, entry["inferiore"] + 1,
+        r = climb(n, d, w, seed, entry["lower"] + 1,
                  moves_per_step=moves, seed=1, attempts=3)
         result.update({"reached": r["size"], "valid": r["valid"],
                       "gradini_riusciti": sum(1 for v in r["steps"].values()
                                               if v == "succeeded")})
-        if r["size"] > entry["inferiore"] and r["valid"]:
+        if r["size"] > entry["lower"] and r["valid"]:
             g = check(r["words"], n, d, w)
             result["giudice_lento"] = g.ok
             if g.ok:
@@ -87,29 +87,29 @@ def main() -> int:
             if "saltata" in e:
                 print(f"    saltata  {e['cell']:<13} {e['saltata']}")
             else:
-                discard = e["reached"] - e["pubblicato"]
+                discard = e["reached"] - e["published"]
                 mark = ("SUPERATO" if discard > 0 else
-                         "pareggiato" if discard == 0 else f"{discard:+d}")
-                print(f"{mark:>11}  {e['cell']:<13} pubbl {e['pubblicato']:>5} "
+                         "matched" if discard == 0 else f"{discard:+d}")
+                print(f"{mark:>11}  {e['cell']:<13} pubbl {e['published']:>5} "
                       f"invariante {e['invariante']:>5} ({e['group']:<13}) "
                       f"-> {e['reached']:>5}  "
                       f"+{e['gradini_riusciti']} steps  {e['seconds']:>7.1f}s")
             sys.stdout.flush()
             (DATA_DIR / "fase3_attacco.json").write_text(json.dumps(results, indent=1))
     useful = [e for e in results if "saltata" not in e]
-    won = [e for e in useful if e["reached"] > e["pubblicato"]]
-    even = sum(1 for e in useful if e["reached"] == e["pubblicato"])
+    won = [e for e in useful if e["reached"] > e["published"]]
+    even = sum(1 for e in useful if e["reached"] == e["published"])
     print(f"\n{'=' * 74}\n{len(useful)} cells tentate: "
           f"pareggiate {even}, superate {len(won)}")
     for e in won:
-        print(f"  {e['cell']}: {e['reached']} invece di {e['pubblicato']}. "
+        print(f"  {e['cell']}: {e['reached']} invece di {e['published']}. "
               f"Giudice slow: {e.get('giudice_lento')}. APPLICARE docs/04.")
     if useful and not won:
-        neighbours = sorted(useful, key=lambda e: e["pubblicato"] - e["reached"])[:6]
+        neighbours = sorted(useful, key=lambda e: e["published"] - e["reached"])[:6]
         print("Le cells piu' neighbours:")
         for e in neighbours:
-            print(f"  {e['cell']}: {e['reached']} against {e['pubblicato']} "
-                  f"({e['reached'] - e['pubblicato']:+d}), "
+            print(f"  {e['cell']}: {e['reached']} against {e['published']} "
+                  f"({e['reached'] - e['published']:+d}), "
                   f"invariante {e['invariante']} below {e['group']}")
     return 0
 

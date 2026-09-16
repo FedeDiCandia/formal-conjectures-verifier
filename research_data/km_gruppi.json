@@ -6,7 +6,7 @@
   "max": 0,
   "ottimo": true,
   "limite_lp": -0.0,
-  "pubblicato": 31,
+  "published": 31,
   "valido": true,
   "parole": []
  },
@@ -17,7 +17,7 @@
   "max": 0,
   "ottimo": true,
   "limite_lp": -0.0,
-  "pubblicato": 31,
+  "published": 31,
   "valido": true,
   "parole": []
  },
@@ -28,7 +28,7 @@
   "max": 0,
   "ottimo": true,
   "limite_lp": -0.0,
-  "pubblicato": 31,
+  "published": 31,
   "valido": true,
   "parole": []
  },
@@ -39,7 +39,7 @@
   "max": 0,
   "ottimo": true,
   "limite_lp": -0.0,
-  "pubblicato": 31,
+  "published": 31,
   "valido": true,
   "parole": []
  },
@@ -50,7 +50,7 @@
   "max": 0,
   "ottimo": true,
   "limite_lp": -0.0,
-  "pubblicato": 31,
+  "published": 31,
   "valido": true,
   "parole": []
  },
@@ -61,7 +61,7 @@
   "max": 0,
   "ottimo": true,
   "limite_lp": -0.0,
-  "pubblicato": 31,
+  "published": 31,
   "valido": true,
   "parole": []
  },
@@ -72,7 +72,7 @@
   "max": 0,
   "ottimo": true,
   "limite_lp": -0.0,
-  "pubblicato": 31,
+  "published": 31,
   "valido": true,
   "parole": []
  },
@@ -83,7 +83,7 @@
   "max": 0,
   "ottimo": true,
   "limite_lp": -0.0,
-  "pubblicato": 31,
+  "published": 31,
   "valido": true,
   "parole": []
  },
@@ -94,7 +94,7 @@
   "max": 27,
   "ottimo": true,
   "limite_lp": 27.0,
-  "pubblicato": 31,
+  "published": 31,
   "valido": true,
   "parole": []
  },
@@ -105,7 +105,7 @@
   "max": 27,
   "ottimo": true,
   "limite_lp": 27.0,
-  "pubblicato": 31,
+  "published": 31,
   "valido": true,
   "parole": []
  },
@@ -116,7 +116,7 @@
   "max": 27,
   "ottimo": true,
   "limite_lp": 27.0,
-  "pubblicato": 31,
+  "published": 31,
   "valido": true,
   "parole": []
  },
@@ -127,7 +127,7 @@
   "max": 0,
   "ottimo": true,
   "limite_lp": -0.0,
-  "pubblicato": 113,
+  "published": 113,
   "valido": true,
   "parole": []
  },
@@ -138,7 +138,7 @@
   "max": 68,
   "ottimo": true,
   "limite_lp": 68.0,
-  "pubblicato": 113,
+  "published": 113,
   "valido": true,
   "parole": []
  },
@@ -149,7 +149,7 @@
   "max": 68,
   "ottimo": true,
   "limite_lp": 68.0,
-  "pubblicato": 113,
+  "published": 113,
   "valido": true,
   "parole": []
  },
@@ -160,7 +160,7 @@
   "max": 68,
   "ottimo": true,
   "limite_lp": 68.0,
-  "pubblicato": 113,
+  "published": 113,
   "valido": true,
   "parole": []
  },
@@ -171,7 +171,7 @@
   "max": 85,
   "ottimo": true,
   "limite_lp": 85.0,
-  "pubblicato": 113,
+  "published": 113,
   "valido": true,
   "parole": []
  },
@@ -182,7 +182,7 @@
   "max": 0,
   "ottimo": true,
   "limite_lp": -0.0,
-  "pubblicato": 69,
+  "published": 69,
   "valido": true,
   "parole": []
  },
@@ -193,7 +193,7 @@
   "max": 0,
   "ottimo": true,
   "limite_lp": -0.0,
-  "pubblicato": 69,
+  "published": 69,
   "valido": true,
   "parole": []
  },
@@ -204,7 +204,7 @@
   "max": 36,
   "ottimo": true,
   "limite_lp": 36.0,
-  "pubblicato": 69,
+  "published": 69,
   "valido": true,
   "parole": []
  },
@@ -215,7 +215,7 @@
   "max": 54,
   "ottimo": true,
   "limite_lp": 54.0,
-  "pubblicato": 69,
+  "published": 69,
   "valido": true,
   "parole": []
  },
@@ -226,7 +226,7 @@
   "max": 63,
   "ottimo": true,
   "limite_lp": 63.0,
-  "pubblicato": 69,
+  "published": 69,
   "valido": true,
   "parole": []
  },
@@ -237,7 +237,7 @@
   "max": 60,
   "ottimo": false,
   "limite_lp": 72.0,
-  "pubblicato": 69,
+  "published": 69,
   "valido": true,
   "parole": []
  },
@@ -248,7 +248,7 @@
   "max": 57,
   "ottimo": false,
   "limite_lp": 78.0,
-  "pubblicato": 69,
+  "published": 69,
   "valido": true,
   "parole": []
  }

@@ -28,7 +28,7 @@ def test_the_fano_plane_is_a_valid_code():
 
 def test_all_three_kinds_of_defect_are_found():
     assert "weight" in check([0b1111, 0b0011], n=4, d=2, w=2).findings[0]
-    assert "duplicato" in check(FANO + [FANO[0]], n=7, d=4, w=3).findings[0]
+    assert "duplicate" in check(FANO + [FANO[0]], n=7, d=4, w=3).findings[0]
     assert "distance" in check([0b000111, 0b001011], n=6, d=4, w=3).findings[0]
     assert "beyond position" in check([0b111000], n=3, d=2, w=3).findings[0]
 
