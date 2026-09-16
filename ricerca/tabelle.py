@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -114,9 +115,35 @@ def _voce(cella: dict) -> dict | None:
             "codice": cella["link"], "perduto": cella["perduto"]}
 
 
+BASE = "https://aeb.win.tue.nl/codes/"
+
+
+def _pagina(nome: str) -> Path:
+    """La pagina di Brouwer, scaricandola se non c'e'.
+
+    Le pagine non sono versionate (non dichiarano una licenza): un clone pulito
+    non le ha, e questa funzione le rimette dov'erano. `curl` e non urllib
+    perche' il Python di questo Mac non ha i certificati di sistema.
+    """
+    locale = DATI / nome
+    if locale.is_file() and locale.stat().st_size > 0:
+        return locale
+    DATI.mkdir(parents=True, exist_ok=True)
+    esito = subprocess.run(
+        ["curl", "-sS", "-L", "--max-time", "45", "-A",
+         "ricerca-codici/1.0 (verifica indipendente di limiti pubblicati)",
+         "-o", str(locale), BASE + nome],
+        capture_output=True, text=True)
+    if esito.returncode != 0 or not locale.is_file() or locale.stat().st_size == 0:
+        locale.unlink(missing_ok=True)
+        raise OSError(f"non riesco a scaricare {BASE + nome}: "
+                      f"{esito.stderr.strip()[:120]}")
+    return locale
+
+
 def peso_costante(percorso: Path | None = None) -> dict:
     """A(n,d,w): una tabella per ogni d, righe n, colonne w."""
-    percorso = percorso or DATI / "Andw.html"
+    percorso = percorso or _pagina("Andw.html")
     testo = percorso.read_text(errors="replace")
     # i titoli <h1><a name="dK"> dicono a quale d appartiene la tabella che segue
     marcatori = [(m.start(), int(m.group(1)))
@@ -152,7 +179,7 @@ def peso_costante(percorso: Path | None = None) -> dict:
 
 def generali(percorso: Path | None = None) -> dict:
     """A(n,d): righe n, colonne d."""
-    percorso = percorso or DATI / "binary-1.html"
+    percorso = percorso or _pagina("binary-1.html")
     testo = percorso.read_text(errors="replace")
     p = _Tabella()
     p.feed(testo)

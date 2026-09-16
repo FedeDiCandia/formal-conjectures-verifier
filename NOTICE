@@ -75,14 +75,13 @@ The list below says which files, and under which terms.
 7. Tables of bounds for binary codes — no licence stated by the author
    Andries E. Brouwer, https://aeb.win.tue.nl/codes/
 
-     dati_ricerca/Andw.html            copies of two of his pages
-     dati_ricerca/binary-1.html
-     dati_ricerca/codici/*             362 explicit codes attaining the
-                                         published lower bounds
+   His pages carry no licence notice, so they are **not redistributed here**:
+   dati_ricerca/Andw.html, dati_ricerca/binary-1.html and the 362 explicit codes
+   under dati_ricerca/codici/ are excluded by .gitignore. ricerca/tabelle.py and
+   ricerca/riproduci.py download them from the original site when they are
+   missing, so the reproduction can still be run and checked.
 
-   These pages carry no licence notice. They are mirrored here so that the
-   reproduction in ricerca/ can be checked against exactly the data it used;
-   ricerca/riproduci.py downloads them from the original site. Attribution is to
-   Brouwer and, for individual codes, to the constructors named in the tables.
-   Anyone reusing this repository should treat these files as third-party
-   material, not as part of the Apache-licensed work.
+   The numbers derived from those tables — which record is claimed, by whom, and
+   whether an explicit code exists — are in dati_ricerca/limiti_cwc.json and in
+   docs/. Attribution is to Brouwer and, for individual codes, to the
+   constructors named in the tables.

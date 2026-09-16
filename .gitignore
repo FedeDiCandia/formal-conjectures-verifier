@@ -28,3 +28,9 @@ runs/
 # Lean build artifacts
 .lake/
 build/
+
+# Dati di terzi senza licenza dichiarata (tabelle di A. E. Brouwer):
+# restano sul disco, li riscarica ricerca/riproduci.py
+dati_ricerca/codici/
+dati_ricerca/Andw.html
+dati_ricerca/binary-1.html

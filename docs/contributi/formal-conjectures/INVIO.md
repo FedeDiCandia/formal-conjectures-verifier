@@ -25,7 +25,7 @@ Restano solo le operazioni che pubblicano: il fork, il push e l'apertura delle P
 ## 0. Due controlli prima di pubblicare
 
 **L'email dei commit.** I commit locali hanno come autore `Federico Di Candia
-<fe.dicandia@outlook.com>` (la tua configurazione globale di git). Il controllo CLA di Google
+<l'email dei tuoi commit>` (la tua configurazione globale di git). Il controllo CLA di Google
 guarda l'email dei commit: deve essere quella con cui hai firmato il CLA e deve essere associata
 al tuo account GitHub. Se non lo è:
 

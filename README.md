@@ -343,9 +343,8 @@ attribution, which in summary is:
 - [**The OEIS**](https://oeis.org/) — the entries mirrored under `dati_ricerca/`
   and quoted in the note are OEIS content, under CC BY-SA 4.0.
 - **Andries E. Brouwer's** [tables of bounds for binary codes](https://aeb.win.tue.nl/codes/)
-  — the tables and the 362 explicit codes under `dati_ricerca/` are his, and carry
-  no licence notice of their own; they are mirrored so the reproduction can be
-  checked against the data it used.
+  — his pages carry no licence notice, so they are not redistributed here: the
+  tables and the 362 explicit codes are downloaded from his site on first use.
 
 Parts of this repository — including some of the Lean proofs — were written with
 AI assistance, and every such proof is machine-checked before it is called a

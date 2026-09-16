@@ -25,12 +25,13 @@ Preparato il 15 settembre 2026. I comandi li esegui tu: `gh` e `git push` sono n
 1. **L'email dei commit.** Tutti e 132 hanno come autore `Federico Di Candia
    <dicandia.fe@gmail.com>`: pubblicando, l'indirizzo diventa visibile. Se non lo vuoi, la
    riscrittura va fatta **prima** del push (`git filter-repo --mail-map`), non dopo.
-2. **`fe.dicandia@outlook.com`** compare una volta, in `docs/contributi/formal-conjectures/INVIO.md`.
+2. **Il tuo secondo indirizzo email** compariva una volta in `INVIO.md`: tolto il 15 settembre.
 3. **`/Users/fededicandia`** compare in 8 file tracciati (28 volte), quasi tutti registri in `docs/dati/`.
 4. **I dati di terzi in `dati_ricerca/`**: le tabelle di Brouwer (362 codici più due pagine) non
-   hanno licenza dichiarata, e un file contiene l'indirizzo email privato di chi ha inviato il
-   codice. Le voci OEIS sono CC BY-SA 4.0: si possono ridistribuire citando la fonte, come fa
-   `NOTICE`. Se preferisci non ridistribuire le tabelle:
+   hanno licenza dichiarata, quindi dal 15 settembre **non sono più versionate** (restano sul
+   disco; `ricerca/riproduci.py` le riscarica). L'email privata nell'intestazione di un codice è
+   stata tolta. Le voci OEIS sono CC BY-SA 4.0: si ridistribuiscono citando la fonte, come fa
+   `NOTICE`. Per rimetterle dentro:
    ```bash
    git rm -r --cached dati_ricerca/codici dati_ricerca/Andw.html dati_ricerca/binary-1.html
    printf 'dati_ricerca/codici/\ndati_ricerca/Andw.html\ndati_ricerca/binary-1.html\n' >> .gitignore
