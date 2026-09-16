@@ -63,7 +63,7 @@ theorem t : True := trivial
 }
 
 
-def test_codice_legittimo_non_viene_rifiutato():
+def test_legitimate_code_is_not_rejected():
     for name, src in GOOD_CODE.items():
         r = guard.check_source(src)
         assert r.ok, f"falso allarme su «{name}»: {[str(f) for f in r.findings]}"
@@ -104,14 +104,14 @@ def test_codice_pericoloso_viene_rifiutato():
             f"«{name}»: waited la rule {expected_rule}, found {rules}"
 
 
-def test_i_numeri_di_riga_sono_corretti():
+def test_the_line_numbers_are_correct():
     src = "theorem a : True := trivial\ntheorem b : True := trivial\ntheorem c : True := by sorry\n"
     r = guard.check_source(src)
     assert not r.ok
     assert r.findings[0].line == 3, f"line waited 3, trovata {r.findings[0].line}"
 
 
-def test_i_commenti_non_alterano_i_numeri_di_riga():
+def test_comments_do_not_shift_the_line_numbers():
     src = "/- commento\n   su piu' lines\n   ancora -/\ntheorem t : True := by sorry\n"
     r = guard.check_source(src)
     assert not r.ok
@@ -179,7 +179,7 @@ EXECUTABLE_CODE = {
 }
 
 
-def test_costrutti_che_eseguono_codice_vengono_rifiutati():
+def test_constructs_that_run_code_are_rejected():
     """Ogni costrutto qui elencato passava il guard before di questo controllo."""
     non_bloccati = []
     wrong_rule = []
@@ -194,7 +194,7 @@ def test_costrutti_che_eseguono_codice_vengono_rifiutati():
     assert not wrong_rule, f"rule inattesa: {wrong_rule}"
 
 
-def test_il_guard_non_disturba_i_file_veri_dell_archivio():
+def test_the_guard_does_not_disturb_the_archives_real_files():
     """Il controllo piu' importante against i falsi allarmi: le rules sulla
     metaprogrammazione non devono scattare su nessuno dei file di problems
     dell'archive, che sono matematica ordinaria scritta da esseri umani."""

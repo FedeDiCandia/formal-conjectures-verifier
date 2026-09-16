@@ -1,6 +1,6 @@
-"""La compattazione del context: senza, un attempt lungo muore di context.
+"""Compacting the context: without it, a long attempt dies of context.
 
-Test di only text, nessuna call all'API.
+Text only; the API is never called.
 """
 import sys
 from pathlib import Path
@@ -13,8 +13,8 @@ import agent
 
 
 def _conversation(n_iterations: int, length: int = 5000) -> list:
-    """Una conversazione finta: statement, poi n rounds di strumento."""
-    messages = [{"role": "user", "content": "ENUNCIATO DEL PROBLEM"}]
+    """A fake conversation: the statement, then n rounds of tool use."""
+    messages = [{"role": "user", "content": "THE PROBLEM'S STATEMENT"}]
     for i in range(n_iterations):
         messages.append({"role": "assistant", "content": [
             {"type": "tool_use", "id": f"t{i}", "name": "lean_check",
@@ -25,28 +25,28 @@ def _conversation(n_iterations: int, length: int = 5000) -> list:
     return messages
 
 
-def test_accorcia_i_risultati_vecchi_e_lascia_intatti_i_recenti():
+def test_it_shortens_the_old_results_and_leaves_the_recent_ones_intact():
     m = _conversation(20)
     before = sum(len(b["content"]) for msg in m if isinstance(msg["content"], list)
-                for b in msg["content"] if b.get("type") == "tool_result")
-    cut = agent.compact_conversation(m, intact=8, queue=600)
+                 for b in msg["content"] if b.get("type") == "tool_result")
+    cut = agent.compact_conversation(m, intact=8, tail=600)
     after = sum(len(b["content"]) for msg in m if isinstance(msg["content"], list)
-               for b in msg["content"] if b.get("type") == "tool_result")
+                for b in msg["content"] if b.get("type") == "tool_result")
     assert cut > 0
-    assert after < before / 3, f"compattazione inefficace: {before} -> {after}"
-    # gli latest_items quattro results (inside gli 8 messages intact) sono interi
-    latest_items = [b["content"] for msg in m[-8:] if isinstance(msg["content"], list)
+    assert after < before / 3, f"compaction ineffective: {before} -> {after}"
+    # the last four results (inside the 8 untouched messages) are whole
+    latest = [b["content"] for msg in m[-8:] if isinstance(msg["content"], list)
               for b in msg["content"] if b.get("type") == "tool_result"]
-    assert latest_items and all(len(c) > 600 for c in latest_items)
+    assert latest and all(len(c) > 600 for c in latest)
 
 
-def test_l_enunciato_non_viene_mai_toccato():
+def test_the_statement_is_never_touched():
     m = _conversation(20)
     agent.compact_conversation(m)
-    assert m[0]["content"] == "ENUNCIATO DEL PROBLEM"
+    assert m[0]["content"] == "THE PROBLEM'S STATEMENT"
 
 
-def test_il_codice_scritto_dal_modello_resta_intero():
+def test_the_code_the_model_wrote_stays_whole():
     m = _conversation(20)
     agent.compact_conversation(m)
     for msg in m:
@@ -56,13 +56,13 @@ def test_il_codice_scritto_dal_modello_resta_intero():
                     assert b["input"]["lean_code"].startswith("theorem trial")
 
 
-def test_e_idempotente():
+def test_it_is_idempotent():
     m = _conversation(20)
     first = agent.compact_conversation(m)
     second = agent.compact_conversation(m)
     assert first > 0 and second == 0
 
 
-def test_una_conversazione_corta_non_viene_toccata():
+def test_a_short_conversation_is_left_alone():
     m = _conversation(3)
     assert agent.compact_conversation(m, intact=8) == 0

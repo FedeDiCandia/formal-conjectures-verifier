@@ -1,7 +1,7 @@
-"""L'estrattore delle dimostrazioni d'archive: i confini dei blocks.
+"""The archive-proof extractor: where the blocks begin and end.
 
-Sono test di only text: non fanno partire Lean, durano millisecondi.
-Servono a fissare i findings found provando davvero, one per one.
+These are text-only tests: they do not start Lean and take milliseconds. They pin
+down the defects that were found by trying, one at a time.
 """
 import sys
 from pathlib import Path
@@ -10,40 +10,40 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "verifier"))
 import archive_proof as pa
 
 
-# --- le words di struttura si confrontano intere --------------------------
+# --- structural words are matched as whole words -------------------------
 
-def test_una_parola_inglese_che_comincia_per_end_non_apre_un_blocco():
-    """Il finding vero: "endomorphism ... -/" veniva letto come `end`."""
+def test_a_word_beginning_with_end_does_not_open_a_block():
+    """The real defect: "endomorphism ... -/" was read as an `end`."""
     assert not pa._opens_structure("endomorphism of a finite set is surjective. -/")
     assert not pa._opens_structure("elaborated by hand -/")
-    assert not pa._opens_structure("importante: vedi below -/")
+    assert not pa._opens_structure("important: see below -/")
     assert not pa._opens_structure("opening remarks -/")
     assert not pa._opens_structure("sections of a bundle -/")
 
 
-def test_le_parole_di_struttura_vere_aprono_un_blocco():
+def test_the_real_structural_words_do_open_a_block():
     for line in ("end GottschalkSurjunctivity", "namespace Foo", "section",
                  "open Nat in", "variable (G : Type*)", "import Mathlib",
                  "set_option linter.style.longLine false", "#check @Nat.floor",
-                 "/-!# Titolo", "attribute [simp] foo", "notation3\"∑ \"x => x"):
+                 "/-!# Title", "attribute [simp] foo", "notation3\"∑ \"x => x"):
         assert pa._opens_structure(line), line
 
 
-def test_una_riga_indentata_non_apre_niente():
+def test_an_indented_line_opens_nothing():
     assert not pa._opens_structure("  end Foo")
     assert not pa._opens_declaration("  theorem t : True := trivial")
 
 
-# --- i confini dei blocks ------------------------------------------------
+# --- the blocks' bounds --------------------------------------------------
 
 _FILE = """import FormalConjectures.Util.ProblemImports
 
-namespace Prova
+namespace Trial
 
-/-- Prima congettura, ancora aperta.
-Questa line finisce il docstring. -/
+/-- First conjecture, still open.
+This line ends the docstring. -/
 @[category research open, AMS 11]
-theorem aperta : True := by
+theorem still_open : True := by
   sorry
 
 /-- Every finite group is surjunctive. This is a classical result: an injective
@@ -52,28 +52,28 @@ endomorphism of a finite set is surjective. -/
 theorem target : True := by
   trivial
 
-end Prova
+end Trial
 """
 
 
-def test_il_docstring_su_due_righe_resta_attaccato_al_suo_teorema():
+def test_a_two_line_docstring_stays_attached_to_its_theorem():
     lines = _FILE.split("\n")
     blocks = pa._blocks(lines)
-    # il block che contiene il target deve contenere TUTTO il suo docstring
+    # the block holding the target has to hold ALL of its docstring
     for a, b in blocks:
         text = "\n".join(lines[a:b + 1])
         if pa._declared_name(text) == "target":
             assert "Every finite group is surjunctive" in text, (
-                f"il docstring e' rimasto outside dal block:\n{text}")
+                f"the docstring was left outside the block:\n{text}")
             assert "endomorphism of a finite set" in text
             break
     else:
-        raise AssertionError("block del target non found")
+        raise AssertionError("the target's block was not found")
 
 
-def test_nessun_blocco_e_solo_la_coda_di_un_docstring():
+def test_no_block_is_only_the_tail_of_a_docstring():
     lines = _FILE.split("\n")
     for a, b in pa._blocks(lines):
         text = "\n".join(lines[a:b + 1]).strip()
         if text.endswith("-/") and "/-" not in text:
-            raise AssertionError(f"block penzolante: {text!r}")
+            raise AssertionError(f"dangling block: {text!r}")

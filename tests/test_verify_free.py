@@ -58,7 +58,7 @@ def _file(tmp_path, name, text):
 
 # --- senza Lean ---------------------------------------------------------------
 
-def test_il_guard_ammette_i_moduli_elencati_e_nessun_altro():
+def test_the_guard_allows_the_listed_modules_and_no_others():
     one = "import FormalConjectures.Wikipedia.PerfectNumbers\ntheorem t : True := trivial\n"
     two = "import FormalConjectures.Wikipedia.JugglerConjecture\ntheorem t : True := trivial\n"
     three = "import FormalConjectures.Wikipedia.Lemoine\ntheorem t : True := trivial\n"
@@ -72,20 +72,20 @@ def test_il_guard_ammette_i_moduli_elencati_e_nessun_altro():
     assert not guard.check_source(two, allowed_module=permissions[0]).ok
 
 
-def test_una_sfida_che_dichiara_un_assioma_e_un_errore(tmp_path):
+def test_a_challenge_declaring_an_axiom_is_an_error(tmp_path):
     cand = _file(tmp_path, "c.lean", "theorem ProvaLibera.total_sum (n : ℕ) : n + 0 = n := rfl\n")
     challenge = "axiom trucco : False\ntheorem ProvaLibera.total_sum (n : ℕ) : n + 0 = n := by\n  sorry\n"
     r = verify_free(challenge, cand, ["ProvaLibera.total_sum"])
     assert r.status == ERROR and "assioma" in r.message
 
 
-def test_un_teorema_non_dichiarato_nella_sfida_e_un_errore(tmp_path):
+def test_a_theorem_not_declared_in_the_challenge_is_an_error(tmp_path):
     cand = _file(tmp_path, "c.lean", "theorem ProvaLibera.total_sum (n : ℕ) : n + 0 = n := rfl\n")
     r = verify_free(GOOD_CHALLENGE, cand, ["ProvaLibera.total_sum", "ProvaLibera.inesistente"])
     assert r.status == ERROR and "inesistente" in r.message
 
 
-def test_un_candidato_con_sorry_e_rifiutato(tmp_path):
+def test_a_candidate_with_sorry_is_rejected(tmp_path):
     cand = _file(tmp_path, "c.lean",
                  f"import {MODULE}\nnamespace ProvaLibera\n"
                  "theorem total_sum (n : ℕ) : n + 0 = n := by\n  sorry\nend ProvaLibera\n")
@@ -95,7 +95,7 @@ def test_un_candidato_con_sorry_e_rifiutato(tmp_path):
 
 # --- con Lean e comparator ------------------------------------------------------
 
-def test_una_dimostrazione_giusta_e_accettata(tmp_path):
+def test_a_correct_proof_is_accepted(tmp_path):
     cand = _file(tmp_path, "c.lean",
                  f"import {MODULE}\nnamespace ProvaLibera\n"
                  "theorem total_sum (n : ℕ) : n + 0 = n := rfl\nend ProvaLibera\n")
@@ -104,7 +104,7 @@ def test_una_dimostrazione_giusta_e_accettata(tmp_path):
     assert r.status == ACCEPTED, (r.message, r.errors[-2000:])
 
 
-def test_stesso_nome_ma_enunciato_diverso_e_rifiutato(tmp_path):
+def test_same_name_but_different_statement_is_rejected(tmp_path):
     cand = _file(tmp_path, "c.lean",
                  f"import {MODULE}\nnamespace ProvaLibera\n"
                  "theorem total_sum (n : ℕ) : 0 + n = n := Nat.zero_add n\nend ProvaLibera\n")
@@ -113,7 +113,7 @@ def test_stesso_nome_ma_enunciato_diverso_e_rifiutato(tmp_path):
     assert r.status == REJECTED, (r.message, r.errors[-2000:])
 
 
-def test_appoggiarsi_al_sorry_di_un_problema_aperto_e_rifiutato(tmp_path):
+def test_leaning_on_an_open_problems_sorry_is_rejected(tmp_path):
     cand = _file(tmp_path, "c.lean",
                  f"import {MODULE}\nnamespace ProvaLibera\n"
                  "theorem dispari_perfetto (n : ℕ) (hn : Nat.Perfect n) : Even n :=\n"
@@ -125,7 +125,7 @@ def test_appoggiarsi_al_sorry_di_un_problema_aperto_e_rifiutato(tmp_path):
     assert "sorryAx" in text or "xiom" in text, text[-2000:]
 
 
-def test_un_olean_incompatibile_e_un_errore_di_strumenti_non_un_rifiuto():
+def test_an_incompatible_olean_is_a_tool_error_not_a_rejection():
     """Il fault del 12 settembre 2026: REJECTED invece di ERROR."""
     from verify import _tool_error
     output = ("uncaught exception: failed to read file '/x/Sfida0.olean', "

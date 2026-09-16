@@ -53,7 +53,7 @@ def _fake_usage(cost: float, model: str):
     return _FakeUsage(int(cost * 1_000_000 / prices(model).output))
 
 
-def test_con_tetto_basso_e_fable_fa_piu_di_una_chiamata():
+def test_with_a_low_cap_and_fable_it_makes_more_than_one_call():
     """È il test che il finding avrebbe fatto fallire: con $0,50 di cap e
     calls da 5 centesimi, di calls ce ne stanno parecchie."""
     n = _possible_calls("claude-fable-5-1", cap=0.50,
@@ -61,7 +61,7 @@ def test_con_tetto_basso_e_fable_fa_piu_di_una_chiamata():
     assert n >= 5, f"only {n} calls con $0,50 di cap"
 
 
-def test_la_soglia_vecchia_fermava_il_tentativo_prima_di_cominciare():
+def test_the_old_threshold_stopped_the_attempt_before_it_began():
     """I numbers real_list dell'incidente, presi dal log della variant B.
 
     `SidorenkoConjecture...non_bipartite_necessary`: 16 287 token in ingresso,
@@ -76,7 +76,7 @@ def test_la_soglia_vecchia_fermava_il_tentativo_prima_di_cominciare():
         "con la threshold new lo stesso attempt deve poter partire")
 
 
-def test_il_limite_resta_rigido():
+def test_the_limit_stays_hard():
     """L'invariante vero, e vale la pena scriverlo per esteso.
 
     Non è «il caso worst sta sempre nel residue»: quando il residue non copre
@@ -98,21 +98,21 @@ def test_il_limite_resta_rigido():
                 f"e' ${worst:.4f} e supera il residue")
 
 
-def test_sotto_la_soglia_minima_si_ferma():
+def test_below_the_minimum_threshold_it_stops():
     """Se non c'è spazio nemmeno per one answer minima, il attempt finisce."""
     b = Budget(dollar_limit=5.0, model="claude-fable-5-1")
     mt = b.affordable_max_tokens(10_000, agent.MAX_TOKENS, residue=0.02)
     assert mt < agent.MIN_USEFUL_TOKENS
 
 
-def test_opus_5_regge_un_tetto_piu_basso_di_fable():
+def test_opus_5_copes_with_a_lower_cap_than_fable():
     """A parità di cap Opus 5 fa più calls: costa metà per token."""
     o = _possible_calls("claude-opus-5", 0.50, 8000, 0.05)
     f = _possible_calls("claude-fable-5-1", 0.50, 8000, 0.05)
     assert o >= f, f"Opus {o} calls, Fable {f}"
 
 
-def test_il_tentativo_interrotto_dal_budget_non_perde_il_lavoro_fatto():
+def test_an_attempt_stopped_by_the_budget_does_not_lose_the_work_done():
     """Quando il budget TOTALE finisce a metà di un problem, quel problem
     finiva nel report con $0,00 e zero checks.
 

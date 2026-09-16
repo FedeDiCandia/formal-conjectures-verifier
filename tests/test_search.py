@@ -69,7 +69,7 @@ print(json.dumps({"event": "end", "position": n, "examined": n}), flush=True)
 '''
 
 
-def test_una_ricerca_arriva_in_fondo(tmp_path):
+def test_a_search_runs_to_completion(tmp_path):
     r = search_module.Search("prova_conta", COUNTING_PROGRAM, folder=tmp_path / "count",
                                variables={"FINO_A": 50})
     result = r.run(verbose=False)
@@ -80,7 +80,7 @@ def test_una_ricerca_arriva_in_fondo(tmp_path):
     assert {"n": 34} in result.found
 
 
-def test_le_variabili_arrivano_al_programma(tmp_path):
+def test_the_variables_reach_the_program(tmp_path):
     """L'environment del figlio e' minimum di proposito: niente key API, niente
     PATH del progetto. I parametri vanno passati esplicitamente."""
     program = """
@@ -97,7 +97,7 @@ with open(os.environ["SEARCH_STATE"], "w") as f:
     assert result.found == ["assente"], "la key API non deve essere visibile"
 
 
-def test_il_checkpoint_viene_scritto(tmp_path):
+def test_the_checkpoint_is_written(tmp_path):
     r = search_module.Search("prova_ckpt", COUNTING_PROGRAM, folder=tmp_path / "ckpt",
                                variables={"FINO_A": 30})
     r.run(verbose=False)
@@ -106,7 +106,7 @@ def test_il_checkpoint_viene_scritto(tmp_path):
     assert d["position"] == 30
 
 
-def test_la_ripresa_riparte_da_dove_era_arrivata(tmp_path):
+def test_resuming_starts_from_where_it_got_to(tmp_path):
     """Il punto piu' importante: after un'interruzione non si ricomincia."""
     folder = tmp_path / "ripresa"
     r = search_module.Search("prova_ripresa", COUNTING_PROGRAM, folder=folder,
@@ -147,7 +147,7 @@ with open(os.environ["SEARCH_STATE"], "w") as f:
 '''
 
 
-def test_la_ricerca_non_ha_accesso_alla_rete(tmp_path):
+def test_the_search_has_no_network_access(tmp_path):
     r = search_module.Search("prova_rete", NETWORK_PROGRAM, folder=tmp_path / "rete")
     result = r.run(verbose=False)
     assert "RETE ACCESSIBILE" not in str(result.found), "la rete deve essere bloccata"
@@ -167,7 +167,7 @@ with open(os.environ["SEARCH_STATE"], "w") as f:
 '''
 
 
-def test_la_ricerca_non_scrive_fuori_dalla_sua_cartella(tmp_path):
+def test_the_search_does_not_write_outside_its_directory(tmp_path):
     r = search_module.Search("prova_scrittura", WRITE_PROGRAM,
                                folder=tmp_path / "write_op",
                                variables={"BERSAGLIO": str(config.ROOT / "PROVA_RICERCA_FUORI.txt")})
@@ -176,7 +176,7 @@ def test_la_ricerca_non_scrive_fuori_dalla_sua_cartella(tmp_path):
     assert not (config.ROOT / "PROVA_RICERCA_FUORI.txt").exists()
 
 
-def test_la_ricerca_puo_usare_numpy_e_sympy(tmp_path):
+def test_the_search_can_use_numpy_and_sympy(tmp_path):
     """L'environment di computation serve proprio a questo."""
     program = '''
 import json, os

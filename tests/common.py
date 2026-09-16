@@ -1,10 +1,10 @@
-"""Aiuti condivisi dai test che fanno partire Lean davvero.
+"""Shared helpers for the tests that really start Lean.
 
-Serve a one cosa sola: gli stessi test devono girare su all_items e two gli
-snapshot dell'archive. Su `bench-v1` il module di utility' si chiama
-`FormalConjectures.Util.ProblemImports`, su `main` `FormalConjecturesUtil`.
-Invece di tenere two copie di ogni file di trial, si riscrive la line di
-import al volo.
+They exist for one thing only: the same tests have to run against both snapshots
+of the archive. On `bench-v1` the utility module is called
+`FormalConjectures.Util.ProblemImports`, on `main` it is `FormalConjecturesUtil`.
+Rather than keeping two copies of every trial file, the import line is rewritten on
+the fly.
 """
 import sys
 from pathlib import Path
@@ -18,5 +18,5 @@ IMPORT_BENCH = "import FormalConjectures.Util.ProblemImports"
 
 
 def adapt(text: str) -> str:
-    """Riscrive l'import del module di utility' per lo snapshot in uso."""
+    """Rewrite the utility module's import for the snapshot in use."""
     return text.replace(IMPORT_BENCH, f"import {config.utility_module()}")

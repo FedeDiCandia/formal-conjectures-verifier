@@ -40,7 +40,7 @@ class _Usage:
 
 # --- il listino --------------------------------------------------------------
 
-def test_i_prezzi_di_opus_5_sono_quelli_ufficiali():
+def test_opus_5_prices_are_the_official_ones():
     p = prices("claude-opus-5")
     assert (p.input, p.output) == (5.00, 25.00)
     assert p.cache_write_5m == 6.25      # 1,25 x input
@@ -48,7 +48,7 @@ def test_i_prezzi_di_opus_5_sono_quelli_ufficiali():
     assert p.cache_read == 0.50           # 0,1 x input
 
 
-def test_i_moltiplicatori_della_cache_non_sono_uguali_per_tutti():
+def test_the_cache_multipliers_are_not_the_same_for_every_model():
     """Fable 5.1 legge dalla cache a 0,025 volte l'input invece di 0,1.
     Se i moltiplicatori fossero computed invece di scritti, questo sbaglio
     passerebbe inosservato."""
@@ -59,13 +59,13 @@ def test_i_moltiplicatori_della_cache_non_sono_uguali_per_tutti():
     assert opus.cache_read / opus.input == pytest.approx(0.10)
 
 
-def test_un_modello_senza_prezzi_fa_fallire_subito():
+def test_a_model_without_prices_fails_immediately():
     """Meglio rifiutarsi di partire che far rispettare un limit sbagliato."""
     with pytest.raises(KeyError, match="Unknown prices"):
         Budget(dollar_limit=5, model="claude-inventato").spent
 
 
-def test_tutti_i_modelli_del_listino_sono_coerenti():
+def test_every_model_in_the_price_list_is_consistent():
     for name, p in PRICE_LIST.items():
         assert p.cache_write_5m == pytest.approx(p.input * 1.25), name
         assert p.cache_write_1h == pytest.approx(p.input * 2.0), name
@@ -74,7 +74,7 @@ def test_tutti_i_modelli_del_listino_sono_coerenti():
 
 # --- l'aritmetica ------------------------------------------------------------
 
-def test_il_costo_somma_le_cinque_voci():
+def test_the_cost_sums_the_five_entries():
     c = Usage()
     c.add(_Usage(inp=10_000, out=2_000, read_count=200_000,
                       scritti_5m=50_000, scritti_1h=10_000))
@@ -83,14 +83,14 @@ def test_il_costo_somma_le_cinque_voci():
     assert c.cost("claude-opus-5") == pytest.approx(expected)
 
 
-def test_la_cache_a_un_ora_costa_il_doppio_di_quella_a_cinque_minuti():
+def test_a_one_hour_cache_write_costs_double_a_five_minute_one():
     a = Usage(); a.add(_Usage(scritti_5m=100_000))
     b = Usage(); b.add(_Usage(scritti_1h=100_000))
     assert b.cost("claude-opus-5") == pytest.approx(a.cost("claude-opus-5") * 1.6)
     # 10.00 / 6.25 = 1.6
 
 
-def test_senza_il_dettaglio_la_cache_viene_contata_come_a_cinque_minuti():
+def test_without_the_detail_the_cache_is_counted_as_five_minute():
     c = Usage()
     c.add(_Usage(scritti_5m=40_000, con_dettaglio=False))
     assert c.cache_write_5m == 40_000
@@ -99,7 +99,7 @@ def test_senza_il_dettaglio_la_cache_viene_contata_come_a_cinque_minuti():
 
 # --- il limit ---------------------------------------------------------------
 
-def test_il_limite_blocca_quando_e_esaurito():
+def test_the_limit_blocks_when_exhausted():
     b = Budget(dollar_limit=0.10, model="claude-opus-5")
     b.record(_Usage(out=10_000))          # 10k output = $0.25 > $0.10
     assert b.exhausted
@@ -107,7 +107,7 @@ def test_il_limite_blocca_quando_e_esaurito():
         b.check_before_calling(1_000, 1_000)
 
 
-def test_il_costo_massimo_possibile_e_il_caso_peggiore():
+def test_the_max_possible_cost_is_the_worst_case():
     """Ogni token in ingresso contato alla tariffa piu' cara (write_op in
     cache) e l'output contata come se riempisse tutto lo spazio concesso."""
     b = Budget(dollar_limit=100, model="claude-opus-5")
@@ -115,7 +115,7 @@ def test_il_costo_massimo_possibile_e_il_caso_peggiore():
     assert b.max_possible_cost(20_000, 32_000) == pytest.approx(expected)
 
 
-def test_una_chiamata_che_potrebbe_sforare_non_parte():
+def test_a_call_that_might_overshoot_does_not_start():
     """E' il controllo che rende RIGIDO il limit: senza, one singola answer
     lunga sforerebbe before che ce ne accorgiamo."""
     b = Budget(dollar_limit=0.50, model="claude-opus-5")
@@ -124,12 +124,12 @@ def test_una_chiamata_che_potrebbe_sforare_non_parte():
         b.check_before_calling(20_000, 32_000)
 
 
-def test_una_chiamata_che_ci_sta_parte():
+def test_a_call_that_fits_does_start():
     b = Budget(dollar_limit=5.00, model="claude-opus-5")
     b.check_before_calling(20_000, 32_000)   # non deve sollevare
 
 
-def test_max_tokens_sostenibile_si_restringe_col_budget():
+def test_affordable_max_tokens_shrinks_with_the_budget():
     b = Budget(dollar_limit=0.50, model="claude-opus-5")
     affordable = b.affordable_max_tokens(20_000, 32_000)
     assert 0 < affordable < 32_000
@@ -137,19 +137,19 @@ def test_max_tokens_sostenibile_si_restringe_col_budget():
     b.check_before_calling(20_000, affordable)
 
 
-def test_max_tokens_sostenibile_rispetta_anche_il_tetto_per_problema():
+def test_affordable_max_tokens_respects_the_per_problem_cap_too():
     b = Budget(dollar_limit=5.00, model="claude-opus-5")
     wide = b.affordable_max_tokens(20_000, 32_000)
     tight = b.affordable_max_tokens(20_000, 32_000, residue=0.30)
     assert tight < wide
 
 
-def test_se_il_solo_ingresso_esaurisce_il_budget_non_resta_spazio():
+def test_if_the_input_alone_exhausts_the_budget_no_room_is_left():
     b = Budget(dollar_limit=0.01, model="claude-opus-5")
     assert b.affordable_max_tokens(1_000_000, 32_000) == 0
 
 
-def test_il_consumo_viene_tenuto_anche_per_problema():
+def test_usage_is_kept_per_problem_as_well():
     b = Budget(dollar_limit=5.00, model="claude-opus-5")
     b.record(_Usage(out=1_000), problem="A")
     b.record(_Usage(out=3_000), problem="B")
@@ -160,7 +160,7 @@ def test_il_consumo_viene_tenuto_anche_per_problema():
 
 # --- controprova esterna: il conto deve riprodurre one bolletta vera ---------
 
-def test_riproduce_la_spesa_misurata_da_epoch_ai():
+def test_it_reproduces_the_spend_measured_by_epoch_ai():
     """Un attempt del benchmark OEIS Open, con i token e il cost che Epoch AI
     ha pubblicato: il nostro conto deve dare lo stesso number.
 
@@ -176,7 +176,7 @@ def test_riproduce_la_spesa_misurata_da_epoch_ai():
     assert abs(c.cost("claude-opus-5") - 50.005) < 0.01
 
 
-def test_fable_5_1_costa_1_45_volte_opus_5_su_un_profilo_lungo():
+def test_fable_5_1_costs_1_45_times_opus_5_on_a_long_profile():
     """Non il doppio, come suggerirebbe il prezzo base.
 
     Fable 5.1 costa il doppio in ingresso e in output, ma la lettura dalla cache

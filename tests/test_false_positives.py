@@ -30,7 +30,7 @@ class FakeProblem:
 
 # --- 1. `plausible` lascia un `sorry` e il file compila ----------------------
 
-def test_1_plausible_senza_controesempio_non_ha_dimostrato_niente():
+def test_1_plausible_without_a_counterexample_proved_nothing():
     """Primo falso positivo. `plausible`, quando non trova controesempi, scrive
     «Unable to find a counter-example» e lascia un `sorry`: il file compila con un
     avviso. Il verdict guardava only se compilava."""
@@ -46,7 +46,7 @@ def test_1_plausible_senza_controesempio_non_ha_dimostrato_niente():
 
 # --- 2. two explorations che si scambiano i messages ------------------------
 
-def test_2_gli_slot_di_esplorazione_sono_esclusivi():
+def test_2_exploration_slots_are_exclusive():
     """Secondo falso positivo. Il file di inspection aveva un name fisso
     (`E0.lean`), quindi two explorations concorrenti si sovrascrivevano il file e
     ognuna leggeva i messages dell'altra: one tactic banale sembrava aver chiuso
@@ -63,7 +63,7 @@ def test_2_gli_slot_di_esplorazione_sono_esclusivi():
 
 # --- 3. il verdict letto dalle lines di error -----------------------------
 
-def test_3_il_verdetto_si_legge_per_nome_non_per_riga():
+def test_3_the_verdict_is_read_by_name_not_by_line():
     """Terzo falso positivo. Il lettore attribuiva gli errors di Lean alla
     declaration sbagliata, e arrivava a dire che un statement E la sua negation
     erano entrambi dimostrati — cosa logicamente impossibile."""
@@ -80,7 +80,7 @@ def test_3_il_verdetto_si_legge_per_nome_non_per_riga():
 
 # --- 4. `type_of%` senza `@` trial un statement diverso ---------------------
 
-def test_4_type_of_va_scritto_con_la_chiocciola():
+def test_4_type_of_has_to_be_written_with_the_at_sign():
     """Quarto falso positivo. `type_of% Foo` senza `@` fa istanziare a Lean gli
     arguments impliciti come metavariabili: la probe provava un statement DIVERSO
     da quello dell'archive, e `aesop` «confutava» la congettura di Agrawal
@@ -92,7 +92,7 @@ def test_4_type_of_va_scritto_con_la_chiocciola():
 
 # --- 5. l'environment sbagliato -----------------------------------------------
 
-def test_5_rifiuta_di_girare_sull_archivio_sbagliato(tmp_path):
+def test_5_it_refuses_to_run_against_the_wrong_archive(tmp_path):
     """Quinto falso positivo. La probe girava con l'index predefinito
     (bench-v1) mentre i targets erano chosen su `main`: gli import fallivano, i
     messages erano spazzatura, e il lettore ci leggeva inside dei successi."""
@@ -110,7 +110,7 @@ def test_5_rifiuta_di_girare_sull_archivio_sbagliato(tmp_path):
 
 # --- la correzione strutturale ---------------------------------------------
 
-def test_la_sonda_non_segnala_senza_il_verificatore():
+def test_the_probe_does_not_flag_without_the_verifier():
     """Il vincolo che rende impossibile un sesto falso positivo della stessa
     famiglia: il flag di segnalazione si accende SOLO after un ACCEPTED che
     arriva da `verify.py`."""
@@ -125,7 +125,7 @@ def test_la_sonda_non_segnala_senza_il_verificatore():
             "un ATTENZIONE viene acceso senza passare dal verifier")
 
 
-def test_conferma_col_verificatore_costruisce_il_candidato_giusto():
+def test_confirming_with_the_verifier_builds_the_right_candidate():
     """Nella forma negata deve usare la modalità confutazione e il `@`."""
     import inspect
     src = inspect.getsource(probe.confirm_with_verifier)

@@ -34,7 +34,7 @@ def test_una_prova_senza_sorryAx_ha_chiuso():
     assert _esiti(output)[("decide", False)] == "chiusa"
 
 
-def test_una_prova_senza_assiomi_ha_chiuso():
+def test_a_proof_with_no_axioms_has_closed():
     output = "E0.lean:5:0: info: 'sonda_decide' does not depend on any axioms"
     assert _esiti(output)[("decide", False)] == "chiusa"
 
@@ -46,16 +46,16 @@ def test_una_prova_che_dipende_da_sorryAx_non_ha_chiuso():
     assert _esiti(output)[("plausible", False)] == "aperta"
 
 
-def test_una_dichiarazione_che_non_esiste_e_un_fallimento():
+def test_a_declaration_that_does_not_exist_is_a_failure():
     assert _esiti("")[("decide", False)] == "aperta"
 
 
-def test_la_negazione_dimostrata_si_chiama_confutata():
+def test_a_proved_negation_is_called_a_refutation():
     output = "E0.lean:9:0: info: 'sonda_decide_neg' does not depend on any axioms"
     assert _esiti(output)[("decide", True)] == "confutata"
 
 
-def test_un_controesempio_di_plausible_viene_riportato():
+def test_a_plausible_counterexample_is_reported():
     output = ("E0.lean:5:2: error: Found a counter-example!\nn := 17\n"
               "E0.lean:5:0: info: 'sonda_plausible' depends on axioms: [sorryAx]")
     trials = probe.read(output, _map())["trials"]
@@ -64,7 +64,7 @@ def test_un_controesempio_di_plausible_viene_riportato():
     assert _esiti(output)[("plausible", False)] == "aperta"
 
 
-def test_il_file_generato_chiede_gli_assiomi_di_ogni_prova():
+def test_the_generated_file_asks_for_each_proofs_axioms():
     class FakeProblem:
         theorem = "Foo.bar"
         module = "FormalConjectures.Foo"
@@ -76,7 +76,7 @@ def test_il_file_generato_chiede_gli_assiomi_di_ogni_prova():
     assert len(mapping) == expected
 
 
-def test_un_file_che_non_compila_non_da_un_esito_pulito():
+def test_a_file_that_does_not_compile_gives_no_clean_verdict():
     """Il sesto falso positivo, del 12 settembre 2026.
 
     Su `Erdos628.erdos_628` la probe leggeva «aesop: chiusa, axioms: nessuno»
@@ -96,7 +96,7 @@ def test_un_file_che_non_compila_non_da_un_esito_pulito():
     assert "verifier" in results[0]["detail"]
 
 
-def test_senza_errori_il_dettaglio_resta_asciutto():
+def test_with_no_errors_the_detail_stays_terse():
     results = probe.read("'sonda_aesop' does not depend on any axioms\n",
                         {"sonda_aesop": ("aesop", False)})["trials"]
     assert results[0]["detail"] == "axioms: nessuno"

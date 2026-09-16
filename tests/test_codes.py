@@ -19,26 +19,26 @@ from orbits import expand, read_permutation, closure, apply   # noqa: E402
 FANO = [sum(1 << ((k + s) % 7) for k in (0, 1, 3)) for s in range(7)]
 
 
-def test_il_piano_di_fano_e_un_codice_valido():
+def test_the_fano_plane_is_a_valid_code():
     # sette blocks di weight 3 su sette points, a pairs a distance 4: A(7,4,3)=7
     e = check(FANO, n=7, d=4, w=3)
     assert e.ok, e.findings
     assert e.size == 7
 
 
-def test_i_difetti_sono_trovati_tutti_e_tre_i_tipi():
+def test_all_three_kinds_of_defect_are_found():
     assert "weight" in check([0b1111, 0b0011], n=4, d=2, w=2).findings[0]
     assert "duplicato" in check(FANO + [FANO[0]], n=7, d=4, w=3).findings[0]
     assert "distance" in check([0b000111, 0b001011], n=6, d=4, w=3).findings[0]
     assert "oltre la position" in check([0b111000], n=3, d=2, w=3).findings[0]
 
 
-def test_distanza_e_peso():
+def test_distance_and_weight():
     assert distance(0b1100, 0b0011) == 4
     assert weight(0b101101) == 4
 
 
-def test_permutazione_e_gruppo():
+def test_permutation_and_group():
     p = read_permutation("(0,1,2)(3,4)", 5)
     assert p == (1, 2, 0, 4, 3)
     assert len(closure([p], 5)) == 6           # Z3 x Z2
@@ -49,7 +49,7 @@ CODE = ROOT / "research_data" / "codici" / "i24.12a"
 
 
 @pytest.mark.skipif(not CODE.is_file(), reason="code pubblicato non scaricato")
-def test_riproduce_il_record_pubblicato_A_24_6_12():
+def test_it_reproduces_the_published_record_A_24_6_12():
     words, n, info = expand(CODE)
     assert n == 24
     assert info["ordine_gruppo"] == 504 and info["seeds"] == 19
@@ -57,7 +57,7 @@ def test_riproduce_il_record_pubblicato_A_24_6_12():
     assert check(words, n=24, d=6, w=12).ok
 
 
-def test_rapido_e_lento_concordano():
+def test_fast_and_slow_agree():
     """Il criterio fast non e' un'euristica: deve dare lo stesso verdict."""
     import random
     from codes import fast_check
@@ -76,7 +76,7 @@ def test_rapido_e_lento_concordano():
     assert cases == 400
 
 
-def test_rapido_su_un_codice_grande_pubblicato():
+def test_fast_on_a_large_published_code():
     from codes import fast_check
     if not CODE.is_file():
         pytest.skip("code pubblicato non scaricato")
@@ -84,7 +84,7 @@ def test_rapido_su_un_codice_grande_pubblicato():
     assert fast_check(words, n=24, d=6, w=12).ok
 
 
-def test_le_due_semplificazioni_esatte_non_cambiano_il_risultato():
+def test_the_two_exact_shortcuts_do_not_change_the_result():
     """Le scorciatoie del rappresentante devono dare le stesse orbits del computation
     ingenuo su all_items le pairs. Se sbagliassero, la ricerca produrrebbe codici
     non validi senza accorgersene."""

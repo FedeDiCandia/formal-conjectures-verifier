@@ -174,7 +174,7 @@ def test_5_rifiuta_enunciato_piu_debole():
 
 # --- 6. RIFIUTA chi ridefinisce one definition dell'archive ---------------
 
-def test_6_rifiuta_ridefinizione_di_una_definizione():
+def test_6_it_rejects_the_redefinition_of_a_definition():
     """Il candidato ridefinisce `jugglerStep` come la funzione costante 6.
     L'statement e' scritto IDENTICO all'original, e la trial e' `rfl`: se il
     confronto fosse testuale, passerebbe."""
@@ -186,7 +186,7 @@ def test_6_rifiuta_ridefinizione_di_una_definizione():
 
 # --- Extra: i problems con un buco answer( ) --------------------------------
 
-def test_7_segnala_i_problemi_con_buco_answer():
+def test_7_it_flags_the_problems_with_an_answer_hole():
     """Un statement che contiene ancora `answer(sorry)` non proposizionale non
     e' dimostrabile onestamente. Il verifier deve dirlo, non rifiutare e
     basta: e' un'informazione diversa."""
@@ -200,7 +200,7 @@ def test_7_segnala_i_problemi_con_buco_answer():
 
 # --- Extra: il timeout ------------------------------------------------------
 
-def test_8_il_timeout_funziona():
+def test_8_the_timeout_works():
     """Con un second a disposizione nessuna check puo' finire."""
     r = _check("1_correct.lean", timeout=1)
     assert r.status == TIMEOUT, f"expected TIMEOUT, ottenuto {r.status}"
@@ -209,7 +209,7 @@ def test_8_il_timeout_funziona():
 
 # --- Extra: la queue parallela -----------------------------------------------
 
-def test_9_verifiche_in_parallelo():
+def test_9_verifications_in_parallel():
     """Due checks insieme devono dare gli stessi results di two checks
     separate, senza pestarsi i piedi sui file temporanei."""
     results = verify_many(
@@ -246,7 +246,7 @@ uncaught exception: Illegal axiom detected: 'sorryAx'
 """
 
 
-def test_10_i_messaggi_info_di_lean_arrivano_a_chi_scrive():
+def test_10_leans_info_messages_reach_the_author():
     """`#check` e `#print` producono messages `info:`. Se li buttassimo away,
     chi scrive la dimostrazione non avrebbe way di ispezionare le definizioni
     e dovrebbe dedurle provocando errors di proposito — cosa che e' davvero
@@ -259,7 +259,7 @@ def test_10_i_messaggi_info_di_lean_arrivano_a_chi_scrive():
         "le lines di continuazione del message devono restare attaccate"
 
 
-def test_11_gli_errori_veri_arrivano_con_il_contesto():
+def test_11_real_errors_arrive_with_their_context():
     from verify import _lean_errors
     out = _lean_errors(COPYRIGHT_NOISE)
     assert "unsolved goals" in out
@@ -267,7 +267,7 @@ def test_11_gli_errori_veri_arrivano_con_il_contesto():
     assert "Illegal axiom detected: 'sorryAx'" in out
 
 
-def test_12_il_rumore_dei_linter_di_stile_viene_tolto():
+def test_12_the_style_linter_noise_is_stripped():
     """Il linter del copyright dell'archive ripete quindici lines di licenza a
     ogni message: e' irrilevante per un file temporaneo e inonderebbe il
     context di chi legge."""
@@ -279,7 +279,7 @@ def test_12_il_rumore_dei_linter_di_stile_viene_tolto():
         "le lines di state di lake non sono messages di Lean"
 
 
-def test_13_i_messaggi_ripetuti_compaiono_una_volta_sola():
+def test_13_repeated_messages_appear_only_once():
     from verify import _lean_errors
     doppio = COPYRIGHT_NOISE + COPYRIGHT_NOISE
     assert _lean_errors(doppio).count("@Nat.floor") == 1
@@ -287,7 +287,7 @@ def test_13_i_messaggi_ripetuti_compaiono_una_volta_sola():
 
 # --- Extra: un candidato che tenta di sabotare l'archive -------------------
 
-def test_14_un_candidato_non_riesce_a_riscrivere_un_file_dell_archivio(tmp_path):
+def test_14_a_candidate_cannot_rewrite_a_file_of_the_archive(tmp_path):
     """Il test di sicurezza piu' importante.
 
     comparator esporta il Challenge PRIMA di compilare la Solution, quindi un
@@ -352,7 +352,7 @@ end JugglerConjecture
         "successive confronterebbero le soluzioni con un statement alterato"
 
 
-def test_i_problemi_oeis_si_leggono_dal_sorgente():
+def test_the_oeis_problems_can_be_read_from_source():
     """Le entries OEIS hanno un module fra guillemet e un file senza.
 
     Un identificatore Lean non puo' cominciare con one cifra, quindi il module

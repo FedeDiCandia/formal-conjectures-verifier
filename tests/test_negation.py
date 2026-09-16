@@ -88,7 +88,7 @@ def _candidate(tmp_path, answer: str) -> Path:
 
 # --- generazione (veloce, senza Lean) ---------------------------------------
 
-def test_la_sostituzione_avviene_solo_nel_teorema_bersaglio(index):
+def test_the_substitution_happens_only_in_the_target_theorem(index):
     """Il file di PerfectNumbers contiene three problems con `answer(sorry)`.
     Invertirli all_items darebbe one challenge diversa da quella richiesta."""
     challenge = negation.generate(index.get(PROBLEM))
@@ -99,7 +99,7 @@ def test_la_sostituzione_avviene_solo_nel_teorema_bersaglio(index):
         "gli altri problems del file devono restare come erano"
 
 
-def test_la_sfida_dichiara_di_essere_generata(index):
+def test_the_challenge_declares_that_it_was_generated(index):
     """Chi apre il file deve capire subito che non e' un file dell'archive."""
     challenge = negation.generate(index.get(PROBLEM))
     assert "SFIDA NEGATA" in challenge.text
@@ -107,14 +107,14 @@ def test_la_sfida_dichiara_di_essere_generata(index):
     assert PROBLEM in challenge.text
 
 
-def test_un_problema_senza_answer_non_si_puo_negare(index):
+def test_a_problem_without_answer_cannot_be_negated(index):
     """Un statement senza `answer( )` afferma direttamente one proposizione:
     la sua negation non e' un problem dell'archive, e' un'altra cosa."""
     with pytest.raises(negation.NotNegatable, match="non contiene"):
         negation.generate(index.get("JugglerConjecture.jugglerStep_36"))
 
 
-def test_un_buco_answer_non_proposizionale_non_si_puo_negare(index):
+def test_a_non_propositional_answer_hole_cannot_be_negated(index):
     """Se la answer e' un number o un insieme non c'e' un verso da invertire:
     c'e' un value da fornire."""
     with_hole = index.find(has_answer_hole=True)
@@ -127,7 +127,7 @@ def test_un_buco_answer_non_proposizionale_non_si_puo_negare(index):
     pytest.skip("nessun problem con buco non proposizionale e answer(sorry) nel source_text")
 
 
-def test_la_confutazione_di_un_enunciato_senza_answer_e_possibile(tmp_path):
+def test_refuting_a_statement_without_answer_is_possible(tmp_path):
     """Prima questa combinazione dava ERROR, e sbagliava.
 
     La mode' confutazione serviva only ai problems con `answer(sorry)`, cioe'
@@ -144,7 +144,7 @@ def test_la_confutazione_di_un_enunciato_senza_answer_e_possibile(tmp_path):
     assert "type_of%" in details
 
 
-def test_un_enunciato_con_un_buco_non_si_puo_confutare(tmp_path):
+def test_a_statement_with_a_hole_cannot_be_refuted(tmp_path):
     """Se l'statement stesso contiene un `sorry`, la sua negation non e'
     un'affermazione ben posta: nessuna delle two vie si apply."""
     idx = ProblemIndex.load()
@@ -171,7 +171,7 @@ def _reason(result) -> set[str]:
             if not c.passed and c.name != "controllo sintattico preventivo"}
 
 
-def test_in_modalita_stretta_il_candidato_con_True_combacia(tmp_path):
+def test_in_strict_mode_a_candidate_with_True_matches(tmp_path):
     """`answer(sorry)` diventa `True`, come nell'archive: gli enunciati
     combaciano, quindi comparator arriva al controllo degli axioms."""
     r = verify(PROBLEM, _candidate(tmp_path, "sorry"), mode=STRICT,
@@ -182,7 +182,7 @@ def test_in_modalita_stretta_il_candidato_con_True_combacia(tmp_path):
     assert "sorryAx" in r.errors
 
 
-def test_in_modalita_stretta_il_candidato_con_False_non_combacia(tmp_path):
+def test_in_strict_mode_a_candidate_with_False_does_not_match(tmp_path):
     """`answer(False)` da' `False ↔ P`: un statement diverso da quello
     dell'archive, e comparator si ferma before degli axioms."""
     r = verify(PROBLEM, _candidate(tmp_path, "False"), mode=STRICT,
@@ -191,7 +191,7 @@ def test_in_modalita_stretta_il_candidato_con_False_non_combacia(tmp_path):
     assert "kind identico all'original" in _reason(r)
 
 
-def test_in_modalita_confutazione_il_candidato_con_False_combacia(tmp_path):
+def test_in_refutation_mode_a_candidate_with_False_matches(tmp_path):
     """E' il verso che count: la challenge negata accetta l'statement `False ↔ P`.
     Con one dimostrazione vera (non `sorry`) questo sarebbe one confutazione
     verificata del problem aperto."""
@@ -213,7 +213,7 @@ def test_in_modalita_confutazione_il_candidato_con_False_combacia(tmp_path):
     assert "module della challenge ready" not in failed
 
 
-def test_in_modalita_confutazione_il_candidato_con_True_non_combacia(tmp_path):
+def test_in_refutation_mode_a_candidate_with_True_does_not_match(tmp_path):
     """La controprova: la challenge negata non si fa passare per quella original.
     Se questo test fallisse, le two mode' verificherebbero la stessa cosa e
     tutta la funzione sarebbe inutile."""
@@ -233,7 +233,7 @@ def test_in_modalita_confutazione_il_candidato_con_True_non_combacia(tmp_path):
 PROBLEMA_SENZA_ANSWER = "PerfectNumbers.infinitely_many_even_perfect"
 
 
-def test_la_via_per_tipo_genera_un_bersaglio_derivato():
+def test_the_type_of_route_generates_a_derived_target():
     idx = ProblemIndex.load()
     p = idx.get(PROBLEM)          # questo ha `answer( )`
     s = negation.generate_by_kind(p)
@@ -244,7 +244,7 @@ def test_la_via_per_tipo_genera_un_bersaglio_derivato():
     assert "sorry" in s.text      # la challenge è un target, non one trial
 
 
-def test_la_via_per_tipo_rifiuta_un_enunciato_con_un_buco():
+def test_the_type_of_route_rejects_a_statement_with_a_hole():
     idx = ProblemIndex.load()
     with_hole = [q for q in idx.find(category="research open") if q.statement_has_sorry]
     if not with_hole:
@@ -253,7 +253,7 @@ def test_la_via_per_tipo_rifiuta_un_enunciato_con_un_buco():
         negation.generate_by_kind(with_hole[0])
 
 
-def test_il_guard_permette_un_solo_modulo_in_piu():
+def test_the_guard_permits_exactly_one_extra_module():
     import guard
     src = "import FormalConjectures.Wikipedia.PerfectNumbers\ntheorem t : True := trivial\n"
     assert not guard.check_source(src).ok          # vietato di norma

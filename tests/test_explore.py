@@ -33,7 +33,7 @@ def setup_module(module):
 
 # --- il guard vale also in exploration ------------------------------------
 
-def test_in_esplorazione_si_puo_importare_il_modulo_del_problema():
+def test_in_exploration_the_problems_module_may_be_imported():
     """E' l'unica rule allentata: serve per fare `#print` sulle definizioni
     dell'archive. In one solution resta vietato, perche' dichiarerebbe un
     name che esiste gia'."""
@@ -43,7 +43,7 @@ def test_in_esplorazione_si_puo_importare_il_modulo_del_problema():
         "in one solution l'import del module del problem deve restare vietato"
 
 
-def test_in_esplorazione_il_codice_eseguibile_resta_vietato():
+def test_in_exploration_executable_code_stays_forbidden():
     """Un file di inspection viene compilato come qualunque other, quindi puo'
     eseguire code allo stesso way: le rules sul code non si allentano."""
     for src in ['#eval IO.println "x"',
@@ -53,7 +53,7 @@ def test_in_esplorazione_il_codice_eseguibile_resta_vietato():
         assert not guard.check_source(src, exploration=True).ok, f"passato: {src}"
 
 
-def test_un_file_vietato_non_viene_nemmeno_compilato():
+def test_a_forbidden_file_is_not_even_compiled():
     r = explore_module.explore(common.adapt(
         'import FormalConjectures.Util.ProblemImports\n#eval IO.println "x"\n'))
     assert not r.ok
@@ -81,7 +81,7 @@ example (n : ℕ) (h : 3 < n) : n = 7 := by
 """))
 
 
-def test_print_di_una_struttura_dell_archivio_arriva_completo(inspection):
+def test_print_of_an_archive_structure_arrives_complete(inspection):
     """Il caso che nel first shakedown l'agent non riusciva a ottenere."""
     m = inspection.messages
     assert "structure Selfridge.IsPseudoSelfridge" in m
@@ -91,23 +91,23 @@ def test_print_di_una_struttura_dell_archivio_arriva_completo(inspection):
     assert "constructor:" in m, "also il costruttore deve comparire"
 
 
-def test_print_di_una_definizione_di_mathlib_mostra_il_corpo(inspection):
+def test_print_of_a_mathlib_definition_shows_the_body(inspection):
     assert "def Nat.Perfect" in inspection.messages
     assert "properDivisors" in inspection.messages, \
         "il body della definition, non only il name"
 
 
-def test_check_mostra_il_tipo_con_gli_impliciti(inspection):
+def test_check_shows_the_type_with_implicits(inspection):
     assert "@Nat.floor :" in inspection.messages
     assert "FloorSemiring" in inspection.messages, \
         "gli arguments impliciti di istanza servono per usare il lemma"
 
 
-def test_exact_suggerisce_un_lemma(inspection):
+def test_exact_suggests_a_lemma(inspection):
     assert "Try this" in inspection.messages
 
 
-def test_gli_errori_arrivano_con_lo_stato_degli_obiettivi(inspection):
+def test_errors_arrive_with_the_goal_state(inspection):
     """Senza lo state degli obiettivi un error non dice cosa fare."""
     assert "error" in inspection.messages
     assert "omega could not trials the goal" in inspection.messages
@@ -115,7 +115,7 @@ def test_gli_errori_arrivano_con_lo_stato_degli_obiettivi(inspection):
         "il counterexample found da omega e' l'informazione utile"
 
 
-def test_i_messaggi_non_sono_troncati(inspection):
+def test_the_messages_are_not_truncated(inspection):
     assert not inspection.truncated
 
 
@@ -132,7 +132,7 @@ FULL_VERIFICATION = {"FormalConjectures.Util.ProblemImports": 33.0,
                      "FormalConjecturesUtil": 47.0}
 
 
-def test_l_esplorazione_e_piu_rapida_di_una_verifica(inspection):
+def test_exploration_is_faster_than_a_verification(inspection):
     """Il reason per cui esiste: se l'exploration non fosse sensibilmente piu'
     rapida di one check complete, non servirebbe a niente.
 
@@ -155,7 +155,7 @@ def test_l_esplorazione_e_piu_rapida_di_una_verifica(inspection):
         f"check complete su questo snapshot")
 
 
-def test_il_timeout_interrompe_una_tattica_che_non_termina():
+def test_the_timeout_interrupts_a_non_terminating_tactic():
     r = explore_module.explore(common.adapt("""import FormalConjectures.Util.ProblemImports
 set_option maxRecDepth 100000 in
 example : True := by
@@ -169,7 +169,7 @@ example : True := by
 
 # --- gli slot: two explorations insieme non devono mescolarsi ----------------
 
-def test_due_esplorazioni_insieme_non_si_mescolano():
+def test_two_explorations_at_once_do_not_get_mixed_up():
     """Il finding che questo test fix era della specie worst.
 
     Il file di inspection vive nell'albero dell'archive e il suo name E' il name

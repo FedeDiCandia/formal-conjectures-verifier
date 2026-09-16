@@ -1,8 +1,8 @@
-"""Il controllo di awake: niente giro se il Mac puo' sospendersi.
+"""The keep-awake check: no run if the Mac can go to sleep.
 
-Nella notte del 13 settembre il Mac e' andato in sospensione durante il giro e
-ogni sospensione ha chiuso one connessione con l'API. I testi qui below sono
-presi da `pmset` su questa macchina, quella notte.
+On the night of 13 September the Mac slept during the run, and every sleep closed a
+connection to the API. The texts below are taken from `pmset` on this machine, that
+night.
 """
 import sys
 from pathlib import Path
@@ -24,28 +24,28 @@ ASSERTIONS = """   pid 96678(caffeinate): [0x00004d5200019da6] 00:00:04 PreventU
 """
 
 
-def test_riconosce_la_fonte_di_alimentazione():
+def test_it_recognises_the_power_source():
     assert awake.power_source(POWER_AC) == "mains"
     assert awake.power_source(POWER_BATTERY) == "battery"
     assert awake.power_source("") == "unknown"
 
 
-def test_riconosce_il_proprio_caffeinate_e_non_quello_di_altri():
+def test_it_recognises_its_own_caffeinate_and_not_other_peoples():
     assert awake.caffeinate_running(ASSERTIONS, 96678)
-    assert not awake.caffeinate_running(ASSERTIONS, 12345), "un other caffeinate non basta"
-    assert not awake.caffeinate_running(ASSERTIONS, 340), "powerd non e' caffeinate"
+    assert not awake.caffeinate_running(ASSERTIONS, 12345), "another caffeinate is not enough"
+    assert not awake.caffeinate_running(ASSERTIONS, 340), "powerd is not caffeinate"
     assert not awake.caffeinate_running(ASSERTIONS, None)
 
 
-def test_a_batteria_non_si_parte_e_il_motivo_e_chiaro():
+def test_on_battery_it_does_not_start_and_the_reason_is_clear():
     reasons = awake.problems(POWER_BATTERY, ASSERTIONS, 96678)
     assert len(reasons) == 1 and "not plugged in" in reasons[0], reasons
 
 
-def test_senza_caffeinate_non_si_parte():
+def test_without_caffeinate_it_does_not_start():
     reasons = awake.problems(POWER_AC, "", 96678)
     assert len(reasons) == 1 and "caffeinate" in reasons[0], reasons
 
 
-def test_con_alimentatore_e_caffeinate_si_parte():
+def test_with_mains_power_and_caffeinate_it_starts():
     assert awake.problems(POWER_AC, ASSERTIONS, 96678) == []

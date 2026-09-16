@@ -1,25 +1,25 @@
 """
-Sonda gli enunciati open_problems con tattiche automatiche, sia diritti sia negati.
+Probe the open statements with automatic tactics, in direct and negated form.
 
-IDEA
-----
-Prima di scrivere un program di ricerca su misura, conviene chiedere a Lean se
-per caso la answer e' a portata di tactic. Due tattiche in particolare:
+THE IDEA
+--------
+Before writing a bespoke search program, it is worth asking Lean whether the answer
+happens to be within reach of a tactic. Two tactics in particular:
 
-  * `plausible` (di Mathlib) generate cases a caso e search_for un CONTROESEMPIO. Se ne
-    trova one, la congettura come e' formalizzata e' falsa — il che di solito
-    non significa aver solved un problem aperto, ma aver found one
-    formalizzazione imprecisa. E' un'informazione preziosa lo stesso.
-  * `decide` closes gli enunciati decidibili su domini finiti. Su un problem
-    aperto non chiudera' quasi mai, ma se lo fa c'e' qualcosa da capire.
+  * `plausible` (from Mathlib) generates random cases and looks for a
+    COUNTEREXAMPLE. If it finds one, the conjecture as formalised is false — which
+    usually does not mean an open problem has been solved, but that an imprecise
+    formalisation has been found. That is valuable information all the same.
+  * `decide` closes decidable statements over finite domains. On an open problem it
+    will almost never close, but if it does there is something to understand.
 
-Si trial su DUE forme: l'statement com'e' e la sua negation. Un problem aperto
-formalizzato come `True ↔ P` afferma che la answer e' si'; se `plausible`
-trova un counterexample a `P`, la answer potrebbe essere no.
+Two forms are tried: the statement as it stands, and its negation. An open problem
+formalised as `True ↔ P` asserts that the answer is yes; if `plausible` finds a
+counterexample to `P`, the answer might be no.
 
-Il timeout e' volutamente BREVE: qui non si search_for di risolvere niente, si
-cercano i cases in cui la answer salta outside da sola. Quelli che richiedono
-davvero computation passano alla fase successiva, con un program su misura.
+The timeout is deliberately SHORT: nothing is being solved here, we are looking for
+the cases where the answer falls out on its own. Those that really need computation
+go on to the next phase, with a bespoke program.
 """
 from __future__ import annotations
 
@@ -36,7 +36,7 @@ import config as verifier_config
 import explore
 from index import ProblemIndex
 
-#: Le tattiche provate, in order di cost crescente.
+#: The tactics tried, in order of increasing cost.
 TACTICS = [
     ("decide", "decide"),
     ("plausible", "plausible"),
@@ -53,10 +53,10 @@ example : {statement} := by
 """
 
 
-#: `plausible` non dimostra niente: se non trova un counterexample lascia il
-#: theorem con un `sorry` e il file compila comunque. Senza questo controllo
-#: un "Unable to find a counter-example" verrebbe letto come statement CHIUSO,
-#: che e' l'error opposto a quello da evitare in un progetto come questo.
+#: `plausible` proves nothing: if it finds no counterexample it leaves the theorem
+#: with a `sorry` and the file compiles anyway. Without this check an "Unable to
+#: find a counter-example" would be read as a CLOSED statement, which is exactly the
+#: error a project like this has to avoid.
 SIGNS_OF_NOT_CLOSED = (
     "declaration uses 'sorry'",
     "Unable to find a counter-example",
@@ -65,44 +65,43 @@ SIGNS_OF_NOT_CLOSED = (
 
 
 def classify(messages: str, ok: bool) -> tuple[str, str | None]:
-    """Da' un verdict ai messages di Lean. Ritorna (result, counterexample)."""
+    """Give a verdict on Lean's messages. Returns (result, counterexample)."""
     if "Found a counter-example" in messages or "counterexample" in messages.lower():
         lines = [l for l in messages.split("\n") if l.strip()]
         return "counterexample", "\n".join(lines[:25])
-    if "TEMPO SCADUTO" in messages:
-        return "tempo scaduto", None
+    if "TIMED OUT" in messages:
+        return "timed out", None
     if "maximum number of heartbeats" in messages:
-        return "heartbeat esauriti", None
+        return "heartbeats exhausted", None
     if any(sign in messages for sign in SIGNS_OF_NOT_CLOSED):
-        return "aperta", None
-    return ("chiusa" if ok else "aperta"), None
+        return "open", None
+    return ("closed" if ok else "open"), None
 
 
 def reclassify(path: Path) -> int:
-    """Riapplica `classify` a un file di results gia' raccolto.
+    """Re-apply `classify` to a file of results already collected.
 
-    Serve quando la rule di classificazione cambia: i messages di Lean sono
-    conservati per gli results notable, quindi un verdict si puo' only
-    declassare, mai inventare.
+    This is for when the classification rule changes: Lean's messages are kept for
+    the notable results, so a verdict can only be downgraded, never invented.
     """
     data = json.loads(path.read_text(encoding="utf-8"))
     changed = 0
     for entry in data:
         for pr in entry["trials"]:
-            if pr["result"] not in ("chiusa", "counterexample"):
+            if pr["result"] not in ("closed", "counterexample"):
                 continue
             new_item, against = classify(pr.get("messages") or "", True)
             if new_item != pr["result"]:
                 pr["result"], pr["counterexample"] = new_item, against
                 changed += 1
         notable = [pr for pr in entry["trials"]
-                    if pr["result"] in ("chiusa", "counterexample")]
+                   if pr["result"] in ("closed", "counterexample")]
         if notable:
             pr = notable[0]
-            entry["ATTENZIONE"] = (f"la tactic {pr['tactic']} ha {pr['result']} la "
-                                 f"forma {'negata' if pr['negated'] else 'diritta'}")
+            entry["ATTENTION"] = (f"the tactic {pr['tactic']} returned {pr['result']} on "
+                                  f"the {'negated' if pr['negated'] else 'direct'} form")
         else:
-            entry.pop("ATTENZIONE", None)
+            entry.pop("ATTENTION", None)
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2),
                         encoding="utf-8")
     return changed
@@ -110,12 +109,11 @@ def reclassify(path: Path) -> int:
 
 def trial(problem, tactic_name, tactic, negated: bool, heartbeats: int,
           timeout: int) -> dict:
-    """Prova one tactic sull'statement (o sulla sua negation)."""
-    # Il `@` e' obbligatorio: senza, Lean istanzia gli arguments
-    # impliciti come metavariabili e la probe trial un statement DIVERSO
-    # da quello dell'archive. Senza di esso `aesop` "confutava" la
-    # congettura di Agrawal, e il verifier vero rifiutava la stessa
-    # dimostrazione: era il quarto falso positivo di questa specie.
+    """Try one tactic on the statement (or on its negation)."""
+    # The `@` is compulsory: without it Lean instantiates the implicit arguments as
+    # metavariables and the probe tries a DIFFERENT statement from the archive's.
+    # Without it `aesop` "refuted" Agrawal's conjecture, and the real verifier
+    # rejected the same proof: that was the fourth false positive of this species.
     kind = f"type_of% @{problem.theorem}"
     statement = f"¬ ({kind})" if negated else kind
     code = TEMPLATE.format(utility=verifier_config.utility_module(),
@@ -130,31 +128,31 @@ def trial(problem, tactic_name, tactic, negated: bool, heartbeats: int,
         "tactic": tactic_name, "negated": negated, "result": result,
         "seconds": round(duration, 1),
         "counterexample": counterexample,
-        "messages": messages[:1500] if result in ("chiusa", "counterexample") else "",
+        "messages": messages[:1500] if result in ("closed", "counterexample") else "",
     }
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--how_many", type=int, default=30)
+    ap.add_argument("--how-many", type=int, default=30, dest="how_many")
     ap.add_argument("--timeout", type=int, default=90)
     ap.add_argument("--heartbeats", type=int, default=400000)
     ap.add_argument("--output", default=str(ROOT / "runs" / "hunt" / "probe_lean.json"))
     ap.add_argument("--problems", default="")
     ap.add_argument("--reclassify", action="store_true",
-                    help="riapplica il verdict a un file gia' raccolto")
+                    help="re-apply the verdict rule to a file already collected")
     args = ap.parse_args()
 
     if args.reclassify:
         n = reclassify(Path(args.output))
-        print(f"verdetti corretti: {n}")
+        print(f"verdicts corrected: {n}")
         return 0
 
     idx = ProblemIndex.load()
     if args.problems:
         chosen = [idx.get(n) for n in args.problems.split()]
     else:
-        # open_problems, verificabili, su oggetti discreti, statement short
+        # open, verifiable, about discrete objects, with a short statement
         CONTINUOUS_SIGNALS = ["ℝ", "ℂ", "Real.", "Complex.", "Filter", "Tendsto",
                             "Measure", "Topological", "Continuous", "Cardinal",
                             "deriv", "∫", "Metric", "Manifold", "NNReal", "ENNReal"]
@@ -166,8 +164,8 @@ def main() -> int:
         open_problems.sort(key=lambda p: len(p.statement))
         chosen = open_problems[:args.how_many]
 
-    print(f"Sondo {len(chosen)} problems con {len(TACTICS)} tattiche x 2 forme.")
-    print(f"Timeout per trial: {args.timeout}s. Nessuna spesa API.\n", flush=True)
+    print(f"Probing {len(chosen)} problems with {len(TACTICS)} tactics x 2 forms.")
+    print(f"Timeout per attempt: {args.timeout}s. No API spend.\n", flush=True)
 
     results = []
     output = Path(args.output)
@@ -181,25 +179,25 @@ def main() -> int:
             for negated in (False, True):
                 e = trial(p, name, tactic, negated, args.heartbeats, args.timeout)
                 entry["trials"].append(e)
-                marchio = {"chiusa": "!!! CHIUSA !!!", "counterexample": "!!! CONTROESEMPIO !!!"}.get(
-                    e["result"], "")
-                forma = "¬" if negated else " "
-                print(f"      {forma} {name:12} {e['result']:18} {e['seconds']:5.1f}s  {marchio}",
+                mark = {"closed": "!!! CLOSED !!!",
+                        "counterexample": "!!! COUNTEREXAMPLE !!!"}.get(e["result"], "")
+                form = "¬" if negated else " "
+                print(f"      {form} {name:12} {e['result']:18} {e['seconds']:5.1f}s  {mark}",
                       flush=True)
-                if e["result"] in ("chiusa", "counterexample"):
-                    entry["ATTENZIONE"] = (
-                        f"la tactic {name} ha {e['result']} la forma "
-                        f"{'negata' if negated else 'diritta'}")
+                if e["result"] in ("closed", "counterexample"):
+                    entry["ATTENTION"] = (
+                        f"the tactic {name} returned {e['result']} on the "
+                        f"{'negated' if negated else 'direct'} form")
         results.append(entry)
         output.write_text(json.dumps(results, ensure_ascii=False, indent=2),
                           encoding="utf-8")
 
-    notable = [v for v in results if "ATTENZIONE" in v]
+    notable = [v for v in results if "ATTENTION" in v]
     print(f"\n{'='*70}")
-    print(f"Esaminati {len(results)} problems. Notevoli: {len(notable)}")
+    print(f"Examined {len(results)} problems. Notable: {len(notable)}")
     for v in notable:
-        print(f"  {v['problem']}: {v['ATTENZIONE']}")
-    print(f"\nRisultati in {output}")
+        print(f"  {v['problem']}: {v['ATTENTION']}")
+    print(f"\nResults in {output}")
     return 0
 
 

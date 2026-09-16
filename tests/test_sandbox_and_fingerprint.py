@@ -67,7 +67,7 @@ def _write_test(path: Path, profile: Path | None) -> bool:
 
 # --- la sandbox --------------------------------------------------------------
 
-def test_senza_sandbox_la_scrittura_nell_archivio_riesce():
+def test_without_the_sandbox_writing_into_the_archive_succeeds():
     """La controprova. Senza questo test, i two successivi non dimostrerebbero
     che e' la sandbox a fermare le scritture: potrebbero essere bloccate da
     qualcos'other (permissions del filesystem, per example)."""
@@ -75,11 +75,11 @@ def test_senza_sandbox_la_scrittura_nell_archivio_riesce():
         "senza sandbox la write_op deve riuscire, altrimenti il test non trial nulla"
 
 
-def test_la_sandbox_blocca_le_scritture_nell_archivio(profile):
+def test_the_sandbox_blocks_writes_into_the_archive(profile):
     assert not _write_test(config.ARCHIVE / "PROVA_SANDBOX.txt", profile)
 
 
-def test_la_sandbox_blocca_le_scritture_sui_file_compilati(profile):
+def test_the_sandbox_blocks_writes_to_the_compiled_files(profile):
     """Il target che count: i file compiled da cui comparator legge
     l'statement original."""
     compiled = config.ARCHIVE / ".lake" / "build" / "lib" / "lean" / "FormalConjectures"
@@ -88,13 +88,13 @@ def test_la_sandbox_blocca_le_scritture_sui_file_compilati(profile):
     assert not _write_test(compiled / "PROVA_SANDBOX.olean", profile)
 
 
-def test_la_sandbox_consente_le_scritture_dove_servono(profile):
+def test_the_sandbox_allows_the_writes_that_are_needed(profile):
     """Se bloccasse also queste, nessuna check potrebbe funzionare."""
     inside = config.ARCHIVE / config.SANDBOX_SUBDIR / "prova_permesso.txt"
     assert _write_test(inside, profile)
 
 
-def test_la_sandbox_blocca_la_rete(profile):
+def test_the_sandbox_blocks_the_network(profile):
     command = sandbox.wrap(
         ["/usr/bin/curl", "-s", "-m", "8", "-o", "/dev/null", "https://example.com"], profile)
     result = subprocess.run(command, capture_output=True, text=True)
@@ -103,7 +103,7 @@ def test_la_sandbox_blocca_la_rete(profile):
 
 # --- l'fingerprint --------------------------------------------------------------
 
-def test_l_impronta_e_stabile():
+def test_the_fingerprint_is_stable():
     a = fingerprint_module.compute(config.ARCHIVE)
     b = fingerprint_module.compute(config.ARCHIVE)
     assert a.n_content_files > 100, "mi aspetto centinaia di file dell'archive"
@@ -111,7 +111,7 @@ def test_l_impronta_e_stabile():
         "two impronte consecutive senza modifiche devono coincidere"
 
 
-def test_l_impronta_rileva_un_file_modificato():
+def test_the_fingerprint_detects_a_modified_file():
     a = fingerprint_module.compute(config.ARCHIVE)
     b = copy.deepcopy(a)
     which = next(iter(b.content))
@@ -121,21 +121,21 @@ def test_l_impronta_rileva_un_file_modificato():
     assert which in differences[0]
 
 
-def test_l_impronta_rileva_un_file_cancellato():
+def test_the_fingerprint_detects_a_deleted_file():
     a = fingerprint_module.compute(config.ARCHIVE)
     b = copy.deepcopy(a)
     b.content.pop(next(iter(b.content)))
     assert any("CANCELLATI" in d for d in fingerprint_module.compare(a, b))
 
 
-def test_l_impronta_rileva_un_cambio_nelle_dipendenze():
+def test_the_fingerprint_detects_a_change_in_the_dependencies():
     a = fingerprint_module.compute(config.ARCHIVE)
     b = copy.deepcopy(a)
     b.dependency_metadata = "0" * 64
     assert any("Mathlib" in d for d in fingerprint_module.compare(a, b))
 
 
-def test_l_impronta_ignora_la_cartella_del_modulo_temporaneo():
+def test_the_fingerprint_ignores_the_temporary_modules_directory():
     """La folder del candidato cambia a ogni check: se la contassimo,
     ogni check segnalerebbe un falso allarme."""
     folder = config.ARCHIVE / config.SANDBOX_SUBDIR
