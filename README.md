@@ -6,10 +6,24 @@ formalised in Lean 4 — taken from Google DeepMind's
 archive — and refuses to call anything a result until the Lean kernel says so.
 
 It did not solve an open problem. What it did produce is a judge you can run
-yourself, four machine-checked proofs of results that were already known but not
-formalised, a short note on a formalised OEIS conjecture, and a set of
-measurements about how much this kind of work costs. The section on **what did
-not work** is the most useful part, and it is not an afterthought.
+yourself, four machine-checked proofs of results that were known but had never
+been written in Lean, a short note auditing one of the archive's own statements,
+and a set of measurements of what this kind of work costs. The section on **what
+did not work** is not an afterthought: it is the part that took the longest to
+get right.
+
+**Where to start**
+
+1. [**The note on OEIS A105020**](docs/pubblicazione/A105020-goldbach.pdf) — 20
+   pages in English, with a Lean formalisation attached. It shows that one of the
+   archive's open entries is equivalent to binary Goldbach, so it is not an
+   independent problem at all. This is the piece to read if you only read one.
+2. [**The adversarial tests**](tests/test_verificatore.py) — six ways of faking a
+   proof (`tests/fixtures/`), and the assertion that the judge rejects each of
+   them, with and without the syntactic pre-scan. They define what "verified"
+   means here.
+3. [**What did not work**](#what-did-not-work), further down, and the four
+   defects of our own that nearly produced results that were not there.
 
 > **Not affiliated.** A personal project, unconnected to Google DeepMind, to
 > Epoch AI, and to Anthropic.
@@ -346,6 +360,22 @@ attribution, which in summary is:
   — his pages carry no licence notice, so they are not redistributed here: the
   tables and the 362 explicit codes are downloaded from his site on first use.
 
-Parts of this repository — including some of the Lean proofs — were written with
-AI assistance, and every such proof is machine-checked before it is called a
-proof. Where a proof was proposed upstream, the pull request says so explicitly.
+## Authorship, and the use of AI
+
+This project was built by one person working with an AI coding assistant (Claude,
+Anthropic). Being precise about who did what matters here, because the subject of
+the repository is exactly the question of when a machine-produced result can be
+trusted:
+
+- **Mine:** the direction and the questions; the decision that the judge comes
+  before the agent and the standard of evidence it enforces; the selection and
+  measurement protocols; the reading of every result, including the four
+  occasions when something that looked like a result was one of our own defects;
+  the mathematics of the A105020 note and the decision to publish it.
+- **Written with the assistant, then machine-checked:** most of the Python, and
+  several of the Lean proofs. No proof is called a proof here unless comparator
+  accepted it and `#print axioms` showed nothing beyond `propext`,
+  `Classical.choice` and `Quot.sound`.
+- **Declared upstream:** where a proof was proposed to the archive, the pull
+  request and the commit say that it was produced with AI assistance and how it
+  was verified.
