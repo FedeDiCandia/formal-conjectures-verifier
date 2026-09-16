@@ -1,4 +1,4 @@
-# Repository esterni clonati (grandi, gestiti da scripts/setup.sh)
+# Repository esterni clonati (grandi, gestiti da scripts/setup.sh): ~37 GB
 external/*/
 !external/.gitkeep
 
@@ -6,16 +6,24 @@ external/*/
 __pycache__/
 *.pyc
 .venv/
+.venv-*/
 venv/
+.pytest_cache/
+*.egg-info/
 
-# Ambiente / segreti
+# Ambiente / segreti: la chiave API non deve mai finire in un commit
 .env
+.env.*
+!.env.esempio
 *.key
+*.pem
+id_rsa*
 
-# Output temporanei
+# Output temporanei (runs/ sono ~555 MB; i tre file gia' versionati restano)
 runs/
 *.log
 .DS_Store
+**/.DS_Store
 
 # Lean build artifacts
 .lake/
