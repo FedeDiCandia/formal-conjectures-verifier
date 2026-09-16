@@ -1,13 +1,13 @@
 """
-Fase 1 vera: la nostra ricerca, da zero, against i bounds pubblicati.
+The real first phase: our search, from nothing, against the published bounds.
 
-Il step zero (`riproduci.py`) ha mostrato che sappiamo leggere e verificare i
-record. Qui si misura la cosa che count: **partendo da niente, quanto ci
-avviciniamo?** Per ogni cell si trial un repertorio di groups, si search_for la clique
-pesata massima fra le orbits, e si compare con la tabella.
+Step zero (`reproduce.py`) showed that we can read and check the records. Here the
+thing that counts is measured: **starting from nothing, how close do we get?** For
+each cell a repertoire of groups is tried, the maximum weighted clique among the
+orbits is sought, and the result is compared with the table.
 
 Tre results: PAREGGIATO (uguale al limit pubblicato), SOTTO (di quanto), SOPRA
-(record battuto — da trattare con il protocollo di docs/04, non da annunciare).
+(a record beaten — to be handled with the protocol in docs/04-finding-protocol.md, not announced).
 """
 from __future__ import annotations
 
@@ -28,7 +28,7 @@ DATA_DIR = ROOT / "research_data"
 
 def select(bounds: dict, *, max_words: int, max_combinations: int,
            how_many: int) -> list[tuple[str, dict]]:
-    """Celle alla portata di un first giro: piccole, e con un limit pubblicato."""
+    """Cells within reach of a first round: small, and with a published bound."""
     candidate = []
     for k, v in bounds.items():
         n, d, w = (int(x) for x in k.split(","))
@@ -48,7 +48,7 @@ def main() -> int:
     bounds = json.loads((DATA_DIR / "limiti_cwc.json").read_text())
     cells = select(bounds, max_words=400, max_combinations=300_000,
                    how_many=int(sys.argv[1]) if len(sys.argv) > 1 else 12)
-    print(f"{len(cells)} cells nel first giro.\n")
+    print(f"{len(cells)} cells in the first round.\n")
     print(f"{'cell':<14}{'pubbl.':>8}{'nostro':>8}{'result':>12}  "
           f"{'group':<14}{'source':<8}{'tempo':>7}")
     print("-" * 78)
@@ -76,11 +76,11 @@ def main() -> int:
                 "group": r["best"]["group"], "seconds": round(dt, 1),
                 "per_gruppo": r["per_gruppo"]}
         if state == "SOPRA":
-            # il giudice slow, non quello fast, e le words per esteso
+            # the slow judge, not the fast one, and the words in full
             g = check(r["best"]["words"], n, d, w)
             entry["giudice_lento"] = g.ok
             entry["words"] = r["best"]["words"]
-            print(f"    ATTENZIONE: above il limit pubblicato. "
+            print(f"    ATTENTION: above the published bound. "
                   f"Giudice slow: {'valid' if g.ok else g.findings[:2]}. "
                   f"Applicare docs/04 before di chiamarlo result.")
         results.append(entry)

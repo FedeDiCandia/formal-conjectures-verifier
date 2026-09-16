@@ -1,20 +1,20 @@
 """
-Il motore a orbits sulle cells che contano.
+The orbit engine on the cells that matter.
 
 PERCHÉ, MISURATO
 ----------------
-La ricerca local su words casuali (`tabu.py`) ha pareggiato 78 bounds su 119
-sulle cells piccole, ma sulle 34 cells con **divario aperto** ha pareggiato 1 su
-34, con residui di 69–441 violations. Non è vicina: è nella regione sbagliata.
+The local search on random words (`tabu.py`) matched 78 bounds of 119 on the small
+cells, but on the 34 cells with an **open gap** it matched 1 of 34, with residuals
+of 69-441 violations. It is not close: it is in the wrong region.
 
-La ragione è nei codici pubblicati, che avevamo già letto: i record di queste cells
-sono **invarianti below un group**. A(22,6,6) ≥ 343 è di Braun–Humpich–Laaksonen–
-Östergård e usa un group di automorfismi; A(24,6,12) ≥ 5558 è un group di order
-504 con 19 seeds. Cercare fra 74.613 words a caso non ha speranza; cercare fra 3391
-orbits è un problem normale.
+The reason is in the published codes, which we had already read: the records of
+these cells are **invariant under a group**. A(22,6,6) ≥ 343 is due to
+Braun-Humpich-Laaksonen-Östergård and uses an automorphism group; A(24,6,12) ≥ 5558
+is a group of order 504 with 19 seeds. Searching among 74,613 random words is
+hopeless; searching among 3391 orbits is an ordinary problem.
 
-Questo script trial ogni group del repertorio su ogni cell con divario aperto, e
-dice quanto si arriva. È l'esperimento che decide se la strada A ha un motore o no.
+This script tries every group in the repertoire on every cell with an open gap, and
+says how far it gets. It is the experiment that decides whether this route has an engine or not.
 """
 from __future__ import annotations
 
@@ -60,7 +60,7 @@ def main() -> int:
     how_many = int(sys.argv[2]) if len(sys.argv) > 2 else 34
     maximum = int(sys.argv[3]) if len(sys.argv) > 3 else 120_000
     items = targets(maximum, how_many)
-    print(f"{len(items)} cells con divario aperto, motore a orbits, "
+    print(f"{len(items)} cells with an open gap, orbit engine, "
           f"{restarts} restarts per group.\n")
     jobs = [(n, d, w, v, restarts) for _, n, d, w, v in items]
     results = []
@@ -83,7 +83,7 @@ def main() -> int:
               f"Giudice slow: {e.get('giudice_lento')}. APPLICARE docs/04.")
     if not won:
         best_list = sorted(results, key=lambda e: e["published"] - e["nostro"])[:5]
-        print("Nessun limit exceeded. Le cinque cells piu' neighbours:")
+        print("No bound beaten. The five closest cells:")
         for e in best_list:
             print(f"  {e['cell']}: {e['nostro']} against {e['published']} "
                   f"({e['nostro'] - e['published']:+d}), group {e['group']}")

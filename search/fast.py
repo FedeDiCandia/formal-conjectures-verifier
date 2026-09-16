@@ -1,28 +1,28 @@
 """
-Search local con il grafo dei conflitti precalcolato.
+Local search with the conflict graph precomputed.
 
 PERCHÉ, MISURATO
 ----------------
-Il first motore local (`tabu.py`) ricalcola a ogni mossa le distanze fra la word
-che enters e all_items le candidate: N·m conteggi di bit per iteration. Su A(17,6,6)
-sono un milione di operazioni per mossa, cioè circa 2500 moves in venti seconds. Con
-così poche moves la ricerca non riesce nemmeno ad **aggiungere one word** a un
-code valid di 85: il salto da 85 a 86 richiede di scambiarne diverse, e 2500
-moves non bastano.
+The first local engine (`tabu.py`) recomputes at every move the distances between
+the entering word and every candidate: N·m bit counts per iteration. On A(17,6,6)
+that is a million operations per move, about 2500 moves in twenty seconds. With so
+few moves the search cannot even **add one word** to a valid code of 85: the leap
+from 85 to 86 requires swapping several, and 2500 moves are not enough.
 
-Qui il job si fa one volta sola. Si precalcola la matrice dei **conflitti** — bit
-`j` della line `i` acceso se le words `i` e `j` distano meno di `d` — e si tiene un
-contatore `count[v]` = how_many words choices sono in conflitto con `v`. Aggiungere o
-togliere one word costa one total_sum di N interi, cioè millesimi di quello che
+
+Here the work is done once. The **conflict** matrix is precomputed — bit `j` of row
+`i` set if words `i` and `j` are at distance less than `d` — and a counter
+`count[v]` = how many chosen words conflict with `v` is kept. Adding or removing a
+word costs a sum of N integers, thousandths of what
 costava before. Si passa da migliaia di moves a milioni.
 
-La matrice occupa N²/8 byte: 19 MB per N = 12.376, 700 MB per N = 74.613. Sopra il
-cap si torna al motore slow, che è più povero ma non esplode in memoria.
+The matrix takes N²/8 bytes: 19 MB for N = 12,376, 700 MB for N = 74,613. Above the
+cap one falls back to the slow engine, which is poorer but does not explode in memory.
 
-IL CRITERIO È SEMPRE LO STESSO
+THE CRITERION IS ALWAYS THE SAME
 ------------------------------
-`count` count le violations, e un code è valid quando la total_sum dei conflitti
-delle words choices è zero. Il verdict finale resta di `codes.check`.
+`count` counts the violations, and a code is valid when the sum of the conflicts of
+the chosen words is zero. The final verdict still belongs to `codes.check`.
 """
 from __future__ import annotations
 
@@ -33,32 +33,32 @@ import numpy as np
 from codes import fast_check
 from tabu import _all_words
 
-# La matrice dei conflitti occupa N²/8 byte. Il cap e' configurabile perche' la
-# cell piu' interessante che abbiamo (A(27,8,5), divario 1) ne chiede 0,8 GB, e su
-# 24 GB di RAM c'e' spazio -- ma non se si lanciano sei processi insieme. Chi lancia
-# in parallelo abbassa il cap o riduce i processi.
+# The conflict matrix takes N²/8 bytes. The cap is configurable because the most
+# interesting cell we have (A(27,8,5), gap 1) asks for 0.8 GB, and on 24 GB of RAM
+# there is room -- but not if six processes are launched together. Whoever launches
+# in parallel lowers the cap or reduces the processes.
 MEMORY_CAP_BYTES = int(os.environ.get("RICERCA_TETTO_MEMORIA", 700_000_000))
 
 
 def conflict_matrix(all_items: np.ndarray, d: int) -> np.ndarray:
-    """Bit `j` della line `i` acceso se `dist(i, j) < d` e `i != j`."""
+    """Bit `j` of row `i` is set if `dist(i, j) < d` and `i != j`."""
     N = len(all_items)
     byte = (N + 7) // 8
     if N * byte > MEMORY_CAP_BYTES:
-        raise MemoryError(f"la matrice richiederebbe {N * byte / 1e6:.0f} MB")
+        raise MemoryError(f"the matrix would need {N * byte / 1e6:.0f} MB")
     M = np.zeros((N, byte), dtype=np.uint8)
     block = max(1, 8_000_000 // max(N, 1))
     for i in range(0, N, block):
         slice = all_items[i:i + block]
         neighbour = np.bitwise_count(np.bitwise_xor(slice[:, None], all_items[None, :])) < d
         for k in range(len(slice)):
-            neighbour[k, i + k] = False          # niente conflitto con se stessa
+            neighbour[k, i + k] = False          # no conflict with itself
         M[i:i + block] = np.packbits(neighbour, axis=1)
     return M
 
 
 class State:
-    """Un insieme di words choices, con il count dei conflitti aggiornato."""
+    """A set of chosen words, with the conflict count kept up to date."""
 
     def __init__(self, M: np.ndarray, N: int) -> None:
         self.M = M
@@ -98,7 +98,7 @@ def search_size(n: int, d: int, w: int, m: int, *, moves: int = 200_000,
                      M: np.ndarray | None = None,
                      start: list[int] | None = None,
                      walk: float = 0.3) -> tuple[list[int], int]:
-    """Cerca un code di `m` words. Restituisce (words, violations minime seen)."""
+    """Look for a code of `m` words. Returns (words, fewest violations seen)."""
     all_items = _all_words(n, w) if all_items is None else all_items
     N = len(all_items)
     if m > N:
@@ -111,7 +111,7 @@ def search_size(n: int, d: int, w: int, m: int, *, moves: int = 200_000,
                 else [int(x) for x in rng.choice(N, size=m, replace=False)])
     for i in start_point[:m]:
         s.add(int(i))
-    while int(s.inside.sum()) < m:            # complete scegliendo il meno in conflitto
+    while int(s.inside.sum()) < m:            # complete by choosing the least conflicted
         cost = np.where(s.inside, 1 << 30, s.count)
         s.add(int(rng.choice(np.flatnonzero(cost == cost.min()))))
 
@@ -142,17 +142,17 @@ def search_size(n: int, d: int, w: int, m: int, *, moves: int = 200_000,
     return [int(all_items[i]) for i in best_list], best
 
 
-def climb(n: int, d: int, w: int, da: list[int], fino_a: int, *,
+def climb(n: int, d: int, w: int, start_from: list[int], up_to: int, *,
          moves_per_step: int = 100_000, seed: int = 0,
          attempts: int = 4) -> dict:
-    """Da un code valid, one word alla volta fino a `fino_a` (o finché riesce)."""
+    """From a valid code, one word at a time up to `up_to` (or as far as it can)."""
     all_items = _all_words(n, w)
     M = conflict_matrix(all_items, d)
     position = {int(p): k for k, p in enumerate(all_items)}
     words = sorted(da)
     rng = np.random.default_rng(seed)
     steps: dict[int, str] = {}
-    while len(words) < fino_a:
+    while len(words) < up_to:
         milestone = len(words) + 1
         base = [position[p] for p in words]
         won = None
@@ -171,4 +171,4 @@ def climb(n: int, d: int, w: int, da: list[int], fino_a: int, *,
         words = sorted(won)
     v = fast_check(words, n, d, w)
     return {"size": len(words), "valid": v.ok, "steps": steps,
-            "words": words if v.ok else [], "goal": fino_a}
+            "words": words if v.ok else [], "goal": up_to}

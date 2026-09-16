@@ -1,36 +1,36 @@
 """
 Kramer–Mesner: group prescritto + programmazione lineare intera **esatta**.
 
-PERCHÉ QUESTO È LO STRUMENTO GIUSTO, E LE EURISTICHE NON LO SONO
+WHY THIS IS THE RIGHT TOOL, AND HEURISTICS ARE NOT
 ----------------------------------------------------------------
-Un code a weight costante con d even è un oggetto di teoria dei disegni. Posto
+A constant-weight code with even d is an object of design theory. Setting
 t = w − d/2, two words possono condividere al maximum t positions, cioè
 
-    **ogni sottoinsieme di t+1 positions sta in al maximum one word.**
+    **every subset of t+1 positions lies in at most one word.**
 
-Per A(27,8,5) si ha t = 1: sono i sottoinsiemi di 5 elementi di un insieme di 27, a
-two a two intersecantisi in al maximum un punto. È il **number di pacchetto**
-D(27,5,2), e il limit di Schönheim dà 32 mentre la tabella pubblica 31. La domanda
-non è vaga: **D(27,5,2) vale 31 o 32?**
+For A(27,8,5) we have t = 1: these are the 5-element subsets of a 27-element set,
+pairwise meeting in at most one point. It is the **packing number**
+D(27,5,2), and Schönheim's bound gives 32 while the table publishes 31. The
+question is not vague: **is D(27,5,2) 31 or 32?**
 
-Messo così diventa un problem di *set packing*, cioè un ILP:
+Put that way it becomes a *set packing* problem, that is an ILP:
 
-    variables   z_B ∈ {0,1} per ogni word candidata B
-    vincoli     per ogni (t+1)-sottoinsieme S:  Σ_{B ⊇ S} z_B ≤ 1
+    variables    z_B ∈ {0,1} for each candidate word B
+    constraints  for each (t+1)-subset S:  Σ_{B ⊇ S} z_B ≤ 1
     goal   massimizzare Σ z_B
 
-Con un **group prescritto** G l'ILP si riduce enormemente: si cercano *orbits*
-invece di words, e per simmetria basta **un vincolo per orbit di
+With a **prescribed group** G the ILP shrinks enormously: one looks for *orbits*
+instead of words, and by symmetry **one constraint per orbit of
 (t+1)-sottoinsiemi**. Su A(27,8,5) below Z27 si passa da 80.730 variables e 351
 vincoli a 2.990 variables e 13 vincoli.
 
-**La differenza che count:** l'ILP non restituisce «ho found», restituisce
-«questo è il maximum». Il maximum code G-invariante diventa un fatto dimostrato,
-non un result di ricerca. Una euristica non potrà mai dire «32 è impossibile below
-Z27»; questo sì.
+**The difference that counts:** the ILP does not return "I found one", it returns
+"this is the maximum". The maximum G-invariant code becomes a proved fact, not a
+search result. A heuristic can never say "32 is impossible under Z27"; this can.
 
-Il solutore è HiGHS, libero e su one macchina sola — il caso che nel piano avevo
-chiamato «un'arma che possiamo prendere also noi», non one barriera.
+
+The solver is HiGHS, free and on a single machine — the case the plan called "a
+weapon we can pick up too", not a barrier.
 """
 from __future__ import annotations
 
@@ -43,7 +43,7 @@ from codes import fast_check
 
 
 def orbit_subsets(n: int, size: int, group) -> tuple[list[tuple], dict]:
-    """Le orbits dei sottoinsiemi di `size` points, e la mapping insieme -> orbit."""
+    """The orbits of the subsets of `size` points, and the map subset -> orbit."""
     whose: dict[tuple, int] = {}
     representatives: list[tuple] = []
     for S in combinations(range(n), size):
@@ -57,7 +57,7 @@ def orbit_subsets(n: int, size: int, group) -> tuple[list[tuple], dict]:
 
 
 def word_orbits(n: int, w: int, group) -> list[tuple[int, ...]]:
-    """Le orbits delle words di weight w, come tuple di supports."""
+    """The orbits of the words of weight w, as tuples of supports."""
     seen = set()
     outside = []
     for S in combinations(range(n), w):
@@ -71,22 +71,22 @@ def word_orbits(n: int, w: int, group) -> list[tuple[int, ...]]:
 
 def solve(n: int, d: int, w: int, group, *, seconds: float = 300.0,
             silence: bool = True) -> dict:
-    """Il maximum code G-invariante, per ILP exact. Restituisce also se è ottimo."""
+    """The maximum G-invariant code, by exact ILP. It also says whether it is optimal."""
     if d % 2:
-        raise ValueError("serve d even")
+        raise ValueError("even d is required")
     t = w - d // 2
     if t < 0:
-        return {"size": 0, "ottimo": True, "note": "d troppo grande"}
+        return {"size": 0, "optimal": True, "note": "d too large"}
     if t >= w:
-        return {"size": 0, "ottimo": False, "note": "nessun vincolo"}
+        return {"size": 0, "optimal": False, "note": "no constraint"}
 
     orbits = word_orbits(n, w, group)
     _, whose = orbit_subsets(n, t + 1, group)
     n_constraints = max(whose.values()) + 1
 
-    # coefficiente: how_many words dell'orbit contengono un dato (t+1)-sottoinsieme.
-    # Per simmetria basta un vincolo per orbit di sottoinsiemi, e come
-    # rappresentante si prende un qualunque S della classe.
+    # coefficient: how many words of the orbit contain a given (t+1)-subset.
+    # By symmetry one constraint per orbit of subsets suffices, and any S of the
+    # class serves as representative.
     coef = np.zeros((n_constraints, len(orbits)), dtype=np.float64)
     sample: dict[int, tuple] = {}
     for S, o in whose.items():
@@ -123,7 +123,7 @@ def solve(n: int, d: int, w: int, group, *, seconds: float = 300.0,
     words = sorted(sum(1 << i for i in b) for b in supports)
     v = fast_check(words, n, d, w)
     return {"size": len(words),
-            "ottimo": h.modelStatusToString(state) == "Optimal",
+            "optimal": h.modelStatusToString(state) == "Optimal",
             "state": h.modelStatusToString(state),
             "limite_lp": round(-h.getInfo().mip_dual_bound, 3),
             "orbits": len(orbits), "vincoli": n_constraints,
@@ -133,23 +133,23 @@ def solve(n: int, d: int, w: int, group, *, seconds: float = 300.0,
 
 def risolvi_completo(n: int, d: int, w: int, *, seconds: float = 1800.0,
                      silence: bool = False, threshold: int | None = None) -> dict:
-    """L'ILP **senza group prescritto**: all_items le words, all_items i vincoli.
+    """The ILP **without a prescribed group**: every word, every constraint.
 
-    PERCHÉ VALE LA PENA
+    WHY IT IS WORTH IT
     -------------------
-    Per A(27,8,5) sono 80.730 variables binarie e 351 vincoli (one per coppia di
-    points). È un *set packing* puro, la forma su cui i solutori moderni sono più
+    For A(27,8,5) that is 80,730 binary variables and 351 constraints (one per pair
+    of points). It is pure *set packing*, the form modern solvers are most
     forti. E l'result è decisivo in **entrambi** i sensi:
 
-      * se trova un code di 32 words, allora D(27,5,2) = 32 e la cell è chiusa;
-      * se dimostra che 31 è l'ottimo, allora D(27,5,2) = 31 e la cell è chiusa
+      * if it finds a code of 32 words, then D(27,5,2) = 32 and the cell is closed;
+      * if it proves 31 is optimal, then D(27,5,2) = 31 and the cell is closed
         ugualmente.
 
-    La tabella oggi dice «fra 31 e 32». Qualunque delle two risposte la determina.
-    Un'euristica non può dare la seconda; un ILP sì.
+    The table today says "between 31 and 32". Either answer settles it.
+    A heuristic cannot give the second; an ILP can.
 
-    `threshold`: se data, si aggiunge il vincolo Σ z ≥ threshold. Chiedere «esiste un
-    code di 32?» invece di «qual è il maximum?» è spesso molto più facile per il
+    `threshold`: if given, the constraint Σ z ≥ threshold is added. Asking "is there
+    a code of 32?" instead of "what is the maximum?" is often far easier for the
     solutore, perché basta trovarne one o dimostrare l'infattibilità.
     """
     t = w - d // 2
@@ -191,7 +191,7 @@ def risolvi_completo(n: int, d: int, w: int, *, seconds: float = 1800.0,
     words = sorted(sum(1 << i for i in B) for B in choices)
     v = fast_check(words, n, d, w) if words else None
     return {"size": len(words), "state": state,
-            "ottimo": state == "Optimal",
+            "optimal": state == "Optimal",
             "infattibile": state == "Infeasible",
             "limite_lp": round(-h.getInfo().mip_dual_bound, 3),
             "variables": len(supports), "vincoli": len(lines),
