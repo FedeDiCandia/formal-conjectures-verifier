@@ -51,7 +51,7 @@ from index import ProblemIndex         # noqa: E402
 AUTHOR = """You are a research mathematician. You will be given one open problem, \
 stated in Lean 4 and in English.
 
-Your task: **trials it or disprove it, in natural language.** No Lean, no code, no \
+Your task: **prove it or disprove it, in natural language.** No Lean, no code, no \
 tools — just mathematics, written the way you would write it for a colleague who \
 will check every step.
 
@@ -60,7 +60,7 @@ Rules that matter:
 - If you see a proof, give it in full. Do not sketch: a sketch cannot be checked.
 - If you see a counterexample, give the object explicitly and verify the required \
 properties by hand.
-- If you can only trials a special case or a weaker statement, do that and say \
+- If you can only prove a special case or a weaker statement, do that and say \
 exactly what you proved and what you did not.
 - **Never** present a heuristic, a plausibility argument, or a numerical check as \
 a proof. Saying "this is what I could not do" is worth more than a gap dressed up \
@@ -84,11 +84,11 @@ look right.
 
 Check, in this order:
 
-1. **Does it trials the stated theorem?** Compare the Lean statement with what the \
+1. **Does it prove the stated theorem?** Compare the Lean statement with what the \
 author actually proved: a quantifier moved, a hypothesis added, a special case \
 silently assumed — these are the usual failures.
 2. **Is any step circular?** Does it use the conjecture, or a known-equivalent \
-form of it, to trials itself?
+form of it, to prove itself?
 3. **Is any step a heuristic in disguise?** "For large n this behaves like…", \
 "the probability that…", "one expects…" are not steps.
 4. **Is every existence claim constructive or justified?** "There must exist…" \

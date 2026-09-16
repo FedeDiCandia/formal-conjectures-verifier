@@ -110,7 +110,7 @@ def test_exact_suggests_a_lemma(inspection):
 def test_errors_arrive_with_the_goal_state(inspection):
     """Without the goal state an error does not say what to do."""
     assert "error" in inspection.messages
-    assert "omega could not trials the goal" in inspection.messages
+    assert "omega could not prove the goal" in inspection.messages
     assert "4 ≤ a ≤ 6" in inspection.messages, \
         "the counterexample omega found is the useful information"
 
@@ -119,7 +119,7 @@ def test_the_messages_are_not_truncated(inspection):
     assert not inspection.truncated
 
 
-def test_l_esplorazione_gira_isolata(inspection):
+def test_the_exploration_runs_isolated(inspection):
     assert inspection.isolated, "it has to run inside sandbox-exec"
 
 

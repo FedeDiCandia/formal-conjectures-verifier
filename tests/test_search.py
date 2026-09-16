@@ -120,9 +120,9 @@ def test_resuming_starts_from_where_it_got_to(tmp_path):
     r.variables = {"UP_TO": reached + 30, "PAUSE": 0.001}
     second = r.run(verbose=False)
     assert second.completed
-    assert second.position == arrivato + 30
+    assert second.position == reached + 30
     # had it started over, the time would have been far longer
-    assert second.examined == arrivato + 30
+    assert second.examined == reached + 30
 
 
 def test_riprendi_falso_ricomincia_da_capo(tmp_path):

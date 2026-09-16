@@ -131,7 +131,7 @@ def load_env() -> None:
 INSTRUCTIONS = """You are working on the `formal-conjectures` benchmark (Google DeepMind), \
 proving theorems in Lean 4 with Mathlib.
 
-You will be given one theorem to trials. Your answer is judged by a program, not \
+You will be given one theorem to prove. Your answer is judged by a program, not \
 by a person, so the rules below are absolute.
 
 # What you must produce
@@ -176,7 +176,7 @@ which the kernel checks);
 or any other construct that runs code or disables checks.
 
 Helper lemmas of your own are welcome — declare them before the theorem, with \
-fresh names, and trials them properly.
+fresh names, and prove them properly.
 
 # How to work
 
@@ -318,7 +318,7 @@ def problem_message(problem: Problem, file_text: str) -> str:
     description = (problem.docstring or "").strip()
     return f"""# The problem
 
-**Theorem to trials:** `{problem.theorem}`
+**Theorem to prove:** `{problem.theorem}`
 **Module it lives in:** `{problem.module}` (do NOT import this)
 **Category:** {problem.category}
 
