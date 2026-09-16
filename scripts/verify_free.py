@@ -40,10 +40,10 @@ def main() -> int:
     if a.report:
         Path(a.report).write_text(json.dumps({
             "result": r.status, "seconds": round(r.duration_s, 1),
-            "controlli": [{"name": c.name, "exceeded": c.passed, "detail": c.detail}
+            "checks": [{"name": c.name, "passed": c.passed, "detail": c.detail}
                           for c in r.checks],
             "message": r.message, "errors": r.errors,
-            "uscita_comparator": r.raw_output[-6000:]}, indent=1, ensure_ascii=False))
+            "comparator_output": r.raw_output[-6000:]}, indent=1, ensure_ascii=False))
     return 0 if r.status == "ACCEPTED" or r.status.upper().startswith("ACC") else 1
 
 

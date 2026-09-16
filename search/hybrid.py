@@ -86,14 +86,14 @@ def extend(words: list[int], all_items: np.ndarray, d: int) -> list[int]:
         choices = np.append(choices, all_items[permitted[0]])
 
 
-def da_gruppo(n: int, d: int, w: int, goal: int, *, iterations: int = 30_000,
+def from_group(n: int, d: int, w: int, goal: int, *, iterations: int = 30_000,
               seeds: int = 3, restarts: int = 300) -> dict:
-    """Cerca `goal` words partendo dal miglior code invariante."""
+    """Look for `goal` words starting from the best invariant code."""
     all_items = _all_words(n, w)
     position = word_index(all_items)
     word_seed, group = best_invariant(n, d, w, restarts=restarts)
     word_seed = extend(word_seed, all_items, d)
-    result = {"invariante": len(word_seed), "group": group,
+    result = {"invariant": len(word_seed), "group": group,
              "goal": goal}
     if len(word_seed) >= goal:
         words = sorted(word_seed)[:goal]
@@ -122,10 +122,10 @@ def da_gruppo(n: int, d: int, w: int, goal: int, *, iterations: int = 30_000,
     return result
 
 
-def sali_a_gradini(n: int, d: int, w: int, goal: int, *,
+def climb_in_steps(n: int, d: int, w: int, goal: int, *,
                    iterations_per_step: int = 4_000, restarts: int = 300,
-                   pazienza: int = 3) -> dict:
-    """Dal code invariante all'goal, **one word alla volta**.
+                   patience: int = 3) -> dict:
+    """From the invariant code to the target, **one word at a time**.
 
     WHY IN STEPS, AND NOT IN ONE LEAP
     -----------------------------------
@@ -133,26 +133,26 @@ def sali_a_gradini(n: int, d: int, w: int, goal: int, *,
     missing up to the target leaves many violations the repair cannot clear — on
     A(17,6,6) the leap from 85 to 113 leaves 63 violations. Adding one word at a
     time, every repair starts from a **valid** configuration and has very little to
-    fix. It is the difference between solving a problem and
-    risolverne ventotto insieme.
+    fix. It is the difference between solving one problem and solving
+    twenty-eight of them at once.
 
-    Si sale finché si riesce; after `pazienza` steps failed di fila si smette e si
-    returns the best valid code reached.
+    It climbs as long as it can; after `patience` failed steps in a row it stops
+    and returns the best valid code reached.
     """
     all_items = _all_words(n, w)
     position = word_index(all_items)
     words, group = best_invariant(n, d, w, restarts=restarts)
     words = extend(words, all_items, d)
-    history = {"invariante": len(words), "group": group, "steps": {}}
+    history = {"invariant": len(words), "group": group, "steps": {}}
     rng = np.random.default_rng(0)
     failed = 0
 
-    while len(words) < goal and failed < pazienza:
+    while len(words) < goal and failed < patience:
         milestone = len(words) + 1
         base = [position[p] for p in words]
         free = np.setdiff1d(np.arange(len(all_items)), np.array(base, dtype=np.int64))
         won = None
-        for attempt in range(pazienza):
+        for attempt in range(patience):
             extra = int(rng.choice(free))
             new_items, violations = size_trial(
                 n, d, w, milestone, iterations=iterations_per_step,

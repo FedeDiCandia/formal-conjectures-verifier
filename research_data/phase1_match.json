@@ -1,1136 +1,1136 @@
 [
  {
-  "cella": "A(6,4,3)",
-  "kind": "esatto",
-  "valore": 4,
+  "cell": "A(6,4,3)",
+  "kind": "exact",
+  "value": 4,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(7,4,3)",
-  "kind": "esatto",
-  "valore": 7,
+  "cell": "A(7,4,3)",
+  "kind": "exact",
+  "value": 7,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(8,4,3)",
-  "kind": "esatto",
-  "valore": 8,
+  "cell": "A(8,4,3)",
+  "kind": "exact",
+  "value": 8,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(9,4,3)",
-  "kind": "esatto",
-  "valore": 12,
+  "cell": "A(9,4,3)",
+  "kind": "exact",
+  "value": 12,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(10,4,3)",
-  "kind": "esatto",
-  "valore": 13,
+  "cell": "A(10,4,3)",
+  "kind": "exact",
+  "value": 13,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(8,4,4)",
-  "kind": "esatto",
-  "valore": 14,
+  "cell": "A(8,4,4)",
+  "kind": "exact",
+  "value": 14,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(11,4,3)",
-  "kind": "esatto",
-  "valore": 17,
+  "cell": "A(11,4,3)",
+  "kind": "exact",
+  "value": 17,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(9,4,4)",
-  "kind": "esatto",
-  "valore": 18,
+  "cell": "A(9,4,4)",
+  "kind": "exact",
+  "value": 18,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(12,4,3)",
-  "kind": "esatto",
-  "valore": 20,
+  "cell": "A(12,4,3)",
+  "kind": "exact",
+  "value": 20,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(13,4,3)",
-  "kind": "esatto",
-  "valore": 26,
+  "cell": "A(13,4,3)",
+  "kind": "exact",
+  "value": 26,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(14,4,3)",
-  "kind": "esatto",
-  "valore": 28,
+  "cell": "A(14,4,3)",
+  "kind": "exact",
+  "value": 28,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(10,4,4)",
-  "kind": "esatto",
-  "valore": 30,
+  "cell": "A(10,4,4)",
+  "kind": "exact",
+  "value": 30,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(11,4,4)",
-  "kind": "esatto",
-  "valore": 35,
+  "cell": "A(11,4,4)",
+  "kind": "exact",
+  "value": 35,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(15,4,3)",
-  "kind": "esatto",
-  "valore": 35,
+  "cell": "A(15,4,3)",
+  "kind": "exact",
+  "value": 35,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(10,4,5)",
-  "kind": "esatto",
-  "valore": 36,
+  "cell": "A(10,4,5)",
+  "kind": "exact",
+  "value": 36,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(16,4,3)",
-  "kind": "esatto",
-  "valore": 37,
+  "cell": "A(16,4,3)",
+  "kind": "exact",
+  "value": 37,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(17,4,3)",
-  "kind": "esatto",
-  "valore": 44,
+  "cell": "A(17,4,3)",
+  "kind": "exact",
+  "value": 44,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(18,4,3)",
-  "kind": "esatto",
-  "valore": 48,
+  "cell": "A(18,4,3)",
+  "kind": "exact",
+  "value": 48,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(12,4,4)",
-  "kind": "esatto",
-  "valore": 51,
+  "cell": "A(12,4,4)",
+  "kind": "exact",
+  "value": 51,
   "reached": false,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(19,4,3)",
-  "kind": "esatto",
-  "valore": 57,
+  "cell": "A(19,4,3)",
+  "kind": "exact",
+  "value": 57,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(20,4,3)",
-  "kind": "esatto",
-  "valore": 60,
+  "cell": "A(20,4,3)",
+  "kind": "exact",
+  "value": 60,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(13,4,4)",
-  "kind": "esatto",
-  "valore": 65,
+  "cell": "A(13,4,4)",
+  "kind": "exact",
+  "value": 65,
   "reached": false,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(11,4,5)",
-  "kind": "esatto",
-  "valore": 66,
+  "cell": "A(11,4,5)",
+  "kind": "exact",
+  "value": 66,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(21,4,3)",
-  "kind": "esatto",
-  "valore": 70,
+  "cell": "A(21,4,3)",
+  "kind": "exact",
+  "value": 70,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(22,4,3)",
-  "kind": "esatto",
-  "valore": 73,
+  "cell": "A(22,4,3)",
+  "kind": "exact",
+  "value": 73,
   "reached": true,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(12,4,5)",
-  "kind": "esatto",
-  "valore": 80,
+  "cell": "A(12,4,5)",
+  "kind": "exact",
+  "value": 80,
   "reached": false,
-  "passed": false
+  "exceeded": false
  },
  {
-  "cella": "A(10,8,5)",
-  "kind": "aperto",
+  "cell": "A(10,8,5)",
+  "kind": "open",
   "published": 2,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(11,8,5)",
-  "kind": "aperto",
+  "cell": "A(11,8,5)",
+  "kind": "open",
   "published": 2,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(12,10,6)",
-  "kind": "aperto",
+  "cell": "A(12,10,6)",
+  "kind": "open",
   "published": 2,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(13,10,6)",
-  "kind": "aperto",
+  "cell": "A(13,10,6)",
+  "kind": "open",
   "published": 2,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(14,10,6)",
-  "kind": "aperto",
+  "cell": "A(14,10,6)",
+  "kind": "open",
   "published": 2,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(14,10,7)",
-  "kind": "aperto",
+  "cell": "A(14,10,7)",
+  "kind": "open",
   "published": 2,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(14,12,7)",
-  "kind": "aperto",
+  "cell": "A(14,12,7)",
+  "kind": "open",
   "published": 2,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(15,12,7)",
-  "kind": "aperto",
+  "cell": "A(15,12,7)",
+  "kind": "open",
   "published": 2,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(16,12,7)",
-  "kind": "aperto",
+  "cell": "A(16,12,7)",
+  "kind": "open",
   "published": 2,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(16,12,8)",
-  "kind": "aperto",
+  "cell": "A(16,12,8)",
+  "kind": "open",
   "published": 2,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(16,14,8)",
-  "kind": "aperto",
+  "cell": "A(16,14,8)",
+  "kind": "open",
   "published": 2,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(17,12,7)",
-  "kind": "aperto",
+  "cell": "A(17,12,7)",
+  "kind": "open",
   "published": 2,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(17,12,8)",
-  "kind": "aperto",
+  "cell": "A(17,12,8)",
+  "kind": "open",
   "published": 2,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(17,14,8)",
-  "kind": "aperto",
+  "cell": "A(17,14,8)",
+  "kind": "open",
   "published": 2,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(18,14,8)",
-  "kind": "aperto",
+  "cell": "A(18,14,8)",
+  "kind": "open",
   "published": 2,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(18,14,9)",
-  "kind": "aperto",
+  "cell": "A(18,14,9)",
+  "kind": "open",
   "published": 2,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(18,16,9)",
-  "kind": "aperto",
+  "cell": "A(18,16,9)",
+  "kind": "open",
   "published": 2,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(19,14,8)",
-  "kind": "aperto",
+  "cell": "A(19,14,8)",
+  "kind": "open",
   "published": 2,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(8,6,4)",
-  "kind": "aperto",
+  "cell": "A(8,6,4)",
+  "kind": "open",
   "published": 2,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(12,8,5)",
-  "kind": "aperto",
+  "cell": "A(12,8,5)",
+  "kind": "open",
   "published": 3,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(13,8,5)",
-  "kind": "aperto",
+  "cell": "A(13,8,5)",
+  "kind": "open",
   "published": 3,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(15,10,6)",
-  "kind": "aperto",
+  "cell": "A(15,10,6)",
+  "kind": "open",
   "published": 3,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(15,10,7)",
-  "kind": "aperto",
+  "cell": "A(15,10,7)",
+  "kind": "open",
   "published": 3,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(16,10,6)",
-  "kind": "aperto",
+  "cell": "A(16,10,6)",
+  "kind": "open",
   "published": 3,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(17,10,6)",
-  "kind": "aperto",
+  "cell": "A(17,10,6)",
+  "kind": "open",
   "published": 3,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(18,12,7)",
-  "kind": "aperto",
+  "cell": "A(18,12,7)",
+  "kind": "open",
   "published": 3,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(18,12,8)",
-  "kind": "aperto",
+  "cell": "A(18,12,8)",
+  "kind": "open",
   "published": 3,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "d"
  },
  {
-  "cella": "A(19,12,7)",
-  "kind": "aperto",
+  "cell": "A(19,12,7)",
+  "kind": "open",
   "published": 3,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(19,12,8)",
-  "kind": "aperto",
+  "cell": "A(19,12,8)",
+  "kind": "open",
   "published": 3,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(20,12,7)",
-  "kind": "aperto",
+  "cell": "A(20,12,7)",
+  "kind": "open",
   "published": 3,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(9,6,4)",
-  "kind": "aperto",
+  "cell": "A(9,6,4)",
+  "kind": "open",
   "published": 3,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(12,8,6)",
-  "kind": "aperto",
+  "cell": "A(12,8,6)",
+  "kind": "open",
   "published": 4,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "d"
  },
  {
-  "cella": "A(13,8,6)",
-  "kind": "aperto",
+  "cell": "A(13,8,6)",
+  "kind": "open",
   "published": 4,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(14,8,5)",
-  "kind": "aperto",
+  "cell": "A(14,8,5)",
+  "kind": "open",
   "published": 4,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(16,10,7)",
-  "kind": "aperto",
+  "cell": "A(16,10,7)",
+  "kind": "open",
   "published": 4,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(16,10,8)",
-  "kind": "aperto",
+  "cell": "A(16,10,8)",
+  "kind": "open",
   "published": 4,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(18,10,6)",
-  "kind": "aperto",
+  "cell": "A(18,10,6)",
+  "kind": "open",
   "published": 4,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(18,12,9)",
-  "kind": "aperto",
+  "cell": "A(18,12,9)",
+  "kind": "open",
   "published": 4,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "j"
  },
  {
-  "cella": "A(19,10,6)",
-  "kind": "aperto",
+  "cell": "A(19,10,6)",
+  "kind": "open",
   "published": 4,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(10,6,4)",
-  "kind": "aperto",
+  "cell": "A(10,6,4)",
+  "kind": "open",
   "published": 5,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(17,10,7)",
-  "kind": "aperto",
+  "cell": "A(17,10,7)",
+  "kind": "open",
   "published": 5,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(20,10,6)",
-  "kind": "aperto",
+  "cell": "A(20,10,6)",
+  "kind": "open",
   "published": 5,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(10,6,5)",
-  "kind": "aperto",
+  "cell": "A(10,6,5)",
+  "kind": "open",
   "published": 6,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(11,6,4)",
-  "kind": "aperto",
+  "cell": "A(11,6,4)",
+  "kind": "open",
   "published": 6,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(15,8,5)",
-  "kind": "aperto",
+  "cell": "A(15,8,5)",
+  "kind": "open",
   "published": 6,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(16,8,5)",
-  "kind": "aperto",
+  "cell": "A(16,8,5)",
+  "kind": "open",
   "published": 6,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(17,10,8)",
-  "kind": "aperto",
+  "cell": "A(17,10,8)",
+  "kind": "open",
   "published": 6,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(18,10,7)",
-  "kind": "aperto",
+  "cell": "A(18,10,7)",
+  "kind": "open",
   "published": 6,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(14,8,6)",
-  "kind": "aperto",
+  "cell": "A(14,8,6)",
+  "kind": "open",
   "published": 7,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(17,8,5)",
-  "kind": "aperto",
+  "cell": "A(17,8,5)",
+  "kind": "open",
   "published": 7,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(21,10,6)",
-  "kind": "aperto",
+  "cell": "A(21,10,6)",
+  "kind": "open",
   "published": 7,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(22,10,6)",
-  "kind": "aperto",
+  "cell": "A(22,10,6)",
+  "kind": "open",
   "published": 7,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(14,8,7)",
-  "kind": "aperto",
+  "cell": "A(14,8,7)",
+  "kind": "open",
   "published": 8,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(19,10,7)",
-  "kind": "aperto",
+  "cell": "A(19,10,7)",
+  "kind": "open",
   "published": 8,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(12,6,4)",
-  "kind": "aperto",
+  "cell": "A(12,6,4)",
+  "kind": "open",
   "published": 9,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(18,10,8)",
-  "kind": "aperto",
+  "cell": "A(18,10,8)",
+  "kind": "open",
   "published": 9,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(18,8,5)",
-  "kind": "aperto",
+  "cell": "A(18,8,5)",
+  "kind": "open",
   "published": 9,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(15,8,6)",
-  "kind": "aperto",
+  "cell": "A(15,8,6)",
+  "kind": "open",
   "published": 10,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(18,10,9)",
-  "kind": "aperto",
+  "cell": "A(18,10,9)",
+  "kind": "open",
   "published": 10,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(20,10,7)",
-  "kind": "aperto",
+  "cell": "A(20,10,7)",
+  "kind": "open",
   "published": 10,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(11,6,5)",
-  "kind": "aperto",
+  "cell": "A(11,6,5)",
+  "kind": "open",
   "published": 11,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(12,6,5)",
-  "kind": "aperto",
+  "cell": "A(12,6,5)",
+  "kind": "open",
   "published": 12,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(19,10,8)",
-  "kind": "aperto",
+  "cell": "A(19,10,8)",
+  "kind": "open",
   "published": 12,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(19,8,5)",
-  "kind": "aperto",
+  "cell": "A(19,8,5)",
+  "kind": "open",
   "published": 12,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(13,6,4)",
-  "kind": "aperto",
+  "cell": "A(13,6,4)",
+  "kind": "open",
   "published": 13,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(14,6,4)",
-  "kind": "aperto",
+  "cell": "A(14,6,4)",
+  "kind": "open",
   "published": 14,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(15,6,4)",
-  "kind": "aperto",
+  "cell": "A(15,6,4)",
+  "kind": "open",
   "published": 15,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(15,8,7)",
-  "kind": "aperto",
+  "cell": "A(15,8,7)",
+  "kind": "open",
   "published": 15,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(16,8,6)",
-  "kind": "aperto",
+  "cell": "A(16,8,6)",
+  "kind": "open",
   "published": 16,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(16,8,7)",
-  "kind": "aperto",
+  "cell": "A(16,8,7)",
+  "kind": "open",
   "published": 16,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(20,8,5)",
-  "kind": "aperto",
+  "cell": "A(20,8,5)",
+  "kind": "open",
   "published": 16,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(17,8,6)",
-  "kind": "aperto",
+  "cell": "A(17,8,6)",
+  "kind": "open",
   "published": 17,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(13,6,5)",
-  "kind": "aperto",
+  "cell": "A(13,6,5)",
+  "kind": "open",
   "published": 18,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(16,6,4)",
-  "kind": "aperto",
+  "cell": "A(16,6,4)",
+  "kind": "open",
   "published": 20,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(17,6,4)",
-  "kind": "aperto",
+  "cell": "A(17,6,4)",
+  "kind": "open",
   "published": 20,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(18,8,6)",
-  "kind": "aperto",
+  "cell": "A(18,8,6)",
+  "kind": "open",
   "published": 21,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(21,8,5)",
-  "kind": "aperto",
+  "cell": "A(21,8,5)",
+  "kind": "open",
   "published": 21,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(22,8,5)",
-  "kind": "aperto",
+  "cell": "A(22,8,5)",
+  "kind": "open",
   "published": 21,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(12,6,6)",
-  "kind": "aperto",
+  "cell": "A(12,6,6)",
+  "kind": "open",
   "published": 22,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "H"
  },
  {
-  "cella": "A(18,6,4)",
-  "kind": "aperto",
+  "cell": "A(18,6,4)",
+  "kind": "open",
   "published": 22,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(23,8,5)",
-  "kind": "aperto",
+  "cell": "A(23,8,5)",
+  "kind": "open",
   "published": 23,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(17,8,7)",
-  "kind": "aperto",
+  "cell": "A(17,8,7)",
+  "kind": "open",
   "published": 24,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(24,8,5)",
-  "kind": "aperto",
+  "cell": "A(24,8,5)",
+  "kind": "open",
   "published": 24,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(19,6,4)",
-  "kind": "aperto",
+  "cell": "A(19,6,4)",
+  "kind": "open",
   "published": 25,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(13,6,6)",
-  "kind": "aperto",
+  "cell": "A(13,6,6)",
+  "kind": "open",
   "published": 26,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(14,6,5)",
-  "kind": "aperto",
+  "cell": "A(14,6,5)",
+  "kind": "open",
   "published": 28,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(19,8,6)",
-  "kind": "aperto",
+  "cell": "A(19,8,6)",
+  "kind": "open",
   "published": 28,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(16,8,8)",
-  "kind": "aperto",
+  "cell": "A(16,8,8)",
+  "kind": "open",
   "published": 30,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "H"
  },
  {
-  "cella": "A(20,6,4)",
-  "kind": "aperto",
+  "cell": "A(20,6,4)",
+  "kind": "open",
   "published": 30,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(25,8,5)",
-  "kind": "aperto",
+  "cell": "A(25,8,5)",
+  "kind": "open",
   "published": 30,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(26,8,5)",
-  "kind": "aperto",
+  "cell": "A(26,8,5)",
+  "kind": "open",
   "published": 30,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(21,6,4)",
-  "kind": "aperto",
+  "cell": "A(21,6,4)",
+  "kind": "open",
   "published": 31,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(18,8,7)",
-  "kind": "aperto",
+  "cell": "A(18,8,7)",
+  "kind": "open",
   "published": 33,
   "upper": null,
-  "state": "SOTTO",
-  "source": "Ö"
+  "state": "BELOW",
+  "source": "\u00d6"
  },
  {
-  "cella": "A(17,8,8)",
-  "kind": "aperto",
+  "cell": "A(17,8,8)",
+  "kind": "open",
   "published": 34,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(22,6,4)",
-  "kind": "aperto",
+  "cell": "A(22,6,4)",
+  "kind": "open",
   "published": 37,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(20,8,6)",
-  "kind": "aperto",
+  "cell": "A(20,8,6)",
+  "kind": "open",
   "published": 40,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(23,6,4)",
-  "kind": "aperto",
+  "cell": "A(23,6,4)",
+  "kind": "open",
   "published": 40,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(14,6,6)",
-  "kind": "aperto",
+  "cell": "A(14,6,6)",
+  "kind": "open",
   "published": 42,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(14,6,7)",
-  "kind": "aperto",
+  "cell": "A(14,6,7)",
+  "kind": "open",
   "published": 42,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(15,6,5)",
-  "kind": "aperto",
+  "cell": "A(15,6,5)",
+  "kind": "open",
   "published": 42,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(24,6,4)",
-  "kind": "aperto",
+  "cell": "A(24,6,4)",
+  "kind": "open",
   "published": 42,
   "upper": null,
-  "state": "PAREGGIATO",
+  "state": "MATCHED",
   "source": "BSSS"
  },
  {
-  "cella": "A(18,8,8)",
-  "kind": "aperto",
+  "cell": "A(18,8,8)",
+  "kind": "open",
   "published": 46,
   "upper": 49,
-  "state": "SOTTO",
-  "source": "Ö"
+  "state": "BELOW",
+  "source": "\u00d6"
  },
  {
-  "cella": "A(16,6,5)",
-  "kind": "aperto",
+  "cell": "A(16,6,5)",
+  "kind": "open",
   "published": 48,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(18,8,9)",
-  "kind": "aperto",
+  "cell": "A(18,8,9)",
+  "kind": "open",
   "published": 48,
   "upper": 58,
-  "state": "SOTTO",
-  "source": "sbÖ"
+  "state": "BELOW",
+  "source": "sb\u00d6"
  },
  {
-  "cella": "A(25,6,4)",
-  "kind": "aperto",
+  "cell": "A(25,6,4)",
+  "kind": "open",
   "published": 50,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(19,8,7)",
-  "kind": "aperto",
+  "cell": "A(19,8,7)",
+  "kind": "open",
   "published": 52,
   "upper": null,
-  "state": "SOTTO",
-  "source": "Ö"
+  "state": "BELOW",
+  "source": "\u00d6"
  },
  {
-  "cella": "A(26,6,4)",
-  "kind": "aperto",
+  "cell": "A(26,6,4)",
+  "kind": "open",
   "published": 52,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(27,6,4)",
-  "kind": "aperto",
+  "cell": "A(27,6,4)",
+  "kind": "open",
   "published": 54,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(21,8,6)",
-  "kind": "aperto",
+  "cell": "A(21,8,6)",
+  "kind": "open",
   "published": 56,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(28,6,4)",
-  "kind": "aperto",
+  "cell": "A(28,6,4)",
+  "kind": "open",
   "published": 63,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(29,6,4)",
-  "kind": "aperto",
+  "cell": "A(29,6,4)",
+  "kind": "open",
   "published": 65,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(17,6,5)",
-  "kind": "aperto",
+  "cell": "A(17,6,5)",
+  "kind": "open",
   "published": 68,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(15,6,7)",
-  "kind": "aperto",
+  "cell": "A(15,6,7)",
+  "kind": "open",
   "published": 69,
   "upper": null,
-  "state": "SOTTO",
-  "source": "G Ö"
+  "state": "BELOW",
+  "source": "G \u00d6"
  },
  {
-  "cella": "A(18,6,5)",
-  "kind": "aperto",
+  "cell": "A(18,6,5)",
+  "kind": "open",
   "published": 69,
   "upper": 72,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "ACL"
  },
  {
-  "cella": "A(15,6,6)",
-  "kind": "aperto",
+  "cell": "A(15,6,6)",
+  "kind": "open",
   "published": 70,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(19,6,5)",
-  "kind": "aperto",
+  "cell": "A(19,6,5)",
+  "kind": "open",
   "published": 76,
   "upper": 83,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(22,8,6)",
-  "kind": "aperto",
+  "cell": "A(22,8,6)",
+  "kind": "open",
   "published": 77,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  },
  {
-  "cella": "A(19,8,8)",
-  "kind": "aperto",
+  "cell": "A(19,8,8)",
+  "kind": "open",
   "published": 78,
   "upper": null,
-  "state": "SOTTO",
-  "source": "Ö"
+  "state": "BELOW",
+  "source": "\u00d6"
  },
  {
-  "cella": "A(20,8,7)",
-  "kind": "aperto",
+  "cell": "A(20,8,7)",
+  "kind": "open",
   "published": 80,
   "upper": null,
-  "state": "SOTTO",
+  "state": "BELOW",
   "source": "BSSS"
  }
 ]

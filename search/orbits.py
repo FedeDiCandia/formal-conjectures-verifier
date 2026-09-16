@@ -17,17 +17,17 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-_CICLO = re.compile(r"\(([^)]*)\)")
+_CYCLE = re.compile(r"\(([^)]*)\)")
 
 
 def read_permutation(line: str, n: int) -> tuple[int, ...]:
     """From cycle notation to a tuple `p` with `p[i]` = the image of `i`."""
     p = list(range(n))
-    for body in _CICLO.findall(line):
+    for body in _CYCLE.findall(line):
         points = [int(x) for x in body.replace(",", " ").split()]
         for a, b in zip(points, points[1:] + points[:1]):
             if not (0 <= a < n and 0 <= b < n):
-                raise ValueError(f"punto outside intervallo in {line!r} (n={n})")
+                raise ValueError(f"point out of range in {line!r} (n={n})")
             p[a] = b
     return tuple(p)
 
@@ -47,7 +47,7 @@ def closure(generators: list[tuple[int, ...]], n: int,
                     seen.add(r)
                     new.append(r)
                     if len(seen) > maximum:
-                        raise ValueError(f"group troppo grande (> {maximum})")
+                        raise ValueError(f"group too large (> {maximum})")
         frontier = new
     return sorted(seen)
 
@@ -60,7 +60,7 @@ def apply(p: tuple[int, ...], word: int) -> int:
     combinations were tried (string as written or reversed, permutation or its
     inverse), and only this one reproduces the published record A(24,6,12) >= 5558;
     the others give 8750 words with pairs at distance 4. The convention is not
-    documentata sul sito: e' stata dedotta verificando.
+    documented on the site: it was deduced by checking.
     """
     outside = 0
     for i in range(len(p)):
@@ -99,9 +99,9 @@ def rotation(n: int, sizes: list[int]) -> tuple[int, ...]:
 
     Blocks are counted from the **left of the bit string**, that is from the high
     positions: `cycle 1 24` on n=25 means that the first character written
-    e' fisso e i 24 seguenti ruotano. Contandoli dall'altra parte i conteggi
-    come out right but the codes turn out invalid — that is how the error came
-    outside.
+    stays fixed and the following 24 rotate. Counting them from the other end the
+    counts come out right but the codes turn out invalid — that is how the error
+    came to light.
     """
     p = list(range(n))
     high = n
@@ -136,7 +136,7 @@ def expand_cyclic(path: str | Path) -> tuple[list[int], int, dict]:
     for s in (int(r, 2) for r in seed_text):
         for p in group:
             words.add(apply(p, s))
-    info = {"n": n, "generators": 1, "ordine_gruppo": len(group),
+    info = {"n": n, "generators": 1, "group_order": len(group),
             "seeds": len(seed_text), "words": len(words), "blocks": sizes,
             "righe_scartate": len(discarded)}
     return sorted(words), n, info
@@ -161,7 +161,7 @@ def expand(path: str | Path) -> tuple[list[int], int, dict]:
     seeds = []
     for r in seed_text:
         if len(r) != n or any(c not in "01" for c in r):
-            raise ValueError(f"{path}: seed di length diversa: {r[:40]!r}")
+            raise ValueError(f"{path}: seed of a different length: {r[:40]!r}")
         seeds.append(int(r, 2))
 
     gen = [read_permutation(r, n) for r in lines[1:sep] if "(" in r]
@@ -171,6 +171,6 @@ def expand(path: str | Path) -> tuple[list[int], int, dict]:
     for s in seeds:
         for p in group:
             words.add(apply(p, s))
-    info = {"n": n, "generators": len(gen), "ordine_gruppo": len(group),
+    info = {"n": n, "generators": len(gen), "group_order": len(group),
             "seeds": len(seeds), "words": len(words)}
     return sorted(words), n, info

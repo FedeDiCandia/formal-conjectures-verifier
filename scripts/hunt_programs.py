@@ -16,15 +16,14 @@ finding, which is worse than no finding.
 #   True ↔ ∀ n, Squarefree (Euclid n)      with Euclid n = p_n# + 1
 #
 # KNOWN STATE (searched on the web on 2026-09-10): whether every Euclid number is
-# squarefree is open. No published systematic search for counterexamples
-# sistematica di counterexamples.
+# squarefree is open. No published systematic search for counterexamples was
+# found.
 #
 # HOW IT IS SEARCHED: if p² divides p_n# + 1 then p does not divide p_n#, so p is
 # greater than p_n. For each prime p the primorial is computed mod p², multiplying one
 # prime q < p at a time, and we watch for it becoming −1 mod p². Cost: about π(p)
 # operations per p, that is P²/(2 ln²P) in total. For P = 10^6 that is a couple of
-# billion multiplications: hours, not
-# giorni.
+# billion multiplications: hours, not days.
 EUCLID = r'''
 import json, os, signal, sys, time
 
@@ -48,14 +47,14 @@ for q in pr[:7]:
     acc *= q
     computed.append(acc + 1)
 if computed != expected:
-    print(json.dumps({"event": "collaudo_fallito",
-                      "expected": expected, "calcolato": computed}), flush=True)
+    print(json.dumps({"event": "shakedown_failed",
+                      "expected": expected, "calculated": computed}), flush=True)
     sys.exit(1)
 # 30031 = 59 * 509: the sixth Euclid number is NOT prime (but it is squarefree)
 if 30031 % 59 != 0:
-    print(json.dumps({"event": "collaudo_fallito", "detail": "30031 = 59*509"}), flush=True)
+    print(json.dumps({"event": "shakedown_failed", "detail": "30031 = 59*509"}), flush=True)
     sys.exit(1)
-print(json.dumps({"event": "shakedown", "result": "exceeded",
+print(json.dumps({"event": "shakedown", "result": "passed",
                   "checked": "the first 7 Euclid numbers and the factorisation of 30031"}),
       flush=True)
 
@@ -100,11 +99,11 @@ for i in range(index_start, len(primes)):
     p2 = p * p
     acc = 1
     # the primorial mod p^2, one prime q < p at a time
-    for j in range(i):          # all_items i primes q < p
+    for j in range(i):          # every prime q < p
         acc = (acc * primes[j]) % p2
-        if acc == p2 - 1:       # acc ≡ -1 (mod p^2), cioe' p^2 | p_n# + 1
-            found.append({"p": p, "indice_primoriale": j + 1,
-                            "ultimo_primo_del_primoriale": primes[j]})
+        if acc == p2 - 1:       # acc ≡ -1 (mod p^2), that is p^2 | p_n# + 1
+            found.append({"p": p, "primorial_index": j + 1,
+                            "last_prime_of_the_primorial": primes[j]})
             print(json.dumps({"event": "found",
                               "detail": found[-1]}), flush=True)
     examined += 1
@@ -173,18 +172,18 @@ def is_prime(n):
 expected = [1, 3, 4, 7, 6, 12, 8, 15, 13, 18]
 computed = [sigma(n) for n in range(1, 11)]
 if computed != expected:
-    print(json.dumps({"event": "collaudo_fallito", "expected": expected,
-                      "calcolato": computed}), flush=True)
+    print(json.dumps({"event": "shakedown_failed", "expected": expected,
+                      "calculated": computed}), flush=True)
     sys.exit(1)
 # sigma(28) = 56 because 28 is perfect
 if sigma(28) != 56:
-    print(json.dumps({"event": "collaudo_fallito", "detail": "sigma(28)"}), flush=True)
+    print(json.dumps({"event": "shakedown_failed", "detail": "sigma(28)"}), flush=True)
     sys.exit(1)
 if [n for n in range(2, 30) if is_prime(n)] != [2,3,5,7,11,13,17,19,23,29]:
-    print(json.dumps({"event": "collaudo_fallito", "detail": "primalita'"}), flush=True)
+    print(json.dumps({"event": "shakedown_failed", "detail": "primality"}), flush=True)
     sys.exit(1)
-print(json.dumps({"event": "shakedown", "result": "exceeded",
-                  "controllati": "sigma(1..10), sigma(28)=56, primes below 30"}), flush=True)
+print(json.dumps({"event": "shakedown", "result": "passed",
+                  "checked": "sigma(1..10), sigma(28)=56, primes below 30"}), flush=True)
 
 # --- the search -----------------------------------------------------------------
 checkpoint = os.environ["SEARCH_CHECKPOINT"]
@@ -226,18 +225,18 @@ while n <= UP_TO and not stopped:
             result = ("first", step, m)
             break
         if m in seen:
-            result = ("ciclo", step, m)
+            result = ("cycle", step, m)
             break
         seen.add(m)
         m = sigma(m) - 1
-        if m > MAX_VALORE:
-            result = ("troppo_grande", step, m)
+        if m > MAX_VALUE:
+            result = ("too_large", step, m)
             break
         if m <= 1:
-            result = ("degenere", step, m)
+            result = ("degenerate", step, m)
             break
     if result is None:
-        result = ("nessun_primo_entro_i_passi", MAX_STEPS, m)
+        result = ("no_prime_within_the_steps", MAX_STEPS, m)
     if result[0] != "first":
         found.append({"n": n, "result": result[0], "steps": result[1],
                         "value": result[2]})
@@ -285,15 +284,15 @@ def central_binom(n):
 
 # --- SELF-TEST on known values -------------------------------------------------
 if [central_binom(n) for n in range(6)] != [1, 2, 6, 20, 70, 252]:
-    print(json.dumps({"event": "collaudo_fallito", "detail": "centralBinom"}), flush=True)
+    print(json.dumps({"event": "shakedown_failed", "detail": "centralBinom"}), flush=True)
     sys.exit(1)
 if desc_factorial(7, 3) != 7 * 6 * 5:
-    print(json.dumps({"event": "collaudo_fallito", "detail": "descFactorial"}), flush=True)
+    print(json.dumps({"event": "shakedown_failed", "detail": "descFactorial"}), flush=True)
     sys.exit(1)
 if desc_factorial(5, 0) != 1:
-    print(json.dumps({"event": "collaudo_fallito", "detail": "descFactorial(n,0)"}), flush=True)
+    print(json.dumps({"event": "shakedown_failed", "detail": "descFactorial(n,0)"}), flush=True)
     sys.exit(1)
-print(json.dumps({"event": "shakedown", "result": "exceeded",
+print(json.dumps({"event": "shakedown", "result": "passed",
                   "checked": "centralBinom(0..5) = 1,2,6,20,70,252 and descFactorial"}),
       flush=True)
 
@@ -371,22 +370,22 @@ def esiste_k(n):
 
 # --- SELF-TEST on known values ------------------------------------------------
 # The archive's test theorems (OEIS/109909.lean) fix:
-#   a(1)=0, a(2)=0, a(3)=0, a(4)=2  (number di primes distinti k(n-k)-1)
+#   a(1)=0, a(2)=0, a(3)=0, a(4)=2  (number of distinct primes k(n-k)-1)
 # Only the part the search needs is checked here: k exists for n=4..8 and does NOT
 # exist for n=1,2,3.
-attesi_senza = [1, 2, 3]
-attesi_con = [4, 5, 6, 7, 8]
+expected_without = [1, 2, 3]
+expected_with = [4, 5, 6, 7, 8]
 for n in attesi_senza:
     if esiste_k(n) is not None:
-        print(json.dumps({"event": "collaudo_fallito", "n": n,
+        print(json.dumps({"event": "shakedown_failed", "n": n,
                           "detail": "found k where the archive says a(n)=0"}), flush=True)
         sys.exit(1)
 for n in attesi_con:
     if esiste_k(n) is None:
-        print(json.dumps({"event": "collaudo_fallito", "n": n,
+        print(json.dumps({"event": "shakedown_failed", "n": n,
                           "detail": "no k where the archive says a(n)>0"}), flush=True)
         sys.exit(1)
-print(json.dumps({"event": "shakedown", "result": "exceeded",
+print(json.dumps({"event": "shakedown", "result": "passed",
                   "checked": "n=1,2,3 with no k; n=4..8 with k, as the archive's "
                                  "test theorems say"}), flush=True)
 
@@ -444,10 +443,10 @@ print(json.dumps({"event": "end", "position": n, "examined": examined,
 '''
 
 SEARCHES = {
-    "euclide_squarefree": {
+    "euclid_squarefree": {
         "problem": "EuclidNumbers.euclid_numbers_are_square_free",
         "program": EUCLID,
-        # MISURATO: 17984 primes (all_items below 200000) examined in 17 seconds,
+        # MEASURED: 17984 primes (all those below 200000) examined in 17 seconds,
         # no findings. The cost grows as the square of the limit, so 2 million is
         # about a hundred times as much: half an hour.
         "variables": {"LIMIT_P": 3000000},
@@ -471,7 +470,7 @@ SEARCHES = {
         "program": SIGMA,
         "variables": {"UP_TO": 200000, "MAX_STEPS": 200},
         "description": "iterates n -> sigma(n)-1 and looks for orbits that never hit a prime",
-        "known_state": "aperto",
+        "known_state": "open",
         "conclusive": "no: it finds SUSPECTS, not counterexamples. An orbit that does "
                       "not reach a prime in 200 steps has to be examined by hand",
         "nature_of_findings": "suspects",
@@ -499,12 +498,12 @@ SEARCHES = {
             "Murthy's conjecture holds that far. {examined} values of n "
             "were examined.",
     },
-    "erdos396_binomiale": {
+    "erdos396_binomial": {
         "problem": "Erdos396.erdos_396",
         "program": BINOMIAL,
         "variables": {"K_MAX": 60, "N_MAX": 20000},
         "description": "for each k, the least n with descFactorial(n,k+1) | centralBinom(n)",
-        "known_state": "aperto",
+        "known_state": "open",
         "conclusive": "no: the form is 'for every k there exists n', which computation "
                       "cannot refute. It serves to gather evidence",
         "nature_of_findings": "results computed",

@@ -3,11 +3,11 @@ Start a command DETACHED from the process that launches it.
 
 Why it is needed: `nohup ... &` from a shell that then exits is not always enough —
 on macOS the process group is killed anyway when the calling shell dies.
-`start_new_session=True` puts the command in a session of its own, and
-li' sopravvive.
+`start_new_session=True` puts the command in a session of its own, where it
+survives.
 
-Uso:
-    python scripts/distacca.py NOME_LAVORO -- command e arguments
+Usage:
+    python scripts/detach.py JOB_NAME -- command and arguments
 The log goes to runs/jobs/NAME.log, the PID to runs/jobs/NAME.pid.
 """
 from __future__ import annotations

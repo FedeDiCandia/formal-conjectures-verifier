@@ -44,7 +44,7 @@ else:
               and p.category in ("research solved", "textbook")
               and proof_lines(p) > 0]
 
-print(f"Problemi da verificare: {len(chosen)}\n", flush=True)
+print(f"Problems to verify: {len(chosen)}\n", flush=True)
 
 # Every module is brought up to date BEFORE starting: it is the only step that
 # modifies the archive, and doing it during parallel verifications falsifies the
@@ -55,7 +55,7 @@ for p in chosen:
     ok, _ = prepare_challenge(p.module, 900)
     if not ok:
         print(f"  ATTENTION: {p.module} does not compile", flush=True)
-print("  fatto\n", flush=True)
+print("  done\n", flush=True)
 
 pool = SlotPool(4)
 results = [None] * len(chosen)
@@ -68,7 +68,7 @@ def work(i, p):
         try:
             extracted = archive_proof.extract(p, idx)
         except archive_proof.NotExtractable as e:
-            results[i] = {"problem": p.theorem, "result": "NON_ESTRAIBILE",
+            results[i] = {"problem": p.theorem, "result": "NOT_EXTRACTABLE",
                             "reason": str(e), "seconds": 0}
             return
         tmp = Path(f"/tmp/archive_proof_run{slot}_{i}.lean")
@@ -79,13 +79,13 @@ def work(i, p):
             tmp.unlink(missing_ok=True)
         failed = [c.name for c in r.checks if not c.passed]
         results[i] = {
-            "problem": p.theorem, "categoria": p.category,
+            "problem": p.theorem, "category": p.category,
             "proof_lines": proof_lines(p),
-            "result": r.status, "controlli_falliti": failed,
+            "result": r.status, "failed_checks": failed,
             "errors": (r.errors or "")[:400],
             "theorems_removed": extracted.theorems_removed,
             "seconds": time.time() - t0,
-            "assiomi_archivio": p.archive_proof_axioms,
+            "archive_axioms": p.archive_proof_axioms,
         }
         state = "OK " if r.accepted else "NO "
         print(f"  [{state}] {p.theorem:58} {r.status:16} {time.time()-t0:5.0f}s", flush=True)
@@ -105,8 +105,8 @@ print(f"ACCETTATE: {len(ok)} su {len(results)}   "
 print(f"{'='*78}")
 for r in results:
     if r["result"] != "ACCEPTED":
-        print(f"  RIFIUTATA  {r['problem']}")
-        print(f"             {r['result']}  {r.get('controlli_falliti')}")
+        print(f"  REJECTED  {r['problem']}")
+        print(f"             {r['result']}  {r.get('failed_checks')}")
         if r.get("errors"):
             print(f"             {r['errors'].strip().splitlines()[0][:110]}")
 

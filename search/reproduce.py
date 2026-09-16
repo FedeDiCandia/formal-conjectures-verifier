@@ -53,7 +53,7 @@ def download(relative: str) -> Path:
         capture_output=True, text=True)
     if result.returncode != 0 or not local.is_file() or local.stat().st_size == 0:
         local.unlink(missing_ok=True)
-        raise OSError(f"curl ha failed ({result.returncode}): "
+        raise OSError(f"curl failed ({result.returncode}): "
                       f"{result.stderr.strip()[:120]}")
     time.sleep(PAUSE)
     return local
@@ -64,25 +64,25 @@ def load(path: Path) -> tuple[list[int], int, str]:
     raw = path.read_text(errors="replace").lstrip()
     head = raw[:200].lower()
     if head.startswith("$base=16"):
-        # listing di words in esadecimale
+        # a listing of words in hexadecimal
         words = [int(r.strip(), 16) for r in raw.splitlines()[1:] if r.strip()]
         width = max((len(r.strip()) for r in raw.splitlines()[1:] if r.strip()),
                         default=0)
         # the width in hexadecimal digits does not give n: the leading zeros are
         # lost. 0 is returned and the caller uses the cell's n.
         del width
-        return words, 0, "listing esadecimale"
+        return words, 0, "hexadecimal listing"
     if head.startswith("$exec orbit"):
         words, n, info = expand(path)
-        return words, n, f"orbits (|G|={info['ordine_gruppo']}, {info['seeds']} seeds)"
+        return words, n, f"orbits (|G|={info['group_order']}, {info['seeds']} seeds)"
     if head.startswith("$exec cycle"):
         words, n, info = expand_cyclic(path)
-        return words, n, (f"cicli {info['blocks']} (|G|={info['ordine_gruppo']}, "
+        return words, n, (f"cycles {info['blocks']} (|G|={info['group_order']}, "
                            f"{info['seeds']} seeds)")
     if head.startswith("$exec"):
         raise ValueError(f"unhandled $EXEC command: {head.splitlines()[0]!r}")
     words, n = read(path)
-    return words, n, "listing di words"
+    return words, n, "list of words"
 
 
 def one(key: str, entry: dict) -> dict:
@@ -94,8 +94,8 @@ def one(key: str, entry: dict) -> dict:
         words, read_n, format = load(path)
         result["format"] = format
         if read_n and read_n != n:
-            result["state"] = "DISCORDE"
-            result["note"] = f"length letta {read_n}, waited {n}"
+            result["state"] = "MISMATCH"
+            result["note"] = f"length read {read_n}, expected {n}"
             return result
         v = fast_check(words, n, d, w)
         result["found"] = v.size
@@ -103,11 +103,11 @@ def one(key: str, entry: dict) -> dict:
             result["state"] = "INVALID"
             result["note"] = v.findings[0]
         elif v.size != entry["lower"]:
-            result["state"] = "DISCORDE"
+            result["state"] = "MISMATCH"
             result["note"] = (f"valid but {v.size} words instead of "
                              f"{entry['lower']}")
         else:
-            result["state"] = "CONFERMATO"
+            result["state"] = "CONFIRMED"
     except OSError as e:
         result["state"] = "NOT DOWNLOADED"
         result["note"] = str(e)[:120]
@@ -139,7 +139,7 @@ def main() -> int:
     print("\n" + "=" * 70)
     for state, how_many in sorted(count.items(), key=lambda kv: -kv[1]):
         print(f"  {state:<14} {how_many}")
-    print(f"\nRapporto in {DATA_DIR / 'reproduction.json'}")
+    print(f"\nReport in {DATA_DIR / 'reproduction.json'}")
     return 0
 
 

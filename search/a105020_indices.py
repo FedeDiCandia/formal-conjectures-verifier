@@ -101,22 +101,22 @@ def main():
         pairs, noncan, example = by_indices(limit, 50_000_000)
         expected = sum(1 for n in range(1, 10**7) if n * (n + 1) // 2 < limit)
         es = {"route": route, "indices_up_to": limit, "pairs": int(pairs.sum()),
-              "coppie_canonical_attese": expected, "non_canonical": int(noncan.sum()),
-              "esempi": [int(x) for x in example if x >= 0][:10]}
+              "canonical_pairs_expected": expected, "non_canonical": int(noncan.sum()),
+              "examples": [int(x) for x in example if x >= 0][:10]}
     else:
         # shakedown with d = 1 on a small interval: one canonical pair for each n
         ds1, c1, e1, g1, _ = by_values(2_000_001, 1)
-        shakedown = {"canonical_trovate_con_d1": int(c1[0]),
-                    "expected": (2_000_001 - 1) // 2, "errori_parametrizzazione": int(e1.sum())}
+        shakedown = {"canonical_found_with_d1": int(c1[0]),
+                    "expected": (2_000_001 - 1) // 2, "parametrisation_errors": int(e1.sum())}
         ds, shots, errors, rounds, example = by_values(limit, 3)
         es = {"route": route, "values_up_to": limit, "shakedown_d1": shakedown,
-              "fattorizzazioni_esaminate": int(rounds.sum()),
-              "errori_parametrizzazione": int(errors.sum()),
-              "coppie_non_canonical": int(shots.sum()),
-              "esempi": [int(x) for x in example if x >= 0][:10]}
+              "factorisations_examined": int(rounds.sum()),
+              "parametrisation_errors": int(errors.sum()),
+              "non_canonical_pairs": int(shots.sum()),
+              "examples": [int(x) for x in example if x >= 0][:10]}
     es["seconds"] = round(time.time() - t0, 1)
     print(json.dumps(es, indent=1), flush=True)
-    (ROOT / "research_data" / f"a105020{route}.json").write_text(json.dumps(es, indent=1))
+    (ROOT / "research_data" / f"a105020_{route}.json").write_text(json.dumps(es, indent=1))
 
 
 if __name__ == "__main__":

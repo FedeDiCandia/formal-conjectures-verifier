@@ -111,7 +111,7 @@ def proof_body(p) -> str | None:
     return None if pos is None else text[pos + 2:].strip()
 
 
-def valuta(p, local_names: list[str], di_fcfm: list[str]) -> tuple[float, list[str]]:
+def evaluate(p, local_names: list[str], fcfm_names_used: list[str]) -> tuple[float, list[str]]:
     """Expected difficulty score (lower = easier) and the reasons for it."""
     doc = " ".join((p.docstring or "").split())
     subjects = set(p.subjects)
@@ -124,8 +124,8 @@ def valuta(p, local_names: list[str], di_fcfm: list[str]) -> tuple[float, list[s
 
     if _SHORT.search(doc):
         add(-6, "source: short proof")
-    citata = bool(_CITATION.search(doc) and _PROVED.search(doc))
-    if citata:
+    cited = bool(_CITATION.search(doc) and _PROVED.search(doc))
+    if cited:
         add(+4, "source: a paper")
     if _DEEP.search(doc):
         add(+6, "source: a deep theorem")
@@ -137,8 +137,8 @@ def valuta(p, local_names: list[str], di_fcfm: list[str]) -> tuple[float, list[s
         add(-2, "textbook")
     if not (subjects and subjects <= ELEMENTARY):
         add(+1 if subjects & ELEMENTARY else +3, "outside AMS 5/11")
-    if local_names or di_fcfm:
-        add(0.5 * len(local_names) + 1.0 * len(di_fcfm), "definitions outside Mathlib")
+    if local_names or fcfm_names_used:
+        add(0.5 * len(local_names) + 1.0 * len(fcfm_names_used), "definitions outside Mathlib")
     if p.formal_proof_kind in ("lean4", "other_system"):
         add(+1, "proof already elsewhere")
     points += len(p.statement) / 80
@@ -147,7 +147,7 @@ def valuta(p, local_names: list[str], di_fcfm: list[str]) -> tuple[float, list[s
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--mostra", type=int, default=30)
+    ap.add_argument("--show", type=int, default=30)
     ap.add_argument("--output", default=str(ROOT / "research_data" / "formalisation_candidates.json"))
     args = ap.parse_args()
 
@@ -168,7 +168,7 @@ def main() -> int:
             excluded["2 proof already complete in the archive"] += 1
             continue
         if set(p.archive_proof_axioms) - PERMITTED - {"sorryAx"}:
-            excluded["3 dipende da native_decide o altri axioms"] += 1
+            excluded["3 depends on native_decide or other axioms"] += 1
             continue
         try:
             body = proof_body(p)
@@ -187,13 +187,13 @@ def main() -> int:
             per_file[f] = declared_names(f.read_text(encoding="utf-8", errors="replace"))
         token = {t.split(".")[-1] for t in _IDENT.findall(p.statement)}
         local_names = sorted(token & per_file[f])
-        di_fcfm = sorted((token & fcfm) - set(local_names))
-        score, reasons = valuta(p, local_names, di_fcfm)
+        fcfm_used = sorted((token & fcfm) - set(local_names))
+        score, reasons = evaluate(p, local_names, fcfm_used)
         candidates.append({
             "problem": p.theorem, "module": p.module, "category": p.category,
             "ams": sorted(p.subjects, key=lambda s: int(s) if s.isdigit() else 999),
-            "lunghezza_enunciato": len(p.statement),
-            "definizioni_locali": local_names, "definizioni_fcfm": di_fcfm,
+            "statement_length": len(p.statement),
+            "local_definitions": local_names, "fcfm_definitions": fcfm_used,
             "formal_proof": p.formal_proof_kind, "link": p.formal_proof_link,
             "score": score, "reasons": reasons,
             "statement": p.statement, "docstring": (p.docstring or "").strip(),
@@ -203,18 +203,18 @@ def main() -> int:
     Path(args.output).write_text(json.dumps(candidates, ensure_ascii=False, indent=1),
                                  encoding="utf-8")
 
-    print("FILTRI")
+    print("FILTERS")
     for k in sorted(excluded):
         print(f"  {k[2:]:52s} {excluded[k]:5d}")
     print(f"  {'CANDIDATES':52s} {len(candidates):5d}")
     print("  by category:", dict(collections.Counter(c["category"] for c in candidates)))
     print("  with formal_proof elsewhere:", sum(1 for c in candidates if c["formal_proof"]))
     count = collections.Counter(m for c in candidates for m in c["reasons"])
-    print("  segnali:", dict(count))
+    print("  signals:", dict(count))
     print("  score < 0 (the source indicates a short proof and nothing hard):",
           sum(1 for c in candidates if c["score"] < 0))
     print()
-    for i, c in enumerate(candidates[:args.mostra], 1):
+    for i, c in enumerate(candidates[:args.show], 1):
         s = " ".join(c["statement"].split())
         print(f"{i:3d} {c['score']:6.1f} {'tb' if c['category'] == 'textbook' else 'rs'} "
               f"AMS {' '.join(c['ams'])}  {c['problem']}")

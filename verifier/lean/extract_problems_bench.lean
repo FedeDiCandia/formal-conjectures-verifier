@@ -8,7 +8,6 @@ fields the verifier needs and that one does not produce:
     happens when the problem uses `answer(sorry)` with an answer that is not a
     proposition (a number, a set…). Such a statement cannot be proved honestly:
     any proof would depend on the axiom `sorryAx`.
-    dall'assioma `sorryAx`.
   * `archiveProofAxioms` : which axioms the proof the archive itself supplies
     depends on. It is needed to choose the problems to exercise the agent on: 87
     of the archive's proofs use `decide +native`, which leaves the axiom
@@ -20,7 +19,7 @@ fields the verifier needs and that one does not produce:
     exercised.
 
 Usage, from the archive's directory:
-    lake env lean --run <percorso>/extract_problems.lean > indice.json
+    lake env lean --run <path>/extract_problems.lean > index.json
 -/
 import Lean
 import FormalConjectures.Util.Attributes.Basic

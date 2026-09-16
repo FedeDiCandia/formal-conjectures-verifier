@@ -14,7 +14,8 @@ is a group of order 504 with 19 seeds. Searching among 74,613 random words is
 hopeless; searching among 3391 orbits is an ordinary problem.
 
 This script tries every group in the repertoire on every cell with an open gap, and
-says how far it gets. It is the experiment that decides whether this route has an engine or not.
+says how far it gets. It is the experiment that decides whether this route has an
+engine or not.
 """
 from __future__ import annotations
 
@@ -41,15 +42,15 @@ def one(arguments) -> dict:
     n, d, w, entry, restarts = arguments
     t0 = time.time()
     r = search_for(n, d, w, group_names(n), restarts=restarts, max_orbits=40_000)
-    mio = r["best"]["size"]
+    ours = r["best"]["size"]
     result = {"cell": f"A({n},{d},{w})", "published": entry["lower"],
              "upper": entry["upper"], "source": entry["source"],
-             "ours": mio, "group": r["best"]["group"],
+             "ours": ours, "group": r["best"]["group"],
              "candidate": comb(n, w), "seconds": round(time.time() - t0, 1),
-             "per_gruppo": {k: v for k, v in r["per_gruppo"].items()}}
-    if mio > entry["lower"]:
+             "per_group": {k: v for k, v in r["per_group"].items()}}
+    if ours > entry["lower"]:
         g = check(r["best"]["words"], n, d, w)
-        result["giudice_lento"] = g.ok
+        result["slow_judge"] = g.ok
         if g.ok:
             result["words"] = sorted(r["best"]["words"])
     return result
@@ -68,25 +69,25 @@ def main() -> int:
         for e in pool.imap_unordered(one, jobs):
             results.append(e)
             discard = e["ours"] - e["published"]
-            mark = ("SUPERATO" if discard > 0 else
+            mark = ("BEATEN" if discard > 0 else
                      "matched" if discard == 0 else f"{discard:+d}")
-            print(f"{mark:>11}  {e['cell']:<13} pubbl {e['published']:>5} "
-                  f"nostro {e['nostro']:>5}  (sup {e['upper']:>5})  "
+            print(f"{mark:>11}  {e['cell']:<13} publ. {e['published']:>5} "
+                  f"ours {e['ours']:>5}  (upper {e['upper']:>5})  "
                   f"group {str(e['group']):<14} {e['seconds']:>7.1f}s")
             sys.stdout.flush()
-            (DATA_DIR / "fase3_orbite.json").write_text(json.dumps(results, indent=1))
+            (DATA_DIR / "phase3_orbits.json").write_text(json.dumps(results, indent=1))
     won = [e for e in results if e["ours"] > e["published"]]
     even = sum(1 for e in results if e["ours"] == e["published"])
-    print(f"\n{'=' * 70}\npareggiati {even}/{len(results)}   passed {len(won)}")
+    print(f"\n{'=' * 70}\nmatched {even}/{len(results)}   beaten {len(won)}")
     for e in won:
         print(f"  {e['cell']}: {e['ours']} instead of {e['published']}. "
-              f"Giudice slow: {e.get('giudice_lento')}. APPLICARE docs/04.")
+              f"Slow judge: {e.get('slow_judge')}. APPLY docs/04.")
     if not won:
         best_list = sorted(results, key=lambda e: e["published"] - e["ours"])[:5]
         print("No bound beaten. The five closest cells:")
         for e in best_list:
-            print(f"  {e['cell']}: {e['nostro']} against {e['published']} "
-                  f"({e['nostro'] - e['published']:+d}), group {e['group']}")
+            print(f"  {e['cell']}: {e['ours']} against {e['published']} "
+                  f"({e['ours'] - e['published']:+d}), group {e['group']}")
     return 0
 
 

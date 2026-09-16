@@ -84,7 +84,7 @@ The agent — and only the agent — needs an Anthropic API key. The verifier, t
 searches and the tests run without one:
 
 ```bash
-cp .env.esempio .env      # then put your key in .env; .env is gitignored
+cp .env.example .env      # then put your key in .env; .env is gitignored
 ```
 
 ---

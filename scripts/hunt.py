@@ -50,31 +50,31 @@ def _in_words(name: str, definition: dict, result) -> str:
 
 
 def report(name: str, definition: dict, result) -> str:
-    kind = definition.get("nature_of_findings", "da interpretare")
+    kind = definition.get("nature_of_findings", "to be interpreted")
     lines = [
         f"# Search: {name}", "",
-        f"**Problema:** `{definition['problem']}`", "",
-        f"**Cosa search_for:** {definition['description']}", "",
-        f"**State noto del problem:** {definition['known_state']}", "",
+        f"**Problem:** `{definition['problem']}`", "",
+        f"**What it searches for:** {definition['description']}", "",
+        f"**Known state of the problem:** {definition['known_state']}", "",
         f"**Is the search conclusive?** {definition['conclusive']}", "",
         "## Result", "",
         f"| | |", "|---|---|",
-        f"| completed | {'sì' if result.completed else 'no, interrupted'} |",
+        f"| completed | {'yes' if result.completed else 'no, interrupted'} |",
         f"| duration | {result.seconds:.0f} s |",
-        f"| position raggiunta | {result.position} |",
+        f"| position reached | {result.position} |",
         f"| cases examined | {result.examined} |",
         f"| entries in the result list | {len(result.found)} |",
-        f"| kind di quelle entries | {kind} |",
+        f"| kind of those entries | {kind} |",
         "",
     ]
     if result.found and kind == "counterexamples":
-        lines += ["## Ritrovamenti", "",
+        lines += ["## Findings", "",
                   "⚠️ To be put through the finding protocol before believing it.", ""]
     elif result.found:
-        lines += [f"## Risultati ({kind})", "",
+        lines += [f"## Results ({kind})", "",
                   "**These are not findings.** This search cannot produce a",
                   "counterexample: what follows is material to read, not a",
-                  "confutazione.", ""]
+                  "refutation.", ""]
     if result.found:
         for t in result.found[:40]:
             lines.append(f"- `{json.dumps(t, ensure_ascii=False)}`")
@@ -82,13 +82,13 @@ def report(name: str, definition: dict, result) -> str:
             lines.append(f"- ... and {len(result.found) - 40} more")
     else:
         words = _in_words(name, definition, result)
-        lines += ["## Ritrovamenti", "",
+        lines += ["## Findings", "",
                   "None. **This is not a failure:** a negative outcome says how far",
                   "one has looked, and that is information.", ""]
         if words:
             lines += [f"**What is known now:** {words}", ""]
         else:
-            lines += [f"Punto reached: {result.position}.", ""]
+            lines += [f"Point reached: {result.position}.", ""]
     lines.append("")
     return "\n".join(lines)
 
@@ -98,7 +98,7 @@ def main() -> int:
     ap.add_argument("--only", default="", help="run only this search")
     ap.add_argument("--hours", type=float, default=0, help="time limit per search")
     ap.add_argument("--resume", action="store_true", default=True)
-    ap.add_argument("--dacapo", action="store_true")
+    ap.add_argument("--restart", action="store_true")
     ap.add_argument("--shakedown", action="store_true",
                     help="a short run, only to check that the programs work")
     args = ap.parse_args()
@@ -108,10 +108,10 @@ def main() -> int:
     if args.shakedown:
         seconds = 25
 
-    print(f"Ricerche in queue: {len(names)}")
+    print(f"Searches queued: {len(names)}")
     print(f"Time limit per search: "
-          f"{'illimitato' if seconds is None else f'{seconds:.0f}s'}")
-    print("Costo in crediti API: ZERO\n", flush=True)
+          f"{'unlimited' if seconds is None else f'{seconds:.0f}s'}")
+    print("Cost in API credits: ZERO\n", flush=True)
 
     summary = []
     for name in names:
@@ -126,13 +126,13 @@ def main() -> int:
         r = search_module.Search(name, d["program"],
                                    folder=ROOT / "runs" / "hunt" / name,
                                    variables=variables)
-        result = r.run(max_seconds=seconds, resume=not args.dacapo)
+        result = r.run(max_seconds=seconds, resume=not args.restart)
         (r.folder / "report.md").write_text(report(name, d, result), encoding="utf-8")
         summary.append({"name": name, "completed": result.completed,
                           "position": result.position, "examined": result.examined,
                           "found": len(result.found), "seconds": round(result.seconds),
                           "nature_of_findings": d.get("nature_of_findings",
-                                                  "da interpretare")})
+                                                  "to be interpreted")})
         label = ("findings" if d.get("nature_of_findings") == "counterexamples"
                      else "computed results (not findings)")
         print(f"  -> {'completed' if result.completed else 'interrupted'}, "
@@ -141,11 +141,11 @@ def main() -> int:
 
     dest = ROOT / "runs" / "hunt" / "summary.json"
     dest.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"\nRiepilogo in {dest}")
+    print(f"\nSummary in {dest}")
     with_findings = [r for r in summary if r["found"]
                         and r.get("nature_of_findings") == "counterexamples"]
     if with_findings:
-        print("\n*** RITROVAMENTI DA ESAMINARE ***")
+        print("\n*** FINDINGS TO EXAMINE ***")
         for r in with_findings:
             print(f"  {r['name']}: {r['found']}  -> runs/hunt/{r['name']}/report.md")
     return 0

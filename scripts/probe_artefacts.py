@@ -104,8 +104,8 @@ def read(output: str, mapping: dict[str, tuple[str, bool]]) -> dict:
     exists and does not depend on `sorryAx`. If it depends on `sorryAx` the tactic
     proved nothing — that is `plausible`'s case, which when it finds no counterexample
     leaves a `sorry` and lets the file compile anyway. If the declaration does not
-    appear among the printed axioms, the attempt failed before
-    di arrivare a esistere.
+    appear among the printed axioms, the attempt failed before the declaration
+    ever came into existence.
     """
     axioms: dict[str, set[str]] = {}
     for line in output.split("\n"):
@@ -146,7 +146,7 @@ def read(output: str, mapping: dict[str, tuple[str, bool]]) -> dict:
         results.append({"tactic": "plausible", "negated": None,
                       "result": "counterexample",
                       "detail": "plausible exhibited a counterexample: "
-                                   "vedi i messages grezzi"})
+                                   "see the raw messages"})
     return {"trials": results}
 
 
@@ -162,9 +162,9 @@ def check_environment(targets: Path) -> None:
     current_one = str(verifier_config.ARCHIVE)
     if "fc-main" in expected and "fc-main" not in current_one:
         raise SystemExit(
-            f"AMBIENTE SBAGLIATO.\n"
+            f"WRONG ENVIRONMENT.\n"
             f"  the targets were chosen on: {expected}\n"
-            f"  l'archive in uso e':           {current_one}\n"
+            f"  the archive in use is:      {current_one}\n"
             f"Relaunch with:\n"
             f"  env FCS_ARCHIVE=$PWD/external/fc-main \\\n"
             f"      FCS_LEAN4EXPORT=$PWD/external/lean4export-433/.lake/build/bin/lean4export \\\n"
@@ -210,7 +210,7 @@ def confirm_with_verifier(problem, tactic: str, negated: bool,
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--targets", default=str(ROOT / "docs/data/targets.json"))
-    ap.add_argument("--how_many", type=int, default=0, help="0 = all_items")
+    ap.add_argument("--how-many", type=int, default=0, help="0 = all")
     ap.add_argument("--timeout", type=int, default=180)
     ap.add_argument("--heartbeats", type=int, default=200000)
     ap.add_argument("--output", default=str(ROOT / "runs/hunt/artefacts.json"))
@@ -258,7 +258,7 @@ def main() -> int:
                         continue          # a counterexample is not a proof
                     tactic = dict((n, t) for n, t, _ in TACTICS)[x["tactic"]]
                     print(f"  ? {p.theorem}: {x['tactic']}"
-                          f"{' (negata)' if x['negated'] else ''} sembra chiudere — "
+                          f"{' (negated)' if x['negated'] else ''} seems to close it — "
                           f"submitting it to the verifier...", flush=True)
                     result, detail = confirm_with_verifier(
                         p, tactic, x["negated"], args.timeout * 4)
@@ -268,7 +268,7 @@ def main() -> int:
                     print(f"    -> verifier: {result}", flush=True)
                     if result == "ACCEPTED":
                         entry["ATTENTION"] = (
-                            f"{x['tactic']}{' (negata)' if x['negated'] else ''} "
+                            f"{x['tactic']}{' (negated)' if x['negated'] else ''} "
                             f"ACCEPTED BY THE VERIFIER")
                 if "ATTENTION" in entry:
                     notable += 1
@@ -280,7 +280,7 @@ def main() -> int:
               f"{'NOTABLE' if 'ATTENTION' in entry else '.':9} {entry['seconds']:6.0f}s",
               flush=True)
 
-    print(f"\n{'='*70}\nEsaminati {len(chosen)}. Notevoli: {notable}\nRisultati in {output}")
+    print(f"\n{'='*70}\nExamined {len(chosen)}. Notable: {notable}\nResults in {output}")
     return 0
 
 

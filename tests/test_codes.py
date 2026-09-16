@@ -1,7 +1,7 @@
 """The code checker and the expansion of orbits.
 
 The reference case is a published record: A(24,6,12) >= 5558, a code by
-Braun, Humpich, Laaksonen & Ostergard, scaricato da aeb.win.tue.nl. Se
+Braun, Humpich, Laaksonen & Ostergard, downloaded from aeb.win.tue.nl. If
 the expansion or the checker breaks, this test says so at once.
 """
 import sys
@@ -20,7 +20,7 @@ FANO = [sum(1 << ((k + s) % 7) for k in (0, 1, 3)) for s in range(7)]
 
 
 def test_the_fano_plane_is_a_valid_code():
-    # sette blocks di weight 3 su sette points, a pairs a distance 4: A(7,4,3)=7
+    # seven blocks of weight 3 on seven points, pairwise at distance 4: A(7,4,3)=7
     e = check(FANO, n=7, d=4, w=3)
     assert e.ok, e.findings
     assert e.size == 7

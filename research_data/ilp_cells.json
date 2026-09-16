@@ -1,62 +1,62 @@
 [
  {
-  "cella": "A(18,6,5)",
-  "soglia": 69,
-  "che": "pareggio",
+  "cell": "A(18,6,5)",
+  "threshold": 69,
+  "question": "match",
   "state": "Time limit reached",
-  "dimensione": 0,
-  "limite_lp": 81.0,
-  "valido": false,
-  "parole": []
+  "size": 0,
+  "lp_bound": 81.0,
+  "valid": false,
+  "words": []
  },
  {
-  "cella": "A(18,6,5)",
-  "soglia": 70,
-  "che": "RECORD",
+  "cell": "A(18,6,5)",
+  "threshold": 70,
+  "question": "RECORD",
   "state": "Time limit reached",
-  "dimensione": 0,
-  "limite_lp": 81.0,
-  "valido": false,
-  "parole": []
+  "size": 0,
+  "lp_bound": 81.0,
+  "valid": false,
+  "words": []
  },
  {
-  "cella": "A(19,6,5)",
-  "soglia": 76,
-  "che": "pareggio",
+  "cell": "A(19,6,5)",
+  "threshold": 76,
+  "question": "match",
   "state": "Time limit reached",
-  "dimensione": 0,
-  "limite_lp": 96.0,
-  "valido": false,
-  "parole": []
+  "size": 0,
+  "lp_bound": 96.0,
+  "valid": false,
+  "words": []
  },
  {
-  "cella": "A(19,6,5)",
-  "soglia": 77,
-  "che": "RECORD",
+  "cell": "A(19,6,5)",
+  "threshold": 77,
+  "question": "RECORD",
   "state": "Time limit reached",
-  "dimensione": 0,
-  "limite_lp": 96.0,
-  "valido": false,
-  "parole": []
+  "size": 0,
+  "lp_bound": 96.0,
+  "valid": false,
+  "words": []
  },
  {
-  "cella": "A(17,6,6)",
-  "soglia": 113,
-  "che": "pareggio",
+  "cell": "A(17,6,6)",
+  "threshold": 113,
+  "question": "match",
   "state": "Time limit reached",
-  "dimensione": 0,
-  "limite_lp": 689.0,
-  "valido": false,
-  "parole": []
+  "size": 0,
+  "lp_bound": 689.0,
+  "valid": false,
+  "words": []
  },
  {
-  "cella": "A(17,6,6)",
-  "soglia": 114,
-  "che": "RECORD",
+  "cell": "A(17,6,6)",
+  "threshold": 114,
+  "question": "RECORD",
   "state": "Time limit reached",
-  "dimensione": 0,
-  "limite_lp": 689.0,
-  "valido": false,
-  "parole": []
+  "size": 0,
+  "lp_bound": 689.0,
+  "valid": false,
+  "words": []
  }
 ]

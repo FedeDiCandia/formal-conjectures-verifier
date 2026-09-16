@@ -1,13 +1,13 @@
 """
-Fase 3: pareggiare e poi **superare** i bounds inferiori pubblicati.
+Phase 3: match and then **beat** the published lower bounds.
 
-BERSAGLI
---------
+TARGETS
+-------
 The A(n,d,w) cells with a **gap still open** between the lower and upper bounds. On
 a cell whose exact value is known there is nothing to beat; on one with no upper
 bound in the table we could not say how much room is left. That leaves
-274 cells, and the first are small: A(27,8,5) lies between 31 and 32, A(18,6,5)
-72, A(22,6,5) fra 132 e 136.
+274 cells, and the first are small: A(27,8,5) lies between 31 and 32, A(18,6,5) at
+72, A(22,6,5) between 132 and 136.
 
 HOW
 ----
@@ -66,7 +66,7 @@ def single_cell(arguments) -> dict:
     result = {"cell": f"A({n},{d},{w})", "published": entry["lower"],
              "upper": entry["upper"], "source": entry["source"],
              "candidate": comb(n, w)}
-    # 1. pareggio
+    # 1. match
     even_residue = []
     even = None
     for seed in range(seeds):
@@ -78,7 +78,7 @@ def single_cell(arguments) -> dict:
             even = p
             break
     result["matched"] = even is not None
-    result["violazioni_al_pareggio"] = min(even_residue)
+    result["violations_at_match"] = min(even_residue)
     # 2. +1, only if we matched: whoever does not match does not beat it
     if even is not None:
         residue_on = []
@@ -91,7 +91,7 @@ def single_cell(arguments) -> dict:
             if viol == 0:
                 won = p
                 break
-        result["violazioni_al_piu_uno"] = min(residue_on)
+        result["violations_at_plus_one"] = min(residue_on)
         if won is not None and check(won, n, d, w).ok:
             result["exceeded"] = True
             result["words"] = sorted(won)
@@ -112,8 +112,8 @@ def main() -> int:
     print(f"{len(items)} cells with an open gap, {iterations:,} iterations "
           f"x {seeds} seeds, su {min(8, os.cpu_count() or 1)} processi.\n")
     for c, n, d, w, v in items:
-        print(f"  A({n},{d},{w}): fra {v['lower']} e {v['upper']} "
-              f"(divario {v['upper'] - v['lower']}), "
+        print(f"  A({n},{d},{w}): between {v['lower']} and {v['upper']} "
+              f"(gap {v['upper'] - v['lower']}), "
               f"{c:,} words candidate, source {v['source']}")
     print()
     jobs = [(n, d, w, v, iterations, seeds) for _, n, d, w, v in items]
@@ -121,18 +121,18 @@ def main() -> int:
     with Pool(processes=min(8, os.cpu_count() or 1)) as pool:
         for e in pool.imap_unordered(single_cell, jobs):
             results.append(e)
-            mark = ("SUPERATO" if e["exceeded"]
+            mark = ("BEATEN" if e["exceeded"]
                      else "matched" if e["matched"] else "below")
-            print(f"{mark:>11}  {e['cell']:<13} pubbl {e['published']:>5} "
-                  f"sup {e['upper']:>5}  "
-                  f"violations: pareggio {e['violazioni_al_pareggio']}, "
-                  f"+1 {e.get('violazioni_al_piu_uno', '-')}  "
+            print(f"{mark:>11}  {e['cell']:<13} publ. {e['published']:>5} "
+                  f"upper {e['upper']:>5}  "
+                  f"violations: at match {e['violations_at_match']}, "
+                  f"at +1 {e.get('violations_at_plus_one', '-')}  "
                   f"{e['seconds']:>7.1f}s")
             sys.stdout.flush()
-            (DATA_DIR / "fase3_spinta.json").write_text(json.dumps(results, indent=1))
+            (DATA_DIR / "phase3_push.json").write_text(json.dumps(results, indent=1))
     won = [e for e in results if e["exceeded"]]
     even = sum(1 for e in results if e["matched"])
-    print(f"\n{'=' * 70}\npareggiati {even}/{len(results)}   passed {len(won)}")
+    print(f"\n{'=' * 70}\nmatched {even}/{len(results)}   beaten {len(won)}")
     for e in won:
         print(f"  {e['cell']}: {e['published'] + 1} words instead of "
               f"{e['published']}. APPLY docs/04-finding-protocol.md IN FULL.")

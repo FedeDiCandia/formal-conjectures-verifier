@@ -1,3230 +1,3230 @@
 [
  {
-  "cella": "A(32,18,11)",
-  "atteso": 4,
+  "cell": "A(32,18,11)",
+  "expected": 4,
   "source": "BSSS",
   "file": "cwc/d18/a32.18.11.4",
-  "formato": "elenco di parole",
-  "trovato": 4,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 4,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,18,12)",
-  "atteso": 5,
+  "cell": "A(30,18,12)",
+  "expected": 5,
   "source": "BSSS",
   "file": "cwc/d18/a30.18.12.5",
-  "formato": "elenco di parole",
-  "trovato": 5,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 5,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,18,13)",
-  "atteso": 5,
+  "cell": "A(30,18,13)",
+  "expected": 5,
   "source": "BSSS",
   "file": "cwc/d18/a30.18.13.5",
-  "formato": "elenco di parole",
-  "trovato": 5,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 5,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,18,14)",
-  "atteso": 5,
+  "cell": "A(30,18,14)",
+  "expected": 5,
   "source": "BSSS",
   "file": "cwc/d18/a30.18.14.5",
-  "formato": "elenco di parole",
-  "trovato": 5,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 5,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(35,18,11)",
-  "atteso": 5,
+  "cell": "A(35,18,11)",
+  "expected": 5,
   "source": "BSSS",
   "file": "cwc/d18/a35.18.11.5",
-  "formato": "elenco di parole",
-  "trovato": 5,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 5,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,18,15)",
-  "atteso": 6,
+  "cell": "A(30,18,15)",
+  "expected": 6,
   "source": "BSSS",
   "file": "cwc/d18/a30.18.15.6",
-  "formato": "elenco di parole",
-  "trovato": 6,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 6,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,18,14)",
-  "atteso": 6,
+  "cell": "A(31,18,14)",
+  "expected": 6,
   "source": "BSSS",
   "file": "cwc/d18/a31.18.14.6",
-  "formato": "elenco di parole",
-  "trovato": 6,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 6,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,18,13)",
-  "atteso": 6,
+  "cell": "A(32,18,13)",
+  "expected": 6,
   "source": "BSSS",
   "file": "cwc/d18/a32.18.13.6",
-  "formato": "elenco di parole",
-  "trovato": 6,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 6,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,18,14)",
-  "atteso": 7,
+  "cell": "A(32,18,14)",
+  "expected": 7,
   "source": "BSSS",
   "file": "cwc/d18/a32.18.14.7",
-  "formato": "elenco di parole",
-  "trovato": 7,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 7,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(33,18,13)",
-  "atteso": 7,
+  "cell": "A(33,18,13)",
+  "expected": 7,
   "source": "BSSS",
   "file": "cwc/d18/a33.18.13.7",
-  "formato": "elenco di parole",
-  "trovato": 7,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 7,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(35,18,12)",
-  "atteso": 7,
+  "cell": "A(35,18,12)",
+  "expected": 7,
   "source": "BSSS",
   "file": "cwc/d18/a35.18.12.7",
-  "formato": "elenco di parole",
-  "trovato": 7,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 7,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(22,12,9)",
-  "atteso": 8,
+  "cell": "A(22,12,9)",
+  "expected": 8,
   "source": "BSSS",
   "file": "cwc/d12/i22.9",
-  "formato": "cicli [2, 4, 8, 8] (|G|=8, 1 semi)",
-  "trovato": 8,
-  "state": "CONFERMATO"
+  "format": "cycles [2, 4, 8, 8] (|G|=8, 1 seeds)",
+  "found": 8,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,18,15)",
-  "atteso": 8,
+  "cell": "A(32,18,15)",
+  "expected": 8,
   "source": "BSSS",
   "file": "cwc/d18/a32.18.15.8",
-  "formato": "elenco di parole",
-  "trovato": 8,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 8,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,18,16)",
-  "atteso": 8,
+  "cell": "A(32,18,16)",
+  "expected": 8,
   "source": "BSSS",
   "file": "cwc/d18/a32.18.16.8",
-  "formato": "elenco di parole",
-  "trovato": 8,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 8,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,12,7)",
-  "atteso": 9,
+  "cell": "A(30,12,7)",
+  "expected": 9,
   "source": "BSSS",
   "file": "cwc/d12/a30.12.7.9",
-  "formato": "elenco di parole",
-  "trovato": 9,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 9,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(20,10,7)",
-  "atteso": 10,
+  "cell": "A(20,10,7)",
+  "expected": 10,
   "source": "BSSS",
   "file": "cwc/d10/i20.7",
-  "formato": "cicli [10, 10] (|G|=10, 1 semi)",
-  "trovato": 10,
-  "state": "CONFERMATO"
+  "format": "cycles [10, 10] (|G|=10, 1 seeds)",
+  "found": 10,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,12,8)",
-  "atteso": 10,
+  "cell": "A(25,12,8)",
+  "expected": 10,
   "source": "BSSS",
   "file": "cwc/d12/i25.8",
-  "formato": "cicli [5, 5, 5, 5, 5] (|G|=5, 2 semi)",
-  "trovato": 10,
-  "state": "CONFERMATO"
+  "format": "cycles [5, 5, 5, 5, 5] (|G|=5, 2 seeds)",
+  "found": 10,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,14,9)",
-  "atteso": 10,
+  "cell": "A(30,14,9)",
+  "expected": 10,
   "source": "x",
   "file": "cwc/d14/a30.14.9.10",
-  "formato": "elenco di parole",
-  "trovato": 10,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 10,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,16,12)",
-  "atteso": 10,
+  "cell": "A(30,16,12)",
+  "expected": 10,
   "source": "BSSS",
   "file": "cwc/d16/a30.16.12.10",
-  "formato": "elenco di parole",
-  "trovato": 10,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 10,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(34,18,14)",
-  "atteso": 10,
+  "cell": "A(34,18,14)",
+  "expected": 10,
   "source": "x",
   "file": "cwc/d18/a34.18.14.10",
-  "formato": "elenco di parole",
-  "trovato": 10,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 10,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(35,18,13)",
-  "atteso": 10,
+  "cell": "A(35,18,13)",
+  "expected": 10,
   "source": "BSSS",
   "file": "cwc/d18/a35.18.13.10",
-  "formato": "elenco di parole",
-  "trovato": 10,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 10,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,14,10)",
-  "atteso": 11,
+  "cell": "A(28,14,10)",
+  "expected": 11,
   "source": "x",
   "file": "cwc/d14/a28.14.10.11",
-  "formato": "elenco di parole",
-  "trovato": 11,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 11,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,16,12)",
-  "atteso": 11,
+  "cell": "A(31,16,12)",
+  "expected": 11,
   "source": "BSSS",
   "file": "cwc/d16/a31.16.12.11",
-  "formato": "elenco di parole",
-  "trovato": 11,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 11,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(33,18,15)",
-  "atteso": 11,
+  "cell": "A(33,18,15)",
+  "expected": 11,
   "source": "BSSS",
   "file": "cwc/d18/a33.18.15.11",
-  "formato": "elenco di parole",
-  "trovato": 11,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 11,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(33,18,16)",
-  "atteso": 11,
+  "cell": "A(33,18,16)",
+  "expected": 11,
   "source": "BSSS",
   "file": "cwc/d18/a33.18.16.11",
-  "formato": "elenco di parole",
-  "trovato": 11,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 11,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(12,6,5)",
-  "atteso": 12,
+  "cell": "A(12,6,5)",
+  "expected": 12,
   "source": "BSSS",
   "file": "cwc/d6/i12.5",
-  "formato": "cicli [12] (|G|=12, 1 semi)",
-  "trovato": 12,
-  "state": "CONFERMATO"
+  "format": "cycles [12] (|G|=12, 1 seeds)",
+  "found": 12,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(19,10,8)",
-  "atteso": 12,
+  "cell": "A(19,10,8)",
+  "expected": 12,
   "source": "BSSS",
   "file": "cwc/d10/a19.10.8.12",
-  "formato": "elenco di parole",
-  "trovato": 12,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 12,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,16,13)",
-  "atteso": 12,
+  "cell": "A(30,16,13)",
+  "expected": 12,
   "source": "BSSS",
   "file": "cwc/d16/a30.16.13.12",
-  "formato": "elenco di parole",
-  "trovato": 12,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 12,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,14,9)",
-  "atteso": 12,
+  "cell": "A(32,14,9)",
+  "expected": 12,
   "source": "BSSS",
   "file": "cwc/d14/a32.14.9.12",
-  "formato": "elenco di parole",
-  "trovato": 12,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 12,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(21,10,7)",
-  "atteso": 13,
+  "cell": "A(21,10,7)",
+  "expected": 13,
   "source": "BSSS",
   "file": "cwc/d10/a21.10.7.13",
-  "formato": "elenco di parole",
-  "trovato": 13,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 13,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,14,11)",
-  "atteso": 13,
+  "cell": "A(27,14,11)",
+  "expected": 13,
   "source": "BSSS",
   "file": "cwc/d14/i26.12",
-  "formato": "cicli [13, 13] (|G|=13, 1 semi)",
-  "state": "DISCORDE",
-  "note": "lunghezza letta 26, attesa 27"
+  "format": "cycles [13, 13] (|G|=13, 1 seeds)",
+  "state": "MISMATCH",
+  "note": "length read 26, expected 27"
  },
  {
-  "cella": "A(34,18,15)",
-  "atteso": 14,
+  "cell": "A(34,18,15)",
+  "expected": 14,
   "source": "BSSS",
   "file": "cwc/d18/a34.18.15.14",
-  "formato": "elenco di parole",
-  "trovato": 14,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 14,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,12,8)",
-  "atteso": 15,
+  "cell": "A(27,12,8)",
+  "expected": 15,
   "source": "BSSS",
   "file": "cwc/d12/i27.8",
-  "formato": "cicli [3, 3, 3, 3, 3, 3, 3, 3, 3] (|G|=3, 5 semi)",
-  "trovato": 15,
-  "state": "CONFERMATO"
+  "format": "cycles [3, 3, 3, 3, 3, 3, 3, 3, 3] (|G|=3, 5 seeds)",
+  "found": 15,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,14,10)",
-  "atteso": 15,
+  "cell": "A(29,14,10)",
+  "expected": 15,
   "source": "BSSS",
   "file": "cwc/d14/i29.10",
-  "formato": "cicli [1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3] (|G|=3, 5 semi)",
-  "trovato": 15,
-  "state": "CONFERMATO"
+  "format": "cycles [1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3] (|G|=3, 5 seeds)",
+  "found": 15,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(16,8,6)",
-  "atteso": 16,
+  "cell": "A(16,8,6)",
+  "expected": 16,
   "source": "BSSS",
   "file": "cwc/d8/i16.6",
-  "formato": "cicli [8, 8] (|G|=8, 2 semi)",
-  "trovato": 16,
-  "state": "CONFERMATO"
+  "format": "cycles [8, 8] (|G|=8, 2 seeds)",
+  "found": 16,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(16,8,7)",
-  "atteso": 16,
+  "cell": "A(16,8,7)",
+  "expected": 16,
   "source": "BSSS",
   "file": "cwc/d8/i16.7",
-  "formato": "cicli [16] (|G|=16, 1 semi)",
-  "trovato": 16,
-  "state": "CONFERMATO"
+  "format": "cycles [16] (|G|=16, 1 seeds)",
+  "found": 16,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(22,10,7)",
-  "atteso": 16,
+  "cell": "A(22,10,7)",
+  "expected": 16,
   "source": "BSSS",
   "file": "cwc/d10/i22.7",
-  "formato": "cicli [5, 5, 5, 5, 1, 1] (|G|=5, 4 semi)",
-  "trovato": 16,
-  "state": "CONFERMATO"
+  "format": "cycles [5, 5, 5, 5, 1, 1] (|G|=5, 4 seeds)",
+  "found": 16,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(23,12,10)",
-  "atteso": 16,
+  "cell": "A(23,12,10)",
+  "expected": 16,
   "source": "BSSS",
   "file": "cwc/d12/a23.12.10.16",
-  "formato": "elenco di parole",
-  "trovato": 16,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 16,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,16,12)",
-  "atteso": 16,
+  "cell": "A(32,16,12)",
+  "expected": 16,
   "source": "BSSS",
   "file": "cwc/d16/a32.16.12.16",
-  "formato": "elenco di parole",
-  "trovato": 16,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 16,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(17,8,6)",
-  "atteso": 17,
+  "cell": "A(17,8,6)",
+  "expected": 17,
   "source": "BSSS",
   "file": "cwc/d8/i17.6",
-  "formato": "cicli [2, 3, 12] (|G|=12, 3 semi)",
-  "trovato": 17,
-  "state": "CONFERMATO"
+  "format": "cycles [2, 3, 12] (|G|=12, 3 seeds)",
+  "found": 17,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(20,10,8)",
-  "atteso": 17,
+  "cell": "A(20,10,8)",
+  "expected": 17,
   "source": "BSSS",
   "file": "cwc/d10/a20.10.8.17",
-  "formato": "elenco di parole",
-  "trovato": 17,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 17,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,16,13)",
-  "atteso": 17,
+  "cell": "A(31,16,13)",
+  "expected": 17,
   "source": "R",
   "file": "cwc/d16/a31.16.13.17",
-  "formato": "elenco di parole",
-  "trovato": 17,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 17,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(34,18,16)",
-  "atteso": 17,
+  "cell": "A(34,18,16)",
+  "expected": 17,
   "source": "BSSS",
   "file": "cwc/d18/i34.16",
-  "formato": "cicli [17, 17] (|G|=17, 1 semi)",
-  "trovato": 17,
-  "state": "CONFERMATO"
+  "format": "cycles [17, 17] (|G|=17, 1 seeds)",
+  "found": 17,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(34,18,17)",
-  "atteso": 18,
+  "cell": "A(34,18,17)",
+  "expected": 18,
   "source": "BSSS",
   "file": "cwc/d18/i34.17",
-  "formato": "cicli [17, 17] (|G|=17, 2 semi)",
-  "trovato": 18,
-  "state": "CONFERMATO"
+  "format": "cycles [17, 17] (|G|=17, 2 seeds)",
+  "found": 18,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,14,12)",
-  "atteso": 19,
+  "cell": "A(27,14,12)",
+  "expected": 19,
   "source": "BSSS",
   "file": "cwc/d14/i27.12",
-  "formato": "cicli [3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 1] (|G|=3, 7 semi)",
-  "trovato": 19,
-  "state": "CONFERMATO"
+  "format": "cycles [3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 1] (|G|=3, 7 seeds)",
+  "found": 19,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,12,8)",
-  "atteso": 19,
+  "cell": "A(28,12,8)",
+  "expected": 19,
   "source": "BSSS",
   "file": "cwc/d12/i28.8",
-  "formato": "cicli [3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] (|G|=3, 9 semi)",
-  "trovato": 19,
-  "state": "CONFERMATO"
+  "format": "cycles [3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] (|G|=3, 9 seeds)",
+  "found": 19,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(20,10,9)",
-  "atteso": 20,
+  "cell": "A(20,10,9)",
+  "expected": 20,
   "source": "BSSS",
   "file": "cwc/d10/i20.9",
-  "formato": "cicli [20] (|G|=20, 1 semi)",
-  "trovato": 20,
-  "state": "CONFERMATO"
+  "format": "cycles [20] (|G|=20, 1 seeds)",
+  "found": 20,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(23,10,7)",
-  "atteso": 20,
+  "cell": "A(23,10,7)",
+  "expected": 20,
   "source": "Ko",
   "file": "cwc/d10/a23.10.7.20",
-  "formato": "elenco di parole",
-  "trovato": 20,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 20,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(18,8,6)",
-  "atteso": 21,
+  "cell": "A(18,8,6)",
+  "expected": 21,
   "source": "BSSS",
   "file": "cwc/d8/i18.6",
-  "formato": "cicli [6, 6, 6] (|G|=6, 5 semi)",
-  "trovato": 21,
-  "state": "CONFERMATO"
+  "format": "cycles [6, 6, 6] (|G|=6, 5 seeds)",
+  "found": 21,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(21,10,8)",
-  "atteso": 21,
+  "cell": "A(21,10,8)",
+  "expected": 21,
   "source": "BSSS",
   "file": "cwc/d10/i21.8",
-  "formato": "cicli [21] (|G|=21, 1 semi)",
-  "trovato": 21,
-  "state": "CONFERMATO"
+  "format": "cycles [21] (|G|=21, 1 seeds)",
+  "found": 21,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,14,11)",
-  "atteso": 21,
+  "cell": "A(28,14,11)",
+  "expected": 21,
   "source": "BSSS",
   "file": "cwc/d14/i28.11",
-  "formato": "cicli [7, 7, 7, 7] (|G|=7, 3 semi)",
-  "trovato": 21,
-  "state": "CONFERMATO"
+  "format": "cycles [7, 7, 7, 7] (|G|=7, 3 seeds)",
+  "found": 21,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,14,10)",
-  "atteso": 21,
+  "cell": "A(30,14,10)",
+  "expected": 21,
   "source": "BSSS",
   "file": "cwc/d14/a30.14.10.21",
-  "formato": "elenco di parole",
-  "trovato": 21,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 21,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(35,18,16)",
-  "atteso": 22,
+  "cell": "A(35,18,16)",
+  "expected": 22,
   "source": "R",
   "file": "cwc/d18/a35.18.16.22",
-  "formato": "elenco di parole",
-  "trovato": 22,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 22,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(17,8,7)",
-  "atteso": 24,
+  "cell": "A(17,8,7)",
+  "expected": 24,
   "source": "BSSS",
   "file": "cwc/d8/i17.7",
-  "formato": "cicli [1, 16] (|G|=16, 2 semi)",
-  "trovato": 24,
-  "state": "CONFERMATO"
+  "format": "cycles [1, 16] (|G|=16, 2 seeds)",
+  "found": 24,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(24,10,7)",
-  "atteso": 24,
+  "cell": "A(24,10,7)",
+  "expected": 24,
   "source": "BSSS",
   "file": "cwc/d10/i24.7",
-  "formato": "cicli [24] (|G|=24, 1 semi)",
-  "trovato": 24,
-  "state": "CONFERMATO"
+  "format": "cycles [24] (|G|=24, 1 seeds)",
+  "found": 24,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(24,12,10)",
-  "atteso": 24,
+  "cell": "A(24,12,10)",
+  "expected": 24,
   "source": "BSSS",
   "file": "cwc/d12/i24.10",
-  "formato": "cicli [24] (|G|=24, 1 semi)",
-  "trovato": 24,
-  "state": "CONFERMATO"
+  "format": "cycles [24] (|G|=24, 1 seeds)",
+  "found": 24,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,16,14)",
-  "atteso": 24,
+  "cell": "A(31,16,14)",
+  "expected": 24,
   "source": "R",
   "file": "cwc/d16/a31.16.14.24",
-  "formato": "elenco di parole",
-  "trovato": 24,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 24,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(22,10,8)",
-  "atteso": 25,
+  "cell": "A(22,10,8)",
+  "expected": 25,
   "source": "R",
   "file": "cwc/d10/a22.10.8.25",
-  "formato": "elenco di parole",
-  "trovato": 25,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 25,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,12,9)",
-  "atteso": 25,
+  "cell": "A(25,12,9)",
+  "expected": 25,
   "source": "BSSS",
   "file": "cwc/d12/i25.9",
-  "formato": "orbite (|G|=12, 7 semi)",
-  "trovato": 25,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=12, 7 seeds)",
+  "found": 25,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,16,13)",
-  "atteso": 25,
+  "cell": "A(32,16,13)",
+  "expected": 25,
   "source": "R",
   "file": "cwc/d16/a32.16.13.25",
-  "formato": "elenco di parole",
-  "trovato": 25,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 25,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(13,6,6)",
-  "atteso": 26,
+  "cell": "A(13,6,6)",
+  "expected": 26,
   "source": "BSSS",
   "file": "cwc/d6/i13.6",
-  "formato": "cicli [13] (|G|=13, 2 semi)",
-  "trovato": 26,
-  "state": "CONFERMATO"
+  "format": "cycles [13] (|G|=13, 2 seeds)",
+  "found": 26,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,12,9)",
-  "atteso": 26,
+  "cell": "A(26,12,9)",
+  "expected": 26,
   "source": "BSSS",
   "file": "cwc/d12/i26.9",
-  "formato": "cicli [26] (|G|=26, 1 semi)",
-  "trovato": 26,
-  "state": "CONFERMATO"
+  "format": "cycles [26] (|G|=26, 1 seeds)",
+  "found": 26,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(21,10,9)",
-  "atteso": 27,
+  "cell": "A(21,10,9)",
+  "expected": 27,
   "source": "BSSS",
   "file": "cwc/d10/a21.10.9.27",
-  "formato": "elenco di parole",
-  "trovato": 27,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 27,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,10,7)",
-  "atteso": 28,
+  "cell": "A(25,10,7)",
+  "expected": 28,
   "source": "BSSS",
   "file": "cwc/d10/i25.7",
-  "formato": "cicli [1, 24] (|G|=24, 2 semi)",
-  "trovato": 28,
-  "state": "CONFERMATO"
+  "format": "cycles [1, 24] (|G|=24, 2 seeds)",
+  "found": 28,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,12,10)",
-  "atteso": 28,
+  "cell": "A(25,12,10)",
+  "expected": 28,
   "source": "cKT",
   "file": "cwc/d12/i25.10",
-  "formato": "cicli [1, 2, 4, 6, 12] (|G|=12, 6 semi)",
-  "trovato": 28,
-  "state": "CONFERMATO"
+  "format": "cycles [1, 2, 4, 6, 12] (|G|=12, 6 seeds)",
+  "found": 28,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,14,12)",
-  "atteso": 28,
+  "cell": "A(28,14,12)",
+  "expected": 28,
   "source": "BSSS",
   "file": "cwc/d14/i28.12",
-  "formato": "cicli [28] (|G|=28, 1 semi)",
-  "trovato": 28,
-  "state": "CONFERMATO"
+  "format": "cycles [28] (|G|=28, 1 seeds)",
+  "found": 28,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,14,13)",
-  "atteso": 28,
+  "cell": "A(28,14,13)",
+  "expected": 28,
   "source": "BSSS",
   "file": "cwc/d14/i28.13",
-  "formato": "cicli [28] (|G|=28, 1 semi)",
-  "trovato": 28,
-  "state": "CONFERMATO"
+  "format": "cycles [28] (|G|=28, 1 seeds)",
+  "found": 28,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,14,11)",
-  "atteso": 28,
+  "cell": "A(29,14,11)",
+  "expected": 28,
   "source": "BSSS",
   "file": "cwc/d14/i29.11",
-  "formato": "cicli [1, 7, 7, 7, 7] (|G|=7, 4 semi)",
-  "trovato": 28,
-  "state": "CONFERMATO"
+  "format": "cycles [1, 7, 7, 7, 7] (|G|=7, 4 seeds)",
+  "found": 28,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,14,12)",
-  "atteso": 29,
+  "cell": "A(29,14,12)",
+  "expected": 29,
   "source": "cPo",
   "file": "cwc/d14/i29.12",
-  "formato": "cicli [29] (|G|=29, 1 semi)",
-  "trovato": 29,
-  "state": "CONFERMATO"
+  "format": "cycles [29] (|G|=29, 1 seeds)",
+  "found": 29,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(16,8,8)",
-  "atteso": 30,
+  "cell": "A(16,8,8)",
+  "expected": 30,
   "source": "H",
   "file": "cwc/d8/a16.8.8.30",
-  "formato": "elenco di parole",
-  "trovato": 30,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 30,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,10,7)",
-  "atteso": 30,
+  "cell": "A(26,10,7)",
+  "expected": 30,
   "source": "BSSS",
   "file": "cwc/d10/i26.7",
-  "formato": "cicli [1, 5, 5, 5, 5, 5] (|G|=5, 6 semi)",
-  "trovato": 30,
-  "state": "CONFERMATO"
+  "format": "cycles [1, 5, 5, 5, 5, 5] (|G|=5, 6 seeds)",
+  "found": 30,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,12,8)",
-  "atteso": 30,
+  "cell": "A(30,12,8)",
+  "expected": 30,
   "source": "BSSS",
   "file": "cwc/d12/i30.8",
-  "formato": "cicli [15, 15] (|G|=15, 2 semi)",
-  "trovato": 30,
-  "state": "CONFERMATO"
+  "format": "cycles [15, 15] (|G|=15, 2 seeds)",
+  "found": 30,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,14,11)",
-  "atteso": 30,
+  "cell": "A(30,14,11)",
+  "expected": 30,
   "source": "BSSS",
   "file": "cwc/d14/i30.11",
-  "formato": "cicli [30] (|G|=30, 1 semi)",
-  "trovato": 30,
-  "state": "CONFERMATO"
+  "format": "cycles [30] (|G|=30, 1 seeds)",
+  "found": 30,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,8,5)",
-  "atteso": 31,
+  "cell": "A(27,8,5)",
+  "expected": 31,
   "source": "ACL",
   "file": "cwc/d8/a27.8.5.31",
-  "formato": "elenco di parole",
-  "trovato": 31,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 31,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,12,8)",
-  "atteso": 31,
+  "cell": "A(31,12,8)",
+  "expected": 31,
   "source": "BSSS",
   "file": "cwc/d12/i31.8",
-  "formato": "cicli [31] (|G|=31, 1 semi)",
-  "trovato": 31,
-  "state": "CONFERMATO"
+  "format": "cycles [31] (|G|=31, 1 seeds)",
+  "found": 31,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,14,10)",
-  "atteso": 31,
+  "cell": "A(31,14,10)",
+  "expected": 31,
   "source": "bibd",
   "file": "cwc/d14/a31.14.10.31",
-  "formato": "elenco di parole",
-  "trovato": 31,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 31,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,14,10)",
-  "atteso": 32,
+  "cell": "A(32,14,10)",
+  "expected": 32,
   "source": "BSSS",
   "file": "cwc/d14/i32.10",
-  "formato": "cicli [16, 16] (|G|=16, 2 semi)",
-  "trovato": 32,
-  "state": "CONFERMATO"
+  "format": "cycles [16, 16] (|G|=16, 2 seeds)",
+  "found": 32,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,16,14)",
-  "atteso": 32,
+  "cell": "A(32,16,14)",
+  "expected": 32,
   "source": "BSSS",
   "file": "cwc/d16/i32.14",
-  "formato": "cicli [16, 16] (|G|=16, 2 semi)",
-  "trovato": 32,
-  "state": "CONFERMATO"
+  "format": "cycles [16, 16] (|G|=16, 2 seeds)",
+  "found": 32,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,16,15)",
-  "atteso": 32,
+  "cell": "A(32,16,15)",
+  "expected": 32,
   "source": "BSSS",
   "file": "cwc/d16/a32.16.15.32",
-  "formato": "elenco di parole",
-  "trovato": 32,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 32,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(23,10,8)",
-  "atteso": 33,
+  "cell": "A(23,10,8)",
+  "expected": 33,
   "source": "BSSS",
   "file": "cwc/d10/i23.8",
-  "formato": "cicli [11, 11, 1] (|G|=11, 3 semi)",
-  "trovato": 33,
-  "state": "CONFERMATO"
+  "format": "cycles [11, 11, 1] (|G|=11, 3 seeds)",
+  "found": 33,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,12,10)",
-  "atteso": 33,
+  "cell": "A(26,12,10)",
+  "expected": 33,
   "source": "Nu",
   "file": "cwc/d12/i26.10",
-  "formato": "orbite (|G|=16, 4 semi)",
-  "trovato": 33,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=16, 4 seeds)",
+  "found": 33,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,8,5)",
-  "atteso": 33,
+  "cell": "A(28,8,5)",
+  "expected": 33,
   "source": "BSSS",
   "file": "cwc/d8/a28.8.5.33",
-  "formato": "elenco di parole",
-  "trovato": 33,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 33,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(17,8,8)",
-  "atteso": 34,
+  "cell": "A(17,8,8)",
+  "expected": 34,
   "source": "BSSS",
   "file": "cwc/d8/i17.8",
-  "formato": "cicli [17] (|G|=17, 2 semi)",
-  "trovato": 34,
-  "state": "CONFERMATO"
+  "format": "cycles [17] (|G|=17, 2 seeds)",
+  "found": 34,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(22,10,9)",
-  "atteso": 35,
+  "cell": "A(22,10,9)",
+  "expected": 35,
   "source": "BSSS",
   "file": "cwc/d10/i22.9",
-  "formato": "cicli [7, 7, 7, 1] (|G|=7, 5 semi)",
-  "trovato": 35,
-  "state": "CONFERMATO"
+  "format": "cycles [7, 7, 7, 1] (|G|=7, 5 seeds)",
+  "found": 35,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,14,11)",
-  "atteso": 35,
+  "cell": "A(31,14,11)",
+  "expected": 35,
   "source": "BSSS",
   "file": "cwc/d14/i31.11",
-  "formato": "cicli [1, 10, 10, 10] (|G|=10, 4 semi)",
-  "trovato": 35,
-  "state": "CONFERMATO"
+  "format": "cycles [1, 10, 10, 10] (|G|=10, 4 seeds)",
+  "found": 35,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(35,18,17)",
-  "atteso": 35,
+  "cell": "A(35,18,17)",
+  "expected": 35,
   "source": "BSSS",
   "file": "cwc/d18/i35.17",
-  "formato": "cicli [35] (|G|=35, 1 semi)",
-  "trovato": 35,
-  "state": "CONFERMATO"
+  "format": "cycles [35] (|G|=35, 1 seeds)",
+  "found": 35,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,12,11)",
-  "atteso": 36,
+  "cell": "A(25,12,11)",
+  "expected": 36,
   "source": "BSSS",
   "file": "cwc/d12/i25.11",
-  "formato": "cicli [1, 24] (|G|=24, 2 semi)",
-  "trovato": 36,
-  "state": "CONFERMATO"
+  "format": "cycles [1, 24] (|G|=24, 2 seeds)",
+  "found": 36,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,10,7)",
-  "atteso": 36,
+  "cell": "A(27,10,7)",
+  "expected": 36,
   "source": "BSSS",
   "file": "cwc/d10/i27.7",
-  "formato": "cicli [9, 9, 9] (|G|=9, 4 semi)",
-  "trovato": 36,
-  "state": "CONFERMATO"
+  "format": "cycles [9, 9, 9] (|G|=9, 4 seeds)",
+  "found": 36,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,14,12)",
-  "atteso": 36,
+  "cell": "A(30,14,12)",
+  "expected": 36,
   "source": "cPo",
   "file": "cwc/d14/i30.12",
-  "formato": "cicli [3, 9, 9, 9] (|G|=9, 4 semi)",
-  "trovato": 36,
-  "state": "CONFERMATO"
+  "format": "cycles [3, 9, 9, 9] (|G|=9, 4 seeds)",
+  "found": 36,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,12,8)",
-  "atteso": 36,
+  "cell": "A(32,12,8)",
+  "expected": 36,
   "source": "BSSS",
   "file": "cwc/d12/i32.8",
-  "formato": "cicli [16, 16] (|G|=16, 3 semi)",
-  "trovato": 36,
-  "state": "CONFERMATO"
+  "format": "cycles [16, 16] (|G|=16, 3 seeds)",
+  "found": 36,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(20,10,10)",
-  "atteso": 38,
+  "cell": "A(20,10,10)",
+  "expected": 38,
   "source": "H",
   "file": "cwc/d10/a20.10.10.38",
-  "formato": "elenco di parole",
-  "trovato": 38,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 38,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,10,7)",
-  "atteso": 38,
+  "cell": "A(28,10,7)",
+  "expected": 38,
   "source": "R",
   "file": "cwc/d10/a28.10.7.38",
-  "formato": "elenco di parole",
-  "trovato": 38,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 38,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,14,13)",
-  "atteso": 38,
+  "cell": "A(29,14,13)",
+  "expected": 38,
   "source": "E",
   "file": "cwc/d14/a29.14.13.38",
-  "formato": "elenco di parole",
-  "trovato": 38,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 38,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(24,10,8)",
-  "atteso": 39,
+  "cell": "A(24,10,8)",
+  "expected": 39,
   "source": "E",
   "file": "cwc/d10/a24.10.8.39",
-  "formato": "elenco di parole",
-  "trovato": 39,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 39,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,12,10)",
-  "atteso": 39,
+  "cell": "A(27,12,10)",
+  "expected": 39,
   "source": "BSSS",
   "file": "cwc/d12/i27.10",
-  "formato": "cicli [1, 26] (|G|=26, 2 semi)",
-  "trovato": 39,
-  "state": "CONFERMATO"
+  "format": "cycles [1, 26] (|G|=26, 2 seeds)",
+  "found": 39,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,12,9)",
-  "atteso": 39,
+  "cell": "A(27,12,9)",
+  "expected": 39,
   "source": "BSSS",
   "file": "cwc/d12/i27.9",
-  "formato": "cicli [9, 9, 9] (|G|=9, 5 semi)",
-  "trovato": 39,
-  "state": "CONFERMATO"
+  "format": "cycles [9, 9, 9] (|G|=9, 5 seeds)",
+  "found": 39,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,14,11)",
-  "atteso": 40,
+  "cell": "A(32,14,11)",
+  "expected": 40,
   "source": "Po",
   "file": "cwc/d14/a32.14.11.40",
-  "formato": "elenco di parole",
-  "trovato": 40,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 40,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,12,11)",
-  "atteso": 41,
+  "cell": "A(26,12,11)",
+  "expected": 41,
   "source": "S",
   "file": "cwc/d12/i26.11",
-  "formato": "orbite (|G|=10, 9 semi)",
-  "trovato": 41,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=10, 9 seeds)",
+  "found": 41,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(14,6,7)",
-  "atteso": 42,
+  "cell": "A(14,6,7)",
+  "expected": 42,
   "source": "BSSS",
   "file": "cwc/d6/a14.6.7.42",
-  "formato": "elenco di parole",
-  "trovato": 42,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 42,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,10,7)",
-  "atteso": 42,
+  "cell": "A(29,10,7)",
+  "expected": 42,
   "source": "BSSS",
   "file": "cwc/d10/i29.7",
-  "formato": "cicli [7, 7, 7, 7, 1] (|G|=7, 6 semi)",
-  "trovato": 42,
-  "state": "CONFERMATO"
+  "format": "cycles [7, 7, 7, 7, 1] (|G|=7, 6 seeds)",
+  "found": 42,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,12,9)",
-  "atteso": 42,
+  "cell": "A(29,12,9)",
+  "expected": 42,
   "source": "gPo",
   "file": "cwc/d12/i29.9",
-  "formato": "orbite (|G|=42, 4 semi)",
-  "trovato": 42,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=42, 4 seeds)",
+  "found": 42,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,12,9)",
-  "atteso": 44,
+  "cell": "A(30,12,9)",
+  "expected": 44,
   "source": "Po",
   "file": "cwc/d12/a30.12.9.44",
-  "formato": "elenco di parole",
-  "trovato": 44,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 44,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(23,10,9)",
-  "atteso": 45,
+  "cell": "A(23,10,9)",
+  "expected": 45,
   "source": "cMEL",
   "file": "cwc/d10/i23.9",
-  "formato": "cicli [21, 1, 1] (|G|=21, 3 semi)",
-  "trovato": 45,
-  "state": "CONFERMATO"
+  "format": "cycles [21, 1, 1] (|G|=21, 3 seeds)",
+  "found": 45,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,14,12)",
-  "atteso": 45,
+  "cell": "A(31,14,12)",
+  "expected": 45,
   "source": "BSSS",
   "file": "cwc/d14/i31.12",
-  "formato": "cicli [1, 15, 15] (|G|=15, 3 semi)",
-  "trovato": 45,
-  "state": "CONFERMATO"
+  "format": "cycles [1, 15, 15] (|G|=15, 3 seeds)",
+  "found": 45,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(22,10,10)",
-  "atteso": 46,
+  "cell": "A(22,10,10)",
+  "expected": 46,
   "source": "NuPo",
   "file": "cwc/d10/a22.10.10.46",
-  "formato": "orbite (|G|=1, 8 semi)",
-  "trovato": 8,
-  "state": "DISCORDE",
-  "note": "valido ma 8 parole invece di 46"
+  "format": "orbits (|G|=1, 8 seeds)",
+  "found": 8,
+  "state": "MISMATCH",
+  "note": "valid but 8 words instead of 46"
  },
  {
-  "cella": "A(22,10,11)",
-  "atteso": 46,
+  "cell": "A(22,10,11)",
+  "expected": 46,
   "source": "cPo",
   "file": "cwc/d10/i22.11",
-  "formato": "cicli [22] (|G|=22, 3 semi)",
-  "trovato": 46,
-  "state": "CONFERMATO"
+  "format": "cycles [22] (|G|=22, 3 seeds)",
+  "found": 46,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(24,12,12)",
-  "atteso": 46,
+  "cell": "A(24,12,12)",
+  "expected": 46,
   "source": "H",
   "file": "cwc/d12/a24.12.12.46",
-  "formato": "elenco di parole",
-  "trovato": 46,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 46,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,14,13)",
-  "atteso": 46,
+  "cell": "A(30,14,13)",
+  "expected": 46,
   "source": "EPo",
   "file": "cwc/d14/a30.14.13.46",
-  "formato": "elenco di parole",
-  "trovato": 46,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 46,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(18,8,9)",
-  "atteso": 48,
-  "source": "sbÖ",
+  "cell": "A(18,8,9)",
+  "expected": 48,
+  "source": "sb\u00d6",
   "file": "cwc/d8/a18.8.9.48",
-  "formato": "elenco di parole",
-  "trovato": 48,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 48,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,12,12)",
-  "atteso": 50,
+  "cell": "A(25,12,12)",
+  "expected": 50,
   "source": "BSSS",
   "file": "cwc/d12/i25.12",
-  "formato": "cicli [5, 10, 10] (|G|=10, 6 semi)",
-  "trovato": 50,
-  "state": "CONFERMATO"
+  "format": "cycles [5, 10, 10] (|G|=10, 6 seeds)",
+  "found": 50,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,12,9)",
-  "atteso": 50,
+  "cell": "A(31,12,9)",
+  "expected": 50,
   "source": "cPo",
   "file": "cwc/d12/i31.9",
-  "formato": "cicli [1, 3, 9, 9, 9] (|G|=9, 8 semi)",
-  "trovato": 50,
-  "state": "CONFERMATO"
+  "format": "cycles [1, 3, 9, 9, 9] (|G|=9, 8 seeds)",
+  "found": 50,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,10,8)",
-  "atteso": 51,
+  "cell": "A(25,10,8)",
+  "expected": 51,
   "source": "BSSS",
   "file": "cwc/d10/a25.10.8.51",
-  "formato": "elenco di parole",
-  "trovato": 51,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 51,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(23,10,10)",
-  "atteso": 54,
+  "cell": "A(23,10,10)",
+  "expected": 54,
   "source": "Po",
   "file": "cwc/d10/a23.10.10.54",
-  "formato": "elenco di parole",
-  "trovato": 54,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 54,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,12,12)",
-  "atteso": 54,
+  "cell": "A(26,12,12)",
+  "expected": 54,
   "source": "Ho",
   "file": "cwc/d12/i26.12",
-  "formato": "cicli [1, 1, 12, 12] (|G|=12, 8 semi)",
-  "trovato": 54,
-  "state": "CONFERMATO"
+  "format": "cycles [1, 1, 12, 12] (|G|=12, 8 seeds)",
+  "found": 54,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,12,11)",
-  "atteso": 54,
+  "cell": "A(27,12,11)",
+  "expected": 54,
   "source": "BSSS",
   "file": "cwc/d12/i27.11",
-  "formato": "cicli [27] (|G|=27, 2 semi)",
-  "trovato": 54,
-  "state": "CONFERMATO"
+  "format": "cycles [27] (|G|=27, 2 seeds)",
+  "found": 54,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,14,12)",
-  "atteso": 55,
+  "cell": "A(32,14,12)",
+  "expected": 55,
   "source": "cPo",
   "file": "cwc/d14/i32.12",
-  "formato": "cicli [2, 10, 10, 10] (|G|=10, 6 semi)",
-  "trovato": 55,
-  "state": "CONFERMATO"
+  "format": "cycles [2, 10, 10, 10] (|G|=10, 6 seeds)",
+  "found": 55,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(24,10,9)",
-  "atteso": 56,
+  "cell": "A(24,10,9)",
+  "expected": 56,
   "source": "cMEL",
   "file": "cwc/d10/i24.9",
-  "formato": "cicli [24] (|G|=24, 3 semi)",
-  "trovato": 56,
-  "state": "CONFERMATO"
+  "format": "cycles [24] (|G|=24, 3 seeds)",
+  "found": 56,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,12,10)",
-  "atteso": 56,
+  "cell": "A(28,12,10)",
+  "expected": 56,
   "source": "BSSS",
   "file": "cwc/d12/i28.10",
-  "formato": "orbite (|G|=12, 9 semi)",
-  "trovato": 56,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=12, 9 seeds)",
+  "found": 56,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,12,13)",
-  "atteso": 58,
+  "cell": "A(26,12,13)",
+  "expected": 58,
   "source": "HoS",
   "file": "cwc/d12/a26.12.13.58",
-  "formato": "elenco di parole",
-  "trovato": 58,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 58,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,14,14)",
-  "atteso": 58,
+  "cell": "A(29,14,14)",
+  "expected": 58,
   "source": "BSSS",
   "file": "cwc/d14/i29.14",
-  "formato": "cicli [29] (|G|=29, 2 semi)",
-  "trovato": 58,
-  "state": "CONFERMATO"
+  "format": "cycles [29] (|G|=29, 2 seeds)",
+  "found": 58,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,14,13)",
-  "atteso": 60,
+  "cell": "A(31,14,13)",
+  "expected": 60,
   "source": "cPo",
   "file": "cwc/d14/i31.13",
-  "formato": "cicli [1, 30] (|G|=30, 2 semi)",
-  "trovato": 60,
-  "state": "CONFERMATO"
+  "format": "cycles [1, 30] (|G|=30, 2 seeds)",
+  "found": 60,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,12,9)",
-  "atteso": 60,
+  "cell": "A(32,12,9)",
+  "expected": 60,
   "source": "BSSS",
   "file": "cwc/d12/i32.9",
-  "formato": "cicli [4, 28] (|G|=28, 3 semi)",
-  "trovato": 60,
-  "state": "CONFERMATO"
+  "format": "cycles [4, 28] (|G|=28, 3 seeds)",
+  "found": 60,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,14,15)",
-  "atteso": 62,
+  "cell": "A(30,14,15)",
+  "expected": 62,
   "source": "cPo",
   "file": "cwc/d14/i30.15",
-  "formato": "cicli [30] (|G|=30, 3 semi)",
-  "trovato": 62,
-  "state": "CONFERMATO"
+  "format": "cycles [30] (|G|=30, 3 seeds)",
+  "found": 62,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,10,7)",
-  "atteso": 62,
+  "cell": "A(31,10,7)",
+  "expected": 62,
   "source": "BSSS",
   "file": "cwc/d10/i31.7",
-  "formato": "cicli [31] (|G|=31, 2 semi)",
-  "trovato": 62,
-  "state": "CONFERMATO"
+  "format": "cycles [31] (|G|=31, 2 seeds)",
+  "found": 62,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,10,7)",
-  "atteso": 64,
+  "cell": "A(32,10,7)",
+  "expected": 64,
   "source": "BSSS",
   "file": "cwc/d10/i32.7",
-  "formato": "cicli [16, 16] (|G|=16, 4 semi)",
-  "trovato": 64,
-  "state": "CONFERMATO"
+  "format": "cycles [16, 16] (|G|=16, 4 seeds)",
+  "found": 64,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(23,10,11)",
-  "atteso": 65,
+  "cell": "A(23,10,11)",
+  "expected": 65,
   "source": "Nu",
   "file": "cwc/d10/i23.11",
-  "state": "NON LETTO",
-  "note": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d10_i23.11: seme di lunghezza diversa: '# Nurmela et al.'"
+  "state": "NOT READ",
+  "note": "ValueError: /Users/fededicandia/Documents/Math/research_data/codes/cwc_d10_i23.11: seed of a different length: '# Nurmela et al.'"
  },
  {
-  "cella": "A(28,12,11)",
-  "atteso": 65,
+  "cell": "A(28,12,11)",
+  "expected": 65,
   "source": "Nu",
   "file": "cwc/d12/i28.11",
-  "state": "NON LETTO",
-  "note": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d12_i28.11: seme di lunghezza diversa: '# Nurmela et al.'"
+  "state": "NOT READ",
+  "note": "ValueError: /Users/fededicandia/Documents/Math/research_data/codes/cwc_d12_i28.11: seed of a different length: '# Nurmela et al.'"
  },
  {
-  "cella": "A(31,14,14)",
-  "atteso": 66,
+  "cell": "A(31,14,14)",
+  "expected": 66,
   "source": "L",
   "file": "cwc/d14/i31.14",
-  "formato": "cicli [1, 6, 12, 12] (|G|=12, 6 semi)",
-  "trovato": 66,
-  "state": "CONFERMATO"
+  "format": "cycles [1, 6, 12, 12] (|G|=12, 6 seeds)",
+  "found": 66,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(17,6,5)",
-  "atteso": 68,
+  "cell": "A(17,6,5)",
+  "expected": 68,
   "source": "BSSS",
   "file": "cwc/d6/i17.5",
-  "formato": "orbite (|G|=16320, 1 semi)",
-  "trovato": 68,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=16320, 1 seeds)",
+  "found": 68,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,10,8)",
-  "atteso": 68,
+  "cell": "A(26,10,8)",
+  "expected": 68,
   "source": "E",
   "file": "cwc/d10/a26.10.8.68",
-  "formato": "elenco di parole",
-  "trovato": 68,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 68,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(15,6,7)",
-  "atteso": 69,
-  "source": "G Ö",
+  "cell": "A(15,6,7)",
+  "expected": 69,
+  "source": "G \u00d6",
   "file": "cwc/d6/a15.6.7.69",
-  "formato": "elenco di parole",
-  "trovato": 69,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 69,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(18,6,5)",
-  "atteso": 69,
+  "cell": "A(18,6,5)",
+  "expected": 69,
   "source": "ACL",
   "file": "cwc/d6/a18.6.5.69",
-  "formato": "elenco di parole",
-  "trovato": 69,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 69,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,12,10)",
-  "atteso": 70,
+  "cell": "A(29,12,10)",
+  "expected": 70,
   "source": "EPo",
   "file": "cwc/d12/a29.12.10.70",
-  "formato": "elenco di parole",
-  "trovato": 70,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 70,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,14,13)",
-  "atteso": 70,
+  "cell": "A(32,14,13)",
+  "expected": 70,
   "source": "L",
   "file": "cwc/d14/i32.13",
-  "formato": "cicli [2, 10, 10, 10] (|G|=10, 7 semi)",
-  "trovato": 70,
-  "state": "CONFERMATO"
+  "format": "cycles [2, 10, 10, 10] (|G|=10, 7 seeds)",
+  "found": 70,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(24,10,10)",
-  "atteso": 72,
+  "cell": "A(24,10,10)",
+  "expected": 72,
   "source": "cKKT",
   "file": "cwc/d10/i24.10",
-  "formato": "cicli [24] (|G|=24, 3 semi)",
-  "trovato": 72,
-  "state": "CONFERMATO"
+  "format": "cycles [24] (|G|=24, 3 seeds)",
+  "found": 72,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,10,9)",
-  "atteso": 72,
+  "cell": "A(25,10,9)",
+  "expected": 72,
   "source": "cMEL",
   "file": "cwc/d10/i25.9",
-  "formato": "cicli [1, 24] (|G|=24, 3 semi)",
-  "trovato": 72,
-  "state": "CONFERMATO"
+  "format": "cycles [1, 24] (|G|=24, 3 seeds)",
+  "found": 72,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,14,15)",
-  "atteso": 72,
+  "cell": "A(31,14,15)",
+  "expected": 72,
   "source": "L",
   "file": "cwc/d14/i31.15",
-  "formato": "cicli [1, 6, 12, 12] (|G|=12, 7 semi)",
-  "trovato": 72,
-  "state": "CONFERMATO"
+  "format": "cycles [1, 6, 12, 12] (|G|=12, 7 seeds)",
+  "found": 72,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(19,6,5)",
-  "atteso": 76,
+  "cell": "A(19,6,5)",
+  "expected": 76,
   "source": "BSSS",
   "file": "cwc/d6/i19.5",
-  "formato": "cicli [19] (|G|=19, 4 semi)",
-  "trovato": 76,
-  "state": "CONFERMATO"
+  "format": "cycles [19] (|G|=19, 4 seeds)",
+  "found": 76,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,10,8)",
-  "atteso": 76,
+  "cell": "A(27,10,8)",
+  "expected": 76,
   "source": "E",
   "file": "cwc/d10/a27.10.8.76",
-  "formato": "elenco di parole",
-  "trovato": 76,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 76,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(22,8,6)",
-  "atteso": 77,
+  "cell": "A(22,8,6)",
+  "expected": 77,
   "source": "BSSS",
   "file": "cwc/d8/i22.6",
-  "formato": "orbite (|G|=1320, 2 semi)",
-  "trovato": 77,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=1320, 2 seeds)",
+  "found": 77,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(24,8,6)",
-  "atteso": 78,
+  "cell": "A(24,8,6)",
+  "expected": 78,
   "source": "BSSS",
   "file": "cwc/d8/a24.8.6.78",
-  "formato": "elenco di parole",
-  "trovato": 78,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 78,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(12,4,5)",
-  "atteso": 80,
-  "source": "Ö",
+  "cell": "A(12,4,5)",
+  "expected": 80,
+  "source": "\u00d6",
   "file": "cwc/d4/a12.4.5.80H",
-  "state": "NON LETTO",
+  "state": "NOT READ",
   "note": "ValueError: invalid literal for int() with base 16: '$N=12'"
  },
  {
-  "cella": "A(27,12,12)",
-  "atteso": 82,
+  "cell": "A(27,12,12)",
+  "expected": 82,
   "source": "KKT",
   "file": "cwc/d12/a27.12.12.82",
-  "formato": "elenco di parole",
-  "trovato": 82,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 82,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,10,8)",
-  "atteso": 85,
+  "cell": "A(28,10,8)",
+  "expected": 85,
   "source": "E",
   "file": "cwc/d10/a28.10.8.85",
-  "formato": "elenco di parole",
-  "trovato": 85,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 85,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,12,13)",
-  "atteso": 87,
+  "cell": "A(27,12,13)",
+  "expected": 87,
   "source": "BoKKT",
   "file": "cwc/d12/a27.12.13.87",
-  "formato": "elenco di parole",
-  "trovato": 87,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 87,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,12,11)",
-  "atteso": 87,
+  "cell": "A(29,12,11)",
+  "expected": 87,
   "source": "L",
   "file": "cwc/d12/i29.11",
-  "formato": "cicli [29] (|G|=29, 3 semi)",
-  "trovato": 87,
-  "state": "CONFERMATO"
+  "format": "cycles [29] (|G|=29, 3 seeds)",
+  "found": 87,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(20,6,5)",
-  "atteso": 90,
+  "cell": "A(20,6,5)",
+  "expected": 90,
   "source": "BSSS",
   "file": "cwc/d6/i20.5",
-  "formato": "cicli [1, 1, 9, 9] (|G|=9, 10 semi)",
-  "trovato": 90,
-  "state": "CONFERMATO"
+  "format": "cycles [1, 1, 9, 9] (|G|=9, 10 seeds)",
+  "found": 90,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,10,9)",
-  "atteso": 91,
+  "cell": "A(26,10,9)",
+  "expected": 91,
   "source": "NuKKT",
   "file": "cwc/d10/i26.9",
-  "state": "NON LETTO",
-  "note": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d10_i26.9: seme di lunghezza diversa: '# Nurmela et al.'"
+  "state": "NOT READ",
+  "note": "ValueError: /Users/fededicandia/Documents/Math/research_data/codes/cwc_d10_i26.9: seed of a different length: '# Nurmela et al.'"
  },
  {
-  "cella": "A(24,10,11)",
-  "atteso": 95,
+  "cell": "A(24,10,11)",
+  "expected": 95,
   "source": "NuKKT",
   "file": "cwc/d10/a24.10.11.95",
-  "formato": "elenco di parole",
-  "trovato": 95,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 95,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,10,8)",
-  "atteso": 96,
+  "cell": "A(29,10,8)",
+  "expected": 96,
   "source": "E",
   "file": "cwc/d10/a29.10.8.96",
-  "formato": "elenco di parole",
-  "trovato": 96,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 96,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,14,14)",
-  "atteso": 96,
+  "cell": "A(32,14,14)",
+  "expected": 96,
   "source": "L",
   "file": "cwc/d14/i32.14",
-  "formato": "orbite (|G|=16, 6 semi)",
-  "trovato": 96,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=16, 6 seeds)",
+  "found": 96,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,14,15)",
-  "atteso": 96,
+  "cell": "A(32,14,15)",
+  "expected": 96,
   "source": "L",
   "file": "cwc/d14/i32.15",
-  "formato": "orbite (|G|=48, 2 semi)",
-  "trovato": 96,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=48, 2 seeds)",
+  "found": 96,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,10,10)",
-  "atteso": 100,
+  "cell": "A(25,10,10)",
+  "expected": 100,
   "source": "BSSS",
   "file": "cwc/d10/i25.10",
-  "formato": "cicli [25] (|G|=25, 4 semi)",
-  "trovato": 100,
-  "state": "CONFERMATO"
+  "format": "cycles [25] (|G|=25, 4 seeds)",
+  "found": 100,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,8,6)",
-  "atteso": 100,
+  "cell": "A(25,8,6)",
+  "expected": 100,
   "source": "BSSS",
   "file": "cwc/d8/i25.6",
-  "formato": "orbite (|G|=1200, 1 semi)",
-  "trovato": 100,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=1200, 1 seeds)",
+  "found": 100,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,12,10)",
-  "atteso": 101,
+  "cell": "A(30,12,10)",
+  "expected": 101,
   "source": "EL",
   "file": "cwc/d12/a30.12.10.101",
-  "formato": "elenco di parole",
-  "trovato": 101,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 101,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,10,8)",
-  "atteso": 108,
+  "cell": "A(30,10,8)",
+  "expected": 108,
   "source": "BSSS",
   "file": "cwc/d10/i30.8",
-  "formato": "cicli [1, 1, 1, 27] (|G|=27, 4 semi)",
-  "trovato": 108,
-  "state": "CONFERMATO"
+  "format": "cycles [1, 1, 1, 27] (|G|=27, 4 seeds)",
+  "found": 108,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,12,10)",
-  "atteso": 108,
+  "cell": "A(31,12,10)",
+  "expected": 108,
   "source": "E",
   "file": "cwc/d12/a31.12.10.108H",
-  "formato": "elenco di parole",
-  "trovato": 108,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 108,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(16,6,7)",
-  "atteso": 109,
+  "cell": "A(16,6,7)",
+  "expected": 109,
   "source": "G",
   "file": "cwc/d6/a16.6.7.109",
-  "formato": "elenco di parole",
-  "trovato": 109,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 109,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(21,6,5)",
-  "atteso": 110,
+  "cell": "A(21,6,5)",
+  "expected": 110,
   "source": "Bo",
   "file": "cwc/d6/a21.6.5.110H",
-  "formato": "elenco esadecimale",
-  "trovato": 110,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 110,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(16,6,6)",
-  "atteso": 112,
+  "cell": "A(16,6,6)",
+  "expected": 112,
   "source": "BSSS",
   "file": "cwc/d6/i16.6",
-  "formato": "orbite (|G|=40320, 1 semi)",
-  "trovato": 112,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=40320, 1 seeds)",
+  "found": 112,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,12,13)",
-  "atteso": 112,
+  "cell": "A(28,12,13)",
+  "expected": 112,
   "source": "gKKT",
   "file": "cwc/d12/i28.13",
-  "formato": "orbite (|G|=168, 2 semi)",
-  "trovato": 112,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=168, 2 seeds)",
+  "found": 112,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(17,6,6)",
-  "atteso": 113,
-  "source": "ChÖ",
+  "cell": "A(17,6,6)",
+  "expected": 113,
+  "source": "Ch\u00d6",
   "file": "cwc/d6/a17.6.6.113",
-  "formato": "elenco di parole",
-  "trovato": 113,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 113,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,10,9)",
-  "atteso": 118,
+  "cell": "A(27,10,9)",
+  "expected": 118,
   "source": "NuPo",
   "file": "cwc/d10/a27.10.9.118",
-  "formato": "elenco di parole",
-  "trovato": 118,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 118,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,12,12)",
-  "atteso": 119,
+  "cell": "A(28,12,12)",
+  "expected": 119,
   "source": "gKKT",
   "file": "cwc/d12/i28.12",
-  "formato": "orbite (|G|=672, 3 semi)",
-  "trovato": 119,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=672, 3 seeds)",
+  "found": 119,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(16,6,8)",
-  "atteso": 120,
+  "cell": "A(16,6,8)",
+  "expected": 120,
   "source": "BSSS",
   "file": "cwc/d6/i16.8",
-  "formato": "orbite (|G|=5760, 1 semi)",
-  "trovato": 120,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=5760, 1 seeds)",
+  "found": 120,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,12,12)",
-  "atteso": 120,
+  "cell": "A(29,12,12)",
+  "expected": 120,
   "source": "BoL",
   "file": "cwc/d12/a29.12.12.120",
-  "formato": "elenco di parole",
-  "trovato": 120,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 120,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,14,16)",
-  "atteso": 122,
+  "cell": "A(32,14,16)",
+  "expected": 122,
   "source": "L",
   "file": "cwc/d14/i32.16",
-  "formato": "orbite (|G|=240, 3 semi)",
-  "trovato": 122,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=240, 3 seeds)",
+  "found": 122,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(13,4,5)",
-  "atteso": 123,
+  "cell": "A(13,4,5)",
+  "expected": 123,
   "source": "BSSS",
   "file": "cwc/d4/a13.4.5.123H",
-  "state": "NON LETTO",
+  "state": "NOT READ",
   "note": "ValueError: invalid literal for int() with base 16: '$N=13'"
  },
  {
-  "cella": "A(24,10,12)",
-  "atteso": 123,
+  "cell": "A(24,10,12)",
+  "expected": 123,
   "source": "KKT",
   "file": "cwc/d10/a24.10.12.123",
-  "formato": "elenco di parole",
-  "trovato": 123,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 123,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,12,10)",
-  "atteso": 123,
+  "cell": "A(32,12,10)",
+  "expected": 123,
   "source": "Bo",
   "file": "cwc/d12/a32.12.10.123H",
-  "formato": "elenco esadecimale",
-  "trovato": 123,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 123,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,10,8)",
-  "atteso": 124,
+  "cell": "A(31,10,8)",
+  "expected": 124,
   "source": "cPo",
   "file": "cwc/d10/i31.8",
-  "formato": "cicli [31] (|G|=31, 4 semi)",
-  "trovato": 124,
-  "state": "CONFERMATO"
+  "format": "cycles [31] (|G|=31, 4 seeds)",
+  "found": 124,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,10,11)",
-  "atteso": 125,
+  "cell": "A(25,10,11)",
+  "expected": 125,
   "source": "cKT",
   "file": "cwc/d10/i25.11",
-  "formato": "cicli [25] (|G|=25, 5 semi)",
-  "trovato": 125,
-  "state": "CONFERMATO"
+  "format": "cycles [25] (|G|=25, 5 seeds)",
+  "found": 125,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,10,10)",
-  "atteso": 130,
+  "cell": "A(26,10,10)",
+  "expected": 130,
   "source": "cPo",
   "file": "cwc/d10/i26.10",
-  "formato": "cicli [26] (|G|=26, 5 semi)",
-  "trovato": 130,
-  "state": "CONFERMATO"
+  "format": "cycles [26] (|G|=26, 5 seeds)",
+  "found": 130,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,8,6)",
-  "atteso": 130,
+  "cell": "A(26,8,6)",
+  "expected": 130,
   "source": "BSSS",
   "file": "cwc/d8/i26.6",
-  "formato": "orbite (|G|=1200, 2 semi)",
-  "trovato": 130,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=1200, 2 seeds)",
+  "found": 130,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(12,4,6)",
-  "atteso": 132,
+  "cell": "A(12,4,6)",
+  "expected": 132,
   "source": "BSSS",
   "file": "cwc/d4/i12.6",
-  "formato": "orbite (|G|=660, 1 semi)",
-  "trovato": 132,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=660, 1 seeds)",
+  "found": 132,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(22,6,5)",
-  "atteso": 132,
+  "cell": "A(22,6,5)",
+  "expected": 132,
   "source": "BSSS",
   "file": "cwc/d6/i22.5",
-  "formato": "orbite (|G|=7920, 2 semi)",
-  "trovato": 132,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=7920, 2 seeds)",
+  "found": 132,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,8,6)",
-  "atteso": 132,
+  "cell": "A(28,8,6)",
+  "expected": 132,
   "source": "E",
   "file": "cwc/d8/a28.8.6.132H",
-  "formato": "elenco esadecimale",
-  "trovato": 132,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 132,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(18,6,6)",
-  "atteso": 133,
+  "cell": "A(18,6,6)",
+  "expected": 133,
   "source": "R",
   "file": "cwc/d6/a18.6.6.133",
-  "formato": "elenco di parole",
-  "trovato": 133,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 133,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,10,9)",
-  "atteso": 140,
+  "cell": "A(28,10,9)",
+  "expected": 140,
   "source": "BSSS",
   "file": "cwc/d10/i28.9",
-  "formato": "orbite (|G|=42, 4 semi)",
-  "trovato": 140,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=42, 4 seeds)",
+  "found": 140,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,10,12)",
-  "atteso": 141,
+  "cell": "A(25,10,12)",
+  "expected": 141,
   "source": "EKT",
   "file": "cwc/d10/a25.10.12.141H",
-  "formato": "elenco esadecimale",
-  "trovato": 141,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 141,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,10,8)",
-  "atteso": 145,
+  "cell": "A(32,10,8)",
+  "expected": 145,
   "source": "Po",
   "file": "cwc/d10/a32.10.8.145H",
-  "formato": "elenco esadecimale",
-  "trovato": 145,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 145,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(23,6,5)",
-  "atteso": 147,
+  "cell": "A(23,6,5)",
+  "expected": 147,
   "source": "t",
   "file": "cwc/d6/a23.6.5.147",
-  "formato": "elenco di parole",
-  "trovato": 147,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 147,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,12,13)",
-  "atteso": 153,
+  "cell": "A(29,12,13)",
+  "expected": 153,
   "source": "E",
   "file": "cwc/d12/a29.12.13.153",
-  "formato": "elenco di parole",
-  "trovato": 153,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 153,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(20,8,9)",
-  "atteso": 160,
+  "cell": "A(20,8,9)",
+  "expected": 160,
   "source": "BSSS",
   "file": "cwc/d8/i20.9",
-  "formato": "orbite (|G|=5760, 1 semi)",
-  "trovato": 160,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=5760, 1 seeds)",
+  "found": 160,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,10,10)",
-  "atteso": 162,
+  "cell": "A(27,10,10)",
+  "expected": 162,
   "source": "NuPo",
   "file": "cwc/d10/i27.10",
-  "state": "NON LETTO",
-  "note": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d10_i27.10: seme di lunghezza diversa: '# Nurmela et al.'"
+  "state": "NOT READ",
+  "note": "ValueError: /Users/fededicandia/Documents/Math/research_data/codes/cwc_d10_i27.10: seed of a different length: '# Nurmela et al.'"
  },
  {
-  "cella": "A(13,4,6)",
-  "atteso": 166,
+  "cell": "A(13,4,6)",
+  "expected": 166,
   "source": "BSSS",
   "file": "cwc/d4/a13.4.6.166H",
-  "state": "NON LETTO",
+  "state": "NOT READ",
   "note": "ValueError: invalid literal for int() with base 16: '$N=13'"
  },
  {
-  "cella": "A(17,6,7)",
-  "atteso": 166,
+  "cell": "A(17,6,7)",
+  "expected": 166,
   "source": "GPo",
   "file": "cwc/d6/a17.6.7.166",
-  "formato": "elenco di parole",
-  "trovato": 166,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 166,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,10,11)",
-  "atteso": 168,
+  "cell": "A(26,10,11)",
+  "expected": 168,
   "source": "cKT",
   "file": "cwc/d10/i26.11",
-  "formato": "cicli [24, 2] (|G|=24, 7 semi)",
-  "trovato": 168,
-  "state": "CONFERMATO"
+  "format": "cycles [24, 2] (|G|=24, 7 seeds)",
+  "found": 168,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,10,9)",
-  "atteso": 168,
+  "cell": "A(29,10,9)",
+  "expected": 168,
   "source": "gPo",
   "file": "cwc/d10/i29.9",
-  "formato": "orbite (|G|=42, 6 semi)",
-  "trovato": 168,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=42, 6 seeds)",
+  "found": 168,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(14,4,5)",
-  "atteso": 169,
+  "cell": "A(14,4,5)",
+  "expected": 169,
   "source": "BSSS",
   "file": "cwc/d4/i14.5",
-  "formato": "orbite (|G|=156, 3 semi)",
-  "trovato": 169,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=156, 3 seeds)",
+  "found": 169,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(19,6,6)",
-  "atteso": 172,
+  "cell": "A(19,6,6)",
+  "expected": 172,
   "source": "BSSS",
   "file": "cwc/d6/i19.6",
-  "formato": "orbite (|G|=96, 7 semi)",
-  "trovato": 172,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=96, 7 seeds)",
+  "found": 172,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,12,14)",
-  "atteso": 172,
+  "cell": "A(28,12,14)",
+  "expected": 172,
   "source": "NuKKT",
   "file": "cwc/d12/i28.14",
-  "state": "NON LETTO",
-  "note": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d12_i28.14: seme di lunghezza diversa: '# Nurmela et al'"
+  "state": "NOT READ",
+  "note": "ValueError: /Users/fededicandia/Documents/Math/research_data/codes/cwc_d12_i28.14: seed of a different length: '# Nurmela et al'"
  },
  {
-  "cella": "A(29,12,14)",
-  "atteso": 174,
+  "cell": "A(29,12,14)",
+  "expected": 174,
   "source": "EPo",
   "file": "cwc/d12/a29.12.14.174",
-  "formato": "elenco di parole",
-  "trovato": 174,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 174,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(20,8,10)",
-  "atteso": 176,
+  "cell": "A(20,8,10)",
+  "expected": 176,
   "source": "BSSS",
   "file": "cwc/d8/i20.10",
-  "formato": "orbite (|G|=3840, 2 semi)",
-  "trovato": 176,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=3840, 2 seeds)",
+  "found": 176,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(17,6,8)",
-  "atteso": 184,
+  "cell": "A(17,6,8)",
+  "expected": 184,
   "source": "BSSS",
   "file": "cwc/d6/i17.8",
-  "formato": "orbite (|G|=16, 14 semi)",
-  "trovato": 184,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=16, 14 seeds)",
+  "found": 184,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,12,11)",
-  "atteso": 187,
+  "cell": "A(32,12,11)",
+  "expected": 187,
   "source": "BoPo",
   "file": "cwc/d12/a32.12.11.187",
-  "formato": "elenco di parole",
-  "trovato": 187,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 187,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,10,9)",
-  "atteso": 203,
+  "cell": "A(30,10,9)",
+  "expected": 203,
   "source": "Po",
   "file": "cwc/d10/a30.10.9.203H",
-  "formato": "elenco esadecimale",
-  "trovato": 203,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 203,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,10,12)",
-  "atteso": 208,
+  "cell": "A(26,10,12)",
+  "expected": 208,
   "source": "gKT",
   "file": "cwc/d10/i26.12",
-  "formato": "orbite (|G|=78, 4 semi)",
-  "trovato": 208,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=78, 4 seeds)",
+  "found": 208,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,10,10)",
-  "atteso": 219,
+  "cell": "A(28,10,10)",
+  "expected": 219,
   "source": "gMEL",
   "file": "cwc/d10/i28.10",
-  "formato": "orbite (|G|=54, 7 semi)",
-  "trovato": 219,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=54, 7 seeds)",
+  "found": 219,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(20,6,6)",
-  "atteso": 232,
+  "cell": "A(20,6,6)",
+  "expected": 232,
   "source": "t",
   "file": "cwc/d6/i20.6",
-  "formato": "orbite (|G|=96, 10 semi)",
-  "trovato": 232,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=96, 10 seeds)",
+  "found": 232,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,10,9)",
-  "atteso": 232,
+  "cell": "A(31,10,9)",
+  "expected": 232,
   "source": "cPo",
   "file": "cwc/d10/i31.9",
-  "formato": "cicli [1, 1, 29] (|G|=29, 8 semi)",
-  "trovato": 232,
-  "state": "CONFERMATO"
+  "format": "cycles [1, 1, 29] (|G|=29, 8 seeds)",
+  "found": 232,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,10,13)",
-  "atteso": 234,
+  "cell": "A(26,10,13)",
+  "expected": 234,
   "source": "ES",
   "file": "cwc/d10/a26.10.13.234H",
-  "formato": "elenco esadecimale",
-  "trovato": 234,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 234,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,12,13)",
-  "atteso": 239,
+  "cell": "A(30,12,13)",
+  "expected": 239,
   "source": "EPo",
   "file": "cwc/d12/a30.12.13.239H",
-  "formato": "elenco di parole",
-  "trovato": 239,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 239,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(15,4,5)",
-  "atteso": 242,
+  "cell": "A(15,4,5)",
+  "expected": 242,
   "source": "Ex",
   "file": "cwc/d4/a15.4.5.242",
-  "formato": "elenco di parole",
-  "trovato": 242,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 242,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(18,6,7)",
-  "atteso": 243,
+  "cell": "A(18,6,7)",
+  "expected": 243,
   "source": "GPo",
   "file": "cwc/d6/a18.6.7.243",
-  "formato": "elenco di parole",
-  "trovato": 243,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 243,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,10,11)",
-  "atteso": 243,
+  "cell": "A(27,10,11)",
+  "expected": 243,
   "source": "gKT",
   "file": "cwc/d10/i27.11",
-  "formato": "orbite (|G|=81, 3 semi)",
-  "trovato": 243,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=81, 3 seeds)",
+  "found": 243,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,8,7)",
-  "atteso": 255,
+  "cell": "A(25,8,7)",
+  "expected": 255,
   "source": "R",
   "file": "cwc/d8/a25.8.7.255",
-  "formato": "elenco di parole",
-  "trovato": 255,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 255,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(18,6,8)",
-  "atteso": 260,
+  "cell": "A(18,6,8)",
+  "expected": 260,
   "source": "KKT",
   "file": "cwc/d6/a18.6.8.260",
-  "formato": "elenco di parole",
-  "trovato": 260,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 260,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,6,5)",
-  "atteso": 262,
+  "cell": "A(27,6,5)",
+  "expected": 262,
   "source": "Bo",
   "file": "cwc/d6/a27.6.5.262H",
-  "formato": "elenco esadecimale",
-  "trovato": 262,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 262,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,8,7)",
-  "atteso": 264,
+  "cell": "A(26,8,7)",
+  "expected": 264,
   "source": "E",
   "file": "cwc/d8/a26.8.7.264H",
-  "formato": "elenco esadecimale",
-  "trovato": 264,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 264,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,10,10)",
-  "atteso": 266,
+  "cell": "A(29,10,10)",
+  "expected": 266,
   "source": "BSSS",
   "file": "cwc/d10/i29.10",
-  "formato": "orbite (|G|=84, 4 semi)",
-  "trovato": 266,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=84, 4 seeds)",
+  "found": 266,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(21,6,6)",
-  "atteso": 273,
+  "cell": "A(21,6,6)",
+  "expected": 273,
   "source": "BSSS",
   "file": "cwc/d6/i21.6",
-  "formato": "orbite (|G|=21, 17 semi)",
-  "trovato": 273,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=21, 17 seeds)",
+  "found": 273,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(14,4,6)",
-  "atteso": 278,
+  "cell": "A(14,4,6)",
+  "expected": 278,
   "source": "BSSS",
   "file": "cwc/d4/a14.4.6.278H",
-  "state": "NON LETTO",
+  "state": "NOT READ",
   "note": "ValueError: invalid literal for int() with base 16: '$N=14'"
  },
  {
-  "cella": "A(28,6,5)",
-  "atteso": 280,
+  "cell": "A(28,6,5)",
+  "expected": 280,
   "source": "Nu",
   "file": "cwc/d6/i28.5",
-  "formato": "orbite (|G|=84, 4 semi)",
-  "trovato": 280,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=84, 4 seeds)",
+  "found": 280,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,12,14)",
-  "atteso": 289,
+  "cell": "A(30,12,14)",
+  "expected": 289,
   "source": "Po",
   "file": "cwc/d12/a30.12.14.289H",
-  "formato": "elenco esadecimale",
-  "trovato": 289,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 289,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(22,8,9)",
-  "atteso": 292,
+  "cell": "A(22,8,9)",
+  "expected": 292,
   "source": "RPo",
   "file": "cwc/d8/a22.8.9.292",
-  "formato": "elenco di parole",
-  "trovato": 292,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 292,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,12,15)",
-  "atteso": 302,
+  "cell": "A(30,12,15)",
+  "expected": 302,
   "source": "sbPo",
   "file": "cwc/d12/a30.12.15.302H",
-  "formato": "elenco esadecimale",
-  "trovato": 302,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 302,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,8,7)",
-  "atteso": 303,
+  "cell": "A(27,8,7)",
+  "expected": 303,
   "source": "d",
   "file": "cwc/d8/a27.8.7.303H",
-  "state": "NON LETTO",
+  "state": "NOT READ",
   "note": "ValueError: invalid literal for int() with base 16: '$N=27'"
  },
  {
-  "cella": "A(32,10,9)",
-  "atteso": 305,
+  "cell": "A(32,10,9)",
+  "expected": 305,
   "source": "E",
   "file": "cwc/d10/a32.10.9.305H",
-  "formato": "elenco esadecimale",
-  "trovato": 305,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 305,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,10,11)",
-  "atteso": 308,
+  "cell": "A(28,10,11)",
+  "expected": 308,
   "source": "gKT",
   "file": "cwc/d10/i28.11",
-  "formato": "orbite (|G|=84, 5 semi)",
-  "trovato": 308,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=84, 5 seeds)",
+  "found": 308,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,6,5)",
-  "atteso": 315,
+  "cell": "A(29,6,5)",
+  "expected": 315,
   "source": "BSSS",
   "file": "cwc/d6/i29.5",
-  "formato": "orbite (|G|=84, 6 semi)",
-  "trovato": 315,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=84, 6 seeds)",
+  "found": 315,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(18,6,9)",
-  "atteso": 320,
+  "cell": "A(18,6,9)",
+  "expected": 320,
   "source": "gKKT",
   "file": "cwc/d6/i18.9",
-  "formato": "orbite (|G|=96, 10 semi)",
-  "trovato": 320,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=96, 10 seeds)",
+  "found": 320,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,8,7)",
-  "atteso": 321,
+  "cell": "A(28,8,7)",
+  "expected": 321,
   "source": "E",
   "file": "cwc/d8/a28.8.7.321H",
-  "formato": "elenco esadecimale",
-  "trovato": 321,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 321,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(16,4,5)",
-  "atteso": 322,
+  "cell": "A(16,4,5)",
+  "expected": 322,
   "source": "BSSS",
   "file": "cwc/d4/i16.5",
-  "formato": "orbite (|G|=21, 20 semi)",
-  "trovato": 322,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=21, 20 seeds)",
+  "found": 322,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,10,10)",
-  "atteso": 322,
+  "cell": "A(30,10,10)",
+  "expected": 322,
   "source": "BSSS",
   "file": "cwc/d10/i30.10",
-  "formato": "orbite (|G|=84, 6 semi)",
-  "trovato": 322,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=84, 6 seeds)",
+  "found": 322,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(14,4,7)",
-  "atteso": 325,
+  "cell": "A(14,4,7)",
+  "expected": 325,
   "source": "BSSS",
   "file": "cwc/d4/a14.4.7.325H",
-  "state": "NON LETTO",
+  "state": "NOT READ",
   "note": "ValueError: invalid literal for int() with base 16: '$N=14'"
  },
  {
-  "cella": "A(19,6,7)",
-  "atteso": 338,
+  "cell": "A(19,6,7)",
+  "expected": 338,
   "source": "sbPo",
   "file": "cwc/d6/a19.6.7.338",
-  "formato": "elenco di parole",
-  "trovato": 338,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 338,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(22,6,6)",
-  "atteso": 343,
-  "source": "BJLÖ",
+  "cell": "A(22,6,6)",
+  "expected": 343,
+  "source": "BJL\u00d6",
   "file": "cwc/d6/i22.6a",
-  "formato": "orbite (|G|=6, 77 semi)",
-  "trovato": 347,
-  "state": "NON VALIDO",
-  "note": "parole 291 e 292: condividono le 4 posizioni [3, 4, 5, 18], quindi distano al più 4 < 6"
+  "format": "orbits (|G|=6, 77 seeds)",
+  "found": 347,
+  "state": "INVALID",
+  "note": "words 291 and 292: they share the 4 positions [3, 4, 5, 18], so they are at distance at most 4 < 6"
  },
  {
-  "cella": "A(28,10,12)",
-  "atteso": 390,
+  "cell": "A(28,10,12)",
+  "expected": 390,
   "source": "S",
   "file": "cwc/d10/i28.12",
-  "formato": "orbite (|G|=78, 5 semi)",
-  "trovato": 390,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=78, 5 seeds)",
+  "found": 390,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(15,4,6)",
-  "atteso": 399,
+  "cell": "A(15,4,6)",
+  "expected": 399,
   "source": "BSSS",
   "file": "cwc/d4/i15.6",
-  "formato": "orbite (|G|=21, 23 semi)",
-  "trovato": 399,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=21, 23 seeds)",
+  "found": 399,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,12,13)",
-  "atteso": 400,
+  "cell": "A(31,12,13)",
+  "expected": 400,
   "source": "CXYPo",
   "file": "cwc/d12/a31.12.13.400H",
-  "formato": "elenco esadecimale",
-  "trovato": 400,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 400,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,10,11)",
-  "atteso": 406,
+  "cell": "A(29,10,11)",
+  "expected": 406,
   "source": "gPo",
   "file": "cwc/d10/i29.11",
-  "formato": "orbite (|G|=203, 2 semi)",
-  "trovato": 406,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=203, 2 seeds)",
+  "found": 406,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(19,6,8)",
-  "atteso": 408,
+  "cell": "A(19,6,8)",
+  "expected": 408,
   "source": "gPo",
   "file": "cwc/d6/i19.8a",
-  "formato": "orbite (|G|=96, 10 semi)",
-  "trovato": 408,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=96, 10 seeds)",
+  "found": 408,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(23,8,9)",
-  "atteso": 412,
+  "cell": "A(23,8,9)",
+  "expected": 412,
   "source": "RPo",
   "file": "cwc/d8/a23.8.9.412",
-  "formato": "elenco di parole",
-  "trovato": 412,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 412,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,10,13)",
-  "atteso": 425,
+  "cell": "A(27,10,13)",
+  "expected": 425,
   "source": "EKT",
   "file": "cwc/d10/a27.10.13.425H",
-  "formato": "elenco esadecimale",
-  "trovato": 425,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 425,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,12,13)",
-  "atteso": 434,
+  "cell": "A(32,12,13)",
+  "expected": 434,
   "source": "Po",
   "file": "cwc/d12/a32.12.13.434H",
-  "formato": "elenco esadecimale",
-  "trovato": 434,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 434,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(17,4,5)",
-  "atteso": 444,
+  "cell": "A(17,4,5)",
+  "expected": 444,
   "source": "Mi",
   "file": "cwc/d4/a17.4.5.444",
-  "formato": "elenco di parole",
-  "trovato": 444,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 444,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(20,6,7)",
-  "atteso": 462,
+  "cell": "A(20,6,7)",
+  "expected": 462,
   "source": "t",
   "file": "cwc/d6/a20.6.7.462H",
-  "state": "NON LETTO",
+  "state": "NOT READ",
   "note": "ValueError: invalid literal for int() with base 16: '$N=20'"
  },
  {
-  "cella": "A(31,10,10)",
-  "atteso": 465,
+  "cell": "A(31,10,10)",
+  "expected": 465,
   "source": "BSSS",
   "file": "cwc/d10/i31.10",
-  "formato": "orbite (|G|=465, 1 semi)",
-  "trovato": 465,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=465, 1 seeds)",
+  "found": 465,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,12,12)",
-  "atteso": 496,
+  "cell": "A(32,12,12)",
+  "expected": 496,
   "source": "BCHPo",
   "file": "cwc/d12/a32.12.12.496H",
-  "formato": "elenco esadecimale",
-  "trovato": 496,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 496,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,10,10)",
-  "atteso": 500,
+  "cell": "A(32,10,10)",
+  "expected": 500,
   "source": "BSSS",
   "file": "cwc/d10/a32.10.10.500H",
-  "formato": "elenco esadecimale",
-  "trovato": 500,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 500,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(19,6,9)",
-  "atteso": 504,
+  "cell": "A(19,6,9)",
+  "expected": 504,
   "source": "BSSS",
   "file": "cwc/d6/i19.9",
-  "formato": "orbite (|G|=96, 11 semi)",
-  "trovato": 504,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=96, 11 seeds)",
+  "found": 504,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,12,14)",
-  "atteso": 510,
+  "cell": "A(31,12,14)",
+  "expected": 510,
   "source": "CXYPo",
   "file": "cwc/d12/a31.12.14.510H",
-  "formato": "elenco esadecimale",
-  "trovato": 510,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 510,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,10,11)",
-  "atteso": 512,
+  "cell": "A(30,10,11)",
+  "expected": 512,
   "source": "EPo",
   "file": "cwc/d10/a30.10.11.512H",
-  "formato": "elenco esadecimale",
-  "trovato": 512,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 512,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,10,12)",
-  "atteso": 543,
+  "cell": "A(29,10,12)",
+  "expected": 543,
   "source": "Po",
   "file": "cwc/d10/a29.10.12.543H",
-  "formato": "elenco esadecimale",
-  "trovato": 543,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 543,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(18,4,5)",
-  "atteso": 544,
+  "cell": "A(18,4,5)",
+  "expected": 544,
   "source": "BSSS",
   "file": "cwc/d4/i18.5",
-  "formato": "orbite (|G|=17, 32 semi)",
-  "trovato": 544,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=17, 32 seeds)",
+  "found": 544,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(21,6,7)",
-  "atteso": 570,
+  "cell": "A(21,6,7)",
+  "expected": 570,
   "source": "b",
   "file": "cwc/d6/i21.7",
-  "formato": "orbite (|G|=63, 12 semi)",
-  "trovato": 570,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=63, 12 seeds)",
+  "found": 570,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,12,15)",
-  "atteso": 572,
+  "cell": "A(31,12,15)",
+  "expected": 572,
   "source": "sPo",
   "file": "cwc/d12/a31.12.15.572H",
-  "formato": "elenco esadecimale",
-  "trovato": 572,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 572,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(20,6,8)",
-  "atteso": 590,
+  "cell": "A(20,6,8)",
+  "expected": 590,
   "source": "EPo",
   "file": "cwc/d6/a20.6.8.590H",
-  "formato": "elenco esadecimale",
-  "trovato": 590,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 590,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(16,4,6)",
-  "atteso": 624,
-  "source": "BJLÖ",
+  "cell": "A(16,4,6)",
+  "expected": 624,
+  "source": "BJL\u00d6",
   "file": "cwc/d4/i16.6a",
-  "formato": "orbite (|G|=48, 19 semi)",
-  "trovato": 624,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=48, 19 seeds)",
+  "found": 624,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,12,15)",
-  "atteso": 629,
+  "cell": "A(32,12,15)",
+  "expected": 629,
   "source": "BSSS",
   "file": "cwc/d12/a32.12.15.629H",
-  "formato": "elenco esadecimale",
-  "trovato": 629,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 629,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(23,8,10)",
-  "atteso": 648,
+  "cell": "A(23,8,10)",
+  "expected": 648,
   "source": "R",
   "file": "cwc/d8/a23.8.10.648",
-  "formato": "elenco di parole",
-  "trovato": 648,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 648,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(24,8,9)",
-  "atteso": 656,
+  "cell": "A(24,8,9)",
+  "expected": 656,
   "source": "RPo",
   "file": "cwc/d8/a24.8.9.656",
-  "formato": "elenco di parole",
-  "trovato": 656,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 656,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,10,13)",
-  "atteso": 756,
+  "cell": "A(28,10,13)",
+  "expected": 756,
   "source": "Nu",
   "file": "cwc/d10/i28.13",
-  "formato": "orbite (|G|=9828, 1 semi)",
-  "trovato": 756,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=9828, 1 seeds)",
+  "found": 756,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(22,6,7)",
-  "atteso": 759,
+  "cell": "A(22,6,7)",
+  "expected": 759,
   "source": "G",
   "file": "cwc/d6/a22.6.7.759",
-  "formato": "elenco di parole",
-  "trovato": 759,
-  "state": "CONFERMATO"
+  "format": "list of words",
+  "found": 759,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(24,8,8)",
-  "atteso": 759,
+  "cell": "A(24,8,8)",
+  "expected": 759,
   "source": "G",
   "file": "cwc/d8/i24.8",
-  "formato": "orbite (|G|=6072, 1 semi)",
-  "trovato": 759,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=6072, 1 seeds)",
+  "found": 759,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,10,13)",
-  "atteso": 759,
+  "cell": "A(29,10,13)",
+  "expected": 759,
   "source": "BoPo",
   "file": "cwc/d10/a29.10.13.759H",
-  "formato": "elenco esadecimale",
-  "trovato": 759,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 759,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,8,8)",
-  "atteso": 763,
+  "cell": "A(26,8,8)",
+  "expected": 763,
   "source": "R",
   "file": "cwc/d8/a26.8.8.763H",
-  "formato": "elenco esadecimale",
-  "trovato": 763,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 763,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,10,12)",
-  "atteso": 768,
+  "cell": "A(30,10,12)",
+  "expected": 768,
   "source": "Po",
   "file": "cwc/d10/a30.10.12.768H",
-  "formato": "elenco esadecimale",
-  "trovato": 768,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 768,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(21,6,8)",
-  "atteso": 775,
+  "cell": "A(21,6,8)",
+  "expected": 775,
   "source": "Po",
   "file": "cwc/d6/a21.6.8.775H",
-  "formato": "elenco esadecimale",
-  "trovato": 775,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 775,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,8,8)",
-  "atteso": 775,
+  "cell": "A(27,8,8)",
+  "expected": 775,
   "source": "E",
   "file": "cwc/d8/a27.8.8.775H",
-  "formato": "elenco esadecimale",
-  "trovato": 775,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 775,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,10,14)",
-  "atteso": 814,
+  "cell": "A(28,10,14)",
+  "expected": 814,
   "source": "EKKT",
   "file": "cwc/d10/a28.10.14.814H",
-  "formato": "elenco esadecimale",
-  "trovato": 814,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 814,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(20,6,9)",
-  "atteso": 832,
+  "cell": "A(20,6,9)",
+  "expected": 832,
   "source": "t",
   "file": "cwc/d6/i20.9",
-  "formato": "orbite (|G|=96, 21 semi)",
-  "trovato": 832,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=96, 21 seeds)",
+  "found": 832,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(16,4,7)",
-  "atteso": 836,
+  "cell": "A(16,4,7)",
+  "expected": 836,
   "source": "b",
   "file": "cwc/d4/a16.4.7.836H",
-  "state": "NON LETTO",
+  "state": "NOT READ",
   "note": "ValueError: invalid literal for int() with base 16: '$N=16'"
  },
  {
-  "cella": "A(25,8,9)",
-  "atteso": 837,
+  "cell": "A(25,8,9)",
+  "expected": 837,
   "source": "RPo",
   "file": "cwc/d8/a25.8.9.837H",
-  "formato": "elenco esadecimale",
-  "trovato": 837,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 837,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(20,4,5)",
-  "atteso": 874,
+  "cell": "A(20,4,5)",
+  "expected": 874,
   "source": "BSSS",
   "file": "cwc/d4/a20.4.5.874H",
-  "state": "NON LETTO",
+  "state": "NOT READ",
   "note": "ValueError: invalid literal for int() with base 16: '$N=20'"
  },
  {
-  "cella": "A(26,8,9)",
-  "atteso": 890,
+  "cell": "A(26,8,9)",
+  "expected": 890,
   "source": "EPo",
   "file": "cwc/d8/a26.8.9.890H",
-  "formato": "elenco esadecimale",
-  "trovato": 890,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 890,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,12,14)",
-  "atteso": 900,
+  "cell": "A(32,12,14)",
+  "expected": 900,
   "source": "CXYPo",
   "file": "cwc/d12/a32.12.14.900H",
-  "formato": "elenco esadecimale",
-  "trovato": 900,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 900,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,10,12)",
-  "atteso": 930,
+  "cell": "A(31,10,12)",
+  "expected": 930,
   "source": "gPo",
   "file": "cwc/d10/i31.12",
-  "formato": "orbite (|G|=465, 2 semi)",
-  "trovato": 930,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=465, 2 seeds)",
+  "found": 930,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,10,13)",
-  "atteso": 936,
+  "cell": "A(30,10,13)",
+  "expected": 936,
   "source": "BoPo",
   "file": "cwc/d10/a30.10.13.936H",
-  "formato": "elenco esadecimale",
-  "trovato": 936,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 936,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(20,6,10)",
-  "atteso": 944,
+  "cell": "A(20,6,10)",
+  "expected": 944,
   "source": "tKKT",
   "file": "cwc/d6/a20.6.10.944H",
-  "formato": "elenco esadecimale",
-  "trovato": 944,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 944,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(24,8,10)",
-  "atteso": 960,
+  "cell": "A(24,8,10)",
+  "expected": 960,
   "source": "GS",
   "file": "cwc/d8/a24.8.10.960H",
-  "formato": "elenco esadecimale",
-  "trovato": 960,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 960,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,10,11)",
-  "atteso": 992,
+  "cell": "A(32,10,11)",
+  "expected": 992,
   "source": "gPo",
   "file": "cwc/d10/i32.11",
-  "formato": "orbite (|G|=992, 1 semi)",
-  "trovato": 992,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=992, 1 seeds)",
+  "found": 992,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,8,9)",
-  "atteso": 1029,
+  "cell": "A(27,8,9)",
+  "expected": 1029,
   "source": "EPo",
   "file": "cwc/d8/a27.8.9.1029H",
-  "formato": "elenco esadecimale",
-  "trovato": 1029,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 1029,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,8,8)",
-  "atteso": 1057,
+  "cell": "A(28,8,8)",
+  "expected": 1057,
   "source": "BSSS",
   "file": "cwc/d8/a28.8.8.1057H",
-  "state": "NON LETTO",
+  "state": "NOT READ",
   "note": "ValueError: invalid literal for int() with base 16: '$N=28'"
  },
  {
-  "cella": "A(21,4,5)",
-  "atteso": 1113,
+  "cell": "A(21,4,5)",
+  "expected": 1113,
   "source": "BSSS",
   "file": "cwc/d4/i21.5",
-  "formato": "orbite (|G|=63, 19 semi)",
-  "trovato": 1113,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=63, 19 seeds)",
+  "found": 1113,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,12,16)",
-  "atteso": 1144,
+  "cell": "A(32,12,16)",
+  "expected": 1144,
   "source": "BSSS",
   "file": "cwc/d12/a32.12.16.1144H",
-  "formato": "elenco esadecimale",
-  "trovato": 1144,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 1144,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(22,6,8)",
-  "atteso": 1145,
+  "cell": "A(22,6,8)",
+  "expected": 1145,
   "source": "E",
   "file": "cwc/d6/a22.6.8.1145H",
-  "formato": "elenco esadecimale",
-  "trovato": 1145,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 1145,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(16,4,8)",
-  "atteso": 1170,
+  "cell": "A(16,4,8)",
+  "expected": 1170,
   "source": "BSSS",
   "file": "cwc/d4/a16.4.8.1170H",
-  "state": "NON LETTO",
+  "state": "NOT READ",
   "note": "ValueError: invalid literal for int() with base 16: '$N=16'"
  },
  {
-  "cella": "A(28,6,6)",
-  "atteso": 1174,
+  "cell": "A(28,6,6)",
+  "expected": 1174,
   "source": "Bo",
   "file": "cwc/d6/a28.6.6.1174H",
-  "formato": "elenco esadecimale",
-  "trovato": 1174,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 1174,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(21,6,9)",
-  "atteso": 1186,
+  "cell": "A(21,6,9)",
+  "expected": 1186,
   "source": "Po",
   "file": "cwc/d6/a21.6.9.1186H",
-  "formato": "elenco esadecimale",
-  "trovato": 1186,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 1186,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,6,6)",
-  "atteso": 1204,
+  "cell": "A(29,6,6)",
+  "expected": 1204,
   "source": "BSSS",
   "file": "cwc/d6/a29.6.6.1204H",
-  "formato": "elenco esadecimale",
-  "trovato": 1204,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 1204,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,8,10)",
-  "atteso": 1248,
+  "cell": "A(25,8,10)",
+  "expected": 1248,
   "source": "S",
   "file": "cwc/d8/a25.8.10.1248H",
-  "formato": "elenco esadecimale",
-  "trovato": 1248,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 1248,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(18,4,6)",
-  "atteso": 1260,
+  "cell": "A(18,4,6)",
+  "expected": 1260,
   "source": "BSSS",
   "file": "cwc/d4/i18.6",
-  "formato": "orbite (|G|=3024, 4 semi)",
-  "trovato": 1260,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=3024, 4 seeds)",
+  "found": 1260,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,8,9)",
-  "atteso": 1376,
+  "cell": "A(28,8,9)",
+  "expected": 1376,
   "source": "Bo",
   "file": "cwc/d8/a28.8.9.1376H",
-  "formato": "elenco esadecimale",
-  "trovato": 1376,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 1376,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(24,8,11)",
-  "atteso": 1378,
+  "cell": "A(24,8,11)",
+  "expected": 1378,
   "source": "RS",
   "file": "cwc/d8/a24.8.11.1378H",
-  "formato": "elenco esadecimale",
-  "trovato": 1378,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 1378,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,10,13)",
-  "atteso": 1395,
+  "cell": "A(31,10,13)",
+  "expected": 1395,
   "source": "gPo",
   "file": "cwc/d10/i31.13",
-  "formato": "orbite (|G|=465, 3 semi)",
-  "trovato": 1395,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=465, 3 seeds)",
+  "found": 1395,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,10,12)",
-  "atteso": 1395,
+  "cell": "A(32,10,12)",
+  "expected": 1395,
   "source": "gPo",
   "file": "cwc/d10/i32.12",
-  "formato": "orbite (|G|=465, 3 semi)",
-  "trovato": 1395,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=465, 3 seeds)",
+  "found": 1395,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(23,6,8)",
-  "atteso": 1439,
+  "cell": "A(23,6,8)",
+  "expected": 1439,
   "source": "BSSS",
   "file": "cwc/d6/a23.6.8.1439H",
-  "formato": "elenco esadecimale",
-  "trovato": 1439,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 1439,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,10,14)",
-  "atteso": 1458,
+  "cell": "A(29,10,14)",
+  "expected": 1458,
   "source": "gPo",
   "file": "cwc/d10/i29.14",
-  "formato": "orbite (|G|=19656, 2 semi)",
-  "trovato": 1458,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=19656, 2 seeds)",
+  "found": 1458,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(30,10,14)",
-  "atteso": 1467,
+  "cell": "A(30,10,14)",
+  "expected": 1467,
   "source": "BoPo",
   "file": "cwc/d10/a30.10.14.1467H",
-  "formato": "elenco esadecimale",
-  "trovato": 1467,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 1467,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(21,6,10)",
-  "atteso": 1474,
+  "cell": "A(21,6,10)",
+  "expected": 1474,
   "source": "S",
   "file": "cwc/d6/a21.6.10.1474H",
-  "formato": "elenco esadecimale",
-  "trovato": 1474,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 1474,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,8,10)",
-  "atteso": 1519,
+  "cell": "A(26,8,10)",
+  "expected": 1519,
   "source": "GS",
   "file": "cwc/d8/a26.8.10.1519H",
-  "formato": "elenco esadecimale",
-  "trovato": 1519,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 1519,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,10,14)",
-  "atteso": 1539,
+  "cell": "A(31,10,14)",
+  "expected": 1539,
   "source": "EPo",
   "file": "cwc/d10/a31.10.14.1539H",
-  "formato": "elenco esadecimale",
-  "trovato": 1539,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 1539,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(19,4,6)",
-  "atteso": 1620,
+  "cell": "A(19,4,6)",
+  "expected": 1620,
   "source": "b",
   "file": "cwc/d4/a19.4.6.1620H",
-  "formato": "elenco esadecimale",
-  "trovato": 1620,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 1620,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,8,11)",
-  "atteso": 1722,
+  "cell": "A(25,8,11)",
+  "expected": 1722,
   "source": "ES",
   "file": "cwc/d8/a25.8.11.1722H",
-  "formato": "elenco esadecimale",
-  "trovato": 1722,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 1722,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,8,10)",
-  "atteso": 1728,
+  "cell": "A(27,8,10)",
+  "expected": 1728,
   "source": "Bo",
   "file": "cwc/d8/a27.8.10.1728H",
-  "formato": "elenco esadecimale",
-  "trovato": 1728,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 1728,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(22,6,9)",
-  "atteso": 1818,
+  "cell": "A(22,6,9)",
+  "expected": 1818,
   "source": "S",
   "file": "cwc/d6/a22.6.9.1818H",
-  "formato": "elenco esadecimale",
-  "trovato": 1818,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 1818,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(24,6,8)",
-  "atteso": 1915,
+  "cell": "A(24,6,8)",
+  "expected": 1915,
   "source": "E",
   "file": "cwc/d6/a24.6.8.1915H",
-  "formato": "elenco esadecimale",
-  "trovato": 1915,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 1915,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(24,4,5)",
-  "atteso": 1920,
-  "source": "BJLÖ",
+  "cell": "A(24,4,5)",
+  "expected": 1920,
+  "source": "BJL\u00d6",
   "file": "cwc/d4/i24.5",
-  "formato": "orbite (|G|=96, 22 semi)",
-  "trovato": 1920,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=96, 22 seeds)",
+  "found": 1920,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(31,10,15)",
-  "atteso": 1922,
+  "cell": "A(31,10,15)",
+  "expected": 1922,
   "source": "Po",
   "file": "cwc/d10/a31.10.15.1922H",
-  "formato": "elenco esadecimale",
-  "trovato": 1922,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 1922,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,10,13)",
-  "atteso": 1984,
+  "cell": "A(32,10,13)",
+  "expected": 1984,
   "source": "gPo",
   "file": "cwc/d10/i32.13",
-  "formato": "orbite (|G|=992, 2 semi)",
-  "trovato": 1984,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=992, 2 seeds)",
+  "found": 1984,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,8,11)",
-  "atteso": 2042,
+  "cell": "A(26,8,11)",
+  "expected": 2042,
   "source": "EKT",
   "file": "cwc/d8/a26.8.11.2042H",
-  "formato": "elenco esadecimale",
-  "trovato": 2042,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 2042,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,8,10)",
-  "atteso": 2103,
+  "cell": "A(28,8,10)",
+  "expected": 2103,
   "source": "ES",
   "file": "cwc/d8/a28.8.10.2103H",
-  "formato": "elenco esadecimale",
-  "trovato": 2103,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 2103,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(22,6,10)",
-  "atteso": 2183,
+  "cell": "A(22,6,10)",
+  "expected": 2183,
   "source": "S",
   "file": "cwc/d6/a22.6.10.2183H",
-  "formato": "elenco esadecimale",
-  "trovato": 2183,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 2183,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(23,6,9)",
-  "atteso": 2278,
+  "cell": "A(23,6,9)",
+  "expected": 2278,
   "source": "BSSS",
   "file": "cwc/d6/a23.6.9.2278H",
-  "formato": "elenco esadecimale",
-  "trovato": 2278,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 2278,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(20,4,6)",
-  "atteso": 2304,
+  "cell": "A(20,4,6)",
+  "expected": 2304,
   "source": "Nu",
   "file": "cwc/d4/i20.6",
-  "state": "NON LETTO",
-  "note": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d4_i20.6: seme di lunghezza diversa: '# Nurmela et al.'"
+  "state": "NOT READ",
+  "note": "ValueError: /Users/fededicandia/Documents/Math/research_data/codes/cwc_d4_i20.6: seed of a different length: '# Nurmela et al.'"
  },
  {
-  "cella": "A(32,10,14)",
-  "atteso": 2325,
+  "cell": "A(32,10,14)",
+  "expected": 2325,
   "source": "gPo",
   "file": "cwc/d10/i32.14",
-  "state": "NON LETTO",
-  "note": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d10_i32.14: seme di lunghezza diversa: '# size 2325'"
+  "state": "NOT READ",
+  "note": "ValueError: /Users/fededicandia/Documents/Math/research_data/codes/cwc_d10_i32.14: seed of a different length: '# size 2325'"
  },
  {
-  "cella": "A(25,4,5)",
-  "atteso": 2380,
-  "source": "BJLÖ",
+  "cell": "A(25,4,5)",
+  "expected": 2380,
+  "source": "BJL\u00d6",
   "file": "cwc/d4/i25.5",
-  "formato": "orbite (|G|=125, 20 semi)",
-  "trovato": 2380,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=125, 20 seeds)",
+  "found": 2380,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,8,11)",
-  "atteso": 2404,
+  "cell": "A(27,8,11)",
+  "expected": 2404,
   "source": "KT",
   "file": "cwc/d8/a27.8.11.2404H",
-  "state": "NON LETTO",
+  "state": "NOT READ",
   "note": "ValueError: invalid literal for int() with base 16: '$N=27'"
  },
  {
-  "cella": "A(24,8,12)",
-  "atteso": 2576,
+  "cell": "A(24,8,12)",
+  "expected": 2576,
   "source": "G",
   "file": "cwc/d8/i24.12",
-  "formato": "orbite (|G|=6072, 4 semi)",
-  "trovato": 2576,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=6072, 4 seeds)",
+  "found": 2576,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,8,12)",
-  "atteso": 2610,
+  "cell": "A(25,8,12)",
+  "expected": 2610,
   "source": "RS",
   "file": "cwc/d8/a25.8.12.2610H",
-  "formato": "elenco esadecimale",
-  "trovato": 2610,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 2610,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,10,15)",
-  "atteso": 2635,
+  "cell": "A(32,10,15)",
+  "expected": 2635,
   "source": "gPo",
   "file": "cwc/d10/i32.15",
-  "state": "NON LETTO",
-  "note": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d10_i32.15: seme di lunghezza diversa: '# size 2635'"
+  "state": "NOT READ",
+  "note": "ValueError: /Users/fededicandia/Documents/Math/research_data/codes/cwc_d10_i32.15: seed of a different length: '# size 2635'"
  },
  {
-  "cella": "A(22,6,11)",
-  "atteso": 2636,
+  "cell": "A(22,6,11)",
+  "expected": 2636,
   "source": "tMo",
   "file": "cwc/d6/a22.6.11.2636H",
-  "formato": "elenco esadecimale",
-  "trovato": 2636,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 2636,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,6,8)",
-  "atteso": 2646,
+  "cell": "A(25,6,8)",
+  "expected": 2646,
   "source": "E",
   "file": "cwc/d6/a25.6.8.2646H",
-  "formato": "elenco esadecimale",
-  "trovato": 2646,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 2646,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(21,4,6)",
-  "atteso": 2880,
-  "source": "BJLÖ",
+  "cell": "A(21,4,6)",
+  "expected": 2880,
+  "source": "BJL\u00d6",
   "file": "cwc/d4/i21.6",
-  "formato": "orbite (|G|=126, 32 semi)",
-  "trovato": 2898,
-  "state": "NON VALIDO",
-  "note": "parole 312 e 1029: condividono le 5 posizioni [0, 3, 6, 9, 12], quindi distano al più 2 < 4"
+  "format": "orbits (|G|=126, 32 seeds)",
+  "found": 2898,
+  "state": "INVALID",
+  "note": "words 312 and 1029: they share the 5 positions [0, 3, 6, 9, 12], so they are at distance at most 2 < 4"
  },
  {
-  "cella": "A(23,6,10)",
-  "atteso": 2992,
+  "cell": "A(23,6,10)",
+  "expected": 2992,
   "source": "BSSS",
   "file": "cwc/d6/a23.6.10.2992H",
-  "formato": "elenco esadecimale",
-  "trovato": 2992,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 2992,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(32,10,16)",
-  "atteso": 3038,
+  "cell": "A(32,10,16)",
+  "expected": 3038,
   "source": "Po",
   "file": "cwc/d10/a32.10.16.3038H",
-  "formato": "elenco esadecimale",
-  "trovato": 3038,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 3038,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,8,12)",
-  "atteso": 3070,
+  "cell": "A(26,8,12)",
+  "expected": 3070,
   "source": "GS",
   "file": "cwc/d8/a26.8.12.3070H",
-  "formato": "elenco esadecimale",
-  "trovato": 3070,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 3070,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(24,6,9)",
-  "atteso": 3080,
-  "source": "BJLÖ",
+  "cell": "A(24,6,9)",
+  "expected": 3080,
+  "source": "BJL\u00d6",
   "file": "cwc/d6/i24.9a",
-  "formato": "orbite (|G|=1320, 3 semi)",
-  "trovato": 3080,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=1320, 3 seeds)",
+  "found": 3080,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,8,12)",
-  "atteso": 3337,
+  "cell": "A(27,8,12)",
+  "expected": 3337,
   "source": "EKT",
   "file": "cwc/d8/a27.8.12.3337H",
-  "formato": "elenco esadecimale",
-  "trovato": 3337,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 3337,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,4,5)",
-  "atteso": 3456,
-  "source": "BJLÖ",
+  "cell": "A(27,4,5)",
+  "expected": 3456,
+  "source": "BJL\u00d6",
   "file": "cwc/d4/i27.5",
-  "formato": "orbite (|G|=27, 128 semi)",
-  "trovato": 3456,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=27, 128 seeds)",
+  "found": 3456,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(23,6,11)",
-  "atteso": 3588,
+  "cell": "A(23,6,11)",
+  "expected": 3588,
   "source": "BSSS",
   "file": "cwc/d6/a23.6.11.3588H",
-  "formato": "elenco esadecimale",
-  "trovato": 3588,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 3588,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,8,13)",
-  "atteso": 3588,
+  "cell": "A(26,8,13)",
+  "expected": 3588,
   "source": "sbS",
   "file": "cwc/d8/i26.13",
-  "state": "NON LETTO",
-  "note": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d8_i26.13: seme di lunghezza diversa: '# Nurmela et al.'"
+  "state": "NOT READ",
+  "note": "ValueError: /Users/fededicandia/Documents/Math/research_data/codes/cwc_d8_i26.13: seed of a different length: '# Nurmela et al.'"
  },
  {
-  "cella": "A(26,6,8)",
-  "atteso": 3602,
+  "cell": "A(26,6,8)",
+  "expected": 3602,
   "source": "E",
   "file": "cwc/d6/a26.6.8.3602H",
-  "formato": "elenco esadecimale",
-  "trovato": 3602,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 3602,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,8,11)",
-  "atteso": 3773,
+  "cell": "A(28,8,11)",
+  "expected": 3773,
   "source": "KT",
   "file": "cwc/d8/a28.8.11.3773H",
-  "state": "NON LETTO",
+  "state": "NOT READ",
   "note": "ValueError: invalid literal for int() with base 16: '$N=28'"
  },
  {
-  "cella": "A(27,8,13)",
-  "atteso": 4094,
+  "cell": "A(27,8,13)",
+  "expected": 4094,
   "source": "NuKKT",
   "file": "cwc/d8/i27.13",
-  "state": "NON LETTO",
-  "note": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d8_i27.13: seme di lunghezza diversa: '# A(27,8,13) >= 4094'"
+  "state": "NOT READ",
+  "note": "ValueError: /Users/fededicandia/Documents/Math/research_data/codes/cwc_d8_i27.13: seed of a different length: '# A(27,8,13) >= 4094'"
  },
  {
-  "cella": "A(24,6,10)",
-  "atteso": 4237,
+  "cell": "A(24,6,10)",
+  "expected": 4237,
   "source": "BSSS",
   "file": "cwc/d6/a24.6.10.4237H",
-  "formato": "elenco esadecimale",
-  "trovato": 4237,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 4237,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,6,9)",
-  "atteso": 4260,
+  "cell": "A(25,6,9)",
+  "expected": 4260,
   "source": "b",
   "file": "cwc/d6/a25.6.9.4260H",
-  "formato": "elenco esadecimale",
-  "trovato": 4260,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 4260,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,6,7)",
-  "atteso": 4680,
+  "cell": "A(28,6,7)",
+  "expected": 4680,
   "source": "BSSS",
   "file": "cwc/d6/i28.7",
-  "formato": "orbite (|G|=9828, 2 semi)",
-  "trovato": 4680,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=9828, 2 seeds)",
+  "found": 4680,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,6,7)",
-  "atteso": 4689,
+  "cell": "A(29,6,7)",
+  "expected": 4689,
   "source": "Bo",
   "file": "cwc/d6/a29.6.7.4689H",
-  "formato": "elenco esadecimale",
-  "trovato": 4689,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 4689,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,6,8)",
-  "atteso": 4828,
+  "cell": "A(27,6,8)",
+  "expected": 4828,
   "source": "E",
   "file": "cwc/d6/a27.6.8.4828H",
-  "formato": "elenco esadecimale",
-  "trovato": 4828,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 4828,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,8,12)",
-  "atteso": 4927,
+  "cell": "A(28,8,12)",
+  "expected": 4927,
   "source": "KT",
   "file": "cwc/d8/a28.8.12.4927H",
-  "formato": "elenco esadecimale",
-  "trovato": 4927,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 4927,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(24,6,11)",
-  "atteso": 5376,
-  "source": "BJLÖ",
+  "cell": "A(24,6,11)",
+  "expected": 5376,
+  "source": "BJL\u00d6",
   "file": "cwc/d6/i24.11a",
-  "formato": "orbite (|G|=504, 14 semi)",
-  "trovato": 5376,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=504, 14 seeds)",
+  "found": 5376,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(24,6,12)",
-  "atteso": 5616,
+  "cell": "A(24,6,12)",
+  "expected": 5616,
   "source": "BSSS",
   "file": "#lost",
-  "state": "NON LETTO",
-  "note": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/#lost: riga 1 non è una lista di posizioni: '<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML '"
+  "state": "NOT READ",
+  "note": "ValueError: /Users/fededicandia/Documents/Math/research_data/codes/#lost: line 1 is not a list of positions: '<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML '"
  },
  {
-  "cella": "A(26,6,9)",
-  "atteso": 5761,
+  "cell": "A(26,6,9)",
+  "expected": 5761,
   "source": "Bo",
   "file": "cwc/d6/a26.6.9.5761H",
-  "formato": "elenco esadecimale",
-  "trovato": 5761,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 5761,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,8,14)",
-  "atteso": 6218,
+  "cell": "A(28,8,14)",
+  "expected": 6218,
   "source": "S",
   "file": "cwc/d8/a28.8.14.6218H",
-  "formato": "elenco esadecimale",
-  "trovato": 6218,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 6218,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,6,8)",
-  "atteso": 6356,
+  "cell": "A(28,6,8)",
+  "expected": 6356,
   "source": "E",
   "file": "cwc/d6/a28.6.8.6356H",
-  "formato": "elenco esadecimale",
-  "trovato": 6356,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 6356,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,6,10)",
-  "atteso": 6600,
-  "source": "BJLÖ",
+  "cell": "A(25,6,10)",
+  "expected": 6600,
+  "source": "BJL\u00d6",
   "file": "cwc/d6/i25.10a",
-  "formato": "orbite (|G|=1320, 5 semi)",
-  "trovato": 6600,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=1320, 5 seeds)",
+  "found": 6600,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,8,13)",
-  "atteso": 6848,
+  "cell": "A(28,8,13)",
+  "expected": 6848,
   "source": "gKT",
   "file": "cwc/d8/i28.13",
-  "formato": "orbite (|G|=192, 70 semi)",
-  "trovato": 6848,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=192, 70 seeds)",
+  "found": 6848,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(24,4,6)",
-  "atteso": 7084,
+  "cell": "A(24,4,6)",
+  "expected": 7084,
   "source": "BSSS",
   "file": "cwc/d4/i24.6",
-  "formato": "orbite (|G|=6072, 3 semi)",
-  "trovato": 7084,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=6072, 3 seeds)",
+  "found": 7084,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(20,4,8)",
-  "atteso": 7830,
-  "source": "BJLÖ",
+  "cell": "A(20,4,8)",
+  "expected": 7830,
+  "source": "BJL\u00d6",
   "file": "cwc/d4/i20.8",
-  "formato": "orbite (|G|=400, 59 semi)",
-  "trovato": 8070,
-  "state": "NON VALIDO",
-  "note": "parole 0 e 1: condividono le 7 posizioni [0, 1, 2, 3, 4, 5, 6], quindi distano al più 2 < 4"
+  "format": "orbits (|G|=400, 59 seeds)",
+  "found": 8070,
+  "state": "INVALID",
+  "note": "words 0 and 1: they share the 7 positions [0, 1, 2, 3, 4, 5, 6], so they are at distance at most 2 < 4"
  },
  {
-  "cella": "A(27,6,9)",
-  "atteso": 8112,
+  "cell": "A(27,6,9)",
+  "expected": 8112,
   "source": "BSSS",
   "file": "cwc/d6/i27.9",
-  "formato": "orbite (|G|=2106, 7 semi)",
-  "trovato": 8112,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=2106, 7 seeds)",
+  "found": 8112,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,6,8)",
-  "atteso": 8148,
+  "cell": "A(29,6,8)",
+  "expected": 8148,
   "source": "E",
   "file": "cwc/d6/a29.6.8.8148H",
-  "formato": "elenco esadecimale",
-  "trovato": 8148,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 8148,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,6,11)",
-  "atteso": 8698,
+  "cell": "A(25,6,11)",
+  "expected": 8698,
   "source": "Bo",
   "file": "cwc/d6/a25.6.11.8698H",
-  "formato": "elenco esadecimale",
-  "trovato": 8698,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 8698,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,6,10)",
-  "atteso": 8810,
+  "cell": "A(26,6,10)",
+  "expected": 8810,
   "source": "BSSS",
   "file": "cwc/d6/i26.10",
-  "formato": "orbite (|G|=3000, 8 semi)",
-  "trovato": 8810,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=3000, 8 seeds)",
+  "found": 8810,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(25,6,12)",
-  "atteso": 9880,
+  "cell": "A(25,6,12)",
+  "expected": 9880,
   "source": "BSSS",
   "file": "cwc/d6/a25.6.12.9880H",
-  "formato": "elenco esadecimale",
-  "trovato": 9880,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 9880,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,6,9)",
-  "atteso": 10920,
+  "cell": "A(28,6,9)",
+  "expected": 10920,
   "source": "BSSS",
   "file": "cwc/d6/i28.9",
-  "formato": "orbite (|G|=2106, 9 semi)",
-  "trovato": 10920,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=2106, 9 seeds)",
+  "found": 10920,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,6,11)",
-  "atteso": 12206,
+  "cell": "A(26,6,11)",
+  "expected": 12206,
   "source": "Mo",
   "file": "cwc/d6/a26.6.11.12206H",
-  "formato": "elenco esadecimale",
-  "trovato": 12206,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 12206,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,6,10)",
-  "atteso": 12987,
+  "cell": "A(27,6,10)",
+  "expected": 12987,
   "source": "BSSS",
   "file": "cwc/d6/i27.10",
-  "formato": "orbite (|G|=2106, 8 semi)",
-  "trovato": 12987,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=2106, 8 seeds)",
+  "found": 12987,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,6,9)",
-  "atteso": 13026,
+  "cell": "A(29,6,9)",
+  "expected": 13026,
   "source": "BSSS",
   "file": "cwc/d6/i29.9",
-  "formato": "orbite (|G|=1053, 16 semi)",
-  "trovato": 13026,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=1053, 16 seeds)",
+  "found": 13026,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(20,4,10)",
-  "atteso": 13452,
+  "cell": "A(20,4,10)",
+  "expected": 13452,
   "source": "BSSS",
   "file": "cwc/d4/i20.10",
-  "formato": "orbite (|G|=3420, 7 semi)",
-  "trovato": 13452,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=3420, 7 seeds)",
+  "found": 13452,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,6,12)",
-  "atteso": 14854,
+  "cell": "A(26,6,12)",
+  "expected": 14854,
   "source": "gsS",
   "file": "cwc/d6/a26.6.12.14854H",
-  "formato": "elenco esadecimale",
-  "trovato": 14854,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 14854,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,4,6)",
-  "atteso": 15288,
+  "cell": "A(28,4,6)",
+  "expected": 15288,
   "source": "BSSS",
   "file": "cwc/d4/i28.6",
-  "formato": "orbite (|G|=1092, 26 semi)",
-  "trovato": 15288,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=1092, 26 seeds)",
+  "found": 15288,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(26,6,13)",
-  "atteso": 16117,
+  "cell": "A(26,6,13)",
+  "expected": 16117,
   "source": "BSSS",
   "file": "cwc/d6/a26.6.13.16117H",
-  "formato": "elenco esadecimale",
-  "trovato": 16117,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 16117,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,6,11)",
-  "atteso": 18260,
+  "cell": "A(27,6,11)",
+  "expected": 18260,
   "source": "KKT",
   "file": "cwc/d6/a27.6.11.18260H",
-  "formato": "elenco esadecimale",
-  "trovato": 18260,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 18260,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,6,10)",
-  "atteso": 18346,
+  "cell": "A(28,6,10)",
+  "expected": 18346,
   "source": "Bo",
   "file": "cwc/d6/a28.6.10.18346H",
-  "formato": "elenco esadecimale",
-  "trovato": 18346,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 18346,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(27,6,12)",
-  "atteso": 23903,
+  "cell": "A(27,6,12)",
+  "expected": 23903,
   "source": "BoKKT",
   "file": "cwc/d6/a27.6.12.23903H",
-  "formato": "elenco esadecimale",
-  "trovato": 23903,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 23903,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(29,6,10)",
-  "atteso": 24254,
+  "cell": "A(29,6,10)",
+  "expected": 24254,
   "source": "BSSS",
   "file": "cwc/d6/a29.6.10.24254H",
-  "formato": "elenco esadecimale",
-  "trovato": 24254,
-  "state": "CONFERMATO"
+  "format": "hexadecimal listing",
+  "found": 24254,
+  "state": "CONFIRMED"
  },
  {
-  "cella": "A(28,6,11)",
-  "atteso": 29484,
+  "cell": "A(28,6,11)",
+  "expected": 29484,
   "source": "NuKKT",
   "file": "cwc/d6/i28.11",
-  "state": "NON LETTO",
-  "note": "ValueError: /Users/fededicandia/Documents/Math/dati_ricerca/codici/cwc_d6_i28.11: seme di lunghezza diversa: '# Nurmela et al.'"
+  "state": "NOT READ",
+  "note": "ValueError: /Users/fededicandia/Documents/Math/research_data/codes/cwc_d6_i28.11: seed of a different length: '# Nurmela et al.'"
  },
  {
-  "cella": "A(24,4,8)",
-  "atteso": 34914,
+  "cell": "A(24,4,8)",
+  "expected": 34914,
   "source": "BSSS",
   "file": "cwc/d4/i24.8",
-  "formato": "orbite (|G|=6072, 12 semi)",
-  "trovato": 34914,
-  "state": "CONFERMATO"
+  "format": "orbits (|G|=6072, 12 seeds)",
+  "found": 34914,
+  "state": "CONFIRMED"
  }
 ]

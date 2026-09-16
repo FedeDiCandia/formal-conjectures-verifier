@@ -12,11 +12,11 @@ is not invariant under that group.**
 This engine assumes nothing. It fixes a target m (how many words are wanted),
 starts from any m words, and minimises the number of pairs that violate the
 distance by swapping one word at a time. If it reaches zero violations, we have a
-code of m words. It is the swap-level tabu search with which
-ottenuti i miglioramenti recenti nelle tables di Brouwer.
+code of m words. It is the swap-level tabu search behind the recent improvements
+in Brouwer's tables.
 
-STRATEGIA
----------
+STRATEGY
+--------
 One starts at m = the published bound and tries. If it succeeds, m+1 is tried: that
 is where a record would fall. If it fails, one goes down. The cost of the objective
 function is kept low by recomputing only the row of the word that changes.
@@ -68,8 +68,8 @@ def size_trial(n: int, d: int, w: int, m: int, *, iterations: int = 60_000,
         # One of the words most in conflict is replaced -- but not always: with a
         # fixed probability ANY word in conflict is taken instead. Without this
         # random walk the search cycles between the same two configurations, and
-        # that is the measured reason why on the cells with a gap
-        # aperto i residui restavano grandi e costanti (69-441 violations).
+        # that is the measured reason why on the cells with an open gap the
+        # residuals stayed large and constant (69-441 violations).
         if rng.random() < 0.25:
             in_conflict = np.flatnonzero(conf > 0)
             slot = int(rng.choice(in_conflict)) if len(in_conflict) else 0
@@ -87,8 +87,8 @@ def size_trial(n: int, d: int, w: int, m: int, *, iterations: int = 60_000,
             dist = np.bitwise_count(np.bitwise_xor(slice[:, None], x[None, :]))
             cost[i:i + block] = (dist < d).sum(axis=1)
         cost[other_items] = 10_000                      # already in the code
-        for word, fino in list(tabu.items()):
-            if fino > step:
+        for word, until in list(tabu.items()):
+            if until > step:
                 cost[word] += 50
             else:
                 del tabu[word]
@@ -103,9 +103,9 @@ def size_trial(n: int, d: int, w: int, m: int, *, iterations: int = 60_000,
     return [int(all_items[i]) for i in choices], total
 
 
-def spingi(n: int, d: int, w: int, start_point: int, *, cap: int = 6,
+def push_up(n: int, d: int, w: int, start_point: int, *, cap: int = 6,
            iterations: int = 40_000, seed: int = 0) -> dict:
-    """Parte da `start_point` words e sale finche' riesce."""
+    """Start from `start_point` words and climb as long as it can."""
     words = _all_words(n, w)
     succeeded: list[int] = []
     m = start_point

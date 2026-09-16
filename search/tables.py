@@ -15,7 +15,7 @@ WHAT IT KEEPS FOR EACH CELL
   lower, upper       the known bounds (upper absent in the d=4 table)
   exact              true if the table marks a dot (the optimum is known)
   source             the superscript tag: empty = [BSSS] 1990
-  construction            c = circolante, g = group di automorfismi, s = accorciato
+  construction       c = circulant, g = automorphism group, s = shortened
   code               the relative path of the explicit code, if there is one
   lost               true if the bound is in red: claimed but **the listing
                          of the code has been lost** and nobody has reconstructed it
@@ -187,7 +187,7 @@ def general(path: Path | None = None) -> dict:
     for tab in p.tables:
         if not tab:
             continue
-        # l'header e' `["", "", "d=4", "d=6", ...]`: one colonna vuota di
+        # the header is `["", "", "d=4", "d=6", ...]`: one empty column of
         # spacing between the row's label and the data, present in the data too.
         head = [c["text"].strip() for c in tab[0]]
         first = next((i for i, t in enumerate(head) if t.startswith("d=")), None)

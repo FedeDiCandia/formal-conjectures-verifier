@@ -317,7 +317,7 @@ def check_source(src: str, *, exploration: bool = False,
             allowed = (ALLOWED_IMPORT_PREFIXES + ("FormalConjectures",)
                           if exploration else ALLOWED_IMPORT_PREFIXES)
             if allowed_module:
-                # one only (away type_of%) oppure one tupla (challenge libera, verify_free)
+                # a single one (outside type_of%) or a tuple (free challenge, verify_free)
                 added = ((allowed_module,) if isinstance(allowed_module, str)
                             else tuple(allowed_module))
                 allowed = allowed + added

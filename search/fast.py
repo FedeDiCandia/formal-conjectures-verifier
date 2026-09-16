@@ -13,8 +13,8 @@ from 85 to 86 requires swapping several, and 2500 moves are not enough.
 Here the work is done once. The **conflict** matrix is precomputed — bit `j` of row
 `i` set if words `i` and `j` are at distance less than `d` — and a counter
 `count[v]` = how many chosen words conflict with `v` is kept. Adding or removing a
-word costs a sum of N integers, thousandths of what
-costava before. Si passa da migliaia di moves a milioni.
+word costs a sum of N integers, thousandths of what it cost before. This takes us
+from thousands of moves to millions.
 
 The matrix takes N²/8 bytes: 19 MB for N = 12,376, 700 MB for N = 74,613. Above the
 cap one falls back to the slow engine, which is poorer but does not explode in memory.

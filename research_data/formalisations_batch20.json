@@ -1,82 +1,82 @@
 [
  {
-  "rango": 1,
+  "rank": 1,
   "problem": "Erdos770.Nat.Prime.h_eq_add_one"
  },
  {
-  "rango": 2,
+  "rank": 2,
   "problem": "Erdos770.erdos_770.variants.odd_h_unbounded"
  },
  {
-  "rango": 3,
+  "rank": 3,
   "problem": "Erdos295.exists_k"
  },
  {
-  "rango": 4,
+  "rank": 4,
   "problem": "DiophantineTuple.noIntegralDiophantineFiveTuple_of_hasUniqueExtensionOfForall"
  },
  {
-  "rango": 5,
+  "rank": 5,
   "problem": "Erdos1148.erdos_1148.variants.weaker"
  },
  {
-  "rango": 6,
+  "rank": 6,
   "problem": "Erdos1000.erdos_1000.variants.totient_le"
  },
  {
-  "rango": 7,
+  "rank": 7,
   "problem": "Erdos707.erdos_707.variants.small_sidon_sets"
  },
  {
-  "rango": 8,
+  "rank": 8,
   "problem": "Erdos399.erdos_399.variants.cambie"
  },
  {
-  "rango": 9,
+  "rank": 9,
   "problem": "ComplexityTheory.coP_eq_P"
  },
  {
-  "rango": 10,
+  "rank": 10,
   "problem": "Erdos1008.erdos_1008.variants.lower_bound"
  },
  {
-  "rango": 11,
+  "rank": 11,
   "problem": "Erdos291.erdos_291.variants.steinerberger_generalization"
  },
  {
-  "rango": 12,
+  "rank": 12,
   "problem": "Erdos649.erdos_649"
  },
  {
-  "rango": 13,
+  "rank": 13,
   "problem": "Erdos180.erdos_180"
  },
  {
-  "rango": 14,
+  "rank": 14,
   "problem": "ComplexityTheory.P_subset_NP"
  },
  {
-  "rango": 15,
+  "rank": 15,
   "problem": "Erdos1084.erdos_1084.variants.easy_upper_d2"
  },
  {
-  "rango": 16,
+  "rank": 16,
   "problem": "OeisA38771.a_n_exists"
  },
  {
-  "rango": 17,
+  "rank": 17,
   "problem": "RegularPrimes.not_isRegularPrime_37"
  },
  {
-  "rango": 18,
+  "rank": 18,
   "problem": "CongruentNumber.not_congruentNumber_1"
  },
  {
-  "rango": 19,
+  "rank": 19,
   "problem": "OeisA3162.a_is_integer"
  },
  {
-  "rango": 20,
+  "rank": 20,
   "problem": "Erdos503.erdos_503.variants.lower_bound"
  }
 ]

@@ -13,7 +13,7 @@
 # post-cutoff material.
 #
 # The commit is FIXED: `main` moves, and a benchmark that moves is not a
-# benchmark. Cambiarlo va fatto consapevolmente modificando COMMIT_MAIN qui.
+# benchmark. Changing it is a deliberate act: edit COMMIT_MAIN here.
 # ---------------------------------------------------------------------------
 set -euo pipefail
 
@@ -31,7 +31,7 @@ export PATH="$HOME/.elan/bin:$PATH"
 
 step() { echo; echo "=============================================================="; echo "  $*"; echo "=============================================================="; }
 
-step "0/6  Controlli preliminari"
+step "0/6  Preliminary checks"
 FREE_GB=$(df -g "$ROOT" | tail -1 | awk '{print $4}')
 echo "  free space: ${FREE_GB} GB"
 if [ "$FREE_GB" -lt 25 ]; then
@@ -47,16 +47,16 @@ if [ ! -d "$SNAP" ]; then
   git -C "$EXT/formal-conjectures" worktree add --detach "$SNAP" "$COMMIT_MAIN"
 fi
 echo "  commit: $(git -C "$SNAP" rev-parse --short HEAD)"
-RICHIESTO=$(cat "$SNAP/lean-toolchain")
-echo "  toolchain richiesto: $RICHIESTO"
-if [ "$RICHIESTO" != "leanprover/lean4:$LEAN_MAIN" ]; then
-  echo "  ATTENZIONE: mi aspettavo leanprover/lean4:$LEAN_MAIN"
+REQUIRED=$(cat "$SNAP/lean-toolchain")
+echo "  toolchain required: $REQUIRED"
+if [ "$REQUIRED" != "leanprover/lean4:$LEAN_MAIN" ]; then
+  echo "  WARNING: expected leanprover/lean4:$LEAN_MAIN"
 fi
 
 step "2/6  Toolchain Lean $LEAN_MAIN"
 elan toolchain install "leanprover/lean4:$LEAN_MAIN" 2>&1 | tail -2
 
-step "3/6  Cache di Mathlib (LUNGO)"
+step "3/6  Mathlib cache (LONG)"
 ( cd "$SNAP" && lake exe cache get 2>&1 | tail -3 )
 
 step "3b/6  Disabling the double-glob library"
@@ -64,8 +64,8 @@ step "3b/6  Disabling the double-glob library"
 # same build directory: `FormalConjectures` (with `google.answer` at its default
 # `alwaysTrue`) and `FormalConjecturesAnswerPostpone` (with `postpone`). The
 # .olean files overwrite each other, so the elaborated statement of a problem
-# with `answer(sorry)` changes according to the LAST build command:
-# di build eseguito: `lake build FormalConjectures` da' `True ↔ P`,
+# with `answer(sorry)` changes according to the LAST build command run:
+# `lake build FormalConjectures` gives `True ↔ P`, while
 # `lake build <a single module>` gives `sorryAx ↔ P`. A judge cannot work against
 # a moving target, so the second library is commented out.
 # It serves upstream's CI for a secondary check, not the verification.
@@ -75,13 +75,13 @@ import sys
 from pathlib import Path
 f = Path(sys.argv[1])
 lines = f.read_text(encoding="utf-8").split("\n")
-i_nome = next(i for i, r in enumerate(lines) if "FormalConjecturesAnswerPostpone" in r)
-i_inizio = max(i for i in range(i_nome) if lines[i].strip() == "[[lean_lib]]")
-i_fine = next(i for i in range(i_nome, len(lines)) if lines[i].startswith("weak.google.answer"))
-lines[i_inizio:i_fine + 1] = ["# disattivata dallo snapshot: vedi scripts/setup_snapshot_main.sh"] + \
-    ["# " + r if r.strip() else "#" for r in lines[i_inizio:i_fine + 1]]
+i_name = next(i for i, r in enumerate(lines) if "FormalConjecturesAnswerPostpone" in r)
+i_start = max(i for i in range(i_name) if lines[i].strip() == "[[lean_lib]]")
+i_end = next(i for i in range(i_name, len(lines)) if lines[i].startswith("weak.google.answer"))
+lines[i_start:i_end + 1] = ["# disabled by the snapshot: see scripts/setup_snapshot_main.sh"] + \
+    ["# " + r if r.strip() else "#" for r in lines[i_start:i_end + 1]]
 f.write_text("\n".join(lines), encoding="utf-8")
-print("  libreria a doppio glob disattivata")
+print("  double-glob library disabled")
 PYEOF
 else
   echo "  already disabled (or upstream removed it)"
@@ -100,13 +100,13 @@ fi
 echo "leanprover/lean4:$LEAN_MAIN" > "$EXPORT_MAIN/lean-toolchain"
 ( cd "$EXPORT_MAIN" && lake build lean4export 2>&1 | tail -5 )
 
-step "6/6  Controllo finale"
+step "6/6  Final check"
 for f in "$SNAP/.lake/build/lib/lean" "$EXPORT_MAIN/.lake/build/bin/lean4export"; do
-  if [ -e "$f" ]; then echo "  OK  $f"; else echo "  MANCANTE  $f"; exit 1; fi
+  if [ -e "$f" ]; then echo "  OK  $f"; else echo "  MISSING  $f"; exit 1; fi
 done
 echo
 echo "  olean compiled: $(find "$SNAP/.lake/build/lib/lean/FormalConjectures" -name '*.olean' 2>/dev/null | wc -l)"
-echo "  spazio occupato: $(du -sh "$SNAP" | cut -f1)"
+echo "  space used: $(du -sh "$SNAP" | cut -f1)"
 echo
 echo "SNAPSHOT READY. To use it:"
 echo "  export FCS_ARCHIVE=$SNAP"

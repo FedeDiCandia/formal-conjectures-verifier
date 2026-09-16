@@ -1,10 +1,10 @@
 """
-Kramer–Mesner: group prescritto + programmazione lineare intera **esatta**.
+Kramer–Mesner: a prescribed group + **exact** integer linear programming.
 
 WHY THIS IS THE RIGHT TOOL, AND HEURISTICS ARE NOT
 ----------------------------------------------------------------
 A constant-weight code with even d is an object of design theory. Setting
-t = w − d/2, two words possono condividere al maximum t positions, cioè
+t = w − d/2, two words can share at most t positions, that is
 
     **every subset of t+1 positions lies in at most one word.**
 
@@ -17,12 +17,12 @@ Put that way it becomes a *set packing* problem, that is an ILP:
 
     variables    z_B ∈ {0,1} for each candidate word B
     constraints  for each (t+1)-subset S:  Σ_{B ⊇ S} z_B ≤ 1
-    goal   massimizzare Σ z_B
+    objective    maximise Σ z_B
 
 With a **prescribed group** G the ILP shrinks enormously: one looks for *orbits*
 instead of words, and by symmetry **one constraint per orbit of
-(t+1)-sottoinsiemi**. Su A(27,8,5) below Z27 si passa da 80.730 variables e 351
-vincoli a 2.990 variables e 13 vincoli.
+(t+1)-subsets**. On A(27,8,5) under Z27 one goes from 80,730 variables and 351
+constraints to 2,990 variables and 13 constraints.
 
 **The difference that counts:** the ILP does not return "I found one", it returns
 "this is the maximum". The maximum G-invariant code becomes a proved fact, not a
@@ -125,13 +125,13 @@ def solve(n: int, d: int, w: int, group, *, seconds: float = 300.0,
     return {"size": len(words),
             "optimal": h.modelStatusToString(state) == "Optimal",
             "state": h.modelStatusToString(state),
-            "limite_lp": round(-h.getInfo().mip_dual_bound, 3),
-            "orbits": len(orbits), "vincoli": n_constraints,
+            "lp_bound": round(-h.getInfo().mip_dual_bound, 3),
+            "orbits": len(orbits), "constraints": n_constraints,
             "valid": v.ok, "findings": v.findings[:2],
             "words": words if v.ok else []}
 
 
-def risolvi_completo(n: int, d: int, w: int, *, seconds: float = 1800.0,
+def solve_full(n: int, d: int, w: int, *, seconds: float = 1800.0,
                      silence: bool = False, threshold: int | None = None) -> dict:
     """The ILP **without a prescribed group**: every word, every constraint.
 
@@ -192,7 +192,7 @@ def risolvi_completo(n: int, d: int, w: int, *, seconds: float = 1800.0,
     v = fast_check(words, n, d, w) if words else None
     return {"size": len(words), "state": state,
             "optimal": state == "Optimal",
-            "infattibile": state == "Infeasible",
-            "limite_lp": round(-h.getInfo().mip_dual_bound, 3),
-            "variables": len(supports), "vincoli": len(lines),
+            "infeasible": state == "Infeasible",
+            "lp_bound": round(-h.getInfo().mip_dual_bound, 3),
+            "variables": len(supports), "constraints": len(lines),
             "valid": bool(v and v.ok), "words": words if v and v.ok else []}

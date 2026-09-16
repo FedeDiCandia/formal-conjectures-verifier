@@ -33,9 +33,10 @@ from codes import fast_check
 #
 # 1. An orbit is usable if and only if **one of its representatives** is at distance
 #    >= d from all the other words of the orbit. There is no need to check every
-#    are the same as those involving a: if a' = g(a) then dist(g(a), b) =
 #    pair: the group acts transitively on the orbit, so the pairs involving a'
-#    coinvolgono a, riordinate.
+#    are the same as those involving a: if a' = g(a) then dist(g(a), b) =
+#    dist(a, g^-1(b)), and g^-1(b) is still in the orbit, so they are the same
+#    pairs, reordered.
 #
 # 2. For the same reason, two orbits are compatible if and only if **one
 #    representative of the first** is at distance >= d from every word of the second.
@@ -192,7 +193,7 @@ def search_for(n: int, d: int, w: int, groups: dict, *, restarts: int = 200,
     best = {"words": [], "size": 0, "group": None}
     for name, G in groups.items():
         if comb(n, w) / len(G) > max_orbits:
-            results[name] = {"saltato": f"circa {comb(n, w) // len(G)} orbits"}
+            results[name] = {"skipped": f"about {comb(n, w) // len(G)} orbits"}
             continue
         orb, weights, neigh = orbits_and_compatibility(n, d, w, G)
         if not orb:
@@ -207,4 +208,4 @@ def search_for(n: int, d: int, w: int, groups: dict, *, restarts: int = 200,
         if len(words) > best["size"]:
             best = {"words": sorted(words), "size": len(words),
                         "group": name}
-    return {"best": best, "per_gruppo": results}
+    return {"best": best, "per_group": results}

@@ -1,9 +1,9 @@
 {
- "modo": "indici",
- "indici_fino_a": 10000000000,
- "coppie": 141420,
- "coppie_canoniche_attese": 141420,
- "non_canoniche": 0,
- "esempi": [],
+ "route": "indices",
+ "indices_up_to": 10000000000,
+ "pairs": 141420,
+ "canonical_pairs_expected": 141420,
+ "non_canonical": 0,
+ "examples": [],
  "seconds": 10.1
 }

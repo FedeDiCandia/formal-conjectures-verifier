@@ -1,5 +1,5 @@
 """
-I groups below cui cercare.
+The groups to search under.
 
 WHY THE GROUP IS EVERYTHING
 ------------------------
@@ -15,7 +15,7 @@ w, discard those that violate the distance internally, and among the rest look f
 pairwise compatible set of maximum total weight.
 It is a maximum weighted clique problem, and for large enough groups it is small.
 
-QUALI GRUPPI
+WHICH GROUPS
 ------------
   cyclic(n)         x → x+1 mod n. Order n. The commonest in the literature.
   affine(n, a)      x → a·x+b mod n, with a in ⟨a⟩ ≤ (Z/n)*. Order n·ord(a).
@@ -48,7 +48,7 @@ def cyclic(n: int) -> list[tuple[int, ...]]:
 
 
 def affine(n: int, a: int) -> list[tuple[int, ...]]:
-    """x → x+1 e x → a·x module n. Richiede gcd(a, n) = 1."""
+    """x → x+1 and x → a·x mod n. Requires gcd(a, n) = 1."""
     if gcd(a, n) != 1:
         raise ValueError(f"{a} is not invertible mod {n}")
     total_sum = tuple((i + 1) % n for i in range(n))
@@ -73,7 +73,7 @@ def group_names(n: int) -> dict[str, list[tuple[int, ...]]]:
     for a in range(2, n):
         if gcd(a, n) != 1:
             continue
-        # order moltiplicativo di a
+        # multiplicative order of a
         order, x = 1, a % n
         while x != 1:
             x = x * a % n
@@ -88,7 +88,7 @@ def group_names(n: int) -> dict[str, list[tuple[int, ...]]]:
     return outside
 
 
-# --------------------------------------------------- corpi finiti: n = potenza di p
+# ------------------------------------------- finite fields: n = a power of p
 #
 # On 27 points the natural group of design theory is not Z27 (cyclic) but the
 # additive group of F_27, which is elementary abelian (Z3)^3, and its extensions by

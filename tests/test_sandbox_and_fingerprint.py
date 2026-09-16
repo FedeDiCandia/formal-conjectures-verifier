@@ -51,7 +51,7 @@ def profile(tmp_path):
 
 
 def _write_test(path: Path, profile: Path | None) -> bool:
-    """Tenta di scrivere `path`. Ritorna True se ci riesce."""
+    """Try to write `path`. Return True if it succeeds."""
     path.unlink(missing_ok=True)
     command = ["/bin/sh", "-c", f'echo trial > "{path}"']
     if profile is not None:

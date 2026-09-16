@@ -6,8 +6,9 @@ thing that counts is measured: **starting from nothing, how close do we get?** F
 each cell a repertoire of groups is tried, the maximum weighted clique among the
 orbits is sought, and the result is compared with the table.
 
-Tre results: PAREGGIATO (uguale al limit pubblicato), SOTTO (di quanto), SOPRA
-(a record beaten — to be handled with the protocol in docs/04-finding-protocol.md, not announced).
+Three results: MATCHED (equal to the published bound), BELOW (by how much), ABOVE
+(a record beaten — to be handled with the protocol in docs/04-finding-protocol.md,
+not announced).
 """
 from __future__ import annotations
 
@@ -49,42 +50,42 @@ def main() -> int:
     cells = select(bounds, max_words=400, max_combinations=300_000,
                    how_many=int(sys.argv[1]) if len(sys.argv) > 1 else 12)
     print(f"{len(cells)} cells in the first round.\n")
-    print(f"{'cell':<14}{'pubbl.':>8}{'nostro':>8}{'result':>12}  "
-          f"{'group':<14}{'source':<8}{'tempo':>7}")
+    print(f"{'cell':<14}{'publ.':>8}{'ours':>8}{'result':>12}  "
+          f"{'group':<14}{'source':<8}{'time':>7}")
     print("-" * 78)
     results = []
-    count = {"PAREGGIATO": 0, "SOTTO": 0, "SOPRA": 0}
+    count = {"MATCHED": 0, "BELOW": 0, "ABOVE": 0}
     for k, v in cells:
         n, d, w = (int(x) for x in k.split(","))
         t0 = time.time()
         r = search_for(n, d, w, group_names(n), restarts=60)
-        mio = r["best"]["size"]
-        if mio > v["lower"]:
-            state = "SOPRA"
-        elif mio == v["lower"]:
-            state = "PAREGGIATO"
+        ours = r["best"]["size"]
+        if ours > v["lower"]:
+            state = "ABOVE"
+        elif ours == v["lower"]:
+            state = "MATCHED"
         else:
-            state = "SOTTO"
+            state = "BELOW"
         count[state] += 1
         dt = time.time() - t0
         print(f"A({n},{d},{w})".ljust(14)
-              + f"{v['lower']:>8}{mio:>8}{state:>12}  "
+              + f"{v['lower']:>8}{ours:>8}{state:>12}  "
               + f"{str(r['best']['group']):<14}{v['source']:<8}{dt:>6.1f}s")
         sys.stdout.flush()
         entry = {"cell": f"A({n},{d},{w})", "published": v["lower"],
-                "nostro": mio, "state": state, "source": v["source"],
+                "ours": ours, "state": state, "source": v["source"],
                 "group": r["best"]["group"], "seconds": round(dt, 1),
-                "per_gruppo": r["per_gruppo"]}
-        if state == "SOPRA":
+                "per_group": r["per_group"]}
+        if state == "ABOVE":
             # the slow judge, not the fast one, and the words in full
             g = check(r["best"]["words"], n, d, w)
-            entry["giudice_lento"] = g.ok
+            entry["slow_judge"] = g.ok
             entry["words"] = r["best"]["words"]
             print(f"    ATTENTION: above the published bound. "
-                  f"Giudice slow: {'valid' if g.ok else g.findings[:2]}. "
-                  f"Applicare docs/04 before di chiamarlo result.")
+                  f"Slow judge: {'valid' if g.ok else g.findings[:2]}. "
+                  f"Apply docs/04 before calling it a result.")
         results.append(entry)
-    (DATA_DIR / "fase1_ricerca.json").write_text(json.dumps(results, indent=1))
+    (DATA_DIR / "phase1_search.json").write_text(json.dumps(results, indent=1))
     print("-" * 78)
     print("  ".join(f"{s}: {c}" for s, c in count.items()))
     return 0

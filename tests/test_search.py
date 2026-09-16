@@ -126,8 +126,8 @@ def test_resuming_starts_from_where_it_got_to(tmp_path):
 
 
 def test_riprendi_falso_ricomincia_da_capo(tmp_path):
-    folder = tmp_path / "dacapo"
-    r = search_module.Search("prova_dacapo", COUNTING_PROGRAM, folder=folder,
+    folder = tmp_path / "restart"
+    r = search_module.Search("restart_trial", COUNTING_PROGRAM, folder=folder,
                                variables={"FINO_A": 20, "PAUSE": 0.001})
     r.run(verbose=False)
     r.variables = {"FINO_A": 10, "PAUSE": 0.001}

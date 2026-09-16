@@ -4,8 +4,8 @@ Our search against the published bounds.
 Three questions, in order, and the third counts only if the first two are in place.
 
   1. **Does the engine find the known optima?** On the cells where A(n,d,w) is an
-     exact value, we have to reach it. If we do not, the engine is weak and
-     qualunque result above e' rumore.
+     exact value, we have to reach it. If we do not, the engine is weak and any
+     result above a bound is noise.
   2. **Does the engine NOT exceed the known optima?** If it claims to have found
      more than the exact value, that is a defect of ours. It is the falsification
      test: without it a "record" means nothing.
@@ -32,19 +32,19 @@ DATA_DIR = ROOT / "research_data"
 def main() -> int:
     bounds = json.loads((DATA_DIR / "bounds_cwc.json").read_text())
     word_cap = int(sys.argv[1]) if len(sys.argv) > 1 else 80
-    tetto_comb = int(sys.argv[2]) if len(sys.argv) > 2 else 80_000
+    comb_cap = int(sys.argv[2]) if len(sys.argv) > 2 else 80_000
     iterations = int(sys.argv[3]) if len(sys.argv) > 3 else 3_000
 
     exact_ones, open_list = [], []
     for k, v in bounds.items():
         n, d, w = (int(x) for x in k.split(","))
-        if d % 2 or v["lower"] > word_cap or comb(n, w) > tetto_comb:
+        if d % 2 or v["lower"] > word_cap or comb(n, w) > comb_cap:
             continue
         (exact_ones if v["exact"] else open_list).append((k, v))
     exact_ones.sort(key=lambda kv: kv[1]["lower"])
     open_list.sort(key=lambda kv: kv[1]["lower"])
     print(f"{len(exact_ones)} cells with a known exact value (shakedown), "
-          f"{len(open_list)} cells open_list (targets).\n")
+          f"{len(open_list)} open cells (targets).\n")
 
     results = []
 
@@ -72,8 +72,8 @@ def main() -> int:
             if g.ok:
                 note = "  ALARM: the slow judge accepts it. To be understood."
         print(f"  A({n},{d},{w}):  optimum {v['lower']:>3}  "
-              f"reached {'si' if reached else 'NO':<3}  "
-              f"exceeded {'SI' if broken_through else 'no':<3}  "
+              f"reached {'yes' if reached else 'NO':<3}  "
+              f"exceeded {'YES' if broken_through else 'no':<3}  "
               f"{time.time() - t0:>5.1f}s{note}")
         sys.stdout.flush()
         results.append({"cell": f"A({n},{d},{w})", "kind": "exact",
@@ -92,31 +92,31 @@ def main() -> int:
         a, va = size_trial(n, d, w, v["lower"], iterations=iterations,
                                  seed=11, words=all_items)
         if va != 0:
-            state, extra = "SOTTO", ""
+            state, extra = "BELOW", ""
             below += 1
         else:
             b, vb = size_trial(n, d, w, v["lower"] + 1,
                                      iterations=iterations, seed=11, words=all_items)
             if vb == 0 and check(b, n, d, w).ok:
-                state, extra = "SOPRA", f"  +1 sul limit ({v['lower'] + 1})"
+                state, extra = "ABOVE", f"  +1 on the bound ({v['lower'] + 1})"
                 above += 1
             else:
-                state, extra = "PAREGGIATO", ""
+                state, extra = "MATCHED", ""
                 even += 1
-        print(f"  A({n},{d},{w}):  pubblicato {v['lower']:>3} "
-              f"(sup {v['upper']})  {state:<11} {time.time() - t0:>5.1f}s"
+        print(f"  A({n},{d},{w}):  published {v['lower']:>3} "
+              f"(upper {v['upper']})  {state:<11} {time.time() - t0:>5.1f}s"
               f"  source {v['source']}{extra}")
         sys.stdout.flush()
-        entry = {"cell": f"A({n},{d},{w})", "kind": "aperto",
+        entry = {"cell": f"A({n},{d},{w})", "kind": "open",
                 "published": v["lower"], "upper": v["upper"],
                 "state": state, "source": v["source"]}
-        if state == "SOPRA":
+        if state == "ABOVE":
             entry["words"] = sorted(b)
-            print("      To be handled with docs/04-finding-protocol.md: check that the table is "
-                  "aggiornata before di chiamarlo record.")
+            print("      To be handled with docs/04-finding-protocol.md: check that the "
+                  "table is up to date before calling it a record.")
         results.append(entry)
-    print(f"\n  pareggiati {even}   above {above}   below {below}")
-    (DATA_DIR / "fase1_pareggio.json").write_text(json.dumps(results, indent=1))
+    print(f"\n  matched {even}   above {above}   below {below}")
+    (DATA_DIR / "phase1_match.json").write_text(json.dumps(results, indent=1))
     return 0
 
 

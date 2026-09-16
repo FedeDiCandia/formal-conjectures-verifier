@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Read the report of an agent run on known proofs and derive the numbers
-del punto 2 (misura) e del punto 3 (proiezione).
+Read the report of an agent run on known proofs and derive the numbers for
+step 2 (measurement) and step 3 (projection).
 
 Every number comes from the JSON report written by agent/agent.py or from the list
 candidates in scripts/select_formalisations.py: nothing copied by hand.
@@ -12,8 +12,8 @@ verifications submitted (does not compile / compiles with a hole / different
 statement) and from the summary of the model's reasoning, iteration by
 iteration, which the report keeps.
 
-Uso:
-  .venv/bin/python scripts/measure_formalisations.py runs/formalizzazioni-lotto20.json
+Usage:
+  .venv/bin/python scripts/measure_formalisations.py runs/formalisations-batch20.json
 """
 from __future__ import annotations
 
@@ -32,7 +32,7 @@ _API = re.compile(r"unknown (identifier|constant)|not found|doesn't exist|does n
                   r"Mathlib (lemma|name|API)|lemma name|exact\?|apply\?|simp lemma|"
                   r"typeclass|elaborat|universe|Decidable", re.I)
 #: signs of a mathematical obstacle
-_MATE = re.compile(r"(don't|do not|can't|cannot) (see|find) (a|the|how)|need(s)? a (proof|argument)|"
+_MATH = re.compile(r"(don't|do not|can't|cannot) (see|find) (a|the|how)|need(s)? a (proof|argument)|"
                    r"key (step|lemma|difficulty)|not (true|obvious)|counterexample|"
                    r"hard(er)? than|deep|requires? (a|the) (theorem|result)|"
                    r"false as stated|misformaliz", re.I)
@@ -40,9 +40,9 @@ _MATE = re.compile(r"(don't|do not|can't|cannot) (see|find) (a|the|how)|need(s)?
 
 def band(c: dict) -> str:
     m = set(c["reasons"])
-    hard = m & {"source: articolo", "source: theorem profondo",
-                "statement: infinito/analisi", "computation grande"}
-    if "source: trial corta" in m and not hard:
+    hard = m & {"source: a paper", "source: a deep theorem",
+                "statement: infinity/analysis", "large computation"}
+    if "source: short proof" in m and not hard:
         return "A"
     if c["category"] == "textbook" and not hard:
         return "B"
@@ -58,33 +58,33 @@ DESCRIPTION = {
     "B": "textbook, nothing hard",
     "C": "research solved, no signal",
     "D": "proof cited from a paper",
-    "E": "segnali duri (theorem profondo, infinito/analisi, computation grande)",
+    "E": "hard signals (a deep theorem, infinity/analysis, a large computation)",
 }
 
 
-def ostacolo(t: dict) -> str:
-    """Matematica, API di Mathlib, o indeterminato, dal reasoning e dalle checks."""
+def obstacle(t: dict) -> str:
+    """Mathematics, the Mathlib API, or undetermined, from the reasoning and the checks."""
     if t["solved"]:
         return "-"
     if not t.get("iteration_detail"):
         return (f"not determinable from the report ({t.get('source', 'no detail')}); "
                 f"{t['explorations']} explorations, {t['checks']} checks")
     text =" ".join(it.get("reasoning", "") for it in t["iteration_detail"])
-    api, mate = len(_API.findall(text)), len(_MATE.findall(text))
+    api, math = len(_API.findall(text)), len(_MATH.findall(text))
     nat = t.get("verifications_by_kind") or {}
     if not t["checks"]:
         base = "no candidate submitted"
-    elif nat.get("buco_o_assioma") or nat.get("enunciato_sbagliato"):
+    elif nat.get("hole_or_axiom") or nat.get("wrong_statement"):
         base = "it compiled, the proof was not there"
     else:
         base = "the candidates did not compile"
     if api > 2 * max(mate, 1):
-        verdict = "API di Mathlib"
-    elif mate > api:
-        verdict = "matematica"
+        verdict = "the Mathlib API"
+    elif math > api:
+        verdict = "mathematics"
     else:
-        verdict = "misto"
-    return f"{verdict} ({base}; segni API {api}, segni matematica {mate})"
+        verdict = "mixed"
+    return f"{verdict} ({base}; API signs {api}, mathematics signs {math})"
 
 
 def main() -> int:
@@ -98,11 +98,11 @@ def main() -> int:
     spent = sum(r["spent"] for r in reports)
     unrecorded = sum(1.0 for r in reports if r.get("interruption"))
 
-    print(f"model {report['model']}, effort {report['effort']}, istruzioni "
+    print(f"model {report['model']}, effort {report['effort']}, instructions "
           f"{report['instructions']}, cap ${report['problem_cap']:.2f}")
-    print(f"spend misurata: ${spent:.4f}" + (
-        f"  + at most ${unrecorded:.2f} unrecorded (interrupted attempts "
-        f"dalla rete: {', '.join(r['interruption']['problem'] for r in reports if r.get('interruption'))})"
+    print(f"measured spend: ${spent:.4f}" + (
+        f"  + at most ${unrecorded:.2f} unrecorded (attempts interrupted "
+        f"by the network: {', '.join(r['interruption']['problem'] for r in reports if r.get('interruption'))})"
         if unrecorded else ""))
     print()
     print(f"{'#':>2} {'band':6} {'result':11} {'cost':>7} {'it':>3} {'ver':>3}  problem")
@@ -112,13 +112,13 @@ def main() -> int:
               f"${t['cost']:6.3f} {t['iterations']:3d} {t['checks']:3d}  {t['problem']}")
         if not t["solved"]:
             print(f"{'':26}{t['reason'][:90]}")
-            print(f"{'':26}ostacolo: {ostacolo(t)}")
+            print(f"{'':26}obstacle: {obstacle(t)}")
 
     solved = [t for t in attempts if t["solved"]]
     # the spend of interrupted attempts is unrecorded: it is counted at its maximum
     spend = spent + unrecorded
-    print(f"\nACCEPTED BY THE VERIFIER: {len(solved)} su {len(set(t['problem'] for t in attempts))} "
-          f"problems tentati")
+    print(f"\nACCEPTED BY THE VERIFIER: {len(solved)} of "
+          f"{len(set(t['problem'] for t in attempts))} problems attempted")
     if solved:
         print(f"cost per success (total spend / successes): ${spend / len(solved):.3f}"
               + (" (with the unrecorded spend at its maximum)" if unrecorded else ""))
@@ -128,7 +128,7 @@ def main() -> int:
     if failed:
         print(f"mean cost of a failure: ${sum(t['cost'] for t in failed) / len(failed):.3f}")
 
-    # --- proiezione
+    # --- projection
     rate: dict[str, tuple[int, int]] = {}
     for t in attempts:
         if t["problem"] in by_name:

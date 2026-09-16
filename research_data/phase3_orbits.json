@@ -1,661 +1,661 @@
 [
  {
-  "cella": "A(19,6,5)",
+  "cell": "A(19,6,5)",
   "published": 76,
   "upper": 83,
   "source": "BSSS",
-  "nostro": 76,
-  "gruppo": "Z19",
+  "ours": 76,
+  "group": "Z19",
   "candidate": 11628,
   "seconds": 0.8,
-  "per_gruppo": {
+  "per_group": {
    "Z19": {
-    "orbite": 396,
-    "ordine": 19,
-    "dimensione": 76
+    "orbits": 396,
+    "order": 19,
+    "size": 76
    },
    "Z19:18": {
-    "orbite": 0,
-    "dimensione": 0
+    "orbits": 0,
+    "size": 0
    },
    "Z19:9": {
-    "orbite": 0,
-    "dimensione": 0
+    "orbits": 0,
+    "size": 0
    },
    "Z19:3": {
-    "orbite": 12,
-    "ordine": 57,
-    "dimensione": 57
+    "orbits": 12,
+    "order": 57,
+    "size": 57
    },
    "Z19:6": {
-    "orbite": 0,
-    "dimensione": 0
+    "orbits": 0,
+    "size": 0
    },
    "Z19:2": {
-    "orbite": 18,
-    "ordine": 38,
-    "dimensione": 57
+    "orbits": 18,
+    "order": 38,
+    "size": 57
    }
   }
  },
  {
-  "cella": "A(23,8,6)",
+  "cell": "A(23,8,6)",
   "published": 77,
   "upper": 80,
   "source": "BSSS",
-  "nostro": 23,
-  "gruppo": "Z23",
+  "ours": 23,
+  "group": "Z23",
   "candidate": 100947,
   "seconds": 2.4,
-  "per_gruppo": {
+  "per_group": {
    "Z23": {
-    "orbite": 1078,
-    "ordine": 23,
-    "dimensione": 23
+    "orbits": 1078,
+    "order": 23,
+    "size": 23
    },
    "Z23:11": {
-    "orbite": 0,
-    "dimensione": 0
+    "orbits": 0,
+    "size": 0
    },
    "Z23:22": {
-    "orbite": 0,
-    "dimensione": 0
+    "orbits": 0,
+    "size": 0
    },
    "Z23:2": {
-    "orbite": 22,
-    "ordine": 46,
-    "dimensione": 23
+    "orbits": 22,
+    "order": 46,
+    "size": 23
    }
   }
  },
  {
-  "cella": "A(17,6,6)",
+  "cell": "A(17,6,6)",
   "published": 113,
   "upper": 124,
-  "source": "ChÖ",
-  "nostro": 85,
-  "gruppo": "Z17",
+  "source": "Ch\u00d6",
+  "ours": 85,
+  "group": "Z17",
   "candidate": 12376,
   "seconds": 3.5,
-  "per_gruppo": {
+  "per_group": {
    "Z17": {
-    "orbite": 544,
-    "ordine": 17,
-    "dimensione": 85
+    "orbits": 544,
+    "order": 17,
+    "size": 85
    },
    "Z17:8": {
-    "orbite": 2,
-    "ordine": 136,
-    "dimensione": 68
+    "orbits": 2,
+    "order": 136,
+    "size": 68
    },
    "Z17:16": {
-    "orbite": 0,
-    "dimensione": 0
+    "orbits": 0,
+    "size": 0
    },
    "Z17:4": {
-    "orbite": 4,
-    "ordine": 68,
-    "dimensione": 68
+    "orbits": 4,
+    "order": 68,
+    "size": 68
    },
    "Z17:2": {
-    "orbite": 16,
-    "ordine": 34,
-    "dimensione": 68
+    "orbits": 16,
+    "order": 34,
+    "size": 68
    }
   }
  },
  {
-  "cella": "A(22,6,5)",
+  "cell": "A(22,6,5)",
   "published": 132,
   "upper": 136,
   "source": "BSSS",
-  "nostro": 132,
-  "gruppo": "Z22",
+  "ours": 132,
+  "group": "Z22",
   "candidate": 26334,
   "seconds": 48.3,
-  "per_gruppo": {
+  "per_group": {
    "Z22": {
-    "orbite": 872,
-    "ordine": 22,
-    "dimensione": 132
+    "orbits": 872,
+    "order": 22,
+    "size": 132
    },
    "Z22:5": {
-    "orbite": 4,
-    "ordine": 110,
-    "dimensione": 132
+    "orbits": 4,
+    "order": 110,
+    "size": 132
    },
    "Z22:10": {
-    "orbite": 0,
-    "dimensione": 0
+    "orbits": 0,
+    "size": 0
    },
    "Z22:2": {
-    "orbite": 30,
-    "ordine": 44,
-    "dimensione": 88
+    "orbits": 30,
+    "order": 44,
+    "size": 88
    },
    "blocchi2x11": {
-    "orbite": 2094,
-    "ordine": 11,
-    "dimensione": 132
+    "orbits": 2094,
+    "order": 11,
+    "size": 132
    }
   }
  },
  {
-  "cella": "A(19,8,9)",
+  "cell": "A(19,8,9)",
   "published": 88,
   "upper": 103,
   "source": "BSSS",
-  "nostro": 57,
-  "gruppo": "Z19",
+  "ours": 57,
+  "group": "Z19",
   "candidate": 92378,
   "seconds": 94.0,
-  "per_gruppo": {
+  "per_group": {
    "Z19": {
-    "orbite": 2252,
-    "ordine": 19,
-    "dimensione": 57
+    "orbits": 2252,
+    "order": 19,
+    "size": 57
    },
    "Z19:18": {
-    "orbite": 1,
-    "ordine": 342,
-    "dimensione": 38
+    "orbits": 1,
+    "order": 342,
+    "size": 38
    },
    "Z19:9": {
-    "orbite": 2,
-    "ordine": 171,
-    "dimensione": 38
+    "orbits": 2,
+    "order": 171,
+    "size": 38
    },
    "Z19:3": {
-    "orbite": 20,
-    "ordine": 57,
-    "dimensione": 38
+    "orbits": 20,
+    "order": 57,
+    "size": 38
    },
    "Z19:6": {
-    "orbite": 1,
-    "ordine": 114,
-    "dimensione": 38
+    "orbits": 1,
+    "order": 114,
+    "size": 38
    },
    "Z19:2": {
-    "orbite": 19,
-    "ordine": 38,
-    "dimensione": 38
+    "orbits": 19,
+    "order": 38,
+    "size": 38
    }
   }
  },
  {
-  "cella": "A(18,6,5)",
+  "cell": "A(18,6,5)",
   "published": 69,
   "upper": 72,
   "source": "ACL",
-  "nostro": 63,
-  "gruppo": "blocchi2x9",
+  "ours": 63,
+  "group": "blocchi2x9",
   "candidate": 8568,
   "seconds": 150.7,
-  "per_gruppo": {
+  "per_group": {
    "Z18": {
-    "orbite": 273,
-    "ordine": 18,
-    "dimensione": 54
+    "orbits": 273,
+    "order": 18,
+    "size": 54
    },
    "Z18:6": {
-    "orbite": 0,
-    "dimensione": 0
+    "orbits": 0,
+    "size": 0
    },
    "Z18:3": {
-    "orbite": 0,
-    "dimensione": 0
+    "orbits": 0,
+    "size": 0
    },
    "Z18:2": {
-    "orbite": 9,
-    "ordine": 36,
-    "dimensione": 36
+    "orbits": 9,
+    "order": 36,
+    "size": 36
    },
    "blocchi2x9": {
-    "orbite": 756,
-    "ordine": 9,
-    "dimensione": 63
+    "orbits": 756,
+    "order": 9,
+    "size": 63
    },
    "blocchi3x6": {
-    "orbite": 1170,
-    "ordine": 6,
-    "dimensione": 54
+    "orbits": 1170,
+    "order": 6,
+    "size": 54
    },
    "blocchi6x3": {
-    "orbite": 2646,
-    "ordine": 3,
-    "dimensione": 57
+    "orbits": 2646,
+    "order": 3,
+    "size": 57
    }
   }
  },
  {
-  "cella": "A(16,6,7)",
+  "cell": "A(16,6,7)",
   "published": 109,
   "upper": 122,
   "source": "G",
-  "nostro": 108,
-  "gruppo": "blocchi4x4",
+  "ours": 108,
+  "group": "blocchi4x4",
   "candidate": 11440,
   "seconds": 183.4,
-  "per_gruppo": {
+  "per_group": {
    "Z16": {
-    "orbite": 528,
-    "ordine": 16,
-    "dimensione": 80
+    "orbits": 528,
+    "order": 16,
+    "size": 80
    },
    "Z16:4": {
-    "orbite": 4,
-    "ordine": 64,
-    "dimensione": 16
+    "orbits": 4,
+    "order": 64,
+    "size": 16
    },
    "Z16:2": {
-    "orbite": 28,
-    "ordine": 32,
-    "dimensione": 64
+    "orbits": 28,
+    "order": 32,
+    "size": 64
    },
    "blocchi2x8": {
-    "orbite": 1216,
-    "ordine": 8,
-    "dimensione": 80
+    "orbits": 1216,
+    "order": 8,
+    "size": 80
    },
    "blocchi4x4": {
-    "orbite": 2624,
-    "ordine": 4,
-    "dimensione": 108
+    "orbits": 2624,
+    "order": 4,
+    "size": 108
    }
   }
  },
  {
-  "cella": "A(16,6,8)",
+  "cell": "A(16,6,8)",
   "published": 120,
   "upper": 138,
   "source": "BSSS",
-  "nostro": 100,
-  "gruppo": "Z16:2",
+  "ours": 100,
+  "group": "Z16:2",
   "candidate": 12870,
   "seconds": 206.4,
-  "per_gruppo": {
+  "per_group": {
    "Z16": {
-    "orbite": 544,
-    "ordine": 16,
-    "dimensione": 98
+    "orbits": 544,
+    "order": 16,
+    "size": 98
    },
    "Z16:4": {
-    "orbite": 4,
-    "ordine": 64,
-    "dimensione": 10
+    "orbits": 4,
+    "order": 64,
+    "size": 10
    },
    "Z16:2": {
-    "orbite": 44,
-    "ordine": 32,
-    "dimensione": 100
+    "orbits": 44,
+    "order": 32,
+    "size": 100
    },
    "blocchi2x8": {
-    "orbite": 1236,
-    "ordine": 8,
-    "dimensione": 90
+    "orbits": 1236,
+    "order": 8,
+    "size": 90
    },
    "blocchi4x4": {
-    "orbite": 2630,
-    "ordine": 4,
-    "dimensione": 85
+    "orbits": 2630,
+    "order": 4,
+    "size": 85
    }
   }
  },
  {
-  "cella": "A(23,6,5)",
+  "cell": "A(23,6,5)",
   "published": 147,
   "upper": 170,
   "source": "t",
-  "nostro": 138,
-  "gruppo": "Z23",
+  "ours": 138,
+  "group": "Z23",
   "candidate": 33649,
   "seconds": 8.7,
-  "per_gruppo": {
+  "per_group": {
    "Z23": {
-    "orbite": 1111,
-    "ordine": 23,
-    "dimensione": 138
+    "orbits": 1111,
+    "order": 23,
+    "size": 138
    },
    "Z23:11": {
-    "orbite": 0,
-    "dimensione": 0
+    "orbits": 0,
+    "size": 0
    },
    "Z23:22": {
-    "orbite": 0,
-    "dimensione": 0
+    "orbits": 0,
+    "size": 0
    },
    "Z23:2": {
-    "orbite": 44,
-    "ordine": 46,
-    "dimensione": 115
+    "orbits": 44,
+    "order": 46,
+    "size": 115
    }
   }
  },
  {
-  "cella": "A(27,8,5)",
+  "cell": "A(27,8,5)",
   "published": 31,
   "upper": 32,
   "source": "ACL",
-  "nostro": 27,
-  "gruppo": "Z27",
+  "ours": 27,
+  "group": "Z27",
   "candidate": 80730,
   "seconds": 714.5,
-  "per_gruppo": {
+  "per_group": {
    "Z27": {
-    "orbite": 180,
-    "ordine": 27,
-    "dimensione": 27
+    "orbits": 180,
+    "order": 27,
+    "size": 27
    },
    "Z27:18": {
-    "orbite": 0,
-    "dimensione": 0
+    "orbits": 0,
+    "size": 0
    },
    "Z27:9": {
-    "orbite": 0,
-    "dimensione": 0
+    "orbits": 0,
+    "size": 0
    },
    "Z27:6": {
-    "orbite": 0,
-    "dimensione": 0
+    "orbits": 0,
+    "size": 0
    },
    "Z27:3": {
-    "orbite": 0,
-    "dimensione": 0
+    "orbits": 0,
+    "size": 0
    },
    "Z27:2": {
-    "orbite": 0,
-    "dimensione": 0
+    "orbits": 0,
+    "size": 0
    },
    "blocchi3x9": {
-    "orbite": 4698,
-    "ordine": 9,
-    "dimensione": 27
+    "orbits": 4698,
+    "order": 9,
+    "size": 27
    }
   }
  },
  {
-  "cella": "A(17,6,7)",
+  "cell": "A(17,6,7)",
   "published": 166,
   "upper": 206,
   "source": "GPo",
-  "nostro": 119,
-  "gruppo": "Z17",
+  "ours": 119,
+  "group": "Z17",
   "candidate": 19448,
   "seconds": 7.5,
-  "per_gruppo": {
+  "per_group": {
    "Z17": {
-    "orbite": 944,
-    "ordine": 17,
-    "dimensione": 119
+    "orbits": 944,
+    "order": 17,
+    "size": 119
    },
    "Z17:8": {
-    "orbite": 6,
-    "ordine": 136,
-    "dimensione": 68
+    "orbits": 6,
+    "order": 136,
+    "size": 68
    },
    "Z17:16": {
-    "orbite": 0,
-    "dimensione": 0
+    "orbits": 0,
+    "size": 0
    },
    "Z17:4": {
-    "orbite": 16,
-    "ordine": 68,
-    "dimensione": 68
+    "orbits": 16,
+    "order": 68,
+    "size": 68
    },
    "Z17:2": {
-    "orbite": 48,
-    "ordine": 34,
-    "dimensione": 85
+    "orbits": 48,
+    "order": 34,
+    "size": 85
    }
   }
  },
  {
-  "cella": "A(20,6,5)",
+  "cell": "A(20,6,5)",
   "published": 90,
   "upper": 100,
   "source": "BSSS",
-  "nostro": 84,
-  "gruppo": "Z20",
+  "ours": 84,
+  "group": "Z20",
   "candidate": 15504,
   "seconds": 850.6,
-  "per_gruppo": {
+  "per_group": {
    "Z20": {
-    "orbite": 539,
-    "ordine": 20,
-    "dimensione": 84
+    "orbits": 539,
+    "order": 20,
+    "size": 84
    },
    "Z20:4": {
-    "orbite": 5,
-    "ordine": 80,
-    "dimensione": 44
+    "orbits": 5,
+    "order": 80,
+    "size": 44
    },
    "Z20:2": {
-    "orbite": 23,
-    "ordine": 40,
-    "dimensione": 44
+    "orbits": 23,
+    "order": 40,
+    "size": 44
    },
    "blocchi2x10": {
-    "orbite": 1302,
-    "ordine": 10,
-    "dimensione": 84
+    "orbits": 1302,
+    "order": 10,
+    "size": 84
    },
    "blocchi4x5": {
-    "orbite": 2924,
-    "ordine": 5,
-    "dimensione": 83
+    "orbits": 2924,
+    "order": 5,
+    "size": 83
    },
    "blocchi5x4": {
-    "orbite": 3616,
-    "ordine": 4,
-    "dimensione": 80
+    "orbits": 3616,
+    "order": 4,
+    "size": 80
    }
   }
  },
  {
-  "cella": "A(29,6,5)",
+  "cell": "A(29,6,5)",
   "published": 315,
   "upper": 364,
   "source": "BSSS",
-  "nostro": 290,
-  "gruppo": "Z29",
+  "ours": 290,
+  "group": "Z29",
   "candidate": 118755,
   "seconds": 956.2,
-  "per_gruppo": {
+  "per_group": {
    "Z29": {
-    "orbite": 3479,
-    "ordine": 29,
-    "dimensione": 290
+    "orbits": 3479,
+    "order": 29,
+    "size": 290
    },
    "Z29:28": {
-    "orbite": 0,
-    "dimensione": 0
+    "orbits": 0,
+    "size": 0
    },
    "Z29:14": {
-    "orbite": 0,
-    "dimensione": 0
+    "orbits": 0,
+    "size": 0
    },
    "Z29:7": {
-    "orbite": 24,
-    "ordine": 203,
-    "dimensione": 203
+    "orbits": 24,
+    "order": 203,
+    "size": 203
    },
    "Z29:4": {
-    "orbite": 84,
-    "ordine": 116,
-    "dimensione": 290
+    "orbits": 84,
+    "order": 116,
+    "size": 290
    },
    "Z29:2": {
-    "orbite": 217,
-    "ordine": 58,
-    "dimensione": 290
+    "orbits": 217,
+    "order": 58,
+    "size": 290
    }
   }
  },
  {
-  "cella": "A(18,6,6)",
+  "cell": "A(18,6,6)",
   "published": 133,
   "upper": 186,
   "source": "R",
-  "nostro": 129,
-  "gruppo": "blocchi6x3",
+  "ours": 129,
+  "group": "blocchi6x3",
   "candidate": 18564,
   "seconds": 24793.5,
-  "per_gruppo": {
+  "per_group": {
    "Z18": {
-    "orbite": 681,
-    "ordine": 18,
-    "dimensione": 117
+    "orbits": 681,
+    "order": 18,
+    "size": 117
    },
    "Z18:6": {
-    "orbite": 3,
-    "ordine": 108,
-    "dimensione": 15
+    "orbits": 3,
+    "order": 108,
+    "size": 15
    },
    "Z18:3": {
-    "orbite": 51,
-    "ordine": 54,
-    "dimensione": 69
+    "orbits": 51,
+    "order": 54,
+    "size": 69
    },
    "Z18:2": {
-    "orbite": 21,
-    "ordine": 36,
-    "dimensione": 60
+    "orbits": 21,
+    "order": 36,
+    "size": 60
    },
    "blocchi2x9": {
-    "orbite": 1805,
-    "ordine": 9,
-    "dimensione": 111
+    "orbits": 1805,
+    "order": 9,
+    "size": 111
    },
    "blocchi3x6": {
-    "orbite": 2412,
-    "ordine": 6,
-    "dimensione": 116
+    "orbits": 2412,
+    "order": 6,
+    "size": 116
    },
    "blocchi6x3": {
-    "orbite": 5838,
-    "ordine": 3,
-    "dimensione": 129
+    "orbits": 5838,
+    "order": 3,
+    "size": 129
    }
   }
  },
  {
-  "cella": "A(19,6,6)",
+  "cell": "A(19,6,6)",
   "published": 172,
   "upper": 228,
   "source": "BSSS",
-  "nostro": 171,
-  "gruppo": "Z19:18",
+  "ours": 171,
+  "group": "Z19:18",
   "candidate": 27132,
   "seconds": 36.1,
-  "per_gruppo": {
+  "per_group": {
    "Z19": {
-    "orbite": 1176,
-    "ordine": 19,
-    "dimensione": 133
+    "orbits": 1176,
+    "order": 19,
+    "size": 133
    },
    "Z19:18": {
-    "orbite": 2,
-    "ordine": 342,
-    "dimensione": 171
+    "orbits": 2,
+    "order": 342,
+    "size": 171
    },
    "Z19:9": {
-    "orbite": 5,
-    "ordine": 171,
-    "dimensione": 171
+    "orbits": 5,
+    "order": 171,
+    "size": 171
    },
    "Z19:3": {
-    "orbite": 60,
-    "ordine": 57,
-    "dimensione": 171
+    "orbits": 60,
+    "order": 57,
+    "size": 171
    },
    "Z19:6": {
-    "orbite": 9,
-    "ordine": 114,
-    "dimensione": 171
+    "orbits": 9,
+    "order": 114,
+    "size": 171
    },
    "Z19:2": {
-    "orbite": 33,
-    "ordine": 38,
-    "dimensione": 171
+    "orbits": 33,
+    "order": 38,
+    "size": 171
    }
   }
  },
  {
-  "cella": "A(21,6,5)",
+  "cell": "A(21,6,5)",
   "published": 110,
   "upper": 126,
   "source": "Bo",
-  "nostro": 105,
-  "gruppo": "Z21",
+  "ours": 105,
+  "group": "Z21",
   "candidate": 20349,
   "seconds": 32437.2,
-  "per_gruppo": {
+  "per_group": {
    "Z21": {
-    "orbite": 663,
-    "ordine": 21,
-    "dimensione": 105
+    "orbits": 663,
+    "order": 21,
+    "size": 105
    },
    "Z21:6": {
-    "orbite": 3,
-    "ordine": 126,
-    "dimensione": 63
+    "orbits": 3,
+    "order": 126,
+    "size": 63
    },
    "Z21:3": {
-    "orbite": 15,
-    "ordine": 63,
-    "dimensione": 84
+    "orbits": 15,
+    "order": 63,
+    "size": 84
    },
    "Z21:2": {
-    "orbite": 41,
-    "ordine": 42,
-    "dimensione": 84
+    "orbits": 41,
+    "order": 42,
+    "size": 84
    },
    "blocchi3x7": {
-    "orbite": 2646,
-    "ordine": 7,
-    "dimensione": 98
+    "orbits": 2646,
+    "order": 7,
+    "size": 98
    },
    "blocchi7x3": {
-    "orbite": 6426,
-    "ordine": 3,
-    "dimensione": 93
+    "orbits": 6426,
+    "order": 3,
+    "size": 93
    }
   }
  },
  {
-  "cella": "A(17,6,8)",
+  "cell": "A(17,6,8)",
   "published": 184,
   "upper": 259,
   "source": "BSSS",
-  "nostro": 136,
-  "gruppo": "Z17",
+  "ours": 136,
+  "group": "Z17",
   "candidate": 24310,
   "seconds": 47.7,
-  "per_gruppo": {
+  "per_group": {
    "Z17": {
-    "orbite": 1222,
-    "ordine": 17,
-    "dimensione": 136
+    "orbits": 1222,
+    "order": 17,
+    "size": 136
    },
    "Z17:8": {
-    "orbite": 10,
-    "ordine": 136,
-    "dimensione": 136
+    "orbits": 10,
+    "order": 136,
+    "size": 136
    },
    "Z17:16": {
-    "orbite": 3,
-    "ordine": 272,
-    "dimensione": 136
+    "orbits": 3,
+    "order": 272,
+    "size": 136
    },
    "Z17:4": {
-    "orbite": 18,
-    "ordine": 68,
-    "dimensione": 136
+    "orbits": 18,
+    "order": 68,
+    "size": 136
    },
    "Z17:2": {
-    "orbite": 54,
-    "ordine": 34,
-    "dimensione": 136
+    "orbits": 54,
+    "order": 34,
+    "size": 136
    }
   }
  }

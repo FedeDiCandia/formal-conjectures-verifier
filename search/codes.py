@@ -90,21 +90,21 @@ def check(words, n: int, d: int, w: int | None = None,
         for (i, a), (j, b) in combinations(list(enumerate(words)), 2):
             dist = distance(a, b)
             if dist < d:
-                if report(f"words {i} e {j}: distance {dist} < {d}"):
+                if report(f"words {i} and {j}: distance {dist} < {d}"):
                     break
 
     return Result(ok=not findings, size=len(words), findings=findings)
 
 
-# ---------------------------------------------------------------- lettura file
+# ------------------------------------------------------------- reading files
 
 def read(path: str | Path, n: int | None = None) -> tuple[list[int], int]:
     """Read a code from a text file and return (words, n).
 
-    Riconosce i two formati in cui questi codici circolano:
+    It recognises the two formats in which these codes circulate:
 
       * **positions**: each line is the list of positions set to 1, e.g.
-        `1 2 3 7` oppure `1,2,3,7`;
+        `1 2 3 7` or `1,2,3,7`;
       * **bits**: each line is a string of `0`s and `1`s of the same length.
 
     The format is recognised from the first useful line and then applied to all of
@@ -135,7 +135,7 @@ def read(path: str | Path, n: int | None = None) -> tuple[list[int], int]:
                 raise ValueError(f"{path}: line {k + 1} is not a list of "
                                  f"positions: {r[:40]!r}") from None
             if len(set(pos)) != len(pos):
-                raise ValueError(f"{path}: line {k + 1} ripete one position")
+                raise ValueError(f"{path}: line {k + 1} repeats a position")
             base = 1 if min(pos) >= 1 else 0
             maximum = max(maximum, max(pos))
             words.append(sum(1 << (p - base) for p in pos))
@@ -143,13 +143,13 @@ def read(path: str | Path, n: int | None = None) -> tuple[list[int], int]:
     return words, (n if n is not None else inferred)
 
 
-# ------------------------------------------------- check rapida, ed esatta
+# ------------------------------------------------- a fast check, and an exact one
 #
 # For large codes, checking every pair is too slow in Python: 50,000 words are 1.25
 # billion pairs. But there is an **equivalent** and almost instantaneous criterion,
 # valid for constant-weight codes.
 #
-# Due words distinte di weight w a distance di Hamming `dist` hanno
+# Two distinct words of weight w at Hamming distance `dist` satisfy
 #
 #     dist = 2 · (w − |A ∩ B|)
 #
@@ -196,7 +196,7 @@ def fast_check(words, n: int, d: int, w: int) -> Result:
     limit = 1 << n
     for i, p in enumerate(words):
         if not isinstance(p, int) or p < 0 or p >= limit:
-            findings.append(f"word {i}: outside dall'intervallo [0, 2^{n})")
+            findings.append(f"word {i}: outside the range [0, 2^{n})")
         elif weight(p) != w:
             findings.append(f"word {i}: weight {weight(p)}, expected {w}")
         if len(findings) >= 20:

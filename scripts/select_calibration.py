@@ -53,7 +53,7 @@ def proof_lines(p) -> int:
 def level(n: int) -> str:
     if n <= 0:
         return "?"
-    return "facile" if n <= 3 else "mean" if n <= 12 else "difficile"
+    return "easy" if n <= 3 else "medium" if n <= 12 else "hard"
 
 
 def git(archive: Path, *args) -> str:
@@ -82,18 +82,18 @@ def proof_date(p, archive: Path) -> tuple[str, str]:
             return out[-1].split("|")[0][:10], "first appearance of the proof line"
     out = git(archive, "log", "--format=%ci|%h", "--diff-filter=A", "--", rel).strip().splitlines()
     if out:
-        return out[-1].split("|")[0][:10], "creazione del file"
-    return "?", "sconosciuto"
+        return out[-1].split("|")[0][:10], "creation of the file"
+    return "?", "unknown"
 
 
-def risk(data: str) -> str:
-    if data == "?":
-        return "ignoto"
-    if data < CUT:
-        return "ALTO"
-    if data < "2026-07":
-        return "INCERTO"
-    return "BASSO"
+def risk(date: str) -> str:
+    if date == "?":
+        return "unknown"
+    if date < CUT:
+        return "HIGH"
+    if date < "2026-07":
+        return "UNCERTAIN"
+    return "LOW"
 
 
 def main() -> int:
@@ -125,42 +125,42 @@ def main() -> int:
         if result != "ACCEPTED":
             continue
         n = proof_lines(p)
-        data, method = proof_date(p, archive)
+        date, method = proof_date(p, archive)
         lines.append({
-            "problem": p.theorem, "module": p.module, "categoria": p.category,
+            "problem": p.theorem, "module": p.module, "category": p.category,
             "proof_lines": n, "level": level(n),
-            "proof_date": data, "metodo_data": method,
-            "rischio_memorizzazione": risk(data),
-            "verifica_archivio": result,
-            "secondi_verifica": v.get("seconds") if v else None,
+            "proof_date": date, "date_method": method,
+            "memorisation_risk": risk(date),
+            "archive_verification": result,
+            "verification_seconds": v.get("seconds") if v else None,
             "statement": p.statement[:300],
             "description": (p.docstring or "").strip()[:300],
         })
 
-    lines.sort(key=lambda r: (r["level"] != "facile", r["level"] != "mean",
+    lines.sort(key=lambda r: (r["level"] != "easy", r["level"] != "medium",
                               r["proof_lines"]))
 
     # selection: N per level, preferring the lowest memorisation risk
     selection = []
-    for lv in ("facile", "mean", "difficile"):
+    for lv in ("easy", "medium", "hard"):
         candidates = [r for r in lines if r["level"] == lv]
-        candidates.sort(key=lambda r: ({"BASSO": 0, "INCERTO": 1, "ALTO": 2,
-                                       "ignoto": 3}[r["rischio_memorizzazione"]],
+        candidates.sort(key=lambda r: ({"LOW": 0, "UNCERTAIN": 1, "HIGH": 2,
+                                       "unknown": 3}[r["memorisation_risk"]],
                                       r["proof_lines"]))
         selection += candidates[:args.per_level]
 
     Path(args.output).write_text(
-        json.dumps({"all_items": lines, "selection": selection}, ensure_ascii=False, indent=2),
+        json.dumps({"all": lines, "selection": selection}, ensure_ascii=False, indent=2),
         encoding="utf-8")
 
     print(f"Archive: {archive}")
     print(f"Training cutoff assumed: {CUT}\n")
     print(f"Problems whose archive proof is ACCEPTED by the verifier: {len(lines)}\n")
-    print(f"{'lvl':10} {'lines':>5} {'data':11} {'risk':9} {'check':10} problem")
+    print(f"{'lvl':10} {'lines':>5} {'date':11} {'risk':9} {'check':10} problem")
     print("-" * 104)
     for r in lines:
         print(f"{r['level']:10} {r['proof_lines']:5d} {r['proof_date']:11} "
-              f"{r['rischio_memorizzazione']:9} {r['verifica_archivio']:10} {r['problem']}")
+              f"{r['memorisation_risk']:9} {r['archive_verification']:10} {r['problem']}")
 
     print(f"\n{'='*104}")
     print(f"PROPOSED SELECTION ({args.per_level} per level)")
@@ -168,15 +168,15 @@ def main() -> int:
     for r in selection:
         print(f"  [{r['level']:9}] {r['problem']}")
         print(f"      {r['proof_lines']} proof lines | added on {r['proof_date']} "
-              f"| memorizzazione {r['rischio_memorizzazione']}")
+              f"| memorisation {r['memorisation_risk']}")
         if r["description"]:
             print(f"      \"{r['description'].splitlines()[0][:90]}\"")
 
     count = {}
     for r in lines:
-        count[r["rischio_memorizzazione"]] = count.get(r["rischio_memorizzazione"], 0) + 1
-    print(f"\nRischio di memorizzazione su all_items i candidates: {count}")
-    if count.get("ALTO", 0) == len(lines) and lines:
+        count[r["memorisation_risk"]] = count.get(r["memorisation_risk"], 0) + 1
+    print(f"\nMemorisation risk over all candidates: {count}")
+    if count.get("HIGH", 0) == len(lines) and lines:
         print("\n  ALL at high risk. That is expected: the benchmark tag is dated")
         print("  2026-05-06 and the training cutoff is May 2026, so every proof in")
         print("  the tag predates it. For post-cutoff problems the snapshot from")

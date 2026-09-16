@@ -33,29 +33,29 @@ from index import ProblemIndex          # noqa: E402
 #: weaker or vacuous. The first two come from Epoch AI's files, the others are
 #: classic defects of formalisation in Lean.
 KNOWN_SUSPECTS = [
-    ("testimone vacuo (`C = 0`, insieme vuoto)",
+    ("vacuous witness (`C = 0`, the empty set)",
      r"∃\s*[A-Za-z]",
      "a leading `∃` can be satisfied by zero or by the empty set: check whether the "
      "statement requires the witness to be non-trivial. This is A211420's case in "
      "Epoch's results: \"there exists C such that ... divides C * a(n)\" is true with "
      "C = 0, because everything divides zero."),
-    ("caso al bordo (n = 0, n = 1)",
+    ("edge case (n = 0, n = 1)",
      r"∀\s*\(?[a-z]+\s*:\s*ℕ\)?",
      "a `∀ n : ℕ` includes n = 0 and n = 1, where the definitions often degenerate. "
      "Check whether the source says \"for every n\" or \"for every n ≥ 2\". This is "
      "A262403: injectivity fails because two values are both 0."),
-    ("sottrazione troncata di ℕ",
+    ("truncated subtraction in ℕ",
      r"-\s*\d|\w\s*-\s*\w",
      "in ℕ subtraction does not go below zero: `k - 1` with k = 0 gives 0, not -1. "
      "If the source speaks of integers, the translation changes its meaning."),
-    ("`sInf`/`sSup` su insieme vuoto",
+    ("`sInf`/`sSup` on the empty set",
      r"sInf|sSup|Finset\.sup|Finset\.inf",
      "`sInf ∅ = 0` and `Finset.sup ∅ = 0` in ℕ: a statement saying \"the minimum is "
      "0\" can be true because the set is empty, not because the minimum is 0."),
-    ("divisione intera",
+    ("integer division",
      r"/\s*\d|\w\s*/\s*\w",
      "in ℕ and ℤ division truncates: `7 / 2 = 3`. If the source speaks of rationals "
-     "l'statement è diverso."),
+     "the statement is a different one."),
     ("`answer(sorry)` in the source",
      r"answer\s*\(",
      "with the default option the `answer( )` elaborator makes `answer(sorry)` equal "
@@ -67,15 +67,15 @@ KNOWN_SUSPECTS = [
 def fascicolo(p, entry: dict) -> str:
     r = []
     def s(x=""): r.append(x)
-    s(f"# Sospetto: `{p.theorem}`")
+    s(f"# Suspect: `{p.theorem}`")
     s()
     s("> **This is not a result.** A trivial tactic closed an open statement,")
     s("> and the explanation is nearly always that the Lean statement does not say")
     s("> what the source says. It has to be compared with the source before")
-    s("> chiamarlo in qualunque way. Vedi `docs/04-protocollo-ritrovamenti.md`.")
+    s("> calling it anything at all. See `docs/04-finding-protocol.md`.")
     s()
-    s(f"**Categoria nell'archive:** {p.category}  ")
-    s(f"**Modulo:** `{p.module}`  ")
+    s(f"**Category in the archive:** {p.category}  ")
+    s(f"**Module:** `{p.module}`  ")
     s(f"**What gave way:** {entry.get('ATTENTION', '—')}")
     s()
     s("## The statement, as the verifier sees it")
@@ -106,7 +106,7 @@ def fascicolo(p, entry: dict) -> str:
           f"{' — appears in this statement' if present else ''}  ")
         s(f"      {explanation}")
     s()
-    s("## Messaggi di Lean, grezzi")
+    s("## Lean messages, raw")
     s()
     s("```")
     s((entry.get("raw_messages") or "(not kept)")[:3000])
@@ -129,7 +129,7 @@ def fascicolo(p, entry: dict) -> str:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--probe", default=str(ROOT / "runs/hunt/artefacts.json"))
-    ap.add_argument("--folder", default=str(ROOT / "runs/sospetti"))
+    ap.add_argument("--folder", default=str(ROOT / "runs/suspects"))
     args = ap.parse_args()
 
     f = Path(args.probe)
@@ -137,8 +137,8 @@ def main() -> int:
         print(f"no probe results in {f}")
         return 0
     data = json.loads(f.read_text(encoding="utf-8"))
-    notable = [v for v in data if "ATTENZIONE" in v]
-    print(f"sondati {len(data)} problems, segnalazioni {len(notable)}")
+    notable = [v for v in data if "ATTENTION" in v]
+    print(f"{len(data)} problems probed, {len(notable)} flagged")
     if not notable:
         print("\nNo flags. That is the likeliest outcome and should be read for what")
         print("it is: the archive's formalisations hold against the trivial tactics.")

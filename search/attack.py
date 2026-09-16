@@ -6,17 +6,18 @@ THE THREE ENGINES, AND WHY ALL THREE ARE NEEDED (measured 11-12 September 2026)
   * **orbits** — matches at once where the record is invariant under a group
     (A(19,6,5) = 76 in 0.8 s) and stalls where it is not: on A(17,6,6) it reaches 85
     against 113, because 113 is not a sum of orbit sizes under Z17.
-    * **local search from random words** — 1 cell matched of 34, residuals of
+  * **local search from random words** — 1 cell matched of 34, residuals of
     69-441 violations. The space is too large to start from nothing.
-  * **precomputed conflicts** — the conflict matrix is built once, and
-        a move costs a sum of N integers instead of N·m bit counts. From thousands
-    di moves a centinaia di migliaia.
+  * **precomputed conflicts** — the conflict matrix is built once, and a move
+    costs a sum of N integers instead of N·m bit counts. From thousands of moves
+    to hundreds of thousands.
 
 This script lines them up as the literature does: **the group gives the structure,
 and the climb in steps extends it one word at a time.** Every step starts from a
 valid code, so the repair has little to fix.
 
-A success goes through the slow judge in `codes.py` and then through the whole protocol in `docs/04-finding-protocol.md`.
+A success goes through the slow judge in `codes.py` and then through the whole
+protocol in `docs/04-finding-protocol.md`.
 """
 from __future__ import annotations
 
@@ -48,25 +49,25 @@ def one(arguments) -> dict:
              "candidate": comb(n, w)}
     N = comb(n, w)
     if N * ((N + 7) // 8) > MEMORY_CAP_BYTES:
-        result["saltata"] = f"matrice da {N * ((N + 7) // 8) / 1e9:.1f} GB"
+        result["skipped"] = f"matrix of {N * ((N + 7) // 8) / 1e9:.1f} GB"
         return result
     try:
         seed, group = best_invariant(n, d, w, restarts=restarts)
         all_items = _all_words(n, w)
         seed = extend(seed, all_items, d)
-        result.update({"invariante": len(seed), "group": group})
+        result.update({"invariant": len(seed), "group": group})
         r = climb(n, d, w, seed, entry["lower"] + 1,
                  moves_per_step=moves, seed=1, attempts=3)
         result.update({"reached": r["size"], "valid": r["valid"],
-                      "gradini_riusciti": sum(1 for v in r["steps"].values()
+                      "steps_succeeded": sum(1 for v in r["steps"].values()
                                               if v == "succeeded")})
         if r["size"] > entry["lower"] and r["valid"]:
             g = check(r["words"], n, d, w)
-            result["giudice_lento"] = g.ok
+            result["slow_judge"] = g.ok
             if g.ok:
                 result["words"] = r["words"]
     except MemoryError as e:
-        result["saltata"] = str(e)
+        result["skipped"] = str(e)
     result["seconds"] = round(time.time() - t0, 1)
     return result
 
@@ -84,33 +85,33 @@ def main() -> int:
     with Pool(processes=min(6, os.cpu_count() or 1)) as pool:
         for e in pool.imap_unordered(one, jobs):
             results.append(e)
-            if "saltata" in e:
-                print(f"    saltata  {e['cell']:<13} {e['saltata']}")
+            if "skipped" in e:
+                print(f"    skipped  {e['cell']:<13} {e['skipped']}")
             else:
                 discard = e["reached"] - e["published"]
-                mark = ("SUPERATO" if discard > 0 else
+                mark = ("BEATEN" if discard > 0 else
                          "matched" if discard == 0 else f"{discard:+d}")
-                print(f"{mark:>11}  {e['cell']:<13} pubbl {e['published']:>5} "
-                      f"invariante {e['invariante']:>5} ({e['group']:<13}) "
+                print(f"{mark:>11}  {e['cell']:<13} publ. {e['published']:>5} "
+                      f"invariant {e['invariant']:>5} ({e['group']:<13}) "
                       f"-> {e['reached']:>5}  "
-                      f"+{e['gradini_riusciti']} steps  {e['seconds']:>7.1f}s")
+                      f"+{e['steps_succeeded']} steps  {e['seconds']:>7.1f}s")
             sys.stdout.flush()
-            (DATA_DIR / "fase3_attacco.json").write_text(json.dumps(results, indent=1))
-    useful = [e for e in results if "saltata" not in e]
+            (DATA_DIR / "phase3_attack.json").write_text(json.dumps(results, indent=1))
+    useful = [e for e in results if "skipped" not in e]
     won = [e for e in useful if e["reached"] > e["published"]]
     even = sum(1 for e in useful if e["reached"] == e["published"])
-    print(f"\n{'=' * 74}\n{len(useful)} cells tentate: "
-          f"pareggiate {even}, superate {len(won)}")
+    print(f"\n{'=' * 74}\n{len(useful)} cells attempted: "
+          f"matched {even}, beaten {len(won)}")
     for e in won:
         print(f"  {e['cell']}: {e['reached']} instead of {e['published']}. "
-              f"Giudice slow: {e.get('giudice_lento')}. APPLICARE docs/04.")
+              f"Slow judge: {e.get('slow_judge')}. APPLY docs/04.")
     if useful and not won:
         neighbours = sorted(useful, key=lambda e: e["published"] - e["reached"])[:6]
         print("The closest cells:")
         for e in neighbours:
             print(f"  {e['cell']}: {e['reached']} against {e['published']} "
                   f"({e['reached'] - e['published']:+d}), "
-                  f"invariante {e['invariante']} below {e['group']}")
+                  f"invariant {e['invariant']} under {e['group']}")
     return 0
 
 

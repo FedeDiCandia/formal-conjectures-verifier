@@ -141,7 +141,7 @@ def one_call(client, model, system, text, budget, cap, effort,
                                                 residue=cap)
     if available < 2_000:
         raise SpendLimitExceeded(
-            f"budget insufficiente: {count.input_tokens:,} token in ingresso, "
+            f"not enough budget: {count.input_tokens:,} input tokens, "
             f"room for the answer {available:,}")
     with client.messages.stream(
             model=model, max_tokens=available,
@@ -150,7 +150,7 @@ def one_call(client, model, system, text, budget, cap, effort,
             output_config={"effort": effort},
             messages=[{"role": "user", "content": text}]) as stream:
         answer = stream.get_final_message()
-    budget.record(answer.usage, "informale")
+    budget.record(answer.usage, "informal")
     output_text = "\n".join(b.text for b in answer.content
                              if b.type == "text").strip()
     if not output_text:
@@ -160,8 +160,8 @@ def one_call(client, model, system, text, budget, cap, effort,
         # receiving nothing is not an acceptable outcome: it stops here, with the exact
         # reason.
         raise SpendLimitExceeded(
-            f"answer vuota: stop_reason={answer.stop_reason}, "
-            f"{answer.usage.output_tokens:,} token in output di cui "
+            f"empty answer: stop_reason={answer.stop_reason}, "
+            f"{answer.usage.output_tokens:,} output tokens of which "
             f"{getattr(answer.usage.output_tokens_details, 'thinking_tokens', '?')} "
             f"of reasoning. The max_tokens cap was {available:,}: "
             f"either more room or a lower effort is needed.")
@@ -182,8 +182,8 @@ def main() -> int:
     # MEASURED on 11 September 2026 on the same problem, with the same input:
     #   effort high,   cap 32k -> 32,000 tokens, ALL of them reasoning, zero lines
     #   effort medium, cap 24k -> 24,000 tokens, ALL of them reasoning, zero lines
-    #   effort low,    cap 24k -> 20.402 token (16.353 di reasoning),
-    #                               7.066 chars di matematica vera, end_turn
+    #   effort low,    cap 24k -> 20,402 tokens (16,353 of reasoning),
+    #                               7,066 characters of real mathematics, end_turn
     # At effort high the model exhausts the room thinking and never concludes. At
     # effort low it concludes, and concludes well: on the first problem it showed that
     # the conjecture implies a case of Lehmer's totient problem, which is open, plus
@@ -192,12 +192,12 @@ def main() -> int:
     ap.add_argument("--effort", default="low")
     ap.add_argument("--budget", type=float, required=True)
     ap.add_argument("--problem-cap", type=float, default=1.20)
-    ap.add_argument("--report", default=str(ROOT / "runs" / "informale.json"))
+    ap.add_argument("--report", default=str(ROOT / "runs" / "informal.json"))
     ap.add_argument("--log", default=None)
     args = ap.parse_args()
 
     log_path = Path(args.log) if args.log else (
-        ROOT / "runs" / "jobs" / f"informale-{time.strftime('%Y%m%d-%H%M%S')}.log")
+        ROOT / "runs" / "jobs" / f"informal-{time.strftime('%Y%m%d-%H%M%S')}.log")
     log_path.parent.mkdir(parents=True, exist_ok=True)
     import agent
     sys.stdout = agent._Doppio(sys.stdout, log_path)
@@ -223,9 +223,9 @@ def main() -> int:
                                     args.problem_cap * 0.7, args.effort)
             entry["trial"] = trial
             entry["confidence"] = extract(trial, "CONFIDENCE")
-            entry["punto_debole"] = extract(trial, "WEAKEST STEP")
+            entry["weakest_step"] = extract(trial, "WEAKEST STEP")
             print(f"  author:   {entry['confidence'] or '(not declared)'}")
-            print(f"            punto debole: {entry['punto_debole'][:100]}")
+            print(f"            weakest step: {entry['weakest_step'][:100]}")
 
             # The reviewer exists to break a claimed proof. If the author declares it
             # has none, there is nothing to arbitrate and the second call is money
@@ -255,10 +255,10 @@ def main() -> int:
             break
         except anthropic.APIError as e:
             entry["error"] = f"API: {e}"
-            print(f"  !! error dall'API: {e}")
+            print(f"  !! API error: {e}")
             results.append(entry)
             if "credit" in str(e).lower():
-                print("  credito exhausted: mi fermo.")
+                print("  credit exhausted: stopping.")
                 break
             continue
         entry["cost"] = round(budget.spent - spent_before, 4)
@@ -272,16 +272,16 @@ def main() -> int:
         Path(args.report).write_text(json.dumps(
             {"model": args.model, "effort": args.effort,
              "spent": budget.spent, "problem_cap": args.problem_cap,
-             "in_corso": True, "results": results},
+             "in_progress": True, "results": results},
             ensure_ascii=False, indent=1), encoding="utf-8")
 
     survivors = [v for v in results if v.get("verdict", "").upper().startswith("HOLDS")]
-    print(f"\n{'='*78}\nRESOCONTO\n{'='*78}")
+    print(f"\n{'='*78}\nSUMMARY\n{'='*78}")
     for v in results:
-        print(f"  {v['problem'][:46]:46} autore {v.get('confidence','-')[:14]:14} "
-              f"revisore {v.get('verdict','-')[:12]:12} ${v.get('cost',0):.4f}")
-    print(f"\n  survivors alla revisione: {len(survivors)} su {len(results)}")
-    print(f"  spesa total: ${budget.spent:.4f} su ${args.budget:.2f}")
+        print(f"  {v['problem'][:46]:46} author {v.get('confidence','-')[:14]:14} "
+              f"reviewer {v.get('verdict','-')[:12]:12} ${v.get('cost',0):.4f}")
+    print(f"\n  survivors of the review: {len(survivors)} of {len(results)}")
+    print(f"  total spend: ${budget.spent:.4f} of ${args.budget:.2f}")
     Path(args.report).write_text(json.dumps(
         {"model": args.model, "effort": args.effort, "spent": budget.spent,
          "problem_cap": args.problem_cap, "results": results},

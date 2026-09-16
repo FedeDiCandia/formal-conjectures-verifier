@@ -3,7 +3,7 @@
 # Installs the whole project environment from scratch.
 # Idempotent: it can be re-run without harm.
 #
-# Uso:  bash scripts/setup.sh
+# Usage:  bash scripts/setup.sh
 # ---------------------------------------------------------------------------
 set -euo pipefail
 
@@ -11,7 +11,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 EXT="$ROOT/external"
 BIN="$ROOT/tools/bin"
 
-# --- Versioni bloccate -----------------------------------------------------
+# --- Pinned versions -------------------------------------------------------
 # The benchmark tag decides EVERYTHING else: it fixes the version of Lean.
 FC_TAG="bench-v1-lean4.27.0"
 LEAN_VERSION="v4.27.0"
@@ -29,13 +29,13 @@ LEAN4EXPORT_REV="master"
 
 step() { echo; echo "==============================================================="; echo "  $*"; echo "==============================================================="; }
 
-# --- 1. elan (gestore di versioni di Lean) ---------------------------------
+# --- 1. elan (the Lean version manager) ------------------------------------
 step "1/7  elan + Lean"
 if ! command -v elan >/dev/null 2>&1; then
   export PATH="$HOME/.elan/bin:$PATH"
 fi
 if ! command -v elan >/dev/null 2>&1; then
-  echo "Installo elan dal sito ufficiale..."
+  echo "Installing elan from the official site..."
   curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
   sh /tmp/elan-init.sh -y --default-toolchain stable
   export PATH="$HOME/.elan/bin:$PATH"
@@ -78,8 +78,8 @@ git -C "$EXT/comparator" fetch --quiet
 git -C "$EXT/comparator" checkout --quiet "$COMPARATOR_REV"
 ( cd "$EXT/comparator" && lake build comparator )
 
-# --- 5. environment Python -----------------------------------------------------
-step "6/7  Ambiente Python isolated (.venv)"
+# --- 5. Python environment -------------------------------------------------
+step "6/7  Isolated Python environment (.venv)"
 if [ ! -d "$ROOT/.venv" ]; then
   python3 -m venv "$ROOT/.venv"
 fi
@@ -87,15 +87,15 @@ fi
 "$ROOT/.venv/bin/pip" install --quiet -r "$ROOT/requirements.txt"
 "$ROOT/.venv/bin/python" -c "import pytest, anthropic; print('  pytest', pytest.__version__, '| anthropic', anthropic.__version__)"
 
-# --- 6. check finale -----------------------------------------------------
+# --- 6. final check --------------------------------------------------------
 step "7/7  Checking the binaries"
 for f in "$EXT/comparator/.lake/build/bin/comparator" \
          "$EXT/lean4export-427/.lake/build/bin/lean4export" \
          "$BIN/landrun"; do
-  if [ -x "$f" ]; then echo "  OK  $f"; else echo "  MANCANTE  $f"; exit 1; fi
+  if [ -x "$f" ]; then echo "  OK  $f"; else echo "  MISSING  $f"; exit 1; fi
 done
 echo
-echo "Ambiente ready."
-echo "Prossimi steps:"
+echo "Environment ready."
+echo "Next steps:"
 echo "  ./.venv/bin/python verifier/index.py --build   # builds the problem index"
-echo "  ./.venv/bin/python -m pytest tests/ -v         # esegue i test del verifier"
+echo "  ./.venv/bin/python -m pytest tests/ -v         # runs the verifier tests"

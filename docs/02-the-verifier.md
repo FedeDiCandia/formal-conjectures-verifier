@@ -115,7 +115,7 @@ and the file stays byte-for-byte identical. The test includes the **control**:
 without the sandbox the same write succeeds — otherwise we would not have shown
 that it is the sandbox that stops it.
 
-### 2. Checking the archive's integrity (`impronta.py`)
+### 2. Checking the archive's integrity (`fingerprint.py`)
 
 comparator's README lists among its assumptions (number 2) that one must not have
 compiled potentially hostile files, since they could have altered the compiled

@@ -17,12 +17,12 @@ The list below says which files, and under which terms.
      verifier/problem_index_main.json     extracted from the archive
      tests/fixtures/*.lean              archive statements, altered on purpose
                                           so the verifier has something to reject
-     docs/contributi/formal-conjectures/**/*.lean
+     docs/contributions/formal-conjectures/**/*.lean
                                         copies of archive files, with proofs
                                           added in place of `sorry`
-     docs/contributi/formal-conjectures/**/*.patch
+     docs/contributions/formal-conjectures/**/*.patch
                                         diffs against archive files
-     docs/pubblicazione/lean/*.lean     files that import and restate archive
+     docs/paper/lean/*.lean             files that import and restate archive
      search/lean/*.lean                  declarations
      research_data/formalisation_candidates.json
                                         docstrings and statements of 1209 problems
@@ -55,7 +55,7 @@ The list below says which files, and under which terms.
    https://github.com/epoch-research/LeanOpenProblems
 
    Not redistributed. Its published result files were read and counted; the
-   numbers derived from them are in docs/dati/ and are labelled as theirs.
+   numbers derived from them are in docs/data/ and are labelled as theirs.
 
 6. The On-Line Encyclopedia of Integer Sequences (OEIS) —
    Creative Commons Attribution Share-Alike 4.0 (CC BY-SA 4.0)
@@ -69,7 +69,7 @@ The list below says which files, and under which terms.
      research_data/oeis-2026-09-12/*.txt
      research_data/oeis-2026-09-12/A045917.html
 
-   The note in docs/pubblicazione/ quotes two OEIS entries (A105020, A045917)
+   The note in docs/paper/ quotes two OEIS entries (A105020, A045917)
    with attribution to their authors and to the OEIS.
 
 7. Tables of bounds for binary codes — no licence stated by the author

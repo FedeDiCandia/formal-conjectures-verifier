@@ -1,12 +1,12 @@
 """
-Stima quanto costerebbe far lavorare l'agent su certi problems.
+Estimate what it would cost to run the agent on a given set of problems.
 
 It does not call the API and spends nothing: it uses the token count, which is
 free, plus the data MEASURED in earlier runs.
 
 Every number produced says where it comes from:
   MEASURED   observed in a real run
-  CONTATO   calcolato esattamente (token, prices di listino)
+  COUNTED    computed exactly (tokens, list prices)
   ESTIMATED  inferred from the two above, with the reasoning beside it
 """
 from __future__ import annotations
@@ -70,14 +70,14 @@ def estimate(problems: list[str], budget: float, effort: str, max_iterations: in
         print("  the only real run was at effort high)")
         print()
 
-    print("QUANTO POTREBBE COSTARE (STIMATO)")
+    print("WHAT IT COULD COST (ESTIMATED)")
     print("-" * 70)
     mean = MEASURE["mean_cost_per_call"] * factor
     median = MEASURE["median_cost_per_call"] * factor
     for label, per_call, iterations in [
-        ("ottimistico (poche iterations, calls corte)", median, 5),
+        ("optimistic  (few iterations, short calls)", median, 5),
         ("realistic   (as in the one run observed)", mean, 9),
-        ("pessimistico (arriva al cap di spesa)", mean, max_iterations),
+        ("pessimistic (it reaches the spending cap)", mean, max_iterations),
     ]:
         total = min(per_call * iterations, cap) * n
         minutes = iterations * MEASURE["seconds_per_iteration"] * n / 60
@@ -90,7 +90,7 @@ def estimate(problems: list[str], budget: float, effort: str, max_iterations: in
     print()
 
     if problems:
-        print("I PROBLEMI SCELTI")
+        print("THE PROBLEMS CHOSEN")
         print("-" * 70)
         try:
             idx = ProblemIndex.load()
@@ -106,14 +106,14 @@ def estimate(problems: list[str], budget: float, effort: str, max_iterations: in
             state = ("solved in the archive with a clean proof"
                      if pr.archive_proof_is_clean else
                      "solved in the archive but with axioms that are not permitted"
-                     if pr.proof_is_sorry_free else "APERTO")
+                     if pr.proof_is_sorry_free else "OPEN")
             print(f"  {name}")
             print(f"      {pr.category} | {state} | statement {len(pr.statement)} chars")
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Estimate the cost of an agent run.")
-    ap.add_argument("--problems", default="", help="names separati da spazi")
+    ap.add_argument("--problems", default="", help="names separated by spaces")
     ap.add_argument("--budget", type=float, default=5.0)
     ap.add_argument("--effort", default="high",
                     choices=["low", "medium", "high", "xhigh", "max"])

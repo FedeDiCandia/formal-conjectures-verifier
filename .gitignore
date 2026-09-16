@@ -1,4 +1,4 @@
-# Repository esterni clonati (grandi, gestiti da scripts/setup.sh): ~37 GB
+# External repositories, cloned by scripts/setup.sh (large: ~37 GB)
 external/*/
 !external/.gitkeep
 
@@ -11,15 +11,15 @@ venv/
 .pytest_cache/
 *.egg-info/
 
-# Ambiente / segreti: la chiave API non deve mai finire in un commit
+# Environment / secrets: the API key must never end up in a commit
 .env
 .env.*
-!.env.esempio
+!.env.example
 *.key
 *.pem
 id_rsa*
 
-# Output temporanei (runs/ sono ~555 MB; i tre file gia' versionati restano)
+# Run output (runs/ is ~555 MB; the three files already versioned stay)
 runs/
 *.log
 .DS_Store
@@ -29,18 +29,19 @@ runs/
 .lake/
 build/
 
-# Dati di terzi senza licenza dichiarata (tabelle di A. E. Brouwer):
-# restano sul disco, li riscarica search/reproduce.py
+# Third-party data with no declared licence (A. E. Brouwer's tables):
+# they stay on disk, search/reproduce.py downloads them again
 research_data/codes/
 research_data/Andw.html
 research_data/binary-1.html
 
-# Note di lavoro interne, non pubblicate
+# Internal working notes, not published
 interno/
+internal/
 
-# Configurazione locale degli strumenti
+# Local tool configuration
 .claude/
 
-# Indici generati: li ricostruisce `python verifier/index.py --build`
+# Generated indices: rebuild them with `python verifier/index.py --build`
 verifier/problem_index.json
 verifier/problem_index_main.json
