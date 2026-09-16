@@ -14,7 +14,7 @@ get right.
 
 **Where to start**
 
-1. [**The note on OEIS A105020**](docs/pubblicazione/A105020-goldbach.pdf) — 20
+1. [**The note on OEIS A105020**](docs/paper/A105020-goldbach.pdf) — 20
    pages in English, with a Lean formalisation attached. It shows that one of the
    archive's open entries is equivalent to binary Goldbach, so it is not an
    independent problem at all. This is the piece to read if you only read one.
@@ -111,7 +111,7 @@ Check a single proof — this is the command behind every claim in this README:
 ./.venv/bin/python verifier/verify.py THEOREM_NAME candidate.lean --json
 ```
 
-The proofs in [`docs/contributi/formal-conjectures/candidati/`](docs/contributi/formal-conjectures/candidati/)
+The proofs in [`docs/contributions/formal-conjectures/candidates/`](docs/contributions/formal-conjectures/candidates/)
 are the exact files that were submitted to it, and can be re-run as they are.
 
 Two archive snapshots are pinned, and the second one is why the measurements mean
@@ -139,7 +139,7 @@ env FCS_ARCHIVE=$PWD/external/fc-main \
 
 ### 1. A note on OEIS A105020 and binary Goldbach
 
-[`docs/pubblicazione/A105020-goldbach.pdf`](docs/pubblicazione/A105020-goldbach.pdf)
+[`docs/paper/A105020-goldbach.pdf`](docs/paper/A105020-goldbach.pdf)
 (20 pages, source and Lean files in the same directory). The archive contains
 `OeisA105020.conjecture`, a Lean formalisation of a 2007 OEIS comment presented as
 "a Goldbach Conjecture for this sequence". The note proves that this formal
@@ -167,7 +167,7 @@ a first band of 16 was attempted at a $1 cap per problem:
 The four: `DiophantineTuple` (two statements), `erdos_1000.variants.totient_le`,
 `Erdos1148…weaker`, and `ComplexityTheory.coP_eq_P`. Drafts, patches and the
 verifier's reports are in
-[`docs/contributi/formal-conjectures/`](docs/contributi/formal-conjectures/LEGGIMI.md).
+[`docs/contributions/formal-conjectures/`](docs/contributions/formal-conjectures/README.md).
 
 **Status upstream, honestly:** accepted *by this verifier* is not accepted *by the
 archive*. Two issues have been filed and assigned
@@ -312,9 +312,9 @@ probes — was free, and there was far more of it than there was API spend.
 | `scripts/` | setup, target selection, searches, probes, analysis |
 | `ricerca/` | the coding-theory search and the reproduction of published records |
 | `docs/` | the full write-up, in Italian, including the finding protocol |
-| `docs/pubblicazione/` | the A105020 note: PDF, LaTeX source, Lean files |
-| `docs/contributi/` | the proofs prepared for the archive, with patches and reports |
-| `docs/dati/` | every raw report, so the numbers above can be checked |
+| `docs/paper/` | the A105020 note: PDF, LaTeX source, Lean files |
+| `docs/contributions/` | the proofs prepared for the archive, with patches and reports |
+| `docs/data/` | every raw report, so the numbers above can be checked |
 
 Most documentation is in Italian; [`README.it.md`](README.it.md) is the Italian
 version of this page. The code, the Lean files and the published note are in
