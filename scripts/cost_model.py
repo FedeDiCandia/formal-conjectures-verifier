@@ -305,7 +305,7 @@ def report_text(data: dict) -> str:
     p(f"**MEASURED** — mean cost of a success ${c_succ:.4f}; mean cost of a failure "
       f"${c_fall:.4f}. A failure costs {c_fall/c_succ:.0f} times a success, because a "
       f"failure consumes the whole per-problem cap while a success stops as soon as "
-      f"dimostrazione passa.")
+      f"the proof passes.")
     p()
     p(f"**MEASURED** — cost of the FIRST iteration, median over {len(problems)} "
       f"problems: ${c_it1:.4f}. Two of the nine successes arrived on the first "
@@ -410,7 +410,7 @@ def report_part_two(data: dict, r: list[str]) -> list[str]:
       f"attempt nearly always ends that way.")
     p(f"- **C, single shot** (the sieve): **${c_s:.4f}** — **MEASURED**, the median "
       f"cost of the first iteration over the 11 calibration problems.")
-    p(f"- **B, program di ricerca** scritto e lanciato: **${c_b:.2f}** di API "
+    p(f"- **B, a search program** written and run: **${c_b:.2f}** of API "
       f"per problem — **ESTIMATED**, of the order of the measured cost of the easy "
       f"facili (media "
       f"${st.mean(x['cost'] for x in problems if x['level']=='easy'):.4f}). "
@@ -447,7 +447,7 @@ def report_part_two(data: dict, r: list[str]) -> list[str]:
       f"makes sense. **MEASURED**: the selection script found {eligible_total} of them "
       f"suitable for computation across the whole archive. Of the four whose "
       f"literature I checked, two have a reachable frontier "
-      f"(numbers di Euclide: nessuna ricerca sistematica pubblicata; congettura di "
+      f"(Euclid numbers: no published systematic search; Selfridge's conjecture: "
       f"Selfridge: verificata only fino a k circa 29) e two no (Erdos 366: "
       f"verificata fino a 10^22; Goldbach e Legendre: fino a 4x10^18). Due su "
       f"quattro, interval di Clopper-Pearson al 90% "

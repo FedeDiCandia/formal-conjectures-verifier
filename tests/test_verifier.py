@@ -84,7 +84,7 @@ def _failed_rule(result) -> set[str]:
     return {c.name for c in result.checks if not c.passed}
 
 
-# --- 1. ACCETTA one dimostrazione corretta ----------------------------------
+# --- 1. It ACCEPTS a correct proof ----------------------------------
 
 def test_1_accetta_dimostrazione_corretta():
     """The most important requirement: if the verifier NEVER accepted
@@ -310,7 +310,7 @@ def test_14_a_candidate_cannot_rewrite_a_file_of_the_archive(tmp_path):
 
 #eval show IO Unit from do
   try
-    IO.FS.writeFile "{target}" "ARCHIVIO ROVINATO"
+    IO.FS.writeFile "{target}" "ARCHIVE RUINED"
     IO.println "SABOTAGGIO RIUSCITO"
   catch e =>
     IO.println s!"sabotaggio impedito: {{e}}"

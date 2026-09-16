@@ -74,7 +74,7 @@ theorem parametrizzazione (N : ℕ) : ∃ c k, k ≤ c ∧ N = triangularNumber 
   obtain ⟨h1, h2⟩ := tri_le_and N
   exact ⟨antidiagonalIndex N, N - triangularNumber (antidiagonalIndex N), by omega, by omega⟩
 
-/-- **Parametrizzazione degli indici**, unicità. -/
+/-- **Parametrisation of the indices**, uniqueness. -/
 theorem parametrizzazione_unica {c k c' k' : ℕ} (hk : k ≤ c) (hk' : k' ≤ c')
     (h : triangularNumber c + k = triangularNumber c' + k') : c = c' ∧ k = k' := by
   have e : c = c' := by rw [← adi_tri_add hk, h, adi_tri_add hk']
@@ -198,7 +198,7 @@ lemma primi_di_semiprimo {p q : ℕ} (hp : 2 ≤ p) (hq : 2 ≤ q)
   exact ⟨ArithmeticFunction.cardFactors_eq_one_iff_prime.mp (by omega),
     ArithmeticFunction.cardFactors_eq_one_iff_prime.mp (by omega)⟩
 
-/-- **L'equivalenza**, fra i due enunciati dell'archivio presi tali e quali. -/
+/-- **The equivalence**, between the archive's two statements taken verbatim. -/
 theorem equivalenza_goldbach :
     (type_of% @OeisA105020.conjecture) ↔ (type_of% @GoldbachConjecture.goldbach) := by
   show (∀ (n i j : ℕ), 1 ≤ n → a i = 2 * n + 1 → a j = 2 * n + 3 → j = i + n + 1 →

@@ -117,7 +117,7 @@ def main() -> int:
     solved = [t for t in attempts if t["solved"]]
     # the spend of interrupted attempts is unrecorded: it is counted at its maximum
     spend = spent + unrecorded
-    print(f"\nACCETTATI DAL VERIFICATORE: {len(solved)} su {len(set(t['problem'] for t in attempts))} "
+    print(f"\nACCEPTED BY THE VERIFIER: {len(solved)} su {len(set(t['problem'] for t in attempts))} "
           f"problems tentati")
     if solved:
         print(f"cost per success (total spend / successes): ${spend / len(solved):.3f}"

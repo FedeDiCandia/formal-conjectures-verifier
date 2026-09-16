@@ -19,7 +19,7 @@ fields the verifier needs and that one does not produce:
     the statement can be cut out and the proof hidden when an agent is being
     exercised.
 
-Uso, dalla cartella dell'archivio:
+Usage, from the archive's directory:
     lake env lean --run <percorso>/extract_problems.lean > indice.json
 -/
 import Lean
@@ -122,7 +122,7 @@ unsafe def main : IO Unit := do
           let some category := categoryMap.get? name | continue
           let statement := toString (← Meta.MetaM.run' (Meta.ppExpr info.type))
           let docstring ← findDocString? env name
-          let assiomi ← collectAxioms name
+          let axioms ← collectAxioms name
           let ranges ← findDeclarationRanges? name
           let rangeJson : Json := match ranges with
             | some r => Json.mkObj [
@@ -146,7 +146,7 @@ unsafe def main : IO Unit := do
             -- the STATEMENT contains a sorry (a non-propositional answer( ) hole)
             ("statementHasSorry", Json.bool info.type.hasSorry),
             -- the axioms the archive's proof depends on
-            ("archiveProofAxioms", toJson (assiomi.map Name.toString)),
+            ("archiveProofAxioms", toJson (axioms.map Name.toString)),
             ("range", rangeJson)]
         | _ => pure ()
 

@@ -10,7 +10,7 @@ def phiSeq (n : ℕ → ℕ) (k : ℕ) : ℕ :=
 noncomputable def phiAvg (n : ℕ → ℕ) (N : ℕ) : ℝ :=
   (∑ k ∈ Finset.range N, (phiSeq n k : ℝ) / (n k : ℝ)) / (N : ℝ)
 
-/-- (enunciato della PR #5837) It is trivial that $\phi_A(k)\geq \phi(n_k)$. -/
+/-- (statement from PR #5837) It is trivial that $\phi_A(k)\geq \phi(n_k)$. -/
 @[category research solved, AMS 11]
 theorem erdos_1000.variants.totient_le (n : ℕ → ℕ) (hn : StrictMono n) (hn0 : 0 < n 0)
     (k : ℕ) :

@@ -35,7 +35,7 @@
   "proof_lines": 2,
   "result": "REJECTED",
   "controlli_falliti": [
-   "controllo sintattico preventivo"
+   "syntactic pre-scan"
   ],
   "errori": "riga 100: [token:sorry] `sorry` lascia un buco nella dimostrazione (introduce l'assioma sorryAx)\n    | example : integralDiophantine4Tuple.encard = ⊤ := by sorry",
   "teoremi_rimossi": 5,

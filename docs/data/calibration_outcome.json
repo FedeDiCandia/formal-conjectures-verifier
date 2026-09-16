@@ -481,7 +481,7 @@
       {
        "caratteri": 2678,
        "result": "REJECTED",
-       "controllo_fallito": "compila senza errori",
+       "controllo_fallito": "compiles without errors",
        "seconds": 19.93796396255493,
        "nature": "errore_tecnico"
       }
@@ -1057,7 +1057,7 @@
       {
        "caratteri": 1234,
        "result": "REJECTED",
-       "controllo_fallito": "compila senza errori",
+       "controllo_fallito": "compiles without errors",
        "seconds": 19.25800609588623,
        "nature": "errore_tecnico"
       }
@@ -1097,7 +1097,7 @@
       {
        "caratteri": 1247,
        "result": "REJECTED",
-       "controllo_fallito": "compila senza errori",
+       "controllo_fallito": "compiles without errors",
        "seconds": 19.43501114845276,
        "nature": "errore_tecnico"
       }

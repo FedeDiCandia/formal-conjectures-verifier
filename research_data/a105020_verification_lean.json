@@ -3,52 +3,52 @@
  "seconds": 118.8,
  "checks": [
   {
-   "name": "sfida ben formata",
+   "name": "well-formed challenge",
    "passed": true,
    "detail": "5 enunciati, nessun assioma dichiarato"
   },
   {
-   "name": "controllo sintattico preventivo",
+   "name": "syntactic pre-scan",
    "passed": true,
    "detail": "niente sorry/admit/axiom/native_decide; moduli dell'archivio importabili: FormalConjectures.OEIS.«105020», FormalConjectures.Wikipedia.GoldbachConjecture"
   },
   {
-   "name": "compilazione isolata",
+   "name": "isolated compilation",
    "passed": true,
    "detail": "sandbox-exec: niente rete, scrittura solo nella cartella del modulo temporaneo"
   },
   {
-   "name": "modulo della sfida pronto",
+   "name": "challenge module ready",
    "passed": true,
    "detail": "FormalConjectures._Judge.Sfida0"
   },
   {
-   "name": "archivio intatto dopo la verifica",
+   "name": "archive intact after the verification",
    "passed": true,
    "detail": "10370 file dell'archivio e 140235 delle dipendenze invariati"
   },
   {
-   "name": "compila senza errori",
+   "name": "compiles without errors",
    "passed": true,
    "detail": "il modulo candidato e' stato compilato da lake"
   },
   {
-   "name": "enunciati identici alla sfida",
+   "name": "statements identical to the challenge",
    "passed": true,
    "detail": "confronto sull'albero sintattico esportato da lean4export, non sul testo"
   },
   {
-   "name": "definizioni usate intatte",
+   "name": "definitions used are intact",
    "passed": true,
    "detail": "le costanti usate negli enunciati coincidono con quelle della sfida e dell'archivio"
   },
   {
-   "name": "assiomi ammessi",
+   "name": "permitted axioms",
    "passed": true,
    "detail": "propext, Classical.choice, Quot.sound"
   },
   {
-   "name": "accettato dal kernel",
+   "name": "accepted by the kernel",
    "passed": true,
    "detail": "termini di prova rieseguiti nel kernel di Lean"
   }

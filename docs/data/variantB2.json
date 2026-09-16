@@ -58,7 +58,7 @@
       {
        "caratteri": 822,
        "result": "REJECTED",
-       "controllo_fallito": "compila senza errori",
+       "controllo_fallito": "compiles without errors",
        "seconds": 19.32617688179016,
        "nature": "errore_tecnico"
       }

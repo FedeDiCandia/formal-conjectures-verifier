@@ -98,7 +98,7 @@ def test_the_substitution_happens_only_in_the_target_theorem(index):
 def test_the_challenge_declares_that_it_was_generated(index):
     """Whoever opens the file has to see at once that it is not an archive file."""
     challenge = negation.generate(index.get(PROBLEM))
-    assert "SFIDA NEGATA" in challenge.text
+    assert "NEGATED CHALLENGE" in challenge.text
     assert "generato automaticamente" in challenge.text
     assert PROBLEM in challenge.text
 

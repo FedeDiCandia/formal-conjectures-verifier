@@ -269,7 +269,7 @@ def main() -> int:
                     if result == "ACCEPTED":
                         entry["ATTENTION"] = (
                             f"{x['tactic']}{' (negata)' if x['negated'] else ''} "
-                            f"ACCETTATA DAL VERIFICATORE")
+                            f"ACCEPTED BY THE VERIFIER")
                 if "ATTENTION" in entry:
                     notable += 1
                     print(f"  !!! {p.theorem}: {entry['ATTENTION']}", flush=True)

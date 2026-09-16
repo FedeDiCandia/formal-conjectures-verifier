@@ -153,7 +153,7 @@ def main() -> int:
         json.dumps({"all_items": lines, "selection": selection}, ensure_ascii=False, indent=2),
         encoding="utf-8")
 
-    print(f"Archivio: {archive}")
+    print(f"Archive: {archive}")
     print(f"Training cutoff assumed: {CUT}\n")
     print(f"Problems whose archive proof is ACCEPTED by the verifier: {len(lines)}\n")
     print(f"{'lvl':10} {'lines':>5} {'data':11} {'risk':9} {'check':10} problem")

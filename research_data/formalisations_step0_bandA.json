@@ -4,7 +4,7 @@
   "commit_dal_10_9": [],
   "plby_sfide": {
    "Erdos1148.lean": {
-    "teoremi": [
+    "theorems": [
      "erdos_1148"
     ],
     "contiene_chiave": false
@@ -26,7 +26,7 @@
   ],
   "plby_sfide": {
    "Erdos707.lean": {
-    "teoremi": [
+    "theorems": [
      "Erdos707.not_erdos_707P",
      "Erdos707.not_erdos_707H",
      "Erdos707.not_erdos_707"
@@ -56,7 +56,7 @@
   "commit_dal_10_9": [],
   "plby_sfide": {
    "Erdos1008.lean": {
-    "teoremi": [
+    "theorems": [
      "erdos_1008"
     ],
     "contiene_chiave": false
@@ -76,7 +76,7 @@
   "commit_dal_10_9": [],
   "plby_sfide": {
    "Erdos291b.lean": {
-    "teoremi": [
+    "theorems": [
      "erdos_291"
     ],
     "contiene_chiave": false

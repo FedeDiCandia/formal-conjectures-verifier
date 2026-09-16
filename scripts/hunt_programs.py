@@ -59,7 +59,7 @@ print(json.dumps({"event": "shakedown", "result": "exceeded",
                   "checked": "the first 7 Euclid numbers and the factorisation of 30031"}),
       flush=True)
 
-# --- ricerca -----------------------------------------------------------------
+# --- the search -----------------------------------------------------------------
 checkpoint = os.environ["SEARCH_CHECKPOINT"]
 state = os.environ["SEARCH_STATE"]
 LIMIT = int(os.environ.get("LIMIT_P", "200000"))
@@ -186,7 +186,7 @@ if [n for n in range(2, 30) if is_prime(n)] != [2,3,5,7,11,13,17,19,23,29]:
 print(json.dumps({"event": "shakedown", "result": "exceeded",
                   "controllati": "sigma(1..10), sigma(28)=56, primes below 30"}), flush=True)
 
-# --- ricerca -----------------------------------------------------------------
+# --- the search -----------------------------------------------------------------
 checkpoint = os.environ["SEARCH_CHECKPOINT"]
 state = os.environ["SEARCH_STATE"]
 MAX_STEPS = int(os.environ.get("MAX_STEPS", "200"))
@@ -390,7 +390,7 @@ print(json.dumps({"event": "shakedown", "result": "exceeded",
                   "checked": "n=1,2,3 with no k; n=4..8 with k, as the archive's "
                                  "test theorems say"}), flush=True)
 
-# --- ricerca ----------------------------------------------------------------
+# --- the search ----------------------------------------------------------------
 checkpoint = os.environ["SEARCH_CHECKPOINT"]
 state = os.environ["SEARCH_STATE"]
 DA = int(os.environ.get("FROM", "4"))

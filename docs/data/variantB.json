@@ -133,7 +133,7 @@
       {
        "caratteri": 435,
        "result": "REJECTED",
-       "controllo_fallito": "compila senza errori",
+       "controllo_fallito": "compiles without errors",
        "seconds": 20.028900146484375,
        "nature": "errore_tecnico"
       }
@@ -210,7 +210,7 @@
       {
        "caratteri": 826,
        "result": "REJECTED",
-       "controllo_fallito": "compila senza errori",
+       "controllo_fallito": "compiles without errors",
        "seconds": 18.58669424057007,
        "nature": "errore_tecnico"
       }
@@ -234,7 +234,7 @@
       {
        "caratteri": 835,
        "result": "REJECTED",
-       "controllo_fallito": "compila senza errori",
+       "controllo_fallito": "compiles without errors",
        "seconds": 15.857671022415161,
        "nature": "errore_tecnico"
       }
@@ -612,7 +612,7 @@
       {
        "caratteri": 1293,
        "result": "REJECTED",
-       "controllo_fallito": "compila senza errori",
+       "controllo_fallito": "compiles without errors",
        "seconds": 20.839503049850464,
        "nature": "errore_tecnico"
       }

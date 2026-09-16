@@ -2,7 +2,7 @@ import FormalConjectures.OEIS.«105020»
 import FormalConjectures.Wikipedia.GoldbachConjecture
 
 /-!
-# Sfida: A105020 e Goldbach
+# Challenge: A105020 and Goldbach
 
 The statements to be verified, and nothing else. Every proof is `sorry`: the
 verifier checks that the candidate proves **exactly these**. The two statements
@@ -35,7 +35,7 @@ theorem coppie_canoniche {n i j : ℕ} (hn : 1 ≤ n) (hi : a i = 2 * n + 1)
     i = triangularNumber n ∧ j = triangularNumber (n + 1) := by
   sorry
 
-/-- L'equivalenza fra i due enunciati dell'archivio. -/
+/-- The equivalence between the archive's two statements. -/
 theorem equivalenza_goldbach :
     (type_of% @OeisA105020.conjecture) ↔ (type_of% @GoldbachConjecture.goldbach) := by
   sorry

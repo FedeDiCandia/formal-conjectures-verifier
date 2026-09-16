@@ -906,7 +906,7 @@
       {
        "caratteri": 864,
        "result": "REJECTED",
-       "controllo_fallito": "compila senza errori",
+       "controllo_fallito": "compiles without errors",
        "seconds": 25.365731239318848,
        "nature": "errore_tecnico"
       }

@@ -12,7 +12,7 @@ import guard
 # --- legitimate code: it must NOT be rejected -----------------------------
 
 GOOD_CODE = {
-    "dimostrazione normale": """
+    "an ordinary proof": """
 import FormalConjectures.Util.ProblemImports
 
 namespace Esempio

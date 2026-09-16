@@ -6,7 +6,7 @@ THE THREE ENGINES, AND WHY ALL THREE ARE NEEDED (measured 11-12 September 2026)
   * **orbits** — matches at once where the record is invariant under a group
     (A(19,6,5) = 76 in 0.8 s) and stalls where it is not: on A(17,6,6) it reaches 85
     against 113, because 113 is not a sum of orbit sizes under Z17.
-  * **ricerca local da words casuali** — 1 cell pareggiata su 34, residui di
+    * **local search from random words** — 1 cell matched of 34, residuals of
     69-441 violations. The space is too large to start from nothing.
   * **precomputed conflicts** — the conflict matrix is built once, and
         a move costs a sum of N integers instead of N·m bit counts. From thousands
