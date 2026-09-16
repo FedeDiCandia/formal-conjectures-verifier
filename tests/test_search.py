@@ -2,7 +2,7 @@
 Tests of the infrastructure for long searches (verifier/search.py).
 
 The three things that have to work, because without them an eight-hour search
-hours e' inutilizzabile:
+is unusable:
     * isolation (no network, no writes outside the directory);
   * the checkpoint, written so that an interruption cannot corrupt it;
   * resumption, which has to start from where it got to and not from scratch.
@@ -33,7 +33,7 @@ import json, os, signal, sys, time
 
 checkpoint = os.environ["SEARCH_CHECKPOINT"]
 state = os.environ["SEARCH_STATE"]
-FINO_A = int(os.environ.get("FINO_A", "50"))
+UP_TO = int(os.environ.get("UP_TO", "50"))
 
 n = 0
 found = []
@@ -54,7 +54,7 @@ def salva():
         json.dump({"position": n, "examined": n, "found": found}, f)
     os.replace(tmp, state)
 
-while n < FINO_A and not stopped:
+while n < UP_TO and not stopped:
     n += 1
     if n % 17 == 0:
         found.append({"n": n})
@@ -70,8 +70,8 @@ print(json.dumps({"event": "end", "position": n, "examined": n}), flush=True)
 
 
 def test_a_search_runs_to_completion(tmp_path):
-    r = search_module.Search("prova_conta", COUNTING_PROGRAM, folder=tmp_path / "count",
-                               variables={"FINO_A": 50})
+    r = search_module.Search("counting_trial", COUNTING_PROGRAM, folder=tmp_path / "count",
+                               variables={"UP_TO": 50})
     result = r.run(verbose=False)
     assert result.completed, f"not completed: {result.to_json()}"
     assert result.position == 50
@@ -81,8 +81,8 @@ def test_a_search_runs_to_completion(tmp_path):
 
 
 def test_the_variables_reach_the_program(tmp_path):
-    """The child's environment is deliberately minimal: no API key, no
-    PATH del progetto. I parametri vanno passati esplicitamente."""
+    """The child's environment is deliberately minimal: no API key, no project
+    PATH. The variables have to be passed explicitly."""
     program = """
 import json, os
 v = os.environ.get("MY_PARAMETER", "absent")
@@ -90,16 +90,16 @@ key = "present" if "ANTHROPIC_API_KEY" in os.environ else "absent"
 with open(os.environ["SEARCH_STATE"], "w") as f:
     json.dump({"position": v, "examined": 1, "found": [key]}, f)
 """
-    r = search_module.Search("prova_var", program, folder=tmp_path / "var",
-                               variables={"MY_PARAMETER": "ciao"})
+    r = search_module.Search("variables_trial", program, folder=tmp_path / "var",
+                               variables={"MY_PARAMETER": "hello"})
     result = r.run(verbose=False)
-    assert result.position == "ciao"
+    assert result.position == "hello"
     assert result.found == ["absent"], "the API key must not be visible"
 
 
 def test_the_checkpoint_is_written(tmp_path):
-    r = search_module.Search("prova_ckpt", COUNTING_PROGRAM, folder=tmp_path / "ckpt",
-                               variables={"FINO_A": 30})
+    r = search_module.Search("checkpoint_trial", COUNTING_PROGRAM, folder=tmp_path / "ckpt",
+                               variables={"UP_TO": 30})
     r.run(verbose=False)
     assert r.checkpoint_file.is_file()
     d = json.loads(r.checkpoint_file.read_text())
@@ -108,16 +108,16 @@ def test_the_checkpoint_is_written(tmp_path):
 
 def test_resuming_starts_from_where_it_got_to(tmp_path):
     """The most important point: after an interruption it does not start over."""
-    folder = tmp_path / "ripresa"
-    r = search_module.Search("prova_ripresa", COUNTING_PROGRAM, folder=folder,
-                               variables={"FINO_A": 100000, "PAUSE": 0.02})
+    folder = tmp_path / "resumption"
+    r = search_module.Search("resumption_trial", COUNTING_PROGRAM, folder=folder,
+                               variables={"UP_TO": 100000, "PAUSE": 0.02})
     first = r.run(max_seconds=2.0, verbose=False)
     assert first.interrupted, "expected an interruption on the time limit"
     assert first.position > 0, "it must have done something before stopping"
-    arrivato = first.position
+    reached = first.position
 
     # second run: it has to RESUME
-    r.variables = {"FINO_A": arrivato + 30, "PAUSE": 0.001}
+    r.variables = {"UP_TO": reached + 30, "PAUSE": 0.001}
     second = r.run(verbose=False)
     assert second.completed
     assert second.position == arrivato + 30
@@ -128,9 +128,9 @@ def test_resuming_starts_from_where_it_got_to(tmp_path):
 def test_riprendi_falso_ricomincia_da_capo(tmp_path):
     folder = tmp_path / "restart"
     r = search_module.Search("restart_trial", COUNTING_PROGRAM, folder=folder,
-                               variables={"FINO_A": 20, "PAUSE": 0.001})
+                               variables={"UP_TO": 20, "PAUSE": 0.001})
     r.run(verbose=False)
-    r.variables = {"FINO_A": 10, "PAUSE": 0.001}
+    r.variables = {"UP_TO": 10, "PAUSE": 0.001}
     second = r.run(resume=False, verbose=False)
     assert second.position == 10, "with resume=False it has to start from zero"
 
@@ -141,24 +141,24 @@ try:
     urllib.request.urlopen("http://example.com", timeout=5)
     print(json.dumps({"event": "found", "detail": "NETWORK REACHABLE"}), flush=True)
 except Exception as e:
-    print(json.dumps({"event": "progress", "position": 0, "rete": type(e).__name__}), flush=True)
+    print(json.dumps({"event": "progress", "position": 0, "network": type(e).__name__}), flush=True)
 with open(os.environ["SEARCH_STATE"], "w") as f:
     json.dump({"position": 0, "examined": 0, "found": []}, f)
 '''
 
 
 def test_the_search_has_no_network_access(tmp_path):
-    r = search_module.Search("prova_rete", NETWORK_PROGRAM, folder=tmp_path / "rete")
+    r = search_module.Search("network_trial", NETWORK_PROGRAM, folder=tmp_path / "network")
     result = r.run(verbose=False)
     assert "NETWORK REACHABLE" not in str(result.found), "the network has to be blocked"
 
 
 WRITE_PROGRAM = '''
 import json, os
-target = os.environ.get("BERSAGLIO", "/tmp/prova_fuori.txt")
+target = os.environ.get("TARGET", "/tmp/write_outside_trial.txt")
 try:
     open(target, "w").write("x")
-    result = "SCRITTURA RIUSCITA"
+    result = "WRITE SUCCEEDED"
 except Exception as e:
     result = type(e).__name__
 print(json.dumps({"event": "progress", "position": 0, "write_op": result}), flush=True)
@@ -168,12 +168,12 @@ with open(os.environ["SEARCH_STATE"], "w") as f:
 
 
 def test_the_search_does_not_write_outside_its_directory(tmp_path):
-    r = search_module.Search("prova_scrittura", WRITE_PROGRAM,
+    r = search_module.Search("write_trial", WRITE_PROGRAM,
                                folder=tmp_path / "write_op",
-                               variables={"BERSAGLIO": str(config.ROOT / "PROVA_RICERCA_FUORI.txt")})
+                               variables={"TARGET": str(config.ROOT / "SEARCH_WRITE_OUTSIDE_TRIAL.txt")})
     result = r.run(verbose=False)
-    assert "SCRITTURA RIUSCITA" not in str(result.found)
-    assert not (config.ROOT / "PROVA_RICERCA_FUORI.txt").exists()
+    assert "WRITE SUCCEEDED" not in str(result.found)
+    assert not (config.ROOT / "SEARCH_WRITE_OUTSIDE_TRIAL.txt").exists()
 
 
 def test_the_search_can_use_numpy_and_sympy(tmp_path):
@@ -187,7 +187,7 @@ print(json.dumps({"event": "progress", "position": v, "first": p}), flush=True)
 with open(os.environ["SEARCH_STATE"], "w") as f:
     json.dump({"position": v, "examined": 1, "found": [p]}, f)
 '''
-    r = search_module.Search("prova_librerie", program, folder=tmp_path / "lib")
+    r = search_module.Search("libraries_trial", program, folder=tmp_path / "lib")
     result = r.run(verbose=False)
     assert result.position == 5050, f"numpy: {result.to_json()}"
     assert 7919 in result.found, "sympy.prime(1000) = 7919"

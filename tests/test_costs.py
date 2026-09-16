@@ -1,14 +1,14 @@
 """
-Test del computation dei costi e del limit di spesa.
+Tests of the cost arithmetic and of the spending limit.
 
-Non chiamano l'API: usano oggetti `usage` finti. Il punto e' che l'aritmetica
-sia giusta e che il limit venga fatto rispettare, non che l'API funzioni.
+They do not call the API: they use fake `usage` objects. The point is that the
+arithmetic is right and that the limit is enforced, not that the API works.
 
-Il listino e' state verificato il 2026-09-10 sulla tabella ufficiale di
-platform.claude.com (documentazione del prompt caching). Due details che era
-facile sbagliare e che questi test difendono:
+The price list was checked on 2026-09-10 against the official table on
+platform.claude.com (the prompt-caching documentation). Two details that were
+easy to get wrong, and that these tests defend:
 
-  * la write_op in cache a 1 ORA costa 2 volte l'input, non 1,25;
+  * a cache write at 1 HOUR costs 2 times the input, not 1.25;
   * the cache-READ multiplier is not the same for every model:
     Fable 5.1 uses 0.025 instead of 0.1.
 """
@@ -51,7 +51,7 @@ def test_opus_5_prices_are_the_official_ones():
 def test_the_cache_multipliers_are_not_the_same_for_every_model():
     """Fable 5.1 reads from the cache at 0.025 times the input instead of 0.1.
     If the multipliers were computed instead of written down, this mistake
-    passerebbe inosservato."""
+    would go unnoticed."""
     fable = prices("claude-fable-5-1")
     assert fable.cache_read == 0.25
     assert fable.cache_read / fable.input == pytest.approx(0.025)
@@ -62,7 +62,7 @@ def test_the_cache_multipliers_are_not_the_same_for_every_model():
 def test_a_model_without_prices_fails_immediately():
     """Better to refuse to start than to enforce the wrong limit."""
     with pytest.raises(KeyError, match="Unknown prices"):
-        Budget(dollar_limit=5, model="claude-inventato").spent
+        Budget(dollar_limit=5, model="claude-made-up").spent
 
 
 def test_every_model_in_the_price_list_is_consistent():
@@ -72,7 +72,7 @@ def test_every_model_in_the_price_list_is_consistent():
         assert p.output > p.input, name
 
 
-# --- l'aritmetica ------------------------------------------------------------
+# --- the arithmetic ---------------------------------------------------------
 
 def test_the_cost_sums_the_five_entries():
     c = Usage()
@@ -164,7 +164,7 @@ def test_it_reproduces_the_spend_measured_by_epoch_ai():
     """One attempt from the OEIS Open benchmark, with the tokens and the cost Epoch AI
     published: our arithmetic has to give the same number.
 
-    Provenienza: `external/LeanOpenProblems-results/runs/oeis-full-50usd-ant-.../
+    Provenance: `external/LeanOpenProblems-results/runs/oeis-full-50usd-ant-.../
     A055487_conjecture/info.json`, model `anthropic/claude-opus-4-8`,
     `total_cost` = 50.00493775. It is the strongest check we have on the
     correctness of the budget arithmetic: it comes from outside, from a real invoice.
@@ -179,11 +179,11 @@ def test_it_reproduces_the_spend_measured_by_epoch_ai():
 def test_fable_5_1_costs_1_45_times_opus_5_on_a_long_profile():
     """Not double, as the headline price would suggest.
 
-    Fable 5.1 costa il doppio in ingresso e in output, ma la lettura dalla cache
+    Fable 5.1 costs double on input and on output, but reading from the cache
     costs HALF in absolute terms ($0.25 against $0.50: 0.025x instead of 0.1x).
-    In a long session the cache is the biggest entry, so the real ratio
-    is lower. If this test breaks, the comparison between models in the
-    spesa va rifatto.
+    In a long session the cache is the biggest entry, so the real ratio is lower.
+    If this test breaks, the comparison between models in the spending plan has to
+    be redone.
     """
     c = Usage(input_tokens=607, output_tokens=684_987,
                 cache_write_5m=2_304_613, cache_read=36_946_793)

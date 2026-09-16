@@ -15,12 +15,12 @@ GOOD_CODE = {
     "an ordinary proof": """
 import FormalConjectures.Util.ProblemImports
 
-namespace Esempio
+namespace Example
 
 @[category research solved, AMS 11]
-theorem due_piu_due : 2 + 2 = 4 := by decide
+theorem two_plus_two : 2 + 2 = 4 := by decide
 
-end Esempio
+end Example
 """,
     "a comment that names the forbidden constructs": """
 -- Note: no sorry here, no native_decide, no axiom.
@@ -33,17 +33,17 @@ theorem sorryFree_lemma : True := trivial
 def axiomatic_thing : Nat := 0
 theorem uses_admitted_style : True := trivial
 """,
-    "stringa contenente words vietate": '''
+    "a string containing forbidden words": '''
 theorem t : True := by
   have msg := "sorry native_decide axiom"
   trivial
 ''',
-    "set_option leciti": """
+    "permitted set_option": """
 set_option maxHeartbeats 1000000 in
 set_option maxRecDepth 4000 in
 theorem t : True := trivial
 """,
-    "set_option usati dall'archive": """
+    "set_option used by the archive": """
 set_option quotPrecheck false
 theorem t : True := trivial
 """,
@@ -51,10 +51,10 @@ theorem t : True := trivial
 -- `+kernel` makes the KERNEL check, the opposite of `+native`
 theorem t : (2:Nat) + 2 = 4 := by decide +kernel
 """,
-    "other_items opzioni di tactic lecite": """
+    "other permitted tactic options": """
 theorem t : True := by simp +arith +decide
 """,
-    "import leciti": """
+    "permitted imports": """
 import FormalConjectures.Util.ProblemImports
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import FormalConjecturesForMathlib.Combinatorics.Extra
@@ -66,28 +66,28 @@ theorem t : True := trivial
 def test_legitimate_code_is_not_rejected():
     for name, src in GOOD_CODE.items():
         r = guard.check_source(src)
-        assert r.ok, f"falso allarme su «{name}»: {[str(f) for f in r.findings]}"
+        assert r.ok, f"false alarm on «{name}»: {[str(f) for f in r.findings]}"
 
 
 # --- dangerous code: it MUST be rejected ----------------------------------
 
 BAD_CODE = {
     "sorry":            ("theorem t : True := by sorry", "token:sorry"),
-    "sorry annidato":   ("theorem t : True := by\n  have h : False := by sorry\n  trivial", "token:sorry"),
+    "nested sorry":     ("theorem t : True := by\n  have h : False := by sorry\n  trivial", "token:sorry"),
     "admit":            ("theorem t : True := by admit", "token:admit"),
     "axiom":            ("axiom imbroglio : False\ntheorem t : True := trivial", "command:axiom"),
     "native_decide":    ("theorem t : True := by native_decide", "token:native_decide"),
-    "sorryAx diretto":  ("theorem t : True := sorryAx True", "token:sorryAx"),
+    "direct sorryAx":   ("theorem t : True := sorryAx True", "token:sorryAx"),
     "skipKernelTC":     ("set_option debug.skipKernelTC true in\ntheorem t : True := trivial",
                          "option:debug.skipKernelTC"),
     "google.answer":    ("set_option google.answer postpone in\ntheorem t : True := trivial",
                          "option:google.answer"),
     "unknown option":   ("set_option something.odd true", "option:something.odd"),
-    "#eval":            ('#eval IO.println "ciao"', "command:#eval"),
+    "#eval":            ('#eval IO.println "hello"', "command:#eval"),
     "#exit":            ("#exit", "command:#exit"),
     "run_cmd":          ("run_cmd Lean.logInfo \"x\"", "command:run_cmd"),
-    "macro":            ('macro "trucco" : term => `(1)', "command:macro"),
-    "elab":             ('elab "trucco" : term => return default', "command:elab"),
+    "macro":            ('macro "trick" : term => `(1)', "command:macro"),
+    "elab":             ('elab "trick" : term => return default', "command:elab"),
     "unsafe":           ("unsafe def f : Nat := 0", "command:unsafe"),
     "implemented_by":   ("@[implemented_by other] def f : Nat := 0", "attribute:implemented_by"),
     "import Lean":      ("import Lean", "import"),
@@ -121,7 +121,7 @@ def test_comments_do_not_shift_the_line_numbers():
 # ---------------------------------------------------------------------------
 # Constructs that RUN CODE during compilation
 # ---------------------------------------------------------------------------
-# Elenco ricavato leggendo i sorgenti di Lean 4.27
+# List drawn up by reading the Lean 4.27 sources
 # (src/lean/Lean/Elab/BuiltinCommand.lean: the `@[builtin_command_elab ...]`)
 # and by censusing the Mathlib attributes that register executable code.
 #
@@ -130,15 +130,15 @@ def test_comments_do_not_shift_the_line_numbers():
 
 EXECUTABLE_CODE = {
     # --- commands
-    "#eval!": ('#eval! IO.println "ciao"', "command:#eval!"),
+    "#eval!": ('#eval! IO.println "hello"', "command:#eval!"),
     "run_meta": ("run_meta Lean.logInfo \"x\"", "command:run_meta"),
     "simproc": ("simproc myProc (_ + 0) := fun e => return .continue", "command:simproc"),
     "simproc_decl": ("simproc_decl myProc (_ + 0) := fun e => return .continue",
                      "command:simproc_decl"),
     "register_simp_attr": ("register_simp_attr mio_simp", "command:register_simp_attr"),
-    "declare_syntax_cat": ("declare_syntax_cat miaCat", "command:declare_syntax_cat"),
+    "declare_syntax_cat": ("declare_syntax_cat myCat", "command:declare_syntax_cat"),
     "notation3": ('notation3 "foo" => 1', "command:notation3"),
-    "meta def": ("meta def cattivo : Unit := ()", "command:meta"),
+    "meta def": ("meta def bad : Unit := ()", "command:meta"),
     "public meta section": ("public meta section", "command:meta"),
 
     # --- attributes that register code with an elaborator or a tactic
@@ -160,20 +160,20 @@ EXECUTABLE_CODE = {
     "decide +native": ("theorem t : True := by decide +native", "option:+native"),
     "decide+native": ("theorem t : True := by decide+native", "option:+native"),
     "simp +native": ("theorem t : True := by simp +native", "option:+native"),
-    "@[init]": ("@[init mioInit] def y := 1", "attribute:init"),
+    "@[init]": ("@[init myInit] def y := 1", "attribute:init"),
     "attribute [simproc]": ("attribute [simproc] something", "attribute:simproc"),
 
-    # --- dichiarazioni in one monade di elaborazione o di input/output.
+    # --- declarations in an elaboration or input/output monad.
     # This is the STRUCTURAL check: it does not chase the commands one at a time,
     # it rejects the file that speaks the language of metaprogramming.
-    "def in IO": ("def cattivo : IO Unit := pure ()", "metaprogramming:IO"),
-    "def in MetaM": ("def cattivo : MetaM Unit := pure ()", "metaprogramming:MetaM"),
-    "def in CoreM": ("def cattivo : CoreM Unit := pure ()", "metaprogramming:CoreM"),
-    "def in TacticM": ("def cattivo : TacticM Unit := pure ()", "metaprogramming:TacticM"),
+    "def in IO": ("def bad : IO Unit := pure ()", "metaprogramming:IO"),
+    "def in MetaM": ("def bad : MetaM Unit := pure ()", "metaprogramming:MetaM"),
+    "def in CoreM": ("def bad : CoreM Unit := pure ()", "metaprogramming:CoreM"),
+    "def in TacticM": ("def bad : TacticM Unit := pure ()", "metaprogramming:TacticM"),
     "def in CommandElabM": ("def c : CommandElabM Unit := pure ()",
                             "metaprogramming:CommandElabM"),
     "handles Expr": ("def f (e : Expr) := e", "metaprogramming:Expr"),
-    "manipola Syntax": ("def f (s : Syntax) := s", "metaprogramming:Syntax"),
+    "handles Syntax": ("def f (s : Syntax) := s", "metaprogramming:Syntax"),
     "open Lean Elab": ("open Lean Elab in\ndef f := 1", "metaprogramming:Elab"),
     "evalExpr": ("def f := evalExpr Nat q(Nat) e", "metaprogramming:evalExpr"),
 }

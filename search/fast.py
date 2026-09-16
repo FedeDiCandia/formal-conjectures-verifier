@@ -37,7 +37,7 @@ from tabu import _all_words
 # interesting cell we have (A(27,8,5), gap 1) asks for 0.8 GB, and on 24 GB of RAM
 # there is room -- but not if six processes are launched together. Whoever launches
 # in parallel lowers the cap or reduces the processes.
-MEMORY_CAP_BYTES = int(os.environ.get("RICERCA_TETTO_MEMORIA", 700_000_000))
+MEMORY_CAP_BYTES = int(os.environ.get("SEARCH_MEMORY_CAP", 700_000_000))
 
 
 def conflict_matrix(all_items: np.ndarray, d: int) -> np.ndarray:

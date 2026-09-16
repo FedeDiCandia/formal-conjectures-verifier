@@ -62,7 +62,7 @@ def test_a_forbidden_file_is_not_even_compiled():
     assert "command:#eval" in r.rejected_by_guard
 
 
-# --- l'exploration vera (fa partire Lean: circa 10 seconds) -----------------
+# --- the real exploration (it starts Lean: about 10 seconds) ----------------
 
 @pytest.fixture(scope="module")
 def inspection():
@@ -124,10 +124,10 @@ def test_l_esplorazione_gira_isolata(inspection):
 
 
 #: How long a COMPLETE verification takes, measured on each snapshot. It gives
-#: meaning to the threshold below: exploration is worth having
-#: only se costa one frazione di one check.
+#: meaning to the threshold below: exploration is worth having only if it costs
+#: a fraction of a verification.
 #:   bench-v1 (Lean 4.27):  32.9 s  — measured with `time`
-#:   main     (Lean 4.33):  47-114 s — misurato su 13 checks d'archive
+#:   main     (Lean 4.33):  47-114 s — measured over 13 archive verifications
 FULL_VERIFICATION = {"FormalConjectures.Util.ProblemImports": 33.0,
                      "FormalConjecturesUtil": 47.0}
 
@@ -142,16 +142,16 @@ def test_exploration_is_faster_than_a_verification(inspection):
     Measuring the worst case under load would measure the load, not the tool.
     """
     import config
-    piena = FULL_VERIFICATION.get(config.utility_module(), 33.0)
+    full = FULL_VERIFICATION.get(config.utility_module(), 33.0)
     seconds = inspection.seconds
-    if seconds >= piena * 0.7:
+    if seconds >= full * 0.7:
         again = explore_module.explore(common.adapt(
             "import FormalConjectures.Util.ProblemImports\n"
             "#check @Nat.floor\n"))
         seconds = min(seconds, again.seconds)
-    assert seconds < piena * 0.7, (
-        f"troppo lenta: {seconds:.1f}s against i {piena:.0f}s di one "
-        f"full verification on this snapshot")
+    assert seconds < full * 0.7, (
+        f"too slow: {seconds:.1f}s against the {full:.0f}s of a full "
+        f"verification on this snapshot")
 
 
 def test_the_timeout_interrupts_a_non_terminating_tactic():
@@ -184,9 +184,9 @@ def test_two_explorations_at_once_do_not_get_mixed_up():
         results[name] = explore_module.explore(code, timeout=200)
 
     a = common.adapt("import FormalConjectures.Util.ProblemImports\n"
-                      "theorem prova_A : (2:ℕ) + 2 = 5 := by norm_num\n")
+                      "theorem trial_A : (2:ℕ) + 2 = 5 := by norm_num\n")
     b = common.adapt("import FormalConjectures.Util.ProblemImports\n"
-                      "theorem prova_B : (3:ℕ) + 3 = 7 := by norm_num\n")
+                      "theorem trial_B : (3:ℕ) + 3 = 7 := by norm_num\n")
     threads = [threading.Thread(target=work, args=("A", a)),
             threading.Thread(target=work, args=("B", b))]
     for f in threads:
@@ -198,6 +198,6 @@ def test_two_explorations_at_once_do_not_get_mixed_up():
     file_a = set(re.findall(r"E(\d+)\.lean", results["A"].messages))
     file_b = set(re.findall(r"E(\d+)\.lean", results["B"].messages))
     assert file_a and file_b, (results["A"].messages, results["B"].messages)
-    assert file_a.isdisjoint(file_b), f"stesso slot: {file_a} e {file_b}"
+    assert file_a.isdisjoint(file_b), f"same slot: {file_a} and {file_b}"
     for name in ("A", "B"):
         assert "unsolved goals" in results[name].messages

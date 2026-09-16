@@ -18,9 +18,9 @@ import probe_artefacts as probe
 
 
 def _map():
-    return {"sonda_decide": ("decide", False),
-            "sonda_decide_neg": ("decide", True),
-            "sonda_plausible": ("plausible", False)}
+    return {"probedecide": ("decide", False),
+            "probedecide_neg": ("decide", True),
+            "probeplausible": ("plausible", False)}
 
 
 def _outcomes(output):
@@ -28,21 +28,21 @@ def _outcomes(output):
             for p in probe.read(output, _map())["trials"]}
 
 
-def test_una_prova_senza_sorryAx_ha_chiuso():
-    output = ("E0.lean:5:0: info: 'sonda_decide' depends on axioms: "
+def test_a_proof_without_sorryAx_has_closed():
+    output = ("E0.lean:5:0: info: 'probedecide' depends on axioms: "
               "[propext, Classical.choice, Quot.sound]")
     assert _outcomes(output)[("decide", False)] == "closed"
 
 
 def test_a_proof_with_no_axioms_has_closed():
-    output = "E0.lean:5:0: info: 'sonda_decide' does not depend on any axioms"
+    output = "E0.lean:5:0: info: 'probedecide' does not depend on any axioms"
     assert _outcomes(output)[("decide", False)] == "closed"
 
 
-def test_una_prova_che_dipende_da_sorryAx_non_ha_chiuso():
+def test_a_proof_that_depends_on_sorryAx_has_not_closed():
     """This is `plausible`'s case: it finds no counterexample, leaves a `sorry`,
     the file compiles and the declaration exists. It has proved nothing."""
-    output = "E0.lean:5:0: info: 'sonda_plausible' depends on axioms: [sorryAx]"
+    output = "E0.lean:5:0: info: 'probeplausible' depends on axioms: [sorryAx]"
     assert _outcomes(output)[("plausible", False)] == "open"
 
 
@@ -51,13 +51,13 @@ def test_a_declaration_that_does_not_exist_is_a_failure():
 
 
 def test_a_proved_negation_is_called_a_refutation():
-    output = "E0.lean:9:0: info: 'sonda_decide_neg' does not depend on any axioms"
+    output = "E0.lean:9:0: info: 'probedecide_neg' does not depend on any axioms"
     assert _outcomes(output)[("decide", True)] == "refuted"
 
 
 def test_a_plausible_counterexample_is_reported():
     output = ("E0.lean:5:2: error: Found a counter-example!\nn := 17\n"
-              "E0.lean:5:0: info: 'sonda_plausible' depends on axioms: [sorryAx]")
+              "E0.lean:5:0: info: 'probeplausible' depends on axioms: [sorryAx]")
     trials = probe.read(output, _map())["trials"]
     assert any(p["result"] == "counterexample" for p in trials)
     # and the attempt itself stays failed: a counterexample is not a proof
@@ -88,8 +88,8 @@ def test_a_file_that_does_not_compile_gives_no_clean_verdict():
     output = (
         "FormalConjectures/_Judge/E0.lean:6:8: error: Invalid `<...>` notation: "
         "The expected type is not an inductive type\n"
-        "'sonda_aesop' does not depend on any axioms\n")
-    results = probe.read(output, {"sonda_aesop": ("aesop", False)})["trials"]
+        "'probeaesop' does not depend on any axioms\n")
+    results = probe.read(output, {"probeaesop": ("aesop", False)})["trials"]
     assert results[0]["result"] == "closed"          # still a candidate, not a verdict
     assert "ATTENTION" in results[0]["detail"]
     assert "does not compile" in results[0]["detail"] or "compilation errors" in results[0]["detail"]
@@ -97,6 +97,6 @@ def test_a_file_that_does_not_compile_gives_no_clean_verdict():
 
 
 def test_with_no_errors_the_detail_stays_terse():
-    results = probe.read("'sonda_aesop' does not depend on any axioms\n",
-                        {"sonda_aesop": ("aesop", False)})["trials"]
+    results = probe.read("'probeaesop' does not depend on any axioms\n",
+                        {"probeaesop": ("aesop", False)})["trials"]
     assert results[0]["detail"] == "axioms: none"

@@ -38,7 +38,7 @@ OPEN_CHALLENGE = f"""import {MODULE}
 
 namespace FreeTrial
 
-theorem dispari_perfetto (n : ℕ) (hn : Nat.Perfect n) : Even n := by
+theorem odd_perfect (n : ℕ) (hn : Nat.Perfect n) : Even n := by
   sorry
 
 end FreeTrial
@@ -74,15 +74,15 @@ def test_the_guard_allows_the_listed_modules_and_no_others():
 
 def test_a_challenge_declaring_an_axiom_is_an_error(tmp_path):
     cand = _file(tmp_path, "c.lean", "theorem FreeTrial.total_sum (n : ℕ) : n + 0 = n := rfl\n")
-    challenge = "axiom trucco : False\ntheorem FreeTrial.total_sum (n : ℕ) : n + 0 = n := by\n  sorry\n"
+    challenge = "axiom trick : False\ntheorem FreeTrial.total_sum (n : ℕ) : n + 0 = n := by\n  sorry\n"
     r = verify_free(challenge, cand, ["FreeTrial.total_sum"])
     assert r.status == ERROR and "declares an axiom" in r.message
 
 
 def test_a_theorem_not_declared_in_the_challenge_is_an_error(tmp_path):
     cand = _file(tmp_path, "c.lean", "theorem FreeTrial.total_sum (n : ℕ) : n + 0 = n := rfl\n")
-    r = verify_free(GOOD_CHALLENGE, cand, ["FreeTrial.total_sum", "FreeTrial.inesistente"])
-    assert r.status == ERROR and "inesistente" in r.message
+    r = verify_free(GOOD_CHALLENGE, cand, ["FreeTrial.total_sum", "FreeTrial.nonexistent"])
+    assert r.status == ERROR and "nonexistent" in r.message
 
 
 def test_a_candidate_with_sorry_is_rejected(tmp_path):
@@ -116,9 +116,9 @@ def test_same_name_but_different_statement_is_rejected(tmp_path):
 def test_leaning_on_an_open_problems_sorry_is_rejected(tmp_path):
     cand = _file(tmp_path, "c.lean",
                  f"import {MODULE}\nnamespace FreeTrial\n"
-                 "theorem dispari_perfetto (n : ℕ) (hn : Nat.Perfect n) : Even n :=\n"
+                 "theorem odd_perfect (n : ℕ) (hn : Nat.Perfect n) : Even n :=\n"
                  "  PerfectNumbers.odd_perfect_number_conjecture n hn\nend FreeTrial\n")
-    r = verify_free(OPEN_CHALLENGE, cand, ["FreeTrial.dispari_perfetto"],
+    r = verify_free(OPEN_CHALLENGE, cand, ["FreeTrial.odd_perfect"],
                       allowed_modules=(MODULE,), timeout=1500)
     assert r.status == REJECTED, (r.message, r.errors[-2000:])
     text = r.raw_output + r.errors + r.message

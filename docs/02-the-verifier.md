@@ -201,8 +201,9 @@ Confusing these two cases would be the easiest way to build a system that
 
 #### Negated challenges
 
-There is a third case, and it is the most interesting. **107 still-open problems**
-are formalised with a propositional `answer(sorry)`, so the statement Lean sees is
+There is a third case, and it is the most interesting. **563 still-open problems**
+of the benchmark tag (634 on the `main` snapshot) are formalised with a
+propositional `answer(sorry)`, so the statement Lean sees is
 `True ↔ P`: the assertion that the answer is **yes**.
 
 If for one of them the right answer were **no**, the theorem as written would be

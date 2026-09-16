@@ -11,7 +11,9 @@ expected type is a proposition. So an open question formalised like this:
     theorem conjecture : answer(sorry) ↔ P := by sorry
 
 elaborates as `True ↔ P`, that is, as the assertion that **the answer is YES**.
-107 of the archive's still-open problems are like that.
+563 of the archive's still-open problems are like that in the benchmark tag, 634
+on the `main` snapshot (counted from the index: `research open`, `answer(sorry)`
+in the source, no `sorry` left in the elaborated statement).
 
 The consequence: if for one of them the right answer were NO, the theorem as
 written would be FALSE, and nobody could prove it. Whoever found the refutation

@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 # ---------------------------------------------------------------------------
-# SHIM di landrun per macOS.
+# A landrun SHIM for macOS.
 #
-# `landrun` (https://github.com/Zouuup/landrun) usa Landlock, una funzionalita'
-# del kernel Linux: su macOS NON esiste. comparator lo invoca per mettere in
-# sandbox la compilazione del file candidato.
+# `landrun` (https://github.com/Zouuup/landrun) uses Landlock, a Linux kernel
+# feature that does NOT exist on macOS. comparator calls it to sandbox the
+# compilation of the candidate file.
 #
-# Questo shim accetta e IGNORA tutte le opzioni di landrun ed esegue il comando
-# senza sandbox. E' la stessa strategia dello script `scripts/fake-landrun.sh`
-# fornito da comparator stesso per lo sviluppo su sistemi non-Linux.
+# This shim accepts and IGNORES every landrun option and runs the command
+# without a sandbox. It is the same strategy as `scripts/fake-landrun.sh`, the
+# script comparator itself ships for development on non-Linux systems.
 #
-# CONSEGUENZA DI SICUREZZA: su macOS perdiamo l'isolamento del processo di
-# compilazione. Le garanzie logiche di comparator (stesso enunciato, assiomi
-# permessi, accettazione da parte del kernel) restano valide; quello che si
-# perde e' la protezione contro un file candidato che esegua codice arbitrario
-# durante la compilazione. Per questo verify.py applica in aggiunta un
-# controllo sintattico preventivo (vedi verifier/verify.py).
+# SECURITY CONSEQUENCE: on macOS we lose the isolation of the compilation
+# process. comparator's logical guarantees (same statement, permitted axioms,
+# accepted by the kernel) still hold; what is lost is the protection against a
+# candidate file that runs arbitrary code while it compiles. That is why
+# verify.py adds a syntactic pre-scan of its own (see verifier/verify.py), and
+# why it wraps the compilation in `sandbox-exec` (see verifier/sandbox.py).
 # ---------------------------------------------------------------------------
 set -euo pipefail
 
@@ -30,8 +30,8 @@ is_value_flag() {
 }
 
 case "${1:-}" in
-  -h|--help)   echo "landrun shim (macOS): accetta e ignora i flag, esegue il comando"; exit 0 ;;
-  -V|--version) echo "SHIM NON-SANDBOXANTE (macOS)" >&2; exit 0 ;;
+  -h|--help)   echo "landrun shim (macOS): accepts and ignores the flags, runs the command"; exit 0 ;;
+  -V|--version) echo "NON-SANDBOXING SHIM (macOS)" >&2; exit 0 ;;
 esac
 
 while [[ $# -gt 0 ]]; do
@@ -43,7 +43,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ $# -eq 0 ]]; then
-  echo "landrun shim: nessun comando fornito" >&2
+  echo "landrun shim: no command given" >&2
   exit 2
 fi
 

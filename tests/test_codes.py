@@ -52,7 +52,7 @@ CODE = ROOT / "research_data" / "codes" / "i24.12a"
 def test_it_reproduces_the_published_record_A_24_6_12():
     words, n, info = expand(CODE)
     assert n == 24
-    assert info["ordine_gruppo"] == 504 and info["seeds"] == 19
+    assert info["group_order"] == 504 and info["seeds"] == 19
     assert len(words) == 5558, "the published record is 5558 words"
     assert check(words, n=24, d=6, w=12).ok
 

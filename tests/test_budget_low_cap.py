@@ -53,8 +53,8 @@ def _fake_usage(cost: float, model: str):
 
 
 def test_with_a_low_cap_and_fable_it_makes_more_than_one_call():
-    """This is the test the defect would have failed: with a $0.50 cap and
-    calls da 5 centesimi, di calls ce ne stanno parecchie."""
+    """This is the test the defect would have failed: with a $0.50 cap and calls
+    of five cents each, there is room for several calls."""
     n = _possible_calls("claude-fable-5-1", cap=0.50,
                             input_tokens=8000, cost_per_call=0.05)
     assert n >= 5, f"only {n} calls with a $0.50 cap"
@@ -63,7 +63,7 @@ def test_with_a_low_cap_and_fable_it_makes_more_than_one_call():
 def test_the_old_threshold_stopped_the_attempt_before_it_began():
     """The real numbers from the incident, taken from variant B's log.
 
-    `SidorenkoConjecture...non_bipartite_necessary`: 16 287 token in ingresso,
+    `SidorenkoConjecture...non_bipartite_necessary`: 16,287 input tokens,
     cap $0.50, spent $0.00. With the previous threshold the attempt did not even
     start; with the new one it makes its call.
     """
@@ -117,14 +117,14 @@ def test_an_attempt_stopped_by_the_budget_does_not_lose_the_work_done():
 
     It happened in round 0-bis: the seventh problem came out at zero cost while the
     log showed one verification submitted. A report that understates the spend is a
-    safety problem, not a cosmetic one: the
-    limit rigido si controlla proprio su quei numbers.
+    safety problem, not a cosmetic one: the hard limit is checked against exactly
+    those numbers.
     """
     from costs import SpendLimitExceeded
     t = agent.Attempt(problem="X.y")
     t.iterations = 3
     t.checks = 1
-    e = SpendLimitExceeded("finito")
+    e = SpendLimitExceeded("out of budget")
     e.attempt = t
     # this is the mechanism main() uses: the exception carries the attempt with it
     assert getattr(e, "attempt", None) is t

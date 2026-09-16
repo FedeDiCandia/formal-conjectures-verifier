@@ -36,7 +36,7 @@ FIXTURES = Path(__file__).resolve().parent / "fixtures"
 PROBLEM = "JugglerConjecture.jugglerStep_36"
 
 
-# --- prerequisiti -----------------------------------------------------------
+# --- prerequisites ----------------------------------------------------------
 
 def setup_module(module):
     """Skip every test (with an explanation) if the environment is not ready."""
@@ -70,7 +70,7 @@ def fixture(name: str) -> Path:
         _ADAPTED[name] = source_path
         return source_path
     text = common.adapt(source_path.read_text(encoding="utf-8"))
-    dest = Path(tempfile.mkdtemp(prefix="fixture_adattata_")) / name
+    dest = Path(tempfile.mkdtemp(prefix="fixture_adapted_")) / name
     dest.write_text(text, encoding="utf-8")
     _ADAPTED[name] = dest
     return dest
@@ -167,8 +167,8 @@ def test_5_it_rejects_a_weakened_statement():
 
 def test_6_it_rejects_the_redefinition_of_a_definition():
     """The candidate redefines `jugglerStep` as the constant function 6. The statement
-    is written IDENTICALLY to the original, and the proof is `rfl`: if
-    confronto fosse testuale, passerebbe."""
+    is written IDENTICALLY to the original, and the proof is `rfl`: if the
+    comparison were textual, it would pass."""
     r = _check("6_redefinition.lean")
     assert r.status == REJECTED
     assert "archive definitions intact" in _failed_rule(r)
@@ -238,7 +238,7 @@ uncaught exception: Illegal axiom detected: 'sorryAx'
 
 
 def test_10_leans_info_messages_reach_the_author():
-    """`#check` e `#print` producono messages `info:`. Se li buttassimo away,
+    """`#check` and `#print` produce `info:` messages. If we threw them away,
     whoever writes the proof would have no way of inspecting the definitions and would
     have to infer them by provoking errors on purpose — which is exactly what happened
     during the first shakedown with the agent."""
@@ -260,8 +260,8 @@ def test_11_real_errors_arrive_with_their_context():
 
 def test_12_the_style_linter_noise_is_stripped():
     """The archive's copyright linter repeats fifteen lines of licence with every
-    message: irrelevant for a temporary file, and it would flood the
-    context di chi legge."""
+    message: irrelevant for a temporary file, and it would flood the reader's
+    context."""
     from verify import _lean_errors
     out = _lean_errors(COPYRIGHT_NOISE)
     assert "copyright" not in out.lower()
@@ -272,8 +272,8 @@ def test_12_the_style_linter_noise_is_stripped():
 
 def test_13_repeated_messages_appear_only_once():
     from verify import _lean_errors
-    doppio = COPYRIGHT_NOISE + COPYRIGHT_NOISE
-    assert _lean_errors(doppio).count("@Nat.floor") == 1
+    twice = COPYRIGHT_NOISE + COPYRIGHT_NOISE
+    assert _lean_errors(twice).count("@Nat.floor") == 1
 
 
 # --- Extra: a candidate that tries to sabotage the archive ------------------
@@ -283,10 +283,10 @@ def test_14_a_candidate_cannot_rewrite_a_file_of_the_archive(tmp_path):
 
     comparator exports the Challenge BEFORE compiling the Solution, so sabotage of the
     archive's compiled files does not alter the verification in progress: it alters
-    every SUBSEQUENT one, making them compare the solution with an
-    statement diverso da quello vero. E' l'assunto 2 del README di comparator,
-    and for us, running verifications one after another, it is not an assumption but a
-    risk concreto.
+    every SUBSEQUENT one, making them compare the solution with a statement other
+    than the true one. It is assumption 2 of comparator's README, and for us,
+    running verifications one after another, it is not an assumption but a concrete
+    risk.
 
     The candidate here uses `#eval` to rewrite `JugglerConjecture.olean`. Three things
     are checked: the guard rejects it; with the guard switched off the sandbox blocks

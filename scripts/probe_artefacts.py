@@ -191,7 +191,7 @@ def confirm_with_verifier(problem, tactic: str, negated: bool,
                   f"  {tactic}\n")
         mode = REFUTATION
     else:
-        name = f"{problem.theorem}_riprova"
+        name = f"{problem.theorem}_retry"
         body += (f"theorem {name} : type_of% @{problem.theorem} := by\n"
                   f"  {tactic}\n")
         mode = STRICT

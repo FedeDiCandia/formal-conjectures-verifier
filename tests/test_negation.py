@@ -2,7 +2,7 @@
 
 THE PROBLEM THEY SOLVE
 ----------------------
-107 still-OPEN problems of the archive are formalised like this:
+Hundreds of still-OPEN problems of the archive are formalised like this:
 
     theorem conjecture : answer(sorry) ↔ P := by sorry
 
@@ -15,7 +15,7 @@ it verified. The negated challenge gives them that way.
 
 HOW THIS IS TESTED WITHOUT SOLVING AN OPEN PROBLEM
 --------------------------------------------------
-None of those 107 problems is provable in either direction: they are open. But
+None of those problems is provable in either direction: they are open. But
 comparator compares the STATEMENTS before checking the axioms, and that is enough.
 
 Take a candidate whose proof is left as `sorry`:
@@ -44,8 +44,8 @@ from verify import verify, REFUTATION, STRICT, REJECTED, ERROR
 
 #: Chosen because the statement uses only Mathlib's `Nat.Perfect` (no local
 #: definition to copy) and because its file contains THREE problems
-#: with `answer(sorry)`: it checks that the substitution touches only
-#: quello target.
+#: with `answer(sorry)`: it checks that the substitution touches only the
+#: target one.
 PROBLEM = "PerfectNumbers.infinitely_many_perfect"
 
 _CANDIDATE = """import FormalConjectures.Util.ProblemImports
@@ -86,7 +86,7 @@ def _candidate(tmp_path, answer: str) -> Path:
 
 def test_the_substitution_happens_only_in_the_target_theorem(index):
     """PerfectNumbers' file contains three problems with `answer(sorry)`.
-    Invertirli all_items darebbe one challenge diversa da quella richiesta."""
+    Inverting them all would give a challenge other than the one asked for."""
     challenge = negation.generate(index.get(PROBLEM))
     body = challenge.text.split("-/\n", 1)[1]     # drop the generated header
     assert challenge.substitutions == 1
@@ -99,7 +99,7 @@ def test_the_challenge_declares_that_it_was_generated(index):
     """Whoever opens the file has to see at once that it is not an archive file."""
     challenge = negation.generate(index.get(PROBLEM))
     assert "NEGATED CHALLENGE" in challenge.text
-    assert "generato automaticamente" in challenge.text
+    assert "generated automatically" in challenge.text
     assert PROBLEM in challenge.text
 
 
@@ -114,10 +114,10 @@ def test_a_non_propositional_answer_hole_cannot_be_negated(index):
     """If the answer is a number or a set there is no direction to invert: there is a
     value to supply."""
     with_hole = index.find(has_answer_hole=True)
-    assert with_hole, "l'index dovrebbe contenerne"
+    assert with_hole, "the index should contain some"
     for p in with_hole:
         if p.answer_placeholder_in_source:
-            with pytest.raises(negation.NotNegatable, match="proposizionale"):
+            with pytest.raises(negation.NotNegatable, match="not propositional"):
                 negation.generate(p)
             return
     pytest.skip("no problem with a non-propositional hole and answer(sorry) in the source")
@@ -150,11 +150,11 @@ def test_a_statement_with_a_hole_cannot_be_refuted(tmp_path):
     r = verify(with_hole[0].theorem, _candidate(tmp_path, "False"),
                mode=REFUTATION, run_guard=False)
     assert r.status == ERROR
-    assert "challenge negata" in r.message.lower()
+    assert "negated challenge" in r.message.lower()
 
 
-def test_modalita_sconosciuta_viene_rifiutata(tmp_path):
-    r = verify(PROBLEM, _candidate(tmp_path, "False"), mode="fantasia")
+def test_an_unknown_mode_is_refused(tmp_path):
+    r = verify(PROBLEM, _candidate(tmp_path, "False"), mode="make-believe")
     assert r.status == ERROR
     assert "mode" in r.message.lower()
 
@@ -189,8 +189,8 @@ def test_in_strict_mode_a_candidate_with_False_does_not_match(tmp_path):
 
 def test_in_refutation_mode_a_candidate_with_False_matches(tmp_path):
     """This is the direction that counts: the negated challenge accepts the statement
-    `False ↔ P`. With a real proof (not `sorry`) this would be a refutation
-    verificata del problem aperto."""
+    `False ↔ P`. With a real proof (not `sorry`) this would be a verified
+    refutation of the open problem."""
     r = verify(PROBLEM, _candidate(tmp_path, "False"), mode=REFUTATION,
                run_guard=False, timeout=900)
     assert r.status == REJECTED
@@ -252,9 +252,9 @@ def test_the_type_of_route_rejects_a_statement_with_a_hole():
 def test_the_guard_permits_exactly_one_extra_module():
     import guard
     src = "import FormalConjectures.Wikipedia.PerfectNumbers\ntheorem t : True := trivial\n"
-    assert not guard.check_source(src).ok          # vietato di norma
+    assert not guard.check_source(src).ok          # forbidden as a rule
     ok = guard.check_source(src, allowed_module="FormalConjectures.Wikipedia.PerfectNumbers")
-    assert ok.ok                                   # permesso se dichiarato
+    assert ok.ok                                   # permitted when declared
     other = "import FormalConjectures.Wikipedia.JugglerConjecture\ntheorem t : True := trivial\n"
     assert not guard.check_source(
         other, allowed_module="FormalConjectures.Wikipedia.PerfectNumbers").ok

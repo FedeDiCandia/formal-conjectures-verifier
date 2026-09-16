@@ -68,26 +68,26 @@ def test_without_the_sandbox_writing_into_the_archive_succeeds():
     """The control. Without this test the two that follow would not show that it is
     the sandbox stopping the writes: they could be blocked by something else (file
     system permissions, for instance)."""
-    assert _write_test(config.ARCHIVE / "PROVA_CONTROPROVA.txt", None), \
+    assert _write_test(config.ARCHIVE / "SANDBOX_CONTROL_TRIAL.txt", None), \
         "without the sandbox the write has to succeed, or the test proves nothing"
 
 
 def test_the_sandbox_blocks_writes_into_the_archive(profile):
-    assert not _write_test(config.ARCHIVE / "PROVA_SANDBOX.txt", profile)
+    assert not _write_test(config.ARCHIVE / "SANDBOX_TRIAL.txt", profile)
 
 
 def test_the_sandbox_blocks_writes_to_the_compiled_files(profile):
-    """The target that matters: the compiled files comparator reads
-    l'statement original."""
+    """The target that matters: the compiled files comparator reads the original
+    statement from."""
     compiled = config.ARCHIVE / ".lake" / "build" / "lib" / "lean" / "FormalConjectures"
     if not compiled.is_dir():
         pytest.skip("archive not compiled")
-    assert not _write_test(compiled / "PROVA_SANDBOX.olean", profile)
+    assert not _write_test(compiled / "SANDBOX_TRIAL.olean", profile)
 
 
 def test_the_sandbox_allows_the_writes_that_are_needed(profile):
     """If it blocked these too, no verification could work at all."""
-    inside = config.ARCHIVE / config.SANDBOX_SUBDIR / "prova_permesso.txt"
+    inside = config.ARCHIVE / config.SANDBOX_SUBDIR / "permitted_write_trial.txt"
     assert _write_test(inside, profile)
 
 
@@ -98,7 +98,7 @@ def test_the_sandbox_blocks_the_network(profile):
     assert result.returncode != 0, "curl must not be able to reach the network"
 
 
-# --- l'fingerprint --------------------------------------------------------------
+# --- the fingerprint --------------------------------------------------------
 
 def test_the_fingerprint_is_stable():
     a = fingerprint_module.compute(config.ARCHIVE)
@@ -139,7 +139,7 @@ def test_the_fingerprint_ignores_the_temporary_modules_directory():
     folder.mkdir(parents=True, exist_ok=True)
     a = fingerprint_module.compute(config.ARCHIVE, exclude=folder.name)
     intruder = folder / "S99.lean"
-    intruder.write_text("-- file temporaneo\n", encoding="utf-8")
+    intruder.write_text("-- temporary file\n", encoding="utf-8")
     try:
         b = fingerprint_module.compute(config.ARCHIVE, exclude=folder.name)
         assert not fingerprint_module.compare(a, b)

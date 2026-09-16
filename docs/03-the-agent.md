@@ -62,7 +62,7 @@ in the index, and finds the `:=` separating statement from proof by counting
 brackets (so that a `:=` inside `(n : ℕ := 3)` is not mistaken for the start of
 the proof).
 
-Finally `controlla_che_sia_nascosta` checks that the text of the original proof
+Finally `check_it_is_hidden` checks that the text of the original proof
 does **not** appear in the material handed to the agent. If it leaked, the
 exercise would measure nothing, and the code stops with an error.
 

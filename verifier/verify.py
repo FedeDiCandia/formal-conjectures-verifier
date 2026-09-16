@@ -404,7 +404,7 @@ def verify(problem_id: str, candidate: Path | str, *,
     """Verify `candidate` as a proof of the theorem `problem_id`.
 
     `mode=REFUTATION` checks the NEGATION of the problem instead of the problem
-    itself: this is for the 107 open problems formalised with a propositional
+    itself: this is for the open problems formalised with a propositional
     `answer(sorry)`, for which the archive's statement asserts that the answer is
     "yes" and a refutation would have no other way of being verified. See
     verifier/negation.py.

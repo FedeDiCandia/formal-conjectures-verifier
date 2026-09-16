@@ -38,8 +38,8 @@ def test_1_plausible_without_a_counterexample_proved_nothing():
         "E0.lean:5:0: warning: declaration uses 'sorry'", ok=True)
     assert result == "open"
     # and under the axiom criterion, the same thing
-    r = probe.read("'sonda_plausible' depends on axioms: [sorryAx]",
-                    {"sonda_plausible": ("plausible", False)})
+    r = probe.read("'probeplausible' depends on axioms: [sorryAx]",
+                    {"probeplausible": ("plausible", False)})
     assert r["trials"][0]["result"] == "open"
 
 
@@ -52,8 +52,8 @@ def test_2_exploration_slots_are_exclusive():
     graph problem."""
     import explore
     assert hasattr(explore, "_exclusive_slot"), (
-        "the locking mechanism has been removed: two explorations "
-        "concorrenti tornerebbero a mescolarsi")
+        "the locking mechanism has been removed: two concurrent explorations "
+        "would go back to overwriting each other")
     assert explore.AVAILABLE_SLOTS >= 2
     import inspect
     assert "flock" in inspect.getsource(explore._exclusive_slot), (
@@ -67,9 +67,9 @@ def test_3_the_verdict_is_read_by_name_not_by_line():
     declaration, and went as far as saying that a statement AND its negation were both
     proved — a logical impossibility."""
     output = ("E0.lean:9:2: error: something is wrong here\n"
-              "'sonda_decide' depends on axioms: [sorryAx]\n"
-              "'sonda_decide_neg' does not depend on any axioms")
-    mapping = {"sonda_decide": ("decide", False), "sonda_decide_neg": ("decide", True)}
+              "'probedecide' depends on axioms: [sorryAx]\n"
+              "'probedecide_neg' does not depend on any axioms")
+    mapping = {"probedecide": ("decide", False), "probedecide_neg": ("decide", True)}
     results = {(p["tactic"], p["negated"]): p["result"]
              for p in probe.read(output, mapping)["trials"]}
     # the error line must not move any verdict: the names are what count
@@ -89,7 +89,7 @@ def test_4_type_of_has_to_be_written_with_the_at_sign():
     assert "type_of% Foo.bar" not in code.replace("type_of% @Foo.bar", "")
 
 
-# --- 5. l'environment sbagliato -----------------------------------------------
+# --- 5. the wrong environment -----------------------------------------------
 
 def test_5_it_refuses_to_run_against_the_wrong_archive(tmp_path):
     """Fifth false positive. The probe was running with the default index (bench-v1)
@@ -104,15 +104,15 @@ def test_5_it_refuses_to_run_against_the_wrong_archive(tmp_path):
         pytest.skip("this test applies when the archive in use is NOT fc-main")
     with pytest.raises(SystemExit) as e:
         probe.check_environment(targets)
-    assert "AMBIENTE SBAGLIATO" in str(e.value)
+    assert "WRONG ENVIRONMENT" in str(e.value)
 
 
 # --- the structural fix -----------------------------------------------------
 
 def test_the_probe_does_not_flag_without_the_verifier():
     """The constraint that makes a sixth false positive of the same family
-    impossible: the flag is raised ONLY after an ACCEPTED that
-    arriva da `verify.py`."""
+    impossible: the flag is raised ONLY after an ACCEPTED that comes from
+    `verify.py`."""
     import inspect
     src = inspect.getsource(probe.main)
     assert "confirm_with_verifier" in src, (
