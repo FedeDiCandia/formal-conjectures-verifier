@@ -86,7 +86,7 @@ def _failed_rule(result) -> set[str]:
 
 # --- 1. It ACCEPTS a correct proof ----------------------------------
 
-def test_1_accetta_dimostrazione_corretta():
+def test_1_it_accepts_a_correct_proof():
     """The most important requirement: if the verifier NEVER accepted
     nothing, it would be useless even while being perfectly safe."""
     r = _check("1_correct.lean")
@@ -100,49 +100,49 @@ def test_1_accetta_dimostrazione_corretta():
 
 # --- 2. It REJECTS a proof containing `sorry` --------------------------------
 
-def test_2a_rifiuta_sorry_col_controllo_sintattico():
+def test_2a_it_rejects_sorry_with_the_pre_scan():
     r = _check("2_sorry.lean")
     assert r.status == REJECTED
-    assert "controllo sintattico preventivo" in _failed_rule(r)
+    assert "syntactic pre-scan" in _failed_rule(r)
 
 
-def test_2b_rifiuta_sorry_anche_senza_controllo_sintattico():
+def test_2b_it_rejects_sorry_even_without_the_pre_scan():
     """The real judgement: comparator sees the axiom `sorryAx`."""
     r = _check("2_sorry.lean", run_guard=False)
     assert r.status == REJECTED
-    assert "axioms permitted" in _failed_rule(r)
+    assert "permitted axioms" in _failed_rule(r)
     assert "sorryAx" in r.errors
 
 
 # --- 3. It REJECTS a proof that adds an axiom -------------------------------
 
-def test_3a_rifiuta_assioma_col_controllo_sintattico():
+def test_3a_it_rejects_an_axiom_with_the_pre_scan():
     r = _check("3_axiom.lean")
     assert r.status == REJECTED
-    assert "controllo sintattico preventivo" in _failed_rule(r)
+    assert "syntactic pre-scan" in _failed_rule(r)
 
 
-def test_3b_rifiuta_assioma_anche_senza_controllo_sintattico():
+def test_3b_it_rejects_an_axiom_even_without_the_pre_scan():
     r = _check("3_axiom.lean", run_guard=False)
     assert r.status == REJECTED
-    assert "axioms permitted" in _failed_rule(r)
+    assert "permitted axioms" in _failed_rule(r)
     assert "Illegal axiom" in r.raw_output, "comparator has to name the added axiom"
 
 
 # --- 4. It REJECTS a proof that uses `native_decide` ------------------------
 
-def test_4a_rifiuta_native_decide_col_controllo_sintattico():
+def test_4a_it_rejects_native_decide_with_the_pre_scan():
     r = _check("4_native_decide.lean")
     assert r.status == REJECTED
-    assert "controllo sintattico preventivo" in _failed_rule(r)
+    assert "syntactic pre-scan" in _failed_rule(r)
 
 
-def test_4b_rifiuta_native_decide_anche_senza_controllo_sintattico():
+def test_4b_it_rejects_native_decide_even_without_the_pre_scan():
     """`native_decide` makes the compiler do the computation instead of the kernel: it
     leaves the axiom `Lean.ofReduceBool` in the proof term."""
     r = _check("4_native_decide.lean", run_guard=False)
     assert r.status == REJECTED
-    assert "axioms permitted" in _failed_rule(r)
+    assert "permitted axioms" in _failed_rule(r)
     # On Lean 4.27 the axiom left behind is `Lean.ofReduceBool`; on Lean 4.33 it is a
     # PER-DECLARATION axiom, of the form
     # `JugglerConjecture.jugglerStep_36._native.native_decide.ax_1_1`. This is why the
@@ -154,13 +154,13 @@ def test_4b_rifiuta_native_decide_anche_senza_controllo_sintattico():
 
 # --- 5. It REJECTS a weakened statement -------------------------------------
 
-def test_5_rifiuta_enunciato_piu_debole():
+def test_5_it_rejects_a_weakened_statement():
     """The candidate proves `jugglerStep 36 = 6 ∨ jugglerStep 36 = 7`, which is
     strictly weaker than the original `jugglerStep 36 = 6`. The syntactic pre-scan
     cannot notice: that is a job for Lean."""
     r = _check("5_weaker.lean")
     assert r.status == REJECTED
-    assert "kind identico all'original" in _failed_rule(r)
+    assert "type identical to the original" in _failed_rule(r)
 
 
 # --- 6. It REJECTS anyone who redefines an archive definition ---------------
@@ -311,9 +311,9 @@ def test_14_a_candidate_cannot_rewrite_a_file_of_the_archive(tmp_path):
 #eval show IO Unit from do
   try
     IO.FS.writeFile "{target}" "ARCHIVE RUINED"
-    IO.println "SABOTAGGIO RIUSCITO"
+    IO.println "SABOTAGE SUCCEEDED"
   catch e =>
-    IO.println s!"sabotaggio impedito: {{e}}"
+    IO.println s!"sabotage prevented: {{e}}"
 
 namespace JugglerConjecture
 noncomputable def jugglerStep (n : ℕ) : ℕ :=
@@ -334,7 +334,7 @@ end JugglerConjecture
 
     # 2. with the guard switched off, the sandbox has to block it anyway
     r = verify(PROBLEM, saboteur, run_guard=False)
-    assert "sabotaggio impedito" in r.raw_output or "SABOTAGGIO RIUSCITO" not in r.raw_output, \
+    assert "sabotage prevented" in r.raw_output or "SABOTAGE SUCCEEDED" not in r.raw_output, \
         f"the sabotage was not prevented:\n{r.raw_output[:2000]}"
 
     # 3. the archive's file has to be byte-for-byte identical
