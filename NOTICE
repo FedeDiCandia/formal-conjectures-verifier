@@ -23,7 +23,7 @@ The list below says which files, and under which terms.
      docs/contributions/formal-conjectures/**/*.patch
                                         diffs against archive files
      docs/paper/lean/*.lean             files that import and restate archive
-     search/lean/*.lean                  declarations
+                                        declarations
      research_data/formalisation_candidates.json
                                         docstrings and statements of 1209 problems
 

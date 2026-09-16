@@ -10,7 +10,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 PUB = HERE.parent
 ROOT = PUB.parent.parent
-REPORT = ROOT / "research_data" / "a105020_verifica_lean_en.json"
+REPORT = ROOT / "research_data" / "a105020_verification.json"
 NUMBERS = {5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine", 10: "ten"}
 ATTACHED = ("Solution.lean", "Challenge.lean", "config.json", "MeaningChecks.lean")
 

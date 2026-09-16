@@ -12,11 +12,16 @@ repository.
 | `bounds_cwc.json`, `bounds_general.json` | Brouwer's tables turned into JSON, with attributions |
 | `reproduction.json` | verifying 361 published record codes |
 | `phase1_match.json`, `phase3_*.json`, `ilp_cells.json`, `km_groups.json` | the coding-theory searches |
-| `a105020_*.json` | the computational checks behind the A105020 note |
+| `a105020_indices.json`, `a105020_values.json` | the computational checks behind the A105020 note |
+| `a105020_verification.json` | the verifier's report on the note's Lean files |
 | `oeis/`, `oeis-2026-09-12/` | OEIS entries, downloaded unmodified (CC BY-SA 4.0, see NOTICE) |
 | `codes/`, `Andw.html`, `binary-1.html` | Brouwer's pages and explicit codes. **Not versioned**: they carry no licence. `search/reproduce.py` downloads them when they are missing |
 
-**A note on language.** The recorded verifier outputs (`*_verification_*.json`) keep the
-`detail` strings exactly as the tools printed them in September 2026, when they printed
-in Italian. They are evidence of a run: rewriting them afterwards would make them
-evidence of nothing. Everything the programs print today is in English.
+**A note on language.** The files the programs here read and rewrite carry English
+field names, the same ones the code uses today: a data file whose keys the code no
+longer knows is a defect waiting to happen, and renaming the keys changes no number.
+The recorded verifier outputs (`*_verification_*.json`) are the exception: their
+`detail` strings are what comparator and Lean printed during the run — in
+September 2026 our own messages around them were still in Italian — and they are
+kept exactly as they were, because a log rewritten afterwards is evidence of
+nothing.

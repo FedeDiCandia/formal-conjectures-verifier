@@ -15,7 +15,10 @@ can be checked rather than taken on trust.
 | `measurements.md` | the register of every measurement, with the provenance of each number |
 | `searches/` | the counterexample searches: one report each, and the raw result |
 
-**A note on language.** The `.txt` files are the raw logs of runs made in September
-2026, when the tools still printed in Italian. They are kept exactly as they were
-produced: rewriting a log after the fact would make it evidence of nothing. The
-numbers in them are the numbers quoted in the documentation.
+**A note on language.** The `.txt` logs and the JSON reports of the runs are kept
+exactly as they were produced in September 2026, when the tools still printed in
+Italian: field names and all. Rewriting a log after the fact would make it evidence
+of nothing, and the numbers in them are the numbers quoted in the documentation.
+(Everything the programs print today is in English, and the data files the code
+still reads and rewrites — those under `research_data/` — were renamed along with
+it.)

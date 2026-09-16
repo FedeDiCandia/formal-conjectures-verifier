@@ -36,7 +36,7 @@ first experimental confirmation that reasoning consumes the `max_tokens` budget.
 | effort | high |
 
 ## M3 — A $5 test, interrupted
-*Provenance: the agent's run log, readable with `interno/scripts/analizza_log_agente.py`.*
+*Provenance: the agent's run log (`runs/`, not versioned).*
 
 Deliberately interrupted at $1.81 of $5.00 after finding a defect in `lean_check`
 (it discarded Lean's informational messages) that was wasting the budget on
@@ -98,10 +98,10 @@ negated form, 60 s timeout per attempt, no API spend.
 One apparent case — `Arxiv.«2107.12475».CollatzLike` — was `plausible` failing to
 find a counterexample and leaving a `sorry`: the file compiled with a warning and
 the verdict reader took it as "closed". Fixed in `scripts/probe_lean.py`, with
-five tests in `tests/test_sonda.py`.
+five tests in `tests/test_probe.py`.
 
 ## M8 — Speed of the local computation
-*Provenance: the search log of `euclide_squarefree`.*
+*Provenance: the search log of `euclid_squarefree`.*
 
 | quantity | value |
 |---|---|

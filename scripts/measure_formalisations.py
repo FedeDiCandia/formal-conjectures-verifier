@@ -48,7 +48,7 @@ def band(c: dict) -> str:
         return "B"
     if not hard:
         return "C"
-    if hard == {"source: articolo"}:
+    if hard == {"source: a paper"}:
         return "D"
     return "E"
 

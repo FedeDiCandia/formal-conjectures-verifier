@@ -2,9 +2,9 @@
 
     env FCS_ARCHIVE=$PWD/external/fc-main FCS_INDEX=$PWD/verifier/problem_index_main.json \\
       .venv/bin/python scripts/verify_free.py \\
-        --challenge search/lean/A105020Goldbach_challenge.lean \\
-        --candidate search/lean/A105020Goldbach_candidate.lean \\
-        --theorems A105020Goldbach.parametrizzazione,... \\
+        --challenge docs/paper/lean/Challenge.lean \\
+        --candidate docs/paper/lean/Solution.lean \\
+        --theorems A105020Goldbach.exists_index_decomposition,... \\
         --modules "FormalConjectures.OEIS.«105020»,FormalConjectures.Wikipedia.GoldbachConjecture"
 """
 import argparse
@@ -31,7 +31,7 @@ def main() -> int:
     modules = tuple(m.strip() for m in a.modules.split(",") if m.strip())
     r = verify_free(Path(a.challenge).read_text(encoding="utf-8"), a.candidate, theorems,
                       allowed_modules=modules, timeout=a.timeout)
-    print(f"ESITO: {r.status}   ({r.duration_s:.0f} s)")
+    print(f"RESULT: {r.status}   ({r.duration_s:.0f} s)")
     for c in r.checks:
         print(c)
     print("\n" + r.message)

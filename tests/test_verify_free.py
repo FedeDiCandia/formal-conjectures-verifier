@@ -1,6 +1,6 @@
 """verify_free: verifying theorems that are NOT in the archive.
 
-The use case that gave rise to it is A105020 ⟺ Goldbach (search/lean/). Here we
+The use case that gave rise to it is A105020 ⟺ Goldbach (docs/paper/lean/). Here we
 check that the verifier's new entry point has the same teeth as `verify`:
 
   * it accepts a correct proof of a statement in the challenge;

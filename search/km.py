@@ -108,7 +108,7 @@ def solve(n: int, d: int, w: int, group, *, seconds: float = 300.0,
     h.changeColsIntegrality(len(orbits), np.arange(len(orbits), dtype=np.int32),
                             np.array([highspy.HighsVarType.kInteger] * len(orbits)))
     h.changeColsCost(len(orbits), np.arange(len(orbits), dtype=np.int32),
-                     np.array([-float(len(o)) for o in orbits]))   # minimizza -Σ|O|z
+                     np.array([-float(len(o)) for o in orbits]))   # minimise -Σ|O|z
     for i in range(n_constraints):
         idx = np.flatnonzero(coef[i])
         if len(idx) == 0:
@@ -138,12 +138,12 @@ def solve_full(n: int, d: int, w: int, *, seconds: float = 1800.0,
     WHY IT IS WORTH IT
     -------------------
     For A(27,8,5) that is 80,730 binary variables and 351 constraints (one per pair
-    of points). It is pure *set packing*, the form modern solvers are most
-    forti. E l'result è decisivo in **entrambi** i sensi:
+    of points). It is pure *set packing*, the form modern solvers are strongest
+    on. And the answer settles the cell **either way**:
 
       * if it finds a code of 32 words, then D(27,5,2) = 32 and the cell is closed;
       * if it proves 31 is optimal, then D(27,5,2) = 31 and the cell is closed
-        ugualmente.
+        just the same.
 
     The table today says "between 31 and 32". Either answer settles it.
     A heuristic cannot give the second; an ILP can.
