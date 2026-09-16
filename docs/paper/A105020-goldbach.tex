@@ -1,23 +1,23 @@
 \documentclass[11pt,a4paper]{article}
 
-% Compilato con XeLaTeX (tectonic). Rispetto al preambolo proposto, le righe pensate
-% per pdflatex sono sostituite dai loro equivalenti Unicode:
-%   fontenc T1 + inputenc utf8  -> tolti: con XeTeX non servono
-%   newtxmath[libertine]        -> unicode-math con Libertinus Math
-%   beramono                    -> DejaVu Sans Mono, stesso disegno di Bera (Vera) Mono
-%                                  ma con i simboli Unicode del codice Lean
-% Le definizioni dei teoremi stanno dopo cleveref: prima, \cref chiama "theorem"
-% anche lemmi e osservazioni.
+% Compiled with XeLaTeX (tectonic). Against the preamble originally proposed, the lines
+% meant for pdflatex are replaced by their Unicode equivalents:
+%   fontenc T1 + inputenc utf8  -> dropped: XeTeX does not need them
+%   newtxmath[libertine]        -> unicode-math with Libertinus Math
+%   beramono                    -> DejaVu Sans Mono, the same design as Bera (Vera) Mono
+%                                  but with Lean code's Unicode symbols
+% The theorem definitions come after cleveref: before it, \cref calls lemmas and
+% remarks "theorem" as well.
 
-% --- font e codifica -------------------------------------------------
+% --- fonts and encoding ----------------------------------------------
 \usepackage{libertine}                          % testo: Linux Libertine (OpenType)
 \setmonofont{DejaVuSansMono.ttf}[Scale=0.85,    % codice: DejaVu Sans Mono,
   BoldFont=DejaVuSansMono-Bold.ttf,               % dritto anche dentro il corsivo
   ItalicFont=DejaVuSansMono.ttf]
-% DejaVu Sans Mono non ha ∣ (U+2223): quel solo carattere viene da Noto Sans Mono
+% DejaVu Sans Mono has no ∣ (U+2223): that one character comes from Noto Sans Mono
 \newfontfamily\leanfallbackfont{NotoSansMono-Regular.ttf}[Scale=0.85]
 
-% --- gabbia ----------------------------------------------------------
+% --- page layout -----------------------------------------------------
 \usepackage[a4paper,margin=1.1in,footskip=0.5in]{geometry}
 \linespread{1.06}
 \setlength{\parskip}{0pt}
@@ -25,19 +25,19 @@
 \setlength{\emergencystretch}{3em}
 \usepackage{needspace}                          % titoli e listati brevi non separati
 
-% --- matematica ------------------------------------------------------
+% --- mathematics -----------------------------------------------------
 \usepackage{amsmath,amssymb,amsthm,mathtools}
 \usepackage{unicode-math}
 \setmathfont{LibertinusMath-Regular.otf}        % matematica coordinata con Libertine
 \medmuskip=4mu plus 2mu minus 2mu               % gli spazi intorno a + e - non si annullano
 
-% --- intestazioni ----------------------------------------------------
+% --- headings --------------------------------------------------------
 \usepackage[explicit]{titlesec}
 \titleformat{\section}{\normalfont\large\bfseries}{\thesection}{0.7em}{#1}
 \titleformat{\subsection}{\normalfont\bfseries}{\thesubsection}{0.7em}{#1}
 \titlespacing*{\section}{0pt}{1.6\baselineskip}{0.6\baselineskip}
 
-% --- codice ----------------------------------------------------------
+% --- code ------------------------------------------------------------
 \usepackage{xcolor}
 \definecolor{rulecol}{gray}{0.75}
 \definecolor{codebg}{gray}{0.975}
@@ -52,15 +52,15 @@
   keepspaces=true, upquote=true,
   aboveskip=0.9\baselineskip, belowskip=0.9\baselineskip,
 }
-% Segno di a capo: senza, una riga spezzata sembra una riga nuova con un'altra
-% indentazione, che in Lean ha un significato.
+% Line-break mark: without it a wrapped line looks like a new line at a different
+% indentation, and in Lean indentation means something.
 \lstset{extendedchars=true, postbreak=\mbox{$\hookrightarrow$}\space}
 \lstdefinestyle{inline}{basicstyle=\ttfamily, frame=none, breaklines=false}
 \newcommand{\li}{\lstinline[style=inline]}
-% Con XeTeX, listings fa passare dal suo buffer solo i caratteri sotto 256; gli altri
-% sono stampati appena letti, prima della parola in sospeso ("⟨m, rfl⟩" usciva come
-% "⟨m, ⟩rfl"). Qui i caratteri non ASCII dei file Lean sono registrati come listings
-% registra quelli a 8 bit.
+% With XeTeX, listings passes only characters below 256 through its buffer; the rest
+% are printed as soon as they are read, before the pending word ("⟨m, rfl⟩" came out
+% as "⟨m, ⟩rfl"). Here the non-ASCII characters of the Lean files are registered the
+% way listings registers the 8-bit ones.
 \makeatletter
 \def\leanchar#1#2{\catcode`#2=\active\lccode`\~=`#2\lccode`\/=`#2\lowercase{\def~{#1/}}}
 \def\leandivides{{\leanfallbackfont ∣}}
@@ -74,7 +74,7 @@
   \catcode`∣=\active\lccode`\~=`∣\lowercase{\def~{\lst@ProcessOther\leandivides}}}
 \makeatother
 
-% --- tabelle, figure, riferimenti ------------------------------------
+% --- tables, figures, references -------------------------------------
 \usepackage{booktabs}
 \usepackage{tikz}
 \usetikzlibrary{decorations.pathreplacing}      % la graffa della figura
@@ -82,20 +82,20 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{cleveref}
 
-% --- teoremi (dopo cleveref) -----------------------------------------
+% --- theorems (after cleveref) ---------------------------------------
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}[theorem]{Lemma}
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
 
-% --- piè di pagina ---------------------------------------------------
+% --- footer ----------------------------------------------------------
 \usepackage{fancyhdr}
 \pagestyle{fancy}\fancyhf{}
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0pt}
 
-% --- valori presi dal rapporto di verifica; file allegati al PDF ------
+% --- values taken from the verification report; files attached to the PDF ---
 \input{build/values.tex}
 \newcommand{\attachsource}[2]{%
   \special{pdf:fstream @#1 (lean/#2) << /Type /EmbeddedFile >>}%

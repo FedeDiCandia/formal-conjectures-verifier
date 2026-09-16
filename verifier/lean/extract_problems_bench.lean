@@ -1,23 +1,23 @@
 /-
-Estrattore dell'indice dei problemi dell'archivio formal-conjectures.
+Extractor for the index of the formal-conjectures archive's problems.
 
-E' modellato su `scripts/extract_names.lean` dell'archivio, ma aggiunge i due
-campi che servono al verificatore e che quello non produce:
+It is modelled on the archive's `scripts/extract_names.lean`, but adds the two
+fields the verifier needs and that one does not produce:
 
-  * `statementHasSorry` : l'ENUNCIATO (non la dimostrazione) contiene un
-    `sorry`. Succede quando il problema usa `answer(sorry)` con una risposta
-    che non e' una proposizione (un numero, un insieme...). Un enunciato del
-    genere non e' dimostrabile onestamente: qualunque prova dipenderebbe
+  * `statementHasSorry` : the STATEMENT (not the proof) contains a `sorry`. This
+    happens when the problem uses `answer(sorry)` with an answer that is not a
+    proposition (a number, a set…). Such a statement cannot be proved honestly:
+    any proof would depend on the axiom `sorryAx`.
     dall'assioma `sorryAx`.
-  * `archiveProofAxioms` : da quali assiomi dipende la dimostrazione che
-    l'archivio stesso fornisce. Serve per scegliere i problemi di collaudo: 87
-    dimostrazioni dell'archivio usano `decide +native`, che lascia l'assioma
-    `Lean.ofReduceBool`, e il verificatore le rifiuta a ragione. Un problema
-    "gia' risolto nell'archivio" non e' quindi detto sia risolvibile sotto le
-    nostre regole, e senza questo campo non c'e' modo di saperlo in anticipo.
-  * `range` : la posizione del teorema nel file sorgente, per poter ritagliare
-    il testo esatto dell'enunciato e per nascondere la dimostrazione quando si
-    collauda un agente.
+  * `archiveProofAxioms` : which axioms the proof the archive itself supplies
+    depends on. It is needed to choose the problems to exercise the agent on: 87
+    of the archive's proofs use `decide +native`, which leaves the axiom
+    `Lean.ofReduceBool`, and the verifier rejects them rightly. A problem
+    "already solved in the archive" is therefore not necessarily solvable under
+    our rules, and without this field there is no way to know in advance.
+  * `range` : the theorem's position in the source file, so that the exact text of
+    the statement can be cut out and the proof hidden when an agent is being
+    exercised.
 
 Uso, dalla cartella dell'archivio:
     lake env lean --run <percorso>/extract_problems.lean > indice.json
@@ -69,7 +69,7 @@ def getModuleNameFromFile (file : System.FilePath) : IO Name := do
       found := true
       moduleComponents := moduleComponents ++ [c]
   if moduleComponents.isEmpty then
-    throw <| IO.userError s!"Impossibile determinare il modulo di {file}"
+    throw <| IO.userError s!"cannot determine the module of {file}"
   return moduleComponents.foldl (fun n s => Name.mkStr n s) Name.anonymous
 
 unsafe def runWithImports {α : Type} (moduleNames : Array Name) (action : CoreM α) : IO α := do
@@ -138,11 +138,11 @@ unsafe def main : IO Unit := do
             ("docstring", match docstring with | some d => Json.str d | none => Json.null),
             ("formalProofKind", fpKind),
             ("formalProofLink", fpLink),
-            -- la DIMOSTRAZIONE e' priva di sorry (cioe' il problema e' gia' risolto qui)
+            -- the PROOF is free of sorry (that is, the problem is already solved here)
             ("proofIsSorryFree", Json.bool (info.value?.any (!·.hasSorry))),
-            -- l'ENUNCIATO contiene un sorry (buco answer( ) non proposizionale)
+            -- the STATEMENT contains a sorry (a non-propositional answer( ) hole)
             ("statementHasSorry", Json.bool info.type.hasSorry),
-            -- gli assiomi da cui dipende la dimostrazione dell'archivio
+            -- the axioms the archive's proof depends on
             ("archiveProofAxioms", toJson (assiomi.map Name.toString)),
             ("range", rangeJson)]
         | _ => pure ()

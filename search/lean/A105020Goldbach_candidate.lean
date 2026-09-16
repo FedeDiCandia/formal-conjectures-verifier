@@ -2,11 +2,11 @@ import FormalConjectures.OEIS.«105020»
 import FormalConjectures.Wikipedia.GoldbachConjecture
 
 /-!
-# A105020: la congettura dell'archivio è equivalente a Goldbach binaria
+# A105020: the archive's conjecture is equivalent to binary Goldbach
 
-Tutto è enunciato con le definizioni dell'archivio (`OeisA105020.a`,
-`triangularNumber`, `antidiagonalIndex`) e con i due enunciati dell'archivio presi
-tali e quali tramite `type_of%`: nessuno dei due è riscritto.
+Everything is stated with the archive's definitions (`OeisA105020.a`,
+`triangularNumber`, `antidiagonalIndex`) and with the archive's two statements taken
+verbatim through `type_of%`: neither is rewritten.
 -/
 
 namespace A105020Goldbach
@@ -28,7 +28,7 @@ lemma tri_succ (n : ℕ) : triangularNumber (n + 1) = triangularNumber n + (n + 
   have h3 : (n + 1) * (n + 1 + 1) = n * (n + 1) + 2 * (n + 1) := by ring
   omega
 
-/-- Ogni indice sta fra `T c` e `T c + c`, con `c` l'antidiagonale. -/
+/-- Every index lies between `T c` and `T c + c`, with `c` the antidiagonal. -/
 lemma tri_le_and (N : ℕ) :
     triangularNumber (antidiagonalIndex N) ≤ N ∧
       N ≤ triangularNumber (antidiagonalIndex N) + antidiagonalIndex N := by
@@ -46,7 +46,7 @@ lemma tri_le_and (N : ℕ) :
   · nlinarith
   · nlinarith
 
-/-- Sull'antidiagonale `c` gli indici sono `T c + k` con `k ≤ c`. -/
+/-- On antidiagonal `c` the indices are `T c + k` with `k ≤ c`. -/
 lemma adi_tri_add {c k : ℕ} (hk : k ≤ c) :
     antidiagonalIndex (triangularNumber c + k) = c := by
   have hT := two_mul_tri c
@@ -57,7 +57,7 @@ lemma adi_tri_add {c k : ℕ} (hk : k ≤ c) :
   show (Nat.sqrt (8 * (triangularNumber c + k) + 1) - 1) / 2 = c
   omega
 
-/-- La formula chiusa: `a (T c + k) = (k + 1)(2c + 1 − k)` per `k ≤ c`. -/
+/-- The closed formula: `a (T c + k) = (k + 1)(2c + 1 − k)` for `k ≤ c`. -/
 theorem a_tri_add {c k : ℕ} (hk : k ≤ c) :
     a (triangularNumber c + k) = (k + 1) * (2 * c + 1 - k) := by
   simp only [a]
@@ -69,7 +69,7 @@ theorem a_tri_add {c k : ℕ} (hk : k ≤ c) :
   have e3 : (k + m + 1) ^ 2 = m ^ 2 + (k + 1) * (k + 2 * m + 1) := by ring
   rw [e3, Nat.add_sub_cancel_left]
 
-/-- **Parametrizzazione degli indici**, esistenza: ogni `N` è `T c + k` con `k ≤ c`. -/
+/-- **Parametrisation of the indices**, existence: every `N` is `T c + k` with `k ≤ c`. -/
 theorem parametrizzazione (N : ℕ) : ∃ c k, k ≤ c ∧ N = triangularNumber c + k := by
   obtain ⟨h1, h2⟩ := tri_le_and N
   exact ⟨antidiagonalIndex N, N - triangularNumber (antidiagonalIndex N), by omega, by omega⟩
@@ -81,7 +81,7 @@ theorem parametrizzazione_unica {c k c' k' : ℕ} (hk : k ≤ c) (hk' : k' ≤ c
   subst e
   exact ⟨rfl, by omega⟩
 
-/-- **La formula `a(N) = d (2s − d)`**, con `s = c + 1` e `d = k + 1`. -/
+/-- **The formula `a(N) = d (2s − d)`**, with `s = c + 1` and `d = k + 1`. -/
 theorem formula_ds {c k : ℕ} (hk : k ≤ c) :
     a (triangularNumber c + k) = (k + 1) * (2 * (c + 1) - (k + 1)) := by
   rw [a_tri_add hk]
@@ -91,7 +91,7 @@ theorem formula_ds {c k : ℕ} (hk : k ≤ c) :
 lemma a_tri (n : ℕ) : a (triangularNumber n) = 2 * n + 1 := by
   simpa using a_tri_add (Nat.zero_le n)
 
-/-- **Il lemma**: le ipotesi della congettura forzano gli indici canonici. -/
+/-- **The lemma**: the conjecture's hypotheses force the canonical indices. -/
 theorem coppie_canoniche {n i j : ℕ} (hn : 1 ≤ n) (hi : a i = 2 * n + 1)
     (hj : a j = 2 * n + 3) (hij : j = i + n + 1) :
     i = triangularNumber n ∧ j = triangularNumber (n + 1) := by
@@ -123,7 +123,7 @@ theorem coppie_canoniche {n i j : ℕ} (hn : 1 ≤ n) (hi : a i = 2 * n + 1)
     exact_mod_cast t1
   have T2 : 2 * (triangularNumber (k' + m') : ℤ) = ((k' : ℤ) + m') * (k' + m' + 1) := by
     exact_mod_cast t2
-  -- (F) ed (E) della dimostrazione a mano, con r = m, r' = m', d = k + 1, d' = k' + 1
+  -- (F) and (E) of the hand proof, with r = m, r' = m', d = k + 1, d' = k' + 1
   have F : (m' : ℤ) * m' + k' = ((k : ℤ) + m) * (k + m + 1) + 2 * k + m' := by
     linear_combination 2 * Hij - T2 + T1 - Hj
   have E : ((k' : ℤ) + 1) * (k' + 2 * m' + 1) = ((k : ℤ) + 1) * (k + 2 * m + 1) + 2 := by
@@ -155,7 +155,7 @@ theorem coppie_canoniche {n i j : ℕ} (hn : 1 ≤ n) (hi : a i = 2 * n + 1)
       have hkk : (0 : ℤ) ≤ k * k := mul_nonneg hk0' hk0'
       have hkm' : (0 : ℤ) ≤ k * m := mul_nonneg hk0' hm0'
       linarith
-    · -- caso r' = s: resta solo d = 1
+    · -- case r' = s: only d = 1 remains
       have hZ : (m' : ℤ) = k + m + 1 := by exact_mod_cast h
       rw [hZ] at F E
       have hk'2 : (k' : ℤ) = 2 * k := by linear_combination F
@@ -186,7 +186,7 @@ theorem coppie_canoniche {n i j : ℕ} (hn : 1 ≤ n) (hi : a i = 2 * n + 1)
     simp only [Nat.zero_add, Nat.add_zero] at hij
     omega
 
-/-- Un semiprimo `p q` con `p, q ≥ 2` ha entrambi i fattori primi. -/
+/-- A semiprime `p q` with `p, q ≥ 2` has both factors prime. -/
 lemma primi_di_semiprimo {p q : ℕ} (hp : 2 ≤ p) (hq : 2 ≤ q)
     (h : (p * q).IsSemiprime) : p.Prime ∧ q.Prime := by
   obtain ⟨_, h2⟩ := h
