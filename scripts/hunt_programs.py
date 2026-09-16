@@ -1,35 +1,35 @@
 """
-I programmi di ricerca, one per problem.
+The search programs, one per problem.
 
-Ogni program rispetta il contratto di verifier/search.py: legge il
-checkpoint, salva i progressi, gestisce SIGTERM, non usa la rete.
+Each program honours the contract in verifier/search.py: it reads the checkpoint,
+saves its progress, handles SIGTERM and does not use the network.
 
-Ogni program ha in cima un block COLLAUDO che ricalcola valori NOTI e si
-ferma se non combaciano. Una ricerca che parte da un computation sbagliato produce
-un ritrovamento falso, che e' peggio di nessun ritrovamento.
+Each program starts with a SELF-TEST block that recomputes KNOWN values and stops if
+they do not match. A search that starts from a wrong computation produces a false
+finding, which is worse than no finding.
 """
 
 # ---------------------------------------------------------------------------
-# 1. Numeri di Euclide senza fattori quadrati
+# 1. Euclid numbers with no square factors
 # ---------------------------------------------------------------------------
 # PROBLEM: EuclidNumbers.euclid_numbers_are_square_free
-#   True ↔ ∀ n, Squarefree (Euclid n)      con Euclid n = p_n# + 1
+#   True ↔ ∀ n, Squarefree (Euclid n)      with Euclid n = p_n# + 1
 #
-# STATO NOTO (cercato sul web il 2026-09-10): e' aperto se ogni number di
-# Euclide sia privo di fattori quadrati. Non risulta pubblicata one ricerca
-# sistematica di controesempi.
+# KNOWN STATE (searched on the web on 2026-09-10): whether every Euclid number is
+# squarefree is open. No published systematic search for counterexamples
+# sistematica di counterexamples.
 #
-# COME SI CERCA: se p² divide p_n# + 1, allora p non divide p_n#, quindi p e'
-# maggiore di p_n. Per ogni first p si compute il primoriale module p²,
-# moltiplicando un first q < p alla volta, e si guarda se in qualche momento
-# vale −1 module p². Costo: circa π(p) operazioni per ogni p, cioe' P²/(2 ln²P)
-# in total. Per P = 10^6 sono un paio di miliardi di moltiplicazioni: hours, non
+# HOW IT IS SEARCHED: if p² divides p_n# + 1 then p does not divide p_n#, so p is
+# greater than p_n. For each prime p the primorial is computed mod p², multiplying one
+# prime q < p at a time, and we watch for it becoming −1 mod p². Cost: about π(p)
+# operations per p, that is P²/(2 ln²P) in total. For P = 10^6 that is a couple of
+# billion multiplications: hours, not
 # giorni.
 EUCLID = r'''
 import json, os, signal, sys, time
 
 def cribro(n):
-    """Primi fino a n, con il crivello di Eratostene."""
+    """The primes up to n, by the sieve of Eratosthenes."""
     s = bytearray([1]) * (n + 1)
     s[0:2] = b"\x00\x00"
     i = 2
@@ -39,8 +39,8 @@ def cribro(n):
         i += 1
     return [i for i in range(n + 1) if s[i]]
 
-# --- COLLAUDO su valori noti -------------------------------------------------
-# I primes numbers di Euclide sono 3, 7, 31, 211, 2311, 30031, 510511.
+# --- SELF-TEST on known values -------------------------------------------------
+# The first Euclid numbers are 3, 7, 31, 211, 2311, 30031, 510511.
 expected = [3, 7, 31, 211, 2311, 30031, 510511]
 pr = cribro(100)
 acc, computed = 1, []
@@ -51,18 +51,18 @@ if computed != expected:
     print(json.dumps({"event": "collaudo_fallito",
                       "expected": expected, "calcolato": computed}), flush=True)
     sys.exit(1)
-# 30031 = 59 * 509: il sesto number di Euclide NON e' first (ma e' senza quadrati)
+# 30031 = 59 * 509: the sixth Euclid number is NOT prime (but it is squarefree)
 if 30031 % 59 != 0:
     print(json.dumps({"event": "collaudo_fallito", "detail": "30031 = 59*509"}), flush=True)
     sys.exit(1)
 print(json.dumps({"event": "shakedown", "result": "exceeded",
-                  "controllati": "primes 7 numbers di Euclide e la fattorizzazione di 30031"}),
+                  "checked": "the first 7 Euclid numbers and the factorisation of 30031"}),
       flush=True)
 
 # --- ricerca -----------------------------------------------------------------
 checkpoint = os.environ["SEARCH_CHECKPOINT"]
 state = os.environ["SEARCH_STATE"]
-LIMIT = int(os.environ.get("LIMITE_P", "200000"))
+LIMIT = int(os.environ.get("LIMIT_P", "200000"))
 
 index_start = 0
 found = []
@@ -99,7 +99,7 @@ for i in range(index_start, len(primes)):
     p = primes[i]
     p2 = p * p
     acc = 1
-    # il primoriale module p^2, un first q < p alla volta
+    # the primorial mod p^2, one prime q < p at a time
     for j in range(i):          # all_items i primes q < p
         acc = (acc * primes[j]) % p2
         if acc == p2 - 1:       # acc ≡ -1 (mod p^2), cioe' p^2 | p_n# + 1
@@ -112,7 +112,7 @@ for i in range(index_start, len(primes)):
     if now - last_warning > 30:
         salva(i + 1)
         print(json.dumps({"event": "progress", "position": i + 1,
-                          "examined": examined, "primo_corrente": p,
+                          "examined": examined, "current_prime": p,
                           "seconds": round(now - t0)}), flush=True)
         last_warning = now
 
@@ -124,17 +124,16 @@ print(json.dumps({"event": "end", "position": min(i + 1, len(primes)),
 
 
 # ---------------------------------------------------------------------------
-# 2. Erdos 409: l'iteration di sigma meno one raggiunge sempre un first?
+# 2. Erdos 409: does iterating sigma minus one always reach a prime?
 # ---------------------------------------------------------------------------
 # PROBLEM: Erdos409.erdos_409.variants.sigma_prime_termination
 #   True ↔ ∀ n > 1, ∃ i, Prime ((fun x => σ₁(x) - 1)^[i] n)
 #
-# COME SI CERCA: per ogni n si itera m ↦ σ(m) − 1 finche' non si incontra un
-# first. Un counterexample e' un n la cui orbit non incontra mai un first:
-# o enters in un ciclo, o cresce senza limit. Si fix un cap di steps e di
-# grandezza; chi lo supera viene segnalato come SOSPETTO, non come
-# counterexample — distinzione importante, perche' "non l'ho found in mille
-# steps" non e' "non esiste".
+# HOW IT IS SEARCHED: for each n, iterate m ↦ σ(m) − 1 until a prime is met. A
+# counterexample is an n whose orbit never meets a prime: either it enters a cycle or
+# it grows without bound. A cap on steps and on size is fixed; whatever exceeds it is
+# reported as a SUSPECT, not as a counterexample — an important distinction, because
+# "I did not find it in a thousand steps" is not "it does not exist".
 SIGMA = r'''
 import json, os, signal, sys, time
 
@@ -151,7 +150,7 @@ def factorise(n):
     return f
 
 def sigma(n):
-    """Somma dei divisori."""
+    """Sum of divisors."""
     if n <= 1:
         return n
     s = 1
@@ -169,15 +168,15 @@ def is_prime(n):
         d += 2
     return True
 
-# --- COLLAUDO su valori noti -------------------------------------------------
-# sigma: 1,3,4,7,6,12,8,15,13,18 per n = 1..10
+# --- SELF-TEST on known values -------------------------------------------------
+# sigma: 1,3,4,7,6,12,8,15,13,18 for n = 1..10
 expected = [1, 3, 4, 7, 6, 12, 8, 15, 13, 18]
 computed = [sigma(n) for n in range(1, 11)]
 if computed != expected:
     print(json.dumps({"event": "collaudo_fallito", "expected": expected,
                       "calcolato": computed}), flush=True)
     sys.exit(1)
-# sigma(28) = 56 perche' 28 e' perfetto
+# sigma(28) = 56 because 28 is perfect
 if sigma(28) != 56:
     print(json.dumps({"event": "collaudo_fallito", "detail": "sigma(28)"}), flush=True)
     sys.exit(1)
@@ -192,7 +191,7 @@ checkpoint = os.environ["SEARCH_CHECKPOINT"]
 state = os.environ["SEARCH_STATE"]
 MAX_STEPS = int(os.environ.get("MAX_STEPS", "200"))
 MAX_VALORE = int(os.environ.get("MAX_VALORE", str(10**14)))
-FINO_A = int(os.environ.get("FINO_A", "200000"))
+UP_TO = int(os.environ.get("UP_TO", "200000"))
 
 n0 = 2
 found = []
@@ -218,7 +217,7 @@ def salva(n):
 
 t0 = time.time(); last = t0
 n = n0
-while n <= FINO_A and not stopped:
+while n <= UP_TO and not stopped:
     m = n
     seen = set()
     result = None
@@ -259,18 +258,17 @@ print(json.dumps({"event": "end", "position": n, "examined": examined,
 
 
 # ---------------------------------------------------------------------------
-# 3. Erdos 396: fattoriale discendente che divide il coefficiente binomiale
+# 3. Erdos 396: a descending factorial dividing the central binomial coefficient
 #    centrale
 # ---------------------------------------------------------------------------
 # PROBLEM: Erdos396.erdos_396
 #   True ↔ ∀ k, ∃ n, descFactorial n (k+1) ∣ centralBinom n
 #
-# Qui NON si search_for un counterexample a colpo sicuro: l'statement e' un "per ogni
-# k esiste n", quindi per confutarlo servirebbe un k per cui NESSUN n funziona,
-# e questo un computation non lo puo' stabilire. Quello che il computation puo' fare e'
-# utile lo stesso: per ogni k, trovare il piu' piccolo n che funziona. Se per
-# qualche k il piu' piccolo n esplode, e' un indizio; se si trova sempre presto,
-# e' one conferma sperimentale.
+# This does NOT look for a counterexample outright: the statement is a "for every k
+# there exists n", so refuting it would need a k for which NO n works, and computation
+# cannot establish that. What computation can do is useful all the same: for each k,
+# find the least n that works. If for some k the least n explodes, that is evidence; if
+# one is always found early, that is experimental confirmation.
 BINOMIAL = r'''
 import json, os, signal, sys, time
 from math import comb
@@ -285,7 +283,7 @@ def desc_factorial(n, k):
 def central_binom(n):
     return comb(2 * n, n)
 
-# --- COLLAUDO su valori noti -------------------------------------------------
+# --- SELF-TEST on known values -------------------------------------------------
 if [central_binom(n) for n in range(6)] != [1, 2, 6, 20, 70, 252]:
     print(json.dumps({"event": "collaudo_fallito", "detail": "centralBinom"}), flush=True)
     sys.exit(1)
@@ -296,7 +294,7 @@ if desc_factorial(5, 0) != 1:
     print(json.dumps({"event": "collaudo_fallito", "detail": "descFactorial(n,0)"}), flush=True)
     sys.exit(1)
 print(json.dumps({"event": "shakedown", "result": "exceeded",
-                  "controllati": "centralBinom(0..5) = 1,2,6,20,70,252 e descFactorial"}),
+                  "checked": "centralBinom(0..5) = 1,2,6,20,70,252 and descFactorial"}),
       flush=True)
 
 checkpoint = os.environ["SEARCH_CHECKPOINT"]
@@ -342,10 +340,10 @@ for k in range(k0, K_MAX + 1):
     entry = {"k": k, "n_minimo": foundn}
     minima.append(entry)
     if foundn is None:
-        # NON e' un counterexample: la forma "per ogni k esiste n" non si
-        # confuta con un computation. E' un indizio: fino a N_MAX non c'e' nessun n.
+        # This is NOT a counterexample: the form "for every k there exists n" cannot
+        # be refuted by computation. It is evidence: up to N_MAX there is no such n.
         found.append({"k": k, "nessun_n_fino_a": N_MAX,
-                        "avvertenza": "indizio, non counterexample"})
+                        "warning": "evidence, not a counterexample"})
     print(json.dumps({"event": "progress", "detail": entry,
                       "position": k + 1, "examined": examined}), flush=True)
     now = time.time()
@@ -365,17 +363,17 @@ import json, os, signal, sys, time
 from sympy import isprime
 
 def esiste_k(n):
-    """Il piu' piccolo k con k(n-k)-1 first, o None se non esiste."""
+    """The least k with k(n-k)-1 prime, or None if there is none."""
     for k in range(1, n // 2 + 1):
         if isprime(k * (n - k) - 1):
             return k
     return None
 
-# --- COLLAUDO su valori noti ------------------------------------------------
-# I theorems di trial dell'archive (OEIS/109909.lean) fissano:
+# --- SELF-TEST on known values ------------------------------------------------
+# The archive's test theorems (OEIS/109909.lean) fix:
 #   a(1)=0, a(2)=0, a(3)=0, a(4)=2  (number di primes distinti k(n-k)-1)
-# Qui basta la parte che serve alla ricerca: esiste k per n=4..8 e NON esiste
-# per n=1,2,3.
+# Only the part the search needs is checked here: k exists for n=4..8 and does NOT
+# exist for n=1,2,3.
 attesi_senza = [1, 2, 3]
 attesi_con = [4, 5, 6, 7, 8]
 for n in attesi_senza:
@@ -386,17 +384,17 @@ for n in attesi_senza:
 for n in attesi_con:
     if esiste_k(n) is None:
         print(json.dumps({"event": "collaudo_fallito", "n": n,
-                          "detail": "nessun k dove l'archive dice a(n)>0"}), flush=True)
+                          "detail": "no k where the archive says a(n)>0"}), flush=True)
         sys.exit(1)
 print(json.dumps({"event": "shakedown", "result": "exceeded",
-                  "controllati": "n=1,2,3 senza k; n=4..8 con k, come i theorems "
-                                 "di trial dell'archive"}), flush=True)
+                  "checked": "n=1,2,3 with no k; n=4..8 with k, as the archive's "
+                                 "test theorems say"}), flush=True)
 
 # --- ricerca ----------------------------------------------------------------
 checkpoint = os.environ["SEARCH_CHECKPOINT"]
 state = os.environ["SEARCH_STATE"]
-DA = int(os.environ.get("DA", "4"))
-FINO_A = int(os.environ.get("FINO_A", "1000000000"))
+DA = int(os.environ.get("FROM", "4"))
+UP_TO = int(os.environ.get("UP_TO", "1000000000"))
 
 start = DA
 found = []
@@ -421,13 +419,13 @@ def salva(n):
                    "ultimo_n": n - 1}, fh)
     os.replace(tmp, state)
 
-print(json.dumps({"event": "start", "da": start, "fino_a": FINO_A}), flush=True)
+print(json.dumps({"event": "start", "da": start, "fino_a": UP_TO}), flush=True)
 t0 = time.time()
 last_warning = t0
 n = start
-while n < FINO_A and not stopped:
+while n < UP_TO and not stopped:
     if esiste_k(n) is None:
-        found.append({"n": n, "note": "nessun k con k(n-k)-1 first: CONTROESEMPIO"})
+        found.append({"n": n, "note": "no k with k(n-k)-1 prime: COUNTEREXAMPLE"})
         print(json.dumps({"event": "found", "detail": found[-1]}), flush=True)
     examined += 1
     n += 1
@@ -435,7 +433,7 @@ while n < FINO_A and not stopped:
     if now - last_warning > 30:
         salva(n)
         print(json.dumps({"event": "progress", "position": n,
-                          "examined": examined, "n_corrente": n,
+                          "examined": examined, "current_n": n,
                           "seconds": round(now - t0)}), flush=True)
         last_warning = now
 
@@ -450,68 +448,68 @@ SEARCHES = {
         "problem": "EuclidNumbers.euclid_numbers_are_square_free",
         "program": EUCLID,
         # MISURATO: 17984 primes (all_items below 200000) examined in 17 seconds,
-        # nessun ritrovamento. Il cost cresce come il quadrato del limit,
-        # quindi 2 milioni sono circa cento volte tanto: one mezz'now.
-        "variables": {"LIMITE_P": 3000000},
-        "descrizione": "search_for un first p con p² che divide un number di Euclide",
-        "stato_noto": "aperto; non risulta one ricerca sistematica pubblicata",
-        "conclusivo": "si: un only p found confuta la congettura",
-        # Che cosa finisce nella items `found` del program: real_list
-        # controesempi, oppure valori computed che vanno interpretati?
-        "natura_trovati": "controesempi",
-        # Come si legge un result senza ritrovamenti, in termini matematici.
-        # Si formatta con i fields dell'result, le variables della ricerca e
+        # no findings. The cost grows as the square of the limit, so 2 million is
+        # about a hundred times as much: half an hour.
+        "variables": {"LIMIT_P": 3000000},
+        "description": "looks for a prime p with p² dividing a Euclid number",
+        "known_state": "open; no published systematic search found",
+        "conclusive": "yes: a single p found refutes the conjecture",
+        # What ends up in the program's `found` list: real counterexamples, or
+        # computed values that have to be interpreted?
+        "nature_of_findings": "counterexamples",
+        # How a result with no findings reads, in mathematical terms. It is
+        # formatted with the result's fields, the search's variables and
         # l'last event del log.
-        "esito_in_parole":
-            "nessun first p fino a {primo_corrente} ha p^2 che divide un number "
-            "di Euclide. Sono stati examined {examined} primes, e per ognuno "
-            "TUTTI i primoriali con fattori minori di p: per quei p il "
-            "controllo e' full, non partial.",
+        "result_in_words":
+            "no prime p up to {current_prime} has p^2 dividing a Euclid number. "
+            "{examined} primes were examined, and for each of them ALL primorials "
+            "with factors smaller than p: for those p the check is complete, not "
+            "partial.",
     },
     "erdos409_sigma": {
         "problem": "Erdos409.erdos_409.variants.sigma_prime_termination",
         "program": SIGMA,
-        "variables": {"FINO_A": 200000, "MAX_STEPS": 200},
-        "descrizione": "itera n -> sigma(n)-1 e search_for orbits che non toccano mai un first",
-        "stato_noto": "aperto",
-        "conclusivo": "no: trova SOSPETTI, non controesempi. Un'orbit che non "
-                      "raggiunge un first in 200 steps va esaminata a mano",
-        "natura_trovati": "sospetti",
-        "esito_in_parole":
-            "nessun n fino a {FINO_A} generate un'orbit di n -> sigma(n)-1 che "
-            "eviti i numbers primes per {MAX_STEPS} steps.",
+        "variables": {"UP_TO": 200000, "MAX_STEPS": 200},
+        "description": "iterates n -> sigma(n)-1 and looks for orbits that never hit a prime",
+        "known_state": "aperto",
+        "conclusive": "no: it finds SUSPECTS, not counterexamples. An orbit that does "
+                      "not reach a prime in 200 steps has to be examined by hand",
+        "nature_of_findings": "suspects",
+        "result_in_words":
+            "no n up to {UP_TO} generates an orbit of n -> sigma(n)-1 that avoids the "
+            "primes for {MAX_STEPS} steps.",
     },
     "murthy_kn_k": {
         "problem": "OeisA109909.conjecture",
         "program": MURTHY,
-        # MISURATO: 157 000 n/s a n circa 10^6 su un core (sympy.isprime, e il
-        # first k funziona quasi sempre). Un miliardo sono ~1,8 hours.
-        "variables": {"DA": 4, "FINO_A": 1000000000},
-        "descrizione": "per ogni n > 3 search_for k con k(n-k)-1 first; un n senza "
-                       "k confuta la congettura di A. Murthy (2005)",
-        "stato_noto": "aperta; citata nella raccolta di Zhi-Wei Sun "
-                      "(arXiv:1211.1588) e in Niu-Zhang 2024. La frontier "
-                      "pubblicata non e' note con precisione: questa ricerca "
-                      "stabilisce almeno la nostra",
-        "conclusivo": "si: un only n senza k confuta la congettura, e per un n "
-                      "moderato la confutazione si check also in Lean",
-        "natura_trovati": "controesempi",
-        "esito_in_parole":
-            "ogni n da 4 a {n_corrente} ha almeno un k con k(n-k)-1 first: "
-            "la congettura di Murthy regge fino a la'. Esaminati {examined} "
-            "valori di n.",
+        # MEASURED: 157,000 n/s at n around 10^6 on one core (sympy.isprime, and the
+        # first k nearly always works). A billion is ~1.8 hours.
+        "variables": {"FROM": 4, "UP_TO": 1000000000},
+        "description": "for each n > 3 looks for k with k(n-k)-1 prime; an n without "
+                       "such k refutes A. Murthy's conjecture (2005)",
+        "known_state": "open; cited in Zhi-Wei Sun's collection "
+                       "(arXiv:1211.1588) and in Niu-Zhang 2024. The published "
+                       "frontier is not precisely known: this search at least "
+                       "establishes ours",
+        "conclusive": "yes: a single n without k refutes the conjecture, and for a "
+                      "moderate n the refutation can be checked in Lean too",
+        "nature_of_findings": "counterexamples",
+        "result_in_words":
+            "every n from 4 to {current_n} has at least one k with k(n-k)-1 prime: "
+            "Murthy's conjecture holds that far. {examined} values of n "
+            "were examined.",
     },
     "erdos396_binomiale": {
         "problem": "Erdos396.erdos_396",
         "program": BINOMIAL,
         "variables": {"K_MAX": 60, "N_MAX": 20000},
-        "descrizione": "per ogni k, il piu' piccolo n con descFactorial(n,k+1) | centralBinom(n)",
-        "stato_noto": "aperto",
-        "conclusivo": "no: la forma e' 'per ogni k esiste n', che un computation non "
-                      "puo' confutare. Serve a raccogliere indizi",
-        "natura_trovati": "results computed",
-        "esito_in_parole":
-            "per ogni k fino a {K_MAX} si e' cercato il minimum n fino a {N_MAX} "
-            "con descFactorial(n, k+1) che divide centralBinom(n).",
+        "description": "for each k, the least n with descFactorial(n,k+1) | centralBinom(n)",
+        "known_state": "aperto",
+        "conclusive": "no: the form is 'for every k there exists n', which computation "
+                      "cannot refute. It serves to gather evidence",
+        "nature_of_findings": "results computed",
+        "result_in_words":
+            "for each k up to {K_MAX} the least n up to {N_MAX} with "
+            "descFactorial(n, k+1) dividing centralBinom(n) was sought.",
     },
 }

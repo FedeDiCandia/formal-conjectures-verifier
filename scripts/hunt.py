@@ -1,9 +1,9 @@
 """
-Esegue le ricerche di controesempi, in queue, con checkpoint e ripresa.
+Run the counterexample searches, one after another, with checkpoints and resumption.
 
-Non usa l'API e non costa niente: gira only sul computer.
-Ogni ricerca lascia in runs/hunt/<name>/ il program, il log, il checkpoint
-e un report leggibile.
+It does not use the API and costs nothing: it runs entirely on the machine.
+Each search leaves its program, log, checkpoint and a readable report in
+runs/hunt/<name>/.
 """
 from __future__ import annotations
 
@@ -22,13 +22,13 @@ from hunt_programs import SEARCHES
 
 
 def _in_words(name: str, definition: dict, result) -> str:
-    """La frase che dice il result in matematica, non in numbers d'index.
+    """The sentence that states the result in mathematics, not in index numbers.
 
-    "position raggiunta 216816" non dice niente a chi legge: quello che count
-    e' "nessun first fino a 3 milioni". I fields disponibili sono quelli
-    dell'result, le variables della ricerca e l'last event del log.
+    "position reached 216816" says nothing to a reader: what counts is "no prime up
+    to 3 million". The fields available are those of the result, the search's
+    variables, and the last event in the log.
     """
-    model = definition.get("esito_in_parole")
+    model = definition.get("result_in_words")
     if not model:
         return ""
     fields = {"position": result.position, "examined": result.examined,
@@ -50,43 +50,43 @@ def _in_words(name: str, definition: dict, result) -> str:
 
 
 def report(name: str, definition: dict, result) -> str:
-    kind = definition.get("natura_trovati", "da interpretare")
+    kind = definition.get("nature_of_findings", "da interpretare")
     lines = [
         f"# Search: {name}", "",
         f"**Problema:** `{definition['problem']}`", "",
-        f"**Cosa search_for:** {definition['descrizione']}", "",
-        f"**State noto del problem:** {definition['stato_noto']}", "",
-        f"**La ricerca è conclusiva?** {definition['conclusivo']}", "",
+        f"**Cosa search_for:** {definition['description']}", "",
+        f"**State noto del problem:** {definition['known_state']}", "",
+        f"**Is the search conclusive?** {definition['conclusive']}", "",
         "## Result", "",
         f"| | |", "|---|---|",
         f"| completed | {'sì' if result.completed else 'no, interrupted'} |",
         f"| duration | {result.seconds:.0f} s |",
         f"| position raggiunta | {result.position} |",
         f"| cases examined | {result.examined} |",
-        f"| entries nella items dei results | {len(result.found)} |",
+        f"| entries in the result list | {len(result.found)} |",
         f"| kind di quelle entries | {kind} |",
         "",
     ]
-    if result.found and kind == "controesempi":
+    if result.found and kind == "counterexamples":
         lines += ["## Ritrovamenti", "",
-                  "⚠️ Da sottoporre al protocollo della fase 7 before di crederci.", ""]
+                  "⚠️ To be put through the finding protocol before believing it.", ""]
     elif result.found:
         lines += [f"## Risultati ({kind})", "",
-                  "**Non sono ritrovamenti.** Questa ricerca non puo' produrre un",
-                  "counterexample: quello che segue e' materiale da leggere, non one",
+                  "**These are not findings.** This search cannot produce a",
+                  "counterexample: what follows is material to read, not a",
                   "confutazione.", ""]
     if result.found:
         for t in result.found[:40]:
             lines.append(f"- `{json.dumps(t, ensure_ascii=False)}`")
         if len(result.found) > 40:
-            lines.append(f"- ... e altri {len(result.found) - 40}")
+            lines.append(f"- ... and {len(result.found) - 40} more")
     else:
         words = _in_words(name, definition, result)
         lines += ["## Ritrovamenti", "",
-                  "Nessuno. **Non è un failure:** un result negativo dice fin",
-                  "dove si è guardato, e quella è un'informazione.", ""]
+                  "None. **This is not a failure:** a negative outcome says how far",
+                  "one has looked, and that is information.", ""]
         if words:
-            lines += [f"**Che cosa si sa adesso:** {words}", ""]
+            lines += [f"**What is known now:** {words}", ""]
         else:
             lines += [f"Punto reached: {result.position}.", ""]
     lines.append("")
@@ -95,12 +95,12 @@ def report(name: str, definition: dict, result) -> str:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--only", default="", help="run only questa ricerca")
-    ap.add_argument("--hours", type=float, default=0, help="tempo maximum per ricerca")
+    ap.add_argument("--only", default="", help="run only this search")
+    ap.add_argument("--hours", type=float, default=0, help="time limit per search")
     ap.add_argument("--resume", action="store_true", default=True)
     ap.add_argument("--dacapo", action="store_true")
     ap.add_argument("--shakedown", action="store_true",
-                    help="esecuzione breve, only per controllare che i programmi funzionino")
+                    help="a short run, only to check that the programs work")
     args = ap.parse_args()
 
     names = [args.only] if args.only else list(SEARCHES)
@@ -109,7 +109,7 @@ def main() -> int:
         seconds = 25
 
     print(f"Ricerche in queue: {len(names)}")
-    print(f"Tempo maximum per ricerca: "
+    print(f"Time limit per search: "
           f"{'illimitato' if seconds is None else f'{seconds:.0f}s'}")
     print("Costo in crediti API: ZERO\n", flush=True)
 
@@ -118,7 +118,7 @@ def main() -> int:
         d = SEARCHES[name]
         variables = dict(d.get("variables", {}))
         if args.shakedown:
-            # valori piccoli: serve only a vedere che il program parta e salvi
+            # small values: this only checks that the program starts and saves
             for k, v in list(variables.items()):
                 if isinstance(v, int) and v > 1000:
                     variables[k] = 2000
@@ -131,10 +131,10 @@ def main() -> int:
         summary.append({"name": name, "completed": result.completed,
                           "position": result.position, "examined": result.examined,
                           "found": len(result.found), "seconds": round(result.seconds),
-                          "natura_trovati": d.get("natura_trovati",
+                          "nature_of_findings": d.get("nature_of_findings",
                                                   "da interpretare")})
-        label = ("ritrovamenti" if d.get("natura_trovati") == "controesempi"
-                     else "results (non ritrovamenti)")
+        label = ("findings" if d.get("nature_of_findings") == "counterexamples"
+                     else "computed results (not findings)")
         print(f"  -> {'completed' if result.completed else 'interrupted'}, "
               f"position {result.position}, {label} {len(result.found)}",
               flush=True)
@@ -143,7 +143,7 @@ def main() -> int:
     dest.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"\nRiepilogo in {dest}")
     with_findings = [r for r in summary if r["found"]
-                        and r.get("natura_trovati") == "controesempi"]
+                        and r.get("nature_of_findings") == "counterexamples"]
     if with_findings:
         print("\n*** RITROVAMENTI DA ESAMINARE ***")
         for r in with_findings:

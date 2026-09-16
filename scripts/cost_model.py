@@ -189,13 +189,13 @@ SCENARIOS = {
             "raccogliere problems su cui gli esperti si sono stopped"),
     },
     "B": {
-        "name": "ricerca di controesempi con computation local",
+        "name": "ricerca di counterexamples con computation local",
         "ottimistico": (0.05,
             "one minoranza di congetture ha bounds verified bassi (per la "
             "congettura di Selfridge la letteratura si ferma a k~29): su quelle "
             "il computation local arriva davvero oltre il noto"),
         "realistico": (0.01,
-            "misurato in questo progetto: 0 ritrovamenti su 3 ricerche e "
+            "misurato in questo progetto: 0 findings su 3 ricerche e "
             "~2 hours-CPU; la ricerca sui numbers di Euclide ha exceeded 2,5 "
             "milioni di primes senza niente"),
         "pessimistico": (0.001,
@@ -221,16 +221,16 @@ FIRST_SHOT_SHARE = 0.22   # MISURATO: 2 dei 9 successi sono arrivati alla before
 N_SELECTED_HUNT = 30          # MISURATO: runs/hunt/selection.json
 REACHABLE_FRONTIER_FRACTION = 0.50   # STIMATO su 2 letterature su 4 controllate
 
-# Che cosa hanno fatto le ricerche lanciate. I ritrovamenti sono ZERO in all_items e
+# Che cosa hanno fatto le ricerche lanciate. I findings sono ZERO in all_items e
 # three: la entry `found` di erdos396 contiene valori CALCOLATI (il minimum n per
-# ogni k), non controesempi, e va letta cosi'.
+# ogni k), non counterexamples, e va letta cosi'.
 HUNT = {
     "euclide_squarefree": (
         "un first p con p^2 che divide un number di Euclide",
         "conclusiva: un only ritrovamento confuterebbe la congettura", 0),
     "erdos409_sigma": (
         "orbits di n -> sigma(n)-1 che non toccano mai un first",
-        "trova sospetti da esaminare a mano, non confutazioni", 0),
+        "trova suspects da esaminare a mano, non confutazioni", 0),
     "erdos396_binomiale": (
         "il minimum n con descFactorial(n,k+1) che divide centralBinom(n)",
         "raccoglie indizi: la forma 'per ogni k esiste n' non e' confutabile "
@@ -444,7 +444,7 @@ def report_part_two(data: dict, r: list[str]) -> list[str]:
     idonei_totali = N_SELECTED_HUNT
     reachable_share = REACHABLE_FRONTIER_FRACTION
     n_b = idonei_totali * reachable_share
-    p("### Strategia B — ricerca di controesempi con computation local")
+    p("### Strategia B — ricerca di counterexamples con computation local")
     p()
     p(f"Qui il limit non e' il denaro: e' il number di problems su cui one "
       f"ricerca ha senso. **MISURATO**: lo script di selection ne ha found "
@@ -562,7 +562,7 @@ def report_part_three(data: dict, r: list[str]) -> list[str]:
     p("La strategia B non si paga in dollari ma in tempo di macchina, quindi il "
       "number che count e' la velocita'.")
     p()
-    p("| ricerca | che cosa search_for | conclusiva? | candidates examined | ritrovamenti |")
+    p("| ricerca | che cosa search_for | conclusiva? | candidates examined | findings |")
     p("|---|---|---|---|---|")
     by_name = {v["name"]: v for v in data["hunt"]}
     for name, (cosa, conclusiva, found) in HUNT.items():
@@ -589,7 +589,7 @@ def report_part_three(data: dict, r: list[str]) -> list[str]:
             p(f"**MISURATO** — la ricerca sui numbers di Euclide ha esaminato "
               f"{sp(last['examined'])} primes in {sp(last['seconds'])} "
               f"seconds, cioe' **{v:.0f} candidates al second** su un core, ed "
-              f"e' arrivata al first {sp(last.get('primo_corrente', 0))} senza "
+              f"e' arrivata al first {sp(last.get('current_prime', 0))} senza "
               f"trovare niente: per ognuno di quei primes sono stati controllati "
               f"TUTTI i primoriali con fattori minori, quindi il controllo e' "
               f"full, non partial. Con 8 ricerche in parallelo e 8 hours di "
@@ -604,7 +604,7 @@ def report_part_three(data: dict, r: list[str]) -> list[str]:
     probe = data["probe"]
     if probe:
         # Stessa rule di scripts/probe_lean.py: `plausible` che non trova
-        # controesempi lascia un `sorry` e il file compila comunque, quindi non
+        # counterexamples lascia un `sorry` e il file compila comunque, quindi non
         # e' one closure.
         def notable(v: dict) -> bool:
             for pr in v["trials"]:
@@ -667,9 +667,9 @@ def report_part_three(data: dict, r: list[str]) -> list[str]:
       "iterations forse si chiudeva. Non l'ho provato, quindi non lo conto.")
     p()
     p("5. **Il value di un ritrovamento.** Se one ricerca trova un counterexample, "
-      "il protocollo in `docs/04-protocollo-ritrovamenti.md` prevede three results: "
+      "il protocollo in `docs/04-protocollo-findings.md` prevede three results: "
       "formalizzazione errata, result gia' noto, candidato new_item. Con zero "
-      "ritrovamenti finora non ho alcun dato su come si dividano, e il caso piu' "
+      "findings finora non ho alcun dato su come si dividano, e il caso piu' "
       "probabile a priori e' il first.")
     p()
 
@@ -701,7 +701,7 @@ def report_part_three(data: dict, r: list[str]) -> list[str]:
       f"della strategia A.")
     p()
     p("3. *Il computation local e' gratis: va saturato sempre.* La caccia ai "
-      "controesempi non consuma budget API, only notti di macchina. Va tenuta "
+      "counterexamples non consuma budget API, only notti di macchina. Va tenuta "
       "accesa in parallelo a qualunque strategia, perche' il suo cost "
       "marginale in dollari e' zero. Ma va puntata sui pochi problems dove i "
       "bounds pubblicati sono bassi: dove la letteratura e' arrivata a 10^22, "

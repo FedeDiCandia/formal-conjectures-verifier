@@ -1,14 +1,14 @@
 """
-Sottopone al verifier le dimostrazioni che l'archive stesso fornisce.
+Submit the proofs the archive itself supplies to the verifier.
 
-Il controllo sugli axioms (field `archiveProofAxioms`) e' necessario ma non
-sufficiente: non dice se la dimostrazione, estratta dal suo file e compilata da
-sola, arriva davvero in fondo. Per saperlo bisogna provarci, ed e' quello che
-fa questo script.
+The axiom check (the `archiveProofAxioms` field) is necessary but not
+sufficient: it does not say whether the proof, extracted from its file and compiled
+on its own, really makes it through. Finding that out means trying, which is what
+this script does.
 
-Un problem enters nella calibrazione di un agent SOLO se la sua dimostrazione
-d'archive viene ACCETTATA qui. Altrimenti chiedere a un agent di risolverlo
-significa chiedergli di fare meglio dell'archive, e un failure non direbbe
+A problem enters an agent's calibration ONLY if its archive proof is ACCEPTED
+here. Otherwise asking an agent to solve it means asking it to do better than the
+archive, and a failure would say
 niente sull'agent.
 """
 import json
@@ -46,15 +46,15 @@ else:
 
 print(f"Problemi da verificare: {len(chosen)}\n", flush=True)
 
-# Si portano in even all_items i modules PRIMA di cominciare: e' l'unico step che
-# modifica l'archive, e farlo durante le checks parallele falsa il
-# controllo dell'fingerprint.
+# Every module is brought up to date BEFORE starting: it is the only step that
+# modifies the archive, and doing it during parallel verifications falsifies the
+# fingerprint check.
 from verify import prepare_challenge
-print("Porto in even i modules degli enunciati...", flush=True)
+print("Bringing the statements' modules up to date...", flush=True)
 for p in chosen:
     ok, _ = prepare_challenge(p.module, 900)
     if not ok:
-        print(f"  ATTENZIONE: {p.module} non compila", flush=True)
+        print(f"  ATTENTION: {p.module} does not compile", flush=True)
 print("  fatto\n", flush=True)
 
 pool = SlotPool(4)

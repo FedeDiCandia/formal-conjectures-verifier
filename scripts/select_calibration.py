@@ -136,7 +136,7 @@ def main() -> int:
             "verifica_archivio": result,
             "secondi_verifica": v.get("seconds") if v else None,
             "statement": p.statement[:300],
-            "descrizione": (p.docstring or "").strip()[:300],
+            "description": (p.docstring or "").strip()[:300],
         })
 
     lines.sort(key=lambda r: (r["level"] != "facile", r["level"] != "mean",
@@ -171,8 +171,8 @@ def main() -> int:
         print(f"  [{r['level']:9}] {r['problem']}")
         print(f"      {r['proof_lines']} lines di trial | aggiunta il {r['proof_date']} "
               f"| memorizzazione {r['rischio_memorizzazione']}")
-        if r["descrizione"]:
-            print(f"      \"{r['descrizione'].splitlines()[0][:90]}\"")
+        if r["description"]:
+            print(f"      \"{r['description'].splitlines()[0][:90]}\"")
 
     count = {}
     for r in lines:

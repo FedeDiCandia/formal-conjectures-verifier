@@ -1,14 +1,14 @@
 """
-Avvia un command DISTACCATO dal processo che lo lancia.
+Start a command DETACHED from the process that launches it.
 
-Perche' serve: `nohup ... &` da one shell che poi exits non basta sempre — su
-macOS il group di processi viene comunque terminato quando la shell chiamante
-muore. `start_new_session=True` mette il command in one sessione tutta sua, e
+Why it is needed: `nohup ... &` from a shell that then exits is not always enough —
+on macOS the process group is killed anyway when the calling shell dies.
+`start_new_session=True` puts the command in a session of its own, and
 li' sopravvive.
 
 Uso:
     python scripts/distacca.py NOME_LAVORO -- command e arguments
-Il log finisce in runs/jobs/NOME.log, il PID in runs/jobs/NOME.pid.
+The log goes to runs/jobs/NAME.log, the PID to runs/jobs/NAME.pid.
 """
 from __future__ import annotations
 
@@ -29,19 +29,19 @@ def main() -> int:
     name = sys.argv[1]
     command = sys.argv[cut + 1:]
     if not command:
-        print("manca il command after --")
+        print("the command after -- is missing")
         return 2
 
     JOBS.mkdir(parents=True, exist_ok=True)
     log = JOBS / f"{name}.log"
     pid_file = JOBS / f"{name}.pid"
 
-    # se ne sta girando one con lo stesso name, non si raddoppia
+    # if one with the same name is already running, do not start a second
     if pid_file.is_file():
         try:
             old = int(pid_file.read_text().strip())
             os.kill(old, 0)
-            print(f"il job '{name}' sta gia' girando (PID {old})")
+            print(f"the job '{name}' is already running (PID {old})")
             return 1
         except (ValueError, ProcessLookupError, PermissionError):
             pass
