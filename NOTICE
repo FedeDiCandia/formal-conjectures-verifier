@@ -1,0 +1,88 @@
+Formal Conjectures Solver
+Copyright 2026 Federico Di Candia
+
+This product includes software and data developed by third parties.
+The list below says which files, and under which terms.
+
+
+1. formal-conjectures — Apache License 2.0
+   Copyright The Formal Conjectures Authors (Google DeepMind)
+   https://github.com/google-deepmind/formal-conjectures
+
+   The archive itself is not redistributed here; scripts/setup.sh clones it.
+   These tracked files contain or derive from its content, and are covered by
+   the Apache License 2.0:
+
+     verifier/problem_index.json        statements, docstrings and metadata
+     verifier/problem_index_main.json     extracted from the archive
+     tests/fixtures/*.lean              archive statements, altered on purpose
+                                          so the verifier has something to reject
+     docs/contributi/formal-conjectures/**/*.lean
+                                        copies of archive files, with proofs
+                                          added in place of `sorry`
+     docs/contributi/formal-conjectures/**/*.patch
+                                        diffs against archive files
+     docs/pubblicazione/lean/*.lean     files that import and restate archive
+     ricerca/lean/*.lean                  declarations
+     dati_ricerca/formalizzazioni_candidati.json
+                                        docstrings and statements of 1209 problems
+
+   The copied files keep the archive's own copyright header. The proofs written
+   here, and the tooling around them, are Copyright 2026 Federico Di Candia and
+   are released under the same licence.
+
+2. comparator — Apache License 2.0
+   Copyright the Lean FRO
+   https://github.com/leanprover/comparator
+
+   Not redistributed; cloned by scripts/setup.sh. It is the judge: every verdict
+   in this repository comes from it.
+
+3. Lean 4 — Apache License 2.0
+   Copyright Microsoft Corporation and the Lean FRO
+   https://github.com/leanprover/lean4
+
+   Not redistributed; installed by elan. Its kernel is what "verified" means here.
+
+4. Mathlib — Apache License 2.0
+   Copyright the Mathlib Community
+   https://github.com/leanprover-community/mathlib4
+
+   Not redistributed; pulled in as a Lake dependency of the archive.
+
+5. LeanOpenProblems (Epoch AI) — MIT License
+   Copyright (c) 2026 Epoch AI
+   https://github.com/epoch-research/LeanOpenProblems
+
+   Not redistributed. Its published result files were read and counted; the
+   numbers derived from them are in docs/dati/ and are labelled as theirs.
+
+6. The On-Line Encyclopedia of Integer Sequences (OEIS) —
+   Creative Commons Attribution Share-Alike 4.0 (CC BY-SA 4.0)
+   Copyright The OEIS Foundation Inc.
+   https://oeis.org/
+
+   These files are verbatim OEIS entries, downloaded unmodified, and are
+   distributed under CC BY-SA 4.0 rather than the Apache licence:
+
+     dati_ricerca/oeis/*.txt
+     dati_ricerca/oeis-2026-09-12/*.txt
+     dati_ricerca/oeis-2026-09-12/A045917.html
+
+   The note in docs/pubblicazione/ quotes two OEIS entries (A105020, A045917)
+   with attribution to their authors and to the OEIS.
+
+7. Tables of bounds for binary codes — no licence stated by the author
+   Andries E. Brouwer, https://aeb.win.tue.nl/codes/
+
+     dati_ricerca/Andw.html            copies of two of his pages
+     dati_ricerca/binary-1.html
+     dati_ricerca/codici/*             362 explicit codes attaining the
+                                         published lower bounds
+
+   These pages carry no licence notice. They are mirrored here so that the
+   reproduction in ricerca/ can be checked against exactly the data it used;
+   ricerca/riproduci.py downloads them from the original site. Attribution is to
+   Brouwer and, for individual codes, to the constructors named in the tables.
+   Anyone reusing this repository should treat these files as third-party
+   material, not as part of the Apache-licensed work.
