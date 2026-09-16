@@ -1,51 +1,51 @@
 """Il controllo di awake: niente giro se il Mac puo' sospendersi.
 
 Nella notte del 13 settembre il Mac e' andato in sospensione durante il giro e
-ogni sospensione ha chiuso una connessione con l'API. I testi qui sotto sono
+ogni sospensione ha chiuso one_ connessione con l'API. I testi qui below sono
 presi da `pmset` su questa macchina, quella notte.
 """
 import sys
 from pathlib import Path
 
-RADICE = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(RADICE / "agent"))
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "agent"))
 
 import awake
 
-BATT_BATTERIA = """Now drawing from 'Battery Power'
+POWER_BATTERY = """Now drawing from 'Battery Power'
  -InternalBattery-0 (id=22282339)	100%; discharging; 3:23 remaining present: true
 """
-BATT_ALIMENTATORE = """Now drawing from 'AC Power'
+POWER_AC = """Now drawing from 'AC Power'
  -InternalBattery-0 (id=22282339)	100%; charged; 0:00 remaining present: true
 """
-ASSERZIONI = """   pid 96678(caffeinate): [0x00004d5200019da6] 00:00:04 PreventUserIdleSystemSleep named: "caffeinate command-line tool"
+ASSERTIONS = """   pid 96678(caffeinate): [0x00004d5200019da6] 00:00:04 PreventUserIdleSystemSleep named: "caffeinate command-line tool"
 	Details: caffeinate asserting on behalf of Process ID 81497
    pid 340(powerd): [0x00004c2500019cfb] 00:04:06 PreventUserIdleSystemSleep named: "Powerd - Prevent sleep while display is on"
 """
 
 
 def test_riconosce_la_fonte_di_alimentazione():
-    assert awake.fonte_alimentazione(BATT_ALIMENTATORE) == "alimentatore"
-    assert awake.fonte_alimentazione(BATT_BATTERIA) == "batteria"
-    assert awake.fonte_alimentazione("") == "sconosciuta"
+    assert awake.power_source(POWER_AC) == "alimentatore"
+    assert awake.power_source(POWER_BATTERY) == "batteria"
+    assert awake.power_source("") == "sconosciuta"
 
 
 def test_riconosce_il_proprio_caffeinate_e_non_quello_di_altri():
-    assert awake.caffeinate_attivo(ASSERZIONI, 96678)
-    assert not awake.caffeinate_attivo(ASSERZIONI, 12345), "un altro caffeinate non basta"
-    assert not awake.caffeinate_attivo(ASSERZIONI, 340), "powerd non e' caffeinate"
-    assert not awake.caffeinate_attivo(ASSERZIONI, None)
+    assert awake.caffeinate_running(ASSERTIONS, 96678)
+    assert not awake.caffeinate_running(ASSERTIONS, 12345), "un other caffeinate non basta"
+    assert not awake.caffeinate_running(ASSERTIONS, 340), "powerd non e' caffeinate"
+    assert not awake.caffeinate_running(ASSERTIONS, None)
 
 
 def test_a_batteria_non_si_parte_e_il_motivo_e_chiaro():
-    motivi = awake.problemi(BATT_BATTERIA, ASSERZIONI, 96678)
-    assert len(motivi) == 1 and "alimentatore" in motivi[0], motivi
+    reasons = awake.problems(POWER_BATTERY, ASSERTIONS, 96678)
+    assert len(reasons) == 1 and "alimentatore" in reasons[0], reasons
 
 
 def test_senza_caffeinate_non_si_parte():
-    motivi = awake.problemi(BATT_ALIMENTATORE, "", 96678)
-    assert len(motivi) == 1 and "caffeinate" in motivi[0], motivi
+    reasons = awake.problems(POWER_AC, "", 96678)
+    assert len(reasons) == 1 and "caffeinate" in reasons[0], reasons
 
 
 def test_con_alimentatore_e_caffeinate_si_parte():
-    assert awake.problemi(BATT_ALIMENTATORE, ASSERZIONI, 96678) == []
+    assert awake.problems(POWER_AC, ASSERTIONS, 96678) == []

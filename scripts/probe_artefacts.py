@@ -1,5 +1,5 @@
 """
-Cerca le formalizzazioni che cedono per un difetto, non per matematica.
+Cerca le formalizzazioni che cedono per un finding, non per matematica.
 
 DA DOVE VIENE QUESTA IDEA
 -------------------------
@@ -7,25 +7,25 @@ Leggendo le soluzioni ACCETTATE del benchmark OEIS Open di Epoch AI si vede che
 il loro 30% di successi non è tutto matematica. Tre esempi reali, dai loro file:
 
   * `A211420_general_divisibility_conjecture` dimostrato con
-    `exact ⟨0, fun n => by simp⟩`: l'enunciato diceva «esiste C tale che per
+    `exact ⟨0, fun n => by simp⟩`: l'statement diceva «esiste C tale che per
     ogni n ... divide C * a(n)», e con C = 0 è vero per niente. La congettura
     matematica non è quella.
   * `A262403_conjecture_ii_distinctness` confutato perché π(T 0) = π(T 1) = 0:
-    l'iniettività cade su due casi al bordo.
-  * `A070823_conjecture` confutato con un controesempio piccolo (n = 20),
-    trovato calcolando e verificato con `decide`.
+    l'iniettività cade su two cases al bordo.
+  * `A070823_conjecture` confutato con un counterexample piccolo (n = 20),
+    found calcolando e verificato con `decide`.
 
-Le prime due sono **formalizzazioni sbagliate**, da segnalare agli autori
-dell'archivio e non da spacciare per risultati; la terza è un controesempio
-vero. Tutte e tre si trovano con tattiche a costo zero, senza API.
+Le prime two sono **formalizzazioni sbagliate**, da segnalare agli autori
+dell'archive e non da spacciare per results; la terza è un counterexample
+vero. Tutte e three si trovano con tattiche a cost zero, senza API.
 
-PERCHÉ UN SOLO FILE PER PROBLEMA
+PERCHÉ UN SOLO FILE PER PROBLEM
 --------------------------------
-Ogni compilazione paga ~6 secondi di import di Mathlib. Provare venti tattiche
-in venti file costa venti volte quell'attesa; metterle nello stesso file la paga
-una volta sola. Le dichiarazioni in Lean sono indipendenti: se una non si chiude
-l'errore riguarda lei, e le altre proseguono. Si risale da ogni messaggio alla
-tattica che l'ha prodotto tramite la riga.
+Ogni compilazione paga ~6 seconds di import di Mathlib. Provare venti tattiche
+in venti file costa venti volte quell'expected_value; metterle nello stesso file la paga
+one_ volta sola. Le dichiarazioni in Lean sono indipendenti: se one_ non si closes
+l'error riguarda lei, e le others proseguono. Si risale da ogni message alla
+tactic che l'ha prodotto tramite la line.
 """
 from __future__ import annotations
 
@@ -36,17 +36,17 @@ import sys
 import time
 from pathlib import Path
 
-RADICE = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(RADICE / "verifier"))
-sys.path.insert(0, str(RADICE / "scripts"))
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "verifier"))
+sys.path.insert(0, str(ROOT / "scripts"))
 
-import config as config_verificatore   # noqa: E402
+import config as verifier_config   # noqa: E402
 import explore                          # noqa: E402
 from index import ProblemIndex          # noqa: E402
 
-#: (nome, tattica, anche_sulla_negazione). L'ordine non conta piu': si compila
+#: (name, tactic, anche_sulla_negazione). L'order non count_ piu': si compila
 #: tutto insieme.
-TATTICHE = [
+TACTICS = [
     ("testimone_zero",   "exact ⟨0, by simp⟩",            False),
     ("testimone_zero_d", "exact ⟨0, by decide⟩",          False),
     ("testimone_vuoto",  "exact ⟨∅, by simp⟩",            False),
@@ -61,112 +61,112 @@ TATTICHE = [
 ]
 
 
-def costruisci(problema, heartbeats: int) -> tuple[str, dict[str, tuple[str, bool]]]:
-    """Il file con tutte le prove, e la mappa nome del teorema -> (tattica, negato).
+def build_(problem, heartbeats: int) -> tuple[str, dict[str, tuple[str, bool]]]:
+    """Il file con all_of le trials, e la map_ name del theorem_ -> (tactic, negated).
 
-    Dopo ogni prova il file chiede a Lean **gli assiomi** di quella prova. È il
-    criterio decisivo, ed è lo stesso del verificatore: una tattica ha chiuso
-    davvero l'enunciato solo se la dichiarazione che ne risulta NON dipende da
-    `sorryAx`. Contare i messaggi di errore non basta — una tattica che falliva
-    produceva a volte un errore attribuito a un'altra riga, e la prova sembrava
-    riuscita. Con `#print axioms` la risposta arriva per nome, non per posizione.
+    Dopo ogni trial il file chiede a Lean **gli axioms** di quella trial. È il
+    criterio decisivo, ed è lo stesso del verifier: one_ tactic ha chiuso
+    davvero l'statement only_ se la declaration che ne risulta NON dipende da
+    `sorryAx`. Contare i messages di error non basta — one_ tactic che falliva
+    produceva a volte un error attribuito a un'altra line, e la trial sembrava
+    riuscita. Con `#print axioms` la answer arriva per name, non per position.
     """
-    righe = [f"import {config_verificatore.modulo_utilita()}",
-             f"import {problema.module}", ""]
-    mappa: dict[str, tuple[str, bool]] = {}
-    # Il `@` e' obbligatorio: senza, Lean istanzia gli argomenti
-    # impliciti come metavariabili e la sonda prova un enunciato DIVERSO
-    # da quello dell'archivio. Senza di esso `aesop` "confutava" la
-    # congettura di Agrawal, e il verificatore vero rifiutava la stessa
+    lines = [f"import {verifier_config.utility_module()}",
+             f"import {problem.module}", ""]
+    map_: dict[str, tuple[str, bool]] = {}
+    # Il `@` e' obbligatorio: senza, Lean istanzia gli arguments
+    # impliciti come metavariabili e la probe trial un statement DIVERSO
+    # da quello dell'archive. Senza di esso `aesop` "confutava" la
+    # congettura di Agrawal, e il verifier vero rifiutava la stessa
     # dimostrazione: era il quarto falso positivo di questa specie.
-    tipo = f"type_of% @{problema.theorem}"
-    for nome, tattica, anche_negato in TATTICHE:
-        for negato in (False, True) if anche_negato else (False,):
-            enunciato = f"¬ ({tipo})" if negato else tipo
-            teorema = f"sonda_{nome}{'_neg' if negato else ''}"
-            mappa[teorema] = (nome, negato)
-            righe.append(f"set_option maxHeartbeats {heartbeats} in")
-            righe.append(f"theorem {teorema} : {enunciato} := by")
-            righe.append(f"  {tattica}")
-            righe.append(f"#print axioms {teorema}")
-            righe.append("")
-    return "\n".join(righe) + "\n", mappa
+    kind_ = f"type_of% @{problem.theorem}"
+    for name, tactic, also_negated in TACTICS:
+        for negated in (False, True) if also_negated else (False,):
+            statement = f"¬ ({kind_})" if negated else kind_
+            theorem_ = f"sonda_{name}{'_neg' if negated else ''}"
+            map_[theorem_] = (name, negated)
+            lines.append(f"set_option maxHeartbeats {heartbeats} in")
+            lines.append(f"theorem {theorem_} : {statement} := by")
+            lines.append(f"  {tactic}")
+            lines.append(f"#print axioms {theorem_}")
+            lines.append("")
+    return "\n".join(lines) + "\n", map_
 
 
-#: `#print axioms nome` stampa una riga di questa forma.
-_RE_ASSIOMI = re.compile(r"'(\S+)' depends on axioms: \[([^\]]*)\]")
+#: `#print axioms name` show one_ line di questa forma.
+_RE_AXIOMS = re.compile(r"'(\S+)' depends on axioms: \[([^\]]*)\]")
 _RE_SENZA = re.compile(r"'(\S+)' does not depend on any axioms")
-_RE_CONTROESEMPIO = re.compile(r"Found a counter-example", re.I)
+_RE_COUNTEREXAMPLE = re.compile(r"Found a counter-example", re.I)
 
 
-def leggi(uscita: str, mappa: dict[str, tuple[str, bool]]) -> dict:
-    """Assegna a ogni tattica il suo esito leggendo gli assiomi, per nome.
+def read_(output: str, map_: dict[str, tuple[str, bool]]) -> dict:
+    """Assegna a ogni tactic il suo result leggendo gli axioms, per name.
 
-    Regola: una tattica ha CHIUSO l'enunciato se la dichiarazione corrispondente
-    esiste e non dipende da `sorryAx`. Se dipende da `sorryAx` la tattica non ha
+    Regola: one_ tactic ha CHIUSO l'statement se la declaration corrispondente
+    esiste e non dipende da `sorryAx`. Se dipende da `sorryAx` la tactic non ha
     dimostrato niente — è il caso di `plausible`, che quando non trova
     controesempi lascia un `sorry` e fa compilare il file comunque. Se la
-    dichiarazione non compare fra gli assiomi stampati, la prova è fallita prima
+    declaration non compare fra gli axioms stampati, la trial è fallita before
     di arrivare a esistere.
     """
-    assiomi: dict[str, set[str]] = {}
-    for riga in uscita.split("\n"):
-        m = _RE_ASSIOMI.search(riga)
+    axioms: dict[str, set[str]] = {}
+    for line in output.split("\n"):
+        m = _RE_AXIOMS.search(line)
         if m:
-            assiomi[m.group(1)] = {a.strip() for a in m.group(2).split(",") if a.strip()}
+            axioms[m.group(1)] = {a.strip() for a in m.group(2).split(",") if a.strip()}
             continue
-        m = _RE_SENZA.search(riga)
+        m = _RE_SENZA.search(line)
         if m:
-            assiomi[m.group(1)] = set()
-    controesempio = bool(_RE_CONTROESEMPIO.search(uscita))
-    # Un file che non compila puo' comunque stampare una riga di assiomi pulita per
-    # una dichiarazione la cui elaborazione e' stata salvata: e' il caso di
+            axioms[m.group(1)] = set()
+    counterexample = bool(_RE_COUNTEREXAMPLE.search(output))
+    # Un file che non compila puo' comunque stampare one_ line di axioms pulita per
+    # one_ declaration la cui elaborazione e' stata salvata: e' il caso di
     # Erdos628.erdos_628, dove `aesop` risultava "chiusa, nessun assioma" mentre il
-    # file aveva un errore di notazione e il verificatore ha poi risposto
-    # RIFIUTATO: il file non compila. La sonda non deve mai mostrare un esito
+    # file aveva un error di notazione e il verifier ha poi risposto
+    # RIFIUTATO: il file non compila. La probe non deve mai mostrare un result
     # positivo senza questo avviso accanto.
-    errori = [r for r in uscita.split("\n") if " error: " in r or r.startswith("error:")]
+    errors = [r for r in output.split("\n") if " error: " in r or r.startswith("error:")]
 
-    esiti = []
-    for teorema, (nome, negato) in mappa.items():
-        ax = assiomi.get(teorema)
+    results = []
+    for theorem_, (name, negated) in map_.items():
+        ax = axioms.get(theorem_)
         if ax is None:
-            esito, dettaglio = "aperta", "la dichiarazione non esiste: la tattica ha fallito"
+            result, detail = "aperta", "la declaration non esiste: la tactic ha failed"
         elif "sorryAx" in ax:
-            esito, dettaglio = "aperta", "dipende da sorryAx: non ha dimostrato niente"
+            result, detail = "aperta", "dipende da sorryAx: non ha dimostrato niente"
         else:
-            esito = "confutata" if negato else "chiusa"
-            dettaglio = "assiomi: " + (", ".join(sorted(ax)) or "nessuno")
-            if errori:
-                dettaglio = (f"ATTENZIONE: il file contiene {len(errori)} errori di "
-                             f"compilazione, quindi questo esito non vale niente "
-                             f"finche' il verificatore non dice ACCETTATO. "
-                             f"Primo errore: {errori[0].strip()[:160]}. " + dettaglio)
-        esiti.append({"tattica": nome, "negato": negato, "esito": esito,
-                      "dettaglio": dettaglio})
-    if controesempio:
-        esiti.append({"tattica": "plausible", "negato": None,
-                      "esito": "controesempio",
-                      "dettaglio": "plausible ha esibito un controesempio: "
-                                   "vedi i messaggi grezzi"})
-    return {"prove": esiti}
+            result = "confutata" if negated else "chiusa"
+            detail = "axioms: " + (", ".join(sorted(ax)) or "nessuno")
+            if errors:
+                detail = (f"ATTENZIONE: il file contiene {len(errors)} errors di "
+                             f"compilazione, quindi questo result non vale niente "
+                             f"finche' il verifier non dice ACCETTATO. "
+                             f"Primo error: {errors[0].strip()[:160]}. " + detail)
+        results.append({"tactic": name, "negated": negated, "result": result,
+                      "detail": detail})
+    if counterexample:
+        results.append({"tactic": "plausible", "negated": None,
+                      "result": "counterexample",
+                      "detail": "plausible ha esibito un counterexample: "
+                                   "vedi i messages grezzi"})
+    return {"trials": results}
 
 
-def controlla_ambiente(bersagli: Path) -> None:
-    """I bersagli e l'archivio devono venire dallo stesso snapshot.
+def check_environment(targets: Path) -> None:
+    """I targets e l'archive devono venire dallo stesso snapshot.
 
-    Quinto falso positivo: la sonda girava con l'indice predefinito (bench-v1)
-    mentre i bersagli erano scelti su `main`. Gli import fallivano, i messaggi di
-    Lean erano spazzatura, e il lettore ci leggeva dentro dei successi.
+    Quinto falso positivo: la probe girava con l'index predefinito (bench-v1)
+    mentre i targets erano chosen su `main`. Gli import fallivano, i messages di
+    Lean erano spazzatura, e il lettore ci leggeva inside dei successi.
     """
-    dati = json.loads(bersagli.read_text(encoding="utf-8"))
-    atteso = dati.get("snapshot", "")
-    attuale = str(config_verificatore.ARCHIVE)
-    if "fc-main" in atteso and "fc-main" not in attuale:
+    data_ = json.loads(targets.read_text(encoding="utf-8"))
+    expected_one = data_.get("snapshot", "")
+    current_one = str(verifier_config.ARCHIVE)
+    if "fc-main" in expected_one and "fc-main" not in current_one:
         raise SystemExit(
             f"AMBIENTE SBAGLIATO.\n"
-            f"  i bersagli sono stati scelti su: {atteso}\n"
-            f"  l'archivio in uso e':           {attuale}\n"
+            f"  i targets sono stati chosen su: {expected_one}\n"
+            f"  l'archive in uso e':           {current_one}\n"
             f"Rilancia con:\n"
             f"  env FCS_ARCHIVE=$PWD/external/fc-main \\\n"
             f"      FCS_LEAN4EXPORT=$PWD/external/lean4export-433/.lake/build/bin/lean4export \\\n"
@@ -174,115 +174,115 @@ def controlla_ambiente(bersagli: Path) -> None:
             f"    ./.venv/bin/python scripts/probe_artefacts.py")
 
 
-def conferma_col_verificatore(problema, tattica: str, negato: bool,
+def confirm_with_verifier(problem, tactic: str, negated: bool,
                               timeout: int) -> tuple[str, str]:
-    """Sottopone la prova al verificatore vero. Ritorna (esito, dettaglio).
+    """Sottopone la trial al verifier vero. Ritorna (result, detail).
 
-    E' l'unico giudizio che conta. Il candidato e' scritto nella forma che
-    `verify.py` si aspetta: in modalita' confutazione gli e' permesso importare
-    il modulo del problema (e appoggiarsi alla sua dimostrazione non serve,
-    perche' e' un `sorry` e il controllo degli assiomi lo rifiuta).
+    E' l'unico giudizio che count_. Il candidato e' scritto nella forma che
+    `verify.py` si aspetta: in mode' confutazione gli e' permesso importare
+    il module del problem (e appoggiarsi alla sua dimostrazione non serve,
+    perche' e' un `sorry` e il controllo degli axioms lo rifiuta).
     """
     import tempfile
-    from verify import verify, CONFUTAZIONE, STRETTA
-    corpo = (f"import {config_verificatore.modulo_utilita()}\n"
-             f"import {problema.module}\n\n")
-    if negato:
-        nome = f"{problema.theorem}_confutazione"
-        corpo += (f"theorem {nome} : ¬ (type_of% @{problema.theorem}) := by\n"
-                  f"  {tattica}\n")
-        modalita = CONFUTAZIONE
+    from verify import verify, REFUTATION, STRICT
+    body = (f"import {verifier_config.utility_module()}\n"
+             f"import {problem.module}\n\n")
+    if negated:
+        name = f"{problem.theorem}_refutation"
+        body += (f"theorem {name} : ¬ (type_of% @{problem.theorem}) := by\n"
+                  f"  {tactic}\n")
+        mode = REFUTATION
     else:
-        nome = f"{problema.theorem}_riprova"
-        corpo += (f"theorem {nome} : type_of% @{problema.theorem} := by\n"
-                  f"  {tattica}\n")
-        modalita = STRETTA
+        name = f"{problem.theorem}_riprova"
+        body += (f"theorem {name} : type_of% @{problem.theorem} := by\n"
+                  f"  {tactic}\n")
+        mode = STRICT
     with tempfile.NamedTemporaryFile("w", suffix=".lean", delete=False,
                                     encoding="utf-8") as fh:
-        fh.write(corpo)
-        percorso = Path(fh.name)
+        fh.write(body)
+        path = Path(fh.name)
     try:
-        r = verify(problema.theorem, percorso, modalita=modalita,
+        r = verify(problem.theorem, path, mode=mode,
                    run_guard=False, timeout=timeout)
         return r.status, (r.message or "")[:300]
     finally:
-        percorso.unlink(missing_ok=True)
+        path.unlink(missing_ok=True)
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--bersagli", default=str(RADICE / "docs/data/targets.json"))
-    ap.add_argument("--quanti", type=int, default=0, help="0 = tutti")
+    ap.add_argument("--targets", default=str(ROOT / "docs/data/targets.json"))
+    ap.add_argument("--how_many", type=int, default=0, help="0 = all_of")
     ap.add_argument("--timeout", type=int, default=180)
     ap.add_argument("--heartbeats", type=int, default=200000)
-    ap.add_argument("--uscita", default=str(RADICE / "runs/caccia/artefatti.json"))
+    ap.add_argument("--output", default=str(ROOT / "runs/hunt/artefacts.json"))
     args = ap.parse_args()
 
-    controlla_ambiente(Path(args.bersagli))
+    check_environment(Path(args.targets))
     idx = ProblemIndex.load()
-    dati = json.loads(Path(args.bersagli).read_text(encoding="utf-8"))
-    scelti = []
-    for c in dati["candidati"]:
+    data_ = json.loads(Path(args.targets).read_text(encoding="utf-8"))
+    chosen = []
+    for c in data_["candidates"]:
         try:
-            scelti.append(idx.get(c["problema"]))
+            chosen.append(idx.get(c["problem"]))
         except Exception:
             continue
 
-    uscita = Path(args.uscita)
-    uscita.parent.mkdir(parents=True, exist_ok=True)
-    risultati = json.loads(uscita.read_text(encoding="utf-8")) if uscita.is_file() else []
-    visti = {v["problema"] for v in risultati}
-    scelti = [p for p in scelti if p.theorem not in visti]
-    if args.quanti:
-        scelti = scelti[:args.quanti]
+    output = Path(args.output)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    results = json.loads(output.read_text(encoding="utf-8")) if output.is_file() else []
+    seen = {v["problem"] for v in results}
+    chosen = [p for p in chosen if p.theorem not in seen]
+    if args.how_many:
+        chosen = chosen[:args.how_many]
 
-    print(f"Sondo {len(scelti)} enunciati, {len(TATTICHE)} tattiche in UN file ciascuno.")
-    print(f"Gia' fatti: {len(visti)}. Nessuna spesa API.\n", flush=True)
+    print(f"Sondo {len(chosen)} enunciati, {len(TACTICS)} tattiche in UN file ciascuno.")
+    print(f"Gia' fatti: {len(seen)}. Nessuna spesa API.\n", flush=True)
 
-    notevoli = 0
-    for i, p in enumerate(scelti, 1):
+    notable = 0
+    for i, p in enumerate(chosen, 1):
         t0 = time.time()
-        codice, mappa = costruisci(p, args.heartbeats)
-        r = explore.explore(codice, timeout=args.timeout)
-        voce = {"problema": p.theorem, "modulo": p.module,
-                "enunciato": p.statement[:300], "secondi": round(time.time() - t0, 1)}
-        if r.rifiutato_dal_guard:
-            voce["errore"] = f"guard: {r.rifiutato_dal_guard}"
+        code, map_ = build_(p, args.heartbeats)
+        r = explore.explore(code, timeout=args.timeout)
+        entry = {"problem": p.theorem, "module": p.module,
+                "statement": p.statement[:300], "seconds": round(time.time() - t0, 1)}
+        if r.rejected_by_guard:
+            entry["error"] = f"guard: {r.rejected_by_guard}"
         else:
-            voce.update(leggi(r.messaggi, mappa))
-            candidati = [x for x in voce["prove"]
-                         if x["esito"] in ("chiusa", "confutata", "controesempio")]
-            if candidati:
-                voce["messaggi_grezzi"] = r.messaggi[:20000]
-                voce["candidati"] = []
-                for x in candidati:
-                    if x["esito"] == "controesempio":
-                        continue          # un controesempio non e' una prova
-                    tattica = dict((n, t) for n, t, _ in TATTICHE)[x["tattica"]]
-                    print(f"  ? {p.theorem}: {x['tattica']}"
-                          f"{' (negata)' if x['negato'] else ''} sembra chiudere — "
-                          f"lo sottopongo al verificatore...", flush=True)
-                    esito, dettaglio = conferma_col_verificatore(
-                        p, tattica, x["negato"], args.timeout * 4)
-                    voce["candidati"].append(
-                        {"tattica": x["tattica"], "negato": x["negato"],
-                         "verificatore": esito, "dettaglio": dettaglio})
-                    print(f"    -> verificatore: {esito}", flush=True)
-                    if esito == "ACCETTATO":
-                        voce["ATTENZIONE"] = (
-                            f"{x['tattica']}{' (negata)' if x['negato'] else ''} "
+            entry.update(read_(r.messages, map_))
+            candidates = [x for x in entry["trials"]
+                         if x["result"] in ("chiusa", "confutata", "counterexample")]
+            if candidates:
+                entry["messaggi_grezzi"] = r.messages[:20000]
+                entry["candidates"] = []
+                for x in candidates:
+                    if x["result"] == "counterexample":
+                        continue          # un counterexample non e' one_ trial
+                    tactic = dict((n, t) for n, t, _ in TACTICS)[x["tactic"]]
+                    print(f"  ? {p.theorem}: {x['tactic']}"
+                          f"{' (negata)' if x['negated'] else ''} sembra chiudere — "
+                          f"lo sottopongo al verifier...", flush=True)
+                    result, detail = confirm_with_verifier(
+                        p, tactic, x["negated"], args.timeout * 4)
+                    entry["candidates"].append(
+                        {"tactic": x["tactic"], "negated": x["negated"],
+                         "verifier": result, "detail": detail})
+                    print(f"    -> verifier: {result}", flush=True)
+                    if result == "ACCETTATO":
+                        entry["ATTENZIONE"] = (
+                            f"{x['tactic']}{' (negata)' if x['negated'] else ''} "
                             f"ACCETTATA DAL VERIFICATORE")
-                if "ATTENZIONE" in voce:
-                    notevoli += 1
-                    print(f"  !!! {p.theorem}: {voce['ATTENZIONE']}", flush=True)
-        risultati.append(voce)
-        uscita.write_text(json.dumps(risultati, ensure_ascii=False, indent=1),
+                if "ATTENZIONE" in entry:
+                    notable += 1
+                    print(f"  !!! {p.theorem}: {entry['ATTENZIONE']}", flush=True)
+        results.append(entry)
+        output.write_text(json.dumps(results, ensure_ascii=False, indent=1),
                           encoding="utf-8")
-        print(f"[{i}/{len(scelti)}] {p.theorem[:54]:54} "
-              f"{'NOTEVOLE' if 'ATTENZIONE' in voce else '.':9} {voce['secondi']:6.0f}s",
+        print(f"[{i}/{len(chosen)}] {p.theorem[:54]:54} "
+              f"{'NOTEVOLE' if 'ATTENZIONE' in entry else '.':9} {entry['seconds']:6.0f}s",
               flush=True)
 
-    print(f"\n{'='*70}\nEsaminati {len(scelti)}. Notevoli: {notevoli}\nRisultati in {uscita}")
+    print(f"\n{'='*70}\nEsaminati {len(chosen)}. Notevoli: {notable}\nRisultati in {output}")
     return 0
 
 

@@ -1,14 +1,14 @@
 """
-FASE C — modello dei costi e proiezione sui problemi aperti.
+FASE C — model dei costi e proiezione sui problems open_.
 
-Ogni numero stampato porta un'etichetta:
+Ogni number stampato porta un'label:
 
   MISURATO   viene da un'esecuzione registrata su file in questo repository.
-  STIMATO    e' un'ipotesi. Accanto c'e' sempre il ragionamento che la regge.
+  STIMATO    e' un'ipotesi. Accanto c'e' sempre il reasoning che la regge.
 
-Il modello non usa librerie esterne: l'intervallo di confidenza e' quello di
-Clopper-Pearson, calcolato per bisezione sulla somma binomiale esatta, cosi'
-non serve scipy e il conto e' riproducibile da chiunque legga il codice.
+Il model non usa librerie esterne: l'intervallo di confidence_level e' quello di
+Clopper-Pearson, calcolato per bisezione sulla total_sum binomiale esatta, cosi'
+non serve scipy e il conto e' riproducibile da chiunque legga il code.
 
 Uso:  python3 scripts/cost_model.py > runs/fase_c.txt
 """
@@ -20,136 +20,136 @@ import statistics as st
 import sys
 from pathlib import Path
 
-RADICE = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(RADICE / "verifier"))
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "verifier"))
 from index import ProblemIndex   # noqa: E402
 
-LIVELLI = ("facile", "medio", "difficile")
-LIVELLI_SPESA = (50, 100, 200, 500, 1000, 5000)
+LEVELS = ("facile", "mean_", "difficile")
+SPEND_LEVELS = (50, 100, 200, 500, 1000, 5000)
 
 
 # ---------------------------------------------------------------- statistica
-def _binom_coda_alta(k: int, n: int, p: float) -> float:
+def _binom_upper_tail(k: int, n: int, p: float) -> float:
     """P(X >= k) per X ~ Binomiale(n, p). Somma esatta, nessuna libreria."""
     return sum(math.comb(n, i) * p**i * (1 - p)**(n - i) for i in range(k, n + 1))
 
 
-def _binom_coda_bassa(k: int, n: int, p: float) -> float:
+def _binom_lower_tail(k: int, n: int, p: float) -> float:
     """P(X <= k)."""
     return sum(math.comb(n, i) * p**i * (1 - p)**(n - i) for i in range(0, k + 1))
 
 
-def _bisezione(f, bersaglio: float, lo: float, hi: float) -> float:
+def _bisection(f, target_: float, lo: float, hi: float) -> float:
     for _ in range(200):
         mid = (lo + hi) / 2
-        if f(mid) < bersaglio:
+        if f(mid) < target_:
             lo = mid
         else:
             hi = mid
     return (lo + hi) / 2
 
 
-def clopper_pearson(k: int, n: int, confidenza: float = 0.90) -> tuple[float, float]:
-    """Intervallo di Clopper-Pearson per una proporzione k/n.
+def clopper_pearson(k: int, n: int, confidence_level: float = 0.90) -> tuple[float, float]:
+    """Intervallo di Clopper-Pearson per one_ proporzione k/n.
 
     E' l'intervallo che non assume niente sulla forma della distribuzione:
-    con numeri piccoli resta largo, ed e' giusto che resti largo.
+    con numbers piccoli resta wide, ed e' giusto che residues wide.
     """
-    alfa = 1 - confidenza
-    basso = 0.0 if k == 0 else _bisezione(
-        lambda p: _binom_coda_alta(k, n, p), alfa / 2, 0.0, 1.0)
-    alto = 1.0 if k == n else _bisezione(
-        lambda p: 1 - _binom_coda_bassa(k, n, p), 1 - alfa / 2, 0.0, 1.0)
-    return basso, alto
+    alfa = 1 - confidence_level
+    low = 0.0 if k == 0 else _bisection(
+        lambda p: _binom_upper_tail(k, n, p), alfa / 2, 0.0, 1.0)
+    high = 1.0 if k == n else _bisection(
+        lambda p: 1 - _binom_lower_tail(k, n, p), 1 - alfa / 2, 0.0, 1.0)
+    return low, high
 
 
-# ---------------------------------------------------------------- dati
-def carica() -> dict:
-    dati = {}
-    dati["cal"] = json.loads(
-        (RADICE / "docs/data/calibration_full.json").read_text(encoding="utf-8"))
+# ---------------------------------------------------------------- data_
+def load_() -> dict:
+    data_ = {}
+    data_["cal"] = json.loads(
+        (ROOT / "docs/data/calibration_full.json").read_text(encoding="utf-8"))
 
     idx = {}
-    for nome, perc in (("bench-v1", "verifier/problem_index.json"),
+    for name, perc in (("bench-v1", "verifier/problem_index.json"),
                        ("main", "verifier/problem_index_main.json")):
-        i = ProblemIndex.load(RADICE / perc)
-        aperti = i.find(category="research open")
-        ap_ver = [p for p in aperti if not p.statement_has_sorry]
+        i = ProblemIndex.load(ROOT / perc)
+        open_ = i.find(category="research open")
+        ap_ver = [p for p in open_ if not p.statement_has_sorry]
         ris = i.find(category="research solved")
-        idx[nome] = {
-            "teoremi": len(i.problems),
-            "aperti": len(aperti),
+        idx[name] = {
+            "theorems": len(i.problems),
+            "open_": len(open_),
             "aperti_verificabili": len(ap_ver),
-            "aperti_con_buco_non_prop": len(aperti) - len(ap_ver),
-            "aperti_confutabili": len([p for p in aperti
+            "aperti_con_buco_non_prop": len(open_) - len(ap_ver),
+            "aperti_confutabili": len([p for p in open_
                                        if p.answer_placeholder_in_source
                                        and not p.statement_has_sorry]),
             "aperti_varianti": len([p for p in ap_ver if ".variants." in p.theorem]),
-            "risolti": len(ris),
+            "solved_": len(ris),
             "risolti_con_prova_pulita": len([p for p in ris if p.archive_proof_is_clean]),
             "risolti_senza_prova": len([p for p in ris if not p.proof_is_complete
                                         and not p.statement_has_sorry]),
             "prove_complete": len([p for p in i.problems if p.proof_is_complete]),
             "prove_pulite": len([p for p in i.problems if p.archive_proof_is_clean]),
         }
-    dati["indice"] = idx
+    data_["index"] = idx
 
-    # prima la copia versionata in docs/data, cosi' la relazione si rigenera
-    # anche su un computer dove runs/ non c'e' (runs/ non e' sotto git)
-    sonda = next((p for p in (RADICE / "docs/data/probe_lean.json",
-                              RADICE / "runs/caccia/probe_lean.json") if p.is_file()),
+    # before la copia versionata in docs/data, cosi' la report_text si rigenera
+    # also_ su un computer dove runs/ non c'e' (runs/ non e' below git)
+    probe = next((p for p in (ROOT / "docs/data/probe_lean.json",
+                              ROOT / "runs/hunt/probe_lean.json") if p.is_file()),
                  None)
-    dati["sonda"] = json.loads(sonda.read_text(encoding="utf-8")) if sonda else None
+    data_["probe"] = json.loads(probe.read_text(encoding="utf-8")) if probe else None
 
     caccia = []
-    for cart in sorted((RADICE / "runs/caccia").glob("*/")):
-        f = cart / "stato.json"
-        g = cart / "esito.json"
-        voce = {"nome": cart.name}
-        for chiave, percorso in (("stato", f), ("esito", g)):
-            if percorso.is_file():
-                voce[chiave] = json.loads(percorso.read_text(encoding="utf-8"))
-        if len(voce) > 1:
-            caccia.append(voce)
-    dati["caccia"] = caccia
-    return dati
+    for folder in sorted((ROOT / "runs/hunt").glob("*/")):
+        f = folder / "state.json"
+        g = folder / "result.json"
+        entry = {"name": folder.name}
+        for key_, path in (("state", f), ("result", g)):
+            if path.is_file():
+                entry[key_] = json.loads(path.read_text(encoding="utf-8"))
+        if len(entry) > 1:
+            caccia.append(entry)
+    data_["hunt"] = caccia
+    return data_
 
 
-# ---------------------------------------------------------------- modello
-def per_livello(problemi: list[dict]) -> dict:
-    fuori = {}
-    for liv in LIVELLI:
-        gruppo = [p for p in problemi if p["livello"] == liv]
-        if not gruppo:
+# ---------------------------------------------------------------- model
+def per_level(problems: list[dict]) -> dict:
+    out_of = {}
+    for lvl in LEVELS:
+        group = [p for p in problems if p["level"] == lvl]
+        if not group:
             continue
-        risolti = [p for p in gruppo if p["risolto"]]
-        falliti = [p for p in gruppo if not p["risolto"]]
-        basso, alto = clopper_pearson(len(risolti), len(gruppo))
-        fuori[liv] = {
-            "n": len(gruppo), "risolti": len(risolti),
-            "tasso": len(risolti) / len(gruppo),
-            "intervallo": (basso, alto),
-            "costo_successo": [p["costo"] for p in risolti],
-            "costo_fallimento": [p["costo"] for p in falliti],
-            "iterazioni_successo": [p["iterazioni"] for p in risolti],
-            "secondi": [p["secondi"] for p in gruppo],
+        solved_ = [p for p in group if p["solved_one"]]
+        failed_ = [p for p in group if not p["solved_one"]]
+        low, high = clopper_pearson(len(solved_), len(group))
+        out_of[lvl] = {
+            "n": len(group), "solved_": len(solved_),
+            "rate": len(solved_) / len(group),
+            "intervallo": (low, high),
+            "costo_successo": [p["cost"] for p in solved_],
+            "costo_fallimento": [p["cost"] for p in failed_],
+            "iterazioni_successo": [p["iterations"] for p in solved_],
+            "seconds": [p["seconds"] for p in group],
         }
-    return fuori
+    return out_of
 
 
-def costo_per_successo(p: float, c_successo: float, c_fallimento: float) -> float:
-    """Costo atteso per ottenere UN successo, con tentativi indipendenti."""
+def cost_per_success(p: float, c_successo: float, c_fallimento: float) -> float:
+    """Costo expected_one per ottenere UN successo, con attempts indipendenti."""
     if p <= 0:
         return float("inf")
     return (c_successo * p + c_fallimento * (1 - p)) / p
 
 
-def tabella_proiezione(nome: str, c_tentativo: float, p: float) -> list[tuple]:
-    righe = []
-    for b in LIVELLI_SPESA:
+def tabella_proiezione(name: str, c_tentativo: float, p: float) -> list[tuple]:
+    lines = []
+    for b in SPEND_LEVELS:
         n = b / c_tentativo
-        righe.append((b, n, n * p))
-    return righe
+        lines.append((b, n, n * p))
+    return lines
 
 
 def fmt(x: float) -> str:
@@ -168,42 +168,42 @@ def fmt(x: float) -> str:
 
 # ---------------------------------------------------------------- scenari
 #
-# Questi sono gli UNICI numeri inventati del modello. Ognuno porta la sua
-# motivazione, e la motivazione dice su quale misura si appoggia.
+# Questi sono gli UNICI numbers inventati del model. Ognuno porta la sua
+# motivazione, e la motivazione dice su which misura si appoggia.
 
-SCENARI = {
+SCENARIOS = {
     "A": {
-        "nome": "dimostrazioni Lean dirette su enunciati aperti",
+        "name": "dimostrazioni Lean dirette su enunciati open_",
         "ottimistico": (0.02,
-            "la sonda automatica non ha chiuso nessuno dei 30 enunciati aperti "
-            "provati (240 prove): il limite superiore misurato al 90% e' 9,5%. "
-            "Prendo circa un quinto di quel tetto, perche' la sonda prova "
+            "la probe automatica non ha chiuso nessuno dei 30 enunciati open_ "
+            "provati (240 trials): il limit superiore misurato al 90% e' 9,5%. "
+            "Prendo circa un quinto di quel cap, perche' la probe trial "
             "tattiche mentre l'agent ragiona — quindi puo' fare meglio — ma "
-            "9,5% e' il tetto di un campione di 30, non una stima"),
+            "9,5% e' il cap di un sample di 30, non one_ estimate"),
         "realistico": (0.003,
-            "un successo ogni ~300 tentativi: la calibrazione misura 5/7 su "
-            "varianti GIA' dimostrate in archivio (prove di 10-34 righe), ma "
-            "nessun aperto ha una prova corta nota, per definizione di aperto"),
+            "un successo ogni ~300 attempts: la calibrazione misura 5/7 su "
+            "varianti GIA' dimostrate in archive (trials di 10-34 lines), ma "
+            "nessun aperto ha one_ trial corta note, per definition di aperto"),
         "pessimistico": (0.0002,
-            "un successo ogni 5000: l'archivio e' curato da DeepMind per "
-            "raccogliere problemi su cui gli esperti si sono fermati"),
+            "un successo ogni 5000: l'archive e' curato da DeepMind per "
+            "raccogliere problems su cui gli esperti si sono stopped"),
     },
     "B": {
-        "nome": "ricerca di controesempi con calcolo locale",
+        "name": "ricerca di controesempi con computation local_",
         "ottimistico": (0.05,
-            "una minoranza di congetture ha limiti verificati bassi (per la "
+            "one_ minoranza di congetture ha bounds verified bassi (per la "
             "congettura di Selfridge la letteratura si ferma a k~29): su quelle "
-            "il calcolo locale arriva davvero oltre il noto"),
+            "il computation local_ arriva davvero oltre il noto"),
         "realistico": (0.01,
             "misurato in questo progetto: 0 ritrovamenti su 3 ricerche e "
-            "~2 ore-CPU; la ricerca sui numeri di Euclide ha superato 2,5 "
-            "milioni di primi senza niente"),
+            "~2 hours-CPU; la ricerca sui numbers di Euclide ha passed_one 2,5 "
+            "milioni di primes senza niente"),
         "pessimistico": (0.001,
-            "i limiti pubblicati sono quasi sempre fuori portata: per il "
-            "problema di Erdos 366 la verifica arriva a 10^22"),
+            "i bounds pubblicati sono quasi sempre out_of portata: per il "
+            "problem di Erdos 366 la check arriva a 10^22"),
     },
     "C": {
-        "nome": "strategia mista: setaccio a basso costo, poi affondo",
+        "name": "strategia mista: setaccio a low cost, poi affondo",
         "ottimistico": (None, "derivato da A e B"),
         "realistico": (None, "derivato da A e B"),
         "pessimistico": (None, "derivato da A e B"),
@@ -211,252 +211,252 @@ SCENARI = {
 }
 
 
-# Parametri della strategia mista. Sono tre numeri, dichiarati qui.
-QUOTA_AFFONDO = 0.10       # STIMATO: su 10 problemi setacciati, 1 merita l'affondo
-AMPLIFICAZIONE = {"ottimistico": 3.0, "realistico": 2.0, "pessimistico": 1.0}
-QUOTA_PRIMO_COLPO = 0.22   # MISURATO: 2 dei 9 successi sono arrivati alla prima
-                           # iterazione (Wilson, ClaudesCycles)
+# Parametri della strategia mista. Sono three numbers, declared qui.
+DIVE_SHARE = 0.10       # STIMATO: su 10 problems setacciati, 1 merita l'affondo
+AMPLIFICATION = {"ottimistico": 3.0, "realistico": 2.0, "pessimistico": 1.0}
+FIRST_SHOT_SHARE = 0.22   # MISURATO: 2 dei 9 successi sono arrivati alla before
+                           # iteration (Wilson, ClaudesCycles)
 
-# Strategia B: quanti bersagli esistono davvero.
-N_SELEZIONATI_CACCIA = 30          # MISURATO: runs/caccia/selezione.json
-FRAZIONE_FRONTIERA_RAGGIUNGIBILE = 0.50   # STIMATO su 2 letterature su 4 controllate
+# Strategia B: how_many targets esistono davvero.
+N_SELECTED_HUNT = 30          # MISURATO: runs/hunt/selection.json
+REACHABLE_FRONTIER_FRACTION = 0.50   # STIMATO su 2 letterature su 4 controllate
 
-# Che cosa hanno fatto le ricerche lanciate. I ritrovamenti sono ZERO in tutte e
-# tre: la voce `trovati` di erdos396 contiene valori CALCOLATI (il minimo n per
+# Che cosa hanno fatto le ricerche lanciate. I ritrovamenti sono ZERO in all_of e
+# three: la entry `found` di erdos396 contiene valori CALCOLATI (il minimum n per
 # ogni k), non controesempi, e va letta cosi'.
-CACCIA = {
+HUNT = {
     "euclide_squarefree": (
-        "un primo p con p^2 che divide un numero di Euclide",
-        "conclusiva: un solo ritrovamento confuterebbe la congettura", 0),
+        "un prime_ p con p^2 che divide un number di Euclide",
+        "conclusiva: un only_ ritrovamento confuterebbe la congettura", 0),
     "erdos409_sigma": (
-        "orbite di n -> sigma(n)-1 che non toccano mai un primo",
+        "orbits di n -> sigma(n)-1 che non toccano mai un prime_",
         "trova sospetti da esaminare a mano, non confutazioni", 0),
     "erdos396_binomiale": (
-        "il minimo n con descFactorial(n,k+1) che divide centralBinom(n)",
+        "il minimum n con descFactorial(n,k+1) che divide centralBinom(n)",
         "raccoglie indizi: la forma 'per ogni k esiste n' non e' confutabile "
-        "da un calcolo", 0),
+        "da un computation", 0),
 }
 
 
-def relazione(dati: dict) -> str:
+def report_text(data_: dict) -> str:
     r: list[str] = []
     def p(s: str = "") -> None:
         r.append(s)
 
-    cal = dati["cal"]
-    problemi = cal["problemi"]
-    idx = dati["indice"]
-    liv = per_livello(problemi)
+    cal = data_["cal"]
+    problems = cal["problems"]
+    idx = data_["index"]
+    lvl = per_level(problems)
 
-    risolti = [x for x in problemi if x["risolto"]]
-    falliti = [x for x in problemi if not x["risolto"]]
-    c_succ = st.mean(x["costo"] for x in risolti)
-    c_fall = st.mean(x["costo"] for x in falliti)
-    c_it1 = st.median(x["costo_it1"] for x in problemi)
+    solved_ = [x for x in problems if x["solved_one"]]
+    failed_ = [x for x in problems if not x["solved_one"]]
+    c_succ = st.mean(x["cost"] for x in solved_)
+    c_fall = st.mean(x["cost"] for x in failed_)
+    c_it1 = st.median(x["costo_it1"] for x in problems)
 
-    p("# Fase C — modello dei costi e proiezione sui problemi aperti")
+    p("# Fase C — model dei costi e proiezione sui problems open_")
     p()
-    p(f"Generato da `scripts/cost_model.py`. Modello **{cal['modello']}**, "
+    p(f"Generato da `scripts/cost_model.py`. Modello **{cal['model']}**, "
       f"effort **{cal['effort']}**, snapshot `{cal['snapshot']}`.")
     p()
 
     # ---------------------------------------------------------------- 1
-    p("## 1. Che cosa e' stato misurato")
+    p("## 1. Che cosa e' state misurato")
     p()
-    p(f"**MISURATO** — {len(problemi)} problemi tentati, {len(risolti)} risolti, "
-      f"spesa totale ${cal['spesa_totale']:.4f}. Tutti entrati nell'archivio "
-      f"dopo il taglio di addestramento dichiarato ({cal['taglio_addestramento']}), "
-      f"tutti con la dimostrazione d'archivio accettata dal verificatore, "
-      f"tutti con la dimostrazione nascosta all'agent.")
+    p(f"**MISURATO** — {len(problems)} problems tentati, {len(solved_)} solved_, "
+      f"spesa total ${cal['spesa_totale']:.4f}. Tutti entrati nell'archive "
+      f"after il cut di addestramento dichiarato ({cal['taglio_addestramento']}), "
+      f"all_of con la dimostrazione d'archive accepted_ dal verifier, "
+      f"all_of con la dimostrazione nascosta all'agent.")
     p()
-    p("| livello | righe di prova | esito | iter. | espl. | verifiche | secondi | costo |")
+    p("| level | lines di trial | result | iter. | espl. | checks | seconds | cost |")
     p("|---|---|---|---|---|---|---|---|")
-    for x in problemi:
-        p(f"| {x['livello']} | {x['righe_prova']} | "
-          f"{'**risolto**' if x['risolto'] else 'non risolto'} | "
-          f"{x['iterazioni']} | {x['esplorazioni']} | {x['verifiche']} | "
-          f"{x['secondi']} | ${x['costo']:.4f} |")
+    for x in problems:
+        p(f"| {x['level']} | {x['proof_lines']} | "
+          f"{'**solved_one**' if x['solved_one'] else 'non solved_one'} | "
+          f"{x['iterations']} | {x['explorations']} | {x['checks']} | "
+          f"{x['seconds']} | ${x['cost']:.4f} |")
     p()
 
     # ---------------------------------------------------------------- 2
-    p("## 2. Il modello, livello per livello")
+    p("## 2. Il model, level per level")
     p()
-    p("Il tasso di successo e' accompagnato dall'intervallo di Clopper-Pearson "
-      "al 90%: con quattro o cinque problemi per livello l'intervallo e' larghissimo, "
-      "e dichiararlo e' l'unico modo onesto di dare il numero.")
+    p("Il rate di successo e' accompagnato dall'intervallo di Clopper-Pearson "
+      "al 90%: con quattro o cinque problems per level l'intervallo e' larghissimo, "
+      "e dichiararlo e' l'unico way onesto di dare il number.")
     p()
-    p("| livello | n | risolti | tasso | intervallo 90% | costo medio se risolto | costo se fallito |")
+    p("| level | n | solved_ | rate | intervallo 90% | cost mean_ se solved_one | cost se failed |")
     p("|---|---|---|---|---|---|---|")
-    for nome, v in liv.items():
+    for name, v in lvl.items():
         cs = f"${st.mean(v['costo_successo']):.4f}" if v["costo_successo"] else "—"
         cf = (f"${st.mean(v['costo_fallimento']):.4f}" if v["costo_fallimento"] else "—")
-        p(f"| {nome} | {v['n']} | {v['risolti']} | {v['tasso']:.0%} | "
+        p(f"| {name} | {v['n']} | {v['solved_']} | {v['rate']:.0%} | "
           f"{v['intervallo'][0]:.0%} – {v['intervallo'][1]:.0%} | {cs} | {cf} |")
-    tot_b, tot_a = clopper_pearson(len(risolti), len(problemi))
-    p(f"| **totale** | {len(problemi)} | {len(risolti)} | "
-      f"{len(risolti)/len(problemi):.0%} | {tot_b:.0%} – {tot_a:.0%} | "
+    tot_b, tot_a = clopper_pearson(len(solved_), len(problems))
+    p(f"| **total** | {len(problems)} | {len(solved_)} | "
+      f"{len(solved_)/len(problems):.0%} | {tot_b:.0%} – {tot_a:.0%} | "
       f"${c_succ:.4f} | ${c_fall:.4f} |")
     p()
-    p("**MISURATO** — le quattro voci di livello `facile` sono problemi di "
+    p("**MISURATO** — le quattro entries di level `facile` sono problems di "
       "categoria `test`, cioe' controlli di sanita' scritti dagli autori "
-      "dell'archivio: 4 su 4. Le sette voci `medio` e `difficile` sono varianti "
+      "dell'archive: 4 su 4. Le sette entries `mean_` e `difficile` sono varianti "
       "di congetture vere e proprie, di categoria `research solved`: 5 su 7. "
-      "Il numero da ricordare e' **5 su 7**, non 9 su 11.")
+      "Il number da ricordare e' **5 su 7**, non 9 su 11.")
     p()
-    p(f"**MISURATO** — costo medio di un successo ${c_succ:.4f}; "
-      f"costo medio di un fallimento ${c_fall:.4f}. Un fallimento costa "
-      f"{c_fall/c_succ:.0f} volte un successo, perche' il fallimento consuma "
-      f"tutto il tetto per problema mentre il successo si ferma appena la "
+    p(f"**MISURATO** — cost mean_ di un successo ${c_succ:.4f}; "
+      f"cost mean_ di un failure ${c_fall:.4f}. Un failure costa "
+      f"{c_fall/c_succ:.0f} volte un successo, perche' il failure consuma "
+      f"tutto il cap per problem mentre il successo si ferma appena la "
       f"dimostrazione passa.")
     p()
-    p(f"**MISURATO** — costo della PRIMA iterazione, mediana su {len(problemi)} "
-      f"problemi: ${c_it1:.4f}. Due dei nove successi sono arrivati proprio alla "
-      f"prima iterazione. Questo e' il prezzo di un colpo solo, e serve alla "
+    p(f"**MISURATO** — cost della PRIMA iteration, mediana su {len(problems)} "
+      f"problems: ${c_it1:.4f}. Due dei nove successi sono arrivati proprio alla "
+      f"before iteration. Questo e' il prezzo di un colpo only_, e serve alla "
       f"strategia mista del punto 4.")
     p()
-    ore_lean = sum(x["secondi_lean"] for x in problemi) / 3600
-    ore_tot = sum(x["secondi"] for x in problemi) / 3600
-    p(f"**MISURATO** — tempo di calendario: {ore_tot:.2f} ore in tutto, di cui "
-      f"{ore_lean:.2f} ore di Lean in locale ({100*ore_lean/ore_tot:.0f}%). "
-      f"Il collo di bottiglia non e' l'API: e' il verificatore.")
+    ore_lean = sum(x["lean_seconds"] for x in problems) / 3600
+    ore_tot = sum(x["seconds"] for x in problems) / 3600
+    p(f"**MISURATO** — tempo di calendario: {ore_tot:.2f} hours in tutto, di cui "
+      f"{ore_lean:.2f} hours di Lean in local_ ({100*ore_lean/ore_tot:.0f}%). "
+      f"Il collo di bottiglia non e' l'API: e' il verifier.")
     p()
-    p("### Costo per problema risolto")
+    p("### Costo per problem solved_one")
     p()
-    p("Formula: (costo se risolto x p + costo se fallito x (1-p)) / p, cioe' quanto "
-      "costa in media arrivare a UN successo ritentando su problemi diversi.")
+    p("Formula: (cost se solved_one x p + cost se failed x (1-p)) / p, cioe' quanto "
+      "costa in media arrivare a UN successo ritentando su problems diversi.")
     p()
-    p("| livello | p | costo per successo | con p al minimo dell'intervallo | al massimo |")
+    p("| level | p | cost per successo | con p al minimum dell'intervallo | al maximum |")
     p("|---|---|---|---|---|")
-    for nome, v in liv.items():
+    for name, v in lvl.items():
         cs = st.mean(v["costo_successo"]) if v["costo_successo"] else c_succ
         cf = st.mean(v["costo_fallimento"]) if v["costo_fallimento"] else c_fall
-        a = costo_per_successo(v["tasso"], cs, cf)
-        b = costo_per_successo(v["intervallo"][0], cs, cf)
-        c = costo_per_successo(v["intervallo"][1], cs, cf)
-        p(f"| {nome} | {v['tasso']:.0%} | ${fmt(a)} | ${fmt(b)} | ${fmt(c)} |")
+        a = cost_per_success(v["rate"], cs, cf)
+        b = cost_per_success(v["intervallo"][0], cs, cf)
+        c = cost_per_success(v["intervallo"][1], cs, cf)
+        p(f"| {name} | {v['rate']:.0%} | ${fmt(a)} | ${fmt(b)} | ${fmt(c)} |")
     p()
     return r
 
-def relazione_seconda_parte(dati: dict, r: list[str]) -> list[str]:
+def report_part_two(data_: dict, r: list[str]) -> list[str]:
     def p(s: str = "") -> None:
         r.append(s)
 
-    cal = dati["cal"]
-    problemi = cal["problemi"]
-    idx = dati["indice"]
-    risolti = [x for x in problemi if x["risolto"]]
-    falliti = [x for x in problemi if not x["risolto"]]
-    c_succ = st.mean(x["costo"] for x in risolti)
-    c_fall = st.mean(x["costo"] for x in falliti)
-    c_it1 = st.median(x["costo_it1"] for x in problemi)
+    cal = data_["cal"]
+    problems = cal["problems"]
+    idx = data_["index"]
+    solved_ = [x for x in problems if x["solved_one"]]
+    failed_ = [x for x in problems if not x["solved_one"]]
+    c_succ = st.mean(x["cost"] for x in solved_)
+    c_fall = st.mean(x["cost"] for x in failed_)
+    c_it1 = st.median(x["costo_it1"] for x in problems)
 
     # ---------------------------------------------------------------- 3
-    p("## 3. Quanti bersagli ci sono")
+    p("## 3. Quanti targets ci sono")
     p()
     p("| | bench-v1 | main (0a8b856c) |")
     p("|---|---|---|")
-    voci = [
-        ("teoremi indicizzati", "teoremi"),
-        ("`research open`", "aperti"),
-        ("aperti con enunciato completo (verificabili)", "aperti_verificabili"),
-        ("aperti con buco `answer( )` non proposizionale", "aperti_con_buco_non_prop"),
-        ("aperti attaccabili per confutazione", "aperti_confutabili"),
-        ("aperti che sono varianti ausiliarie", "aperti_varianti"),
-        ("`research solved`", "risolti"),
-        ("risolti con dimostrazione pulita in archivio", "risolti_con_prova_pulita"),
-        ("risolti SENZA dimostrazione in archivio", "risolti_senza_prova"),
+    entries = [
+        ("theorems indicizzati", "theorems"),
+        ("`research open`", "open_"),
+        ("open_ con statement full_ (verificabili)", "aperti_verificabili"),
+        ("open_ con buco `answer( )` non proposizionale", "aperti_con_buco_non_prop"),
+        ("open_ attaccabili per confutazione", "aperti_confutabili"),
+        ("open_ che sono varianti ausiliarie", "aperti_varianti"),
+        ("`research solved`", "solved_"),
+        ("solved_ con dimostrazione pulita in archive", "risolti_con_prova_pulita"),
+        ("solved_ SENZA dimostrazione in archive", "risolti_senza_prova"),
     ]
-    for etichetta, chiave in voci:
-        p(f"| {etichetta} | {idx['bench-v1'][chiave]} | {idx['main'][chiave]} |")
+    for label, key_ in entries:
+        p(f"| {label} | {idx['bench-v1'][key_]} | {idx['main'][key_]} |")
     p()
-    p("Tutti **MISURATI** sull'indice costruito da Lean.")
+    p("Tutti **MISURATI** sull'index built_ da Lean.")
     p()
     p("I conteggi di `main` valgono con la semantica `google.answer = "
       "always_true`, quella predefinita, in cui `answer(sorry) ↔ P` diventa "
-      "`True ↔ P` e il problema e' davvero dimostrabile. Fino a questa sessione "
-      "lo snapshot dichiarava anche una seconda libreria che compilava gli "
-      "stessi file con `postpone`, e i due insiemi di `.olean` si sovrascrivevano "
-      "a vicenda: con quella semantica gli stessi 94 problemi non sono "
+      "`True ↔ P` e il problem e' davvero dimostrabile. Fino a questa sessione "
+      "lo snapshot dichiarava also_ one_ seconda libreria che compilava gli "
+      "stessi file con `postpone`, e i two insiemi di `.olean` si sovrascrivevano "
+      "a vicenda: con quella semantica gli stessi 94 problems non sono "
       "attaccabili affatto. La libreria in eccesso e' stata disattivata — vedi "
-      "`docs/01` — e i numeri qui sopra sono quelli della semantica giusta.")
+      "`docs/01` — e i numbers qui above sono quelli della semantica giusta.")
     p()
     p(f"Due osservazioni che cambiano la strategia. Primo: **nessuno** dei "
-      f"{idx['main']['aperti']} problemi marcati `research open` ha una "
-      f"dimostrazione completa in archivio — l'archivio e' coerente con se stesso, "
-      f"non ci sono aperti 'per distrazione' da raccogliere. Secondo: "
-      f"{idx['main']['risolti_senza_prova']} problemi sono marcati `research solved` "
-      f"ma non hanno alcuna dimostrazione Lean in archivio: la matematica e' nota, "
-      f"la formalizzazione manca. Quella e' una terza classe di bersagli, piu' "
-      f"facile degli aperti e piu' difficile di quelli su cui ho calibrato.")
+      f"{idx['main']['open_']} problems marcati `research open` ha one_ "
+      f"dimostrazione complete_ in archive — l'archive e' coerente con se stesso, "
+      f"non ci sono open_ 'per distrazione' da raccogliere. Secondo: "
+      f"{idx['main']['risolti_senza_prova']} problems sono marcati `research solved` "
+      f"ma non hanno alcuna dimostrazione Lean in archive: la matematica e' note, "
+      f"la formalizzazione manca. Quella e' one_ terza classe di targets, piu' "
+      f"facile degli open_ e piu' difficile di quelli su cui ho calibrato.")
     p()
 
     # ---------------------------------------------------------------- 4
-    p("## 4. Proiezione sui problemi aperti")
+    p("## 4. Proiezione sui problems open_")
     p()
-    p("Le probabilita' di successo su un problema **aperto** non sono misurabili: "
-      "sono le tre ipotesi qui sotto, e ogni riga dichiara su cosa si appoggia. "
-      "I conti tengono conto del fatto che i bersagli sono in numero **finito**: "
-      "quando una strategia li ha esauriti, la spesa in piu' non compra niente "
-      "che questo modello sappia valutare.")
+    p("Le probabilita' di successo su un problem **aperto** non sono misurabili: "
+      "sono le three ipotesi qui below, e ogni line dichiara su cosa si appoggia. "
+      "I conti tengono conto del fatto che i targets sono in number **finito**: "
+      "quando one_ strategia li ha esauriti, la spesa in piu' non compra niente "
+      "che questo model sappia valutare.")
     p()
-    n_bersagli = idx["main"]["aperti_verificabili"]
+    n_targets = idx["main"]["aperti_verificabili"]
     c_a = c_fall
     c_s = c_it1
     c_b = 0.10
 
-    p("### Costo di un tentativo (base del conto)")
+    p("### Costo di un attempt (base del conto)")
     p()
-    p(f"- **A, affondo completo** su un enunciato aperto: **${c_a:.2f}** — "
-      f"**MISURATO**, media dei due fallimenti della calibrazione "
-      f"(${falliti[0]['costo']:.4f} fermato dalle 20 iterazioni, "
-      f"${falliti[1]['costo']:.4f} fermato dal tetto di spesa). Su un aperto il "
-      f"tentativo finisce quasi sempre cosi'.")
-    p(f"- **C, colpo solo** (setaccio): **${c_s:.4f}** — **MISURATO**, mediana "
-      f"del costo della prima iterazione sugli 11 problemi della calibrazione.")
-    p(f"- **B, programma di ricerca** scritto e lanciato: **${c_b:.2f}** di API "
-      f"per problema — **STIMATO**, dell'ordine del costo misurato dei problemi "
+    p(f"- **A, affondo full_** su un statement aperto: **${c_a:.2f}** — "
+      f"**MISURATO**, media dei two fallimenti della calibrazione "
+      f"(${failed_[0]['cost']:.4f} fermato dalle 20 iterations, "
+      f"${failed_[1]['cost']:.4f} fermato dal cap di spesa). Su un aperto il "
+      f"attempt finisce quasi sempre cosi'.")
+    p(f"- **C, colpo only_** (setaccio): **${c_s:.4f}** — **MISURATO**, mediana "
+      f"del cost della before iteration sugli 11 problems della calibrazione.")
+    p(f"- **B, program di ricerca** scritto e lanciato: **${c_b:.2f}** di API "
+      f"per problem — **STIMATO**, dell'order del cost misurato dei problems "
       f"facili (media "
-      f"${st.mean(x['costo'] for x in problemi if x['livello']=='facile'):.4f}). "
-      f"Il calcolo locale non costa dollari: costa notti di macchina.")
+      f"${st.mean(x['cost'] for x in problems if x['level']=='facile'):.4f}). "
+      f"Il computation local_ non costa dollari: costa notti di macchina.")
     p()
 
     # ------------------------------------------------- A
-    p("### Strategia A — dimostrazioni Lean dirette su enunciati aperti")
+    p("### Strategia A — dimostrazioni Lean dirette su enunciati open_")
     p()
-    p(f"Un affondo per problema, scelti a caso tra i {n_bersagli} aperti "
-      f"verificabili. Saturazione a **${fmt(n_bersagli*c_a)}**.")
+    p(f"Un affondo per problem, chosen a caso tra i {n_targets} open_ "
+      f"verificabili. Saturazione a **${fmt(n_targets*c_a)}**.")
     p()
     p("| spesa | affondi | ottimistico | realistico | pessimistico |")
     p("|---|---|---|---|---|")
-    for b in LIVELLI_SPESA:
-        n = min(b / c_a, n_bersagli)
-        nota = " *(saturo)*" if b / c_a > n_bersagli else ""
-        celle = [fmt(n * SCENARI["A"][sc][0])
+    for b in SPEND_LEVELS:
+        n = min(b / c_a, n_targets)
+        note = " *(saturo)*" if b / c_a > n_targets else ""
+        cells = [fmt(n * SCENARIOS["A"][sc][0])
                  for sc in ("ottimistico", "realistico", "pessimistico")]
-        p(f"| ${b} | {fmt(n)}{nota} | {celle[0]} | {celle[1]} | {celle[2]} |")
+        p(f"| ${b} | {fmt(n)}{note} | {cells[0]} | {cells[1]} | {cells[2]} |")
     p()
     for sc in ("ottimistico", "realistico", "pessimistico"):
-        prob, motivo = SCENARI["A"][sc]
-        p(f"- **{sc}: p = {prob:.2%}** — STIMATO. {motivo}.")
+        prob, reason = SCENARIOS["A"][sc]
+        p(f"- **{sc}: p = {prob:.2%}** — STIMATO. {reason}.")
     p()
 
     # ------------------------------------------------- B
-    idonei_totali = N_SELEZIONATI_CACCIA
-    quota_raggiungibili = FRAZIONE_FRONTIERA_RAGGIUNGIBILE
-    n_b = idonei_totali * quota_raggiungibili
-    p("### Strategia B — ricerca di controesempi con calcolo locale")
+    idonei_totali = N_SELECTED_HUNT
+    reachable_share = REACHABLE_FRONTIER_FRACTION
+    n_b = idonei_totali * reachable_share
+    p("### Strategia B — ricerca di controesempi con computation local_")
     p()
-    p(f"Qui il limite non e' il denaro: e' il numero di problemi su cui una "
-      f"ricerca ha senso. **MISURATO**: lo script di selezione ne ha trovati "
-      f"{idonei_totali} adatti al calcolo su tutto l'archivio. Dei quattro di cui "
-      f"ho controllato la letteratura, due hanno una frontiera raggiungibile "
-      f"(numeri di Euclide: nessuna ricerca sistematica pubblicata; congettura di "
-      f"Selfridge: verificata solo fino a k circa 29) e due no (Erdos 366: "
+    p(f"Qui il limit non e' il denaro: e' il number di problems su cui one_ "
+      f"ricerca ha senso. **MISURATO**: lo script di selection ne ha found "
+      f"{idonei_totali} adatti al computation su tutto l'archive. Dei quattro di cui "
+      f"ho controllato la letteratura, two hanno one_ frontier raggiungibile "
+      f"(numbers di Euclide: nessuna ricerca sistematica pubblicata; congettura di "
+      f"Selfridge: verificata only_ fino a k circa 29) e two no (Erdos 366: "
       f"verificata fino a 10^22; Goldbach e Legendre: fino a 4x10^18). Due su "
       f"quattro, intervallo di Clopper-Pearson al 90% "
       f"{clopper_pearson(2,4)[0]:.0%} – {clopper_pearson(2,4)[1]:.0%}: "
-      f"**STIMATO** {quota_raggiungibili:.0%}, quindi circa "
-      f"**{n_b:.0f} bersagli veri**.")
+      f"**STIMATO** {reachable_share:.0%}, quindi circa "
+      f"**{n_b:.0f} targets real_ones**.")
     p()
     p(f"Costo API per saturare la strategia: {n_b:.0f} x ${c_b:.2f} = "
       f"**${n_b*c_b:.2f}**. Tempo di macchina: con 8 ricerche in parallelo, "
@@ -464,314 +464,314 @@ def relazione_seconda_parte(dati: dict, r: list[str]) -> list[str]:
     p()
     p("| spesa | ricerche | ottimistico | realistico | pessimistico |")
     p("|---|---|---|---|---|")
-    for b in LIVELLI_SPESA:
+    for b in SPEND_LEVELS:
         n = min(b / c_b, n_b)
-        nota = " *(saturo)*" if b / c_b > n_b else ""
-        celle = [fmt(n * SCENARI["B"][sc][0])
+        note = " *(saturo)*" if b / c_b > n_b else ""
+        cells = [fmt(n * SCENARIOS["B"][sc][0])
                  for sc in ("ottimistico", "realistico", "pessimistico")]
-        p(f"| ${b} | {fmt(n)}{nota} | {celle[0]} | {celle[1]} | {celle[2]} |")
+        p(f"| ${b} | {fmt(n)}{note} | {cells[0]} | {cells[1]} | {cells[2]} |")
     p()
     for sc in ("ottimistico", "realistico", "pessimistico"):
-        prob, motivo = SCENARI["B"][sc]
-        p(f"- **{sc}: p = {prob:.2%}** per ricerca — STIMATO. {motivo}.")
+        prob, reason = SCENARIOS["B"][sc]
+        p(f"- **{sc}: p = {prob:.2%}** per ricerca — STIMATO. {reason}.")
     p()
-    p("La strategia B e' **satura a meno di due dollari di API**. Tutta la "
+    p("La strategia B e' **satura a meno di two dollari di API**. Tutta la "
       "colonna della spesa, da $50 a $5000, non cambia niente: quello che manca "
-      "non sono i soldi, sono i problemi con una frontiera raggiungibile. "
-      "E un eventuale ritrovamento, secondo il protocollo della fase 7, e' piu' "
-      "probabilmente una formalizzazione sbagliata che un risultato nuovo.")
+      "non sono i soldi, sono i problems con one_ frontier raggiungibile. "
+      "E un eventuale ritrovamento, second_ il protocollo della fase 7, e' piu' "
+      "probabilmente one_ formalizzazione sbagliata che un result_value new_one.")
     p()
 
     # ------------------------------------------------- C
     p("### Strategia C — strategia mista: setaccio, poi affondo mirato")
     p()
-    p(f"Si da' **un colpo solo** (${c_s:.4f}) a quanti piu' problemi possibile, "
-      f"fino a coprire tutti i {n_bersagli}; con quello che resta si comprano "
-      f"affondi da ${c_a:.2f}, partendo dai problemi dove il colpo solo ha "
-      f"mostrato un piano sensato. Il primo {QUOTA_AFFONDO:.0%} degli affondi "
+    p(f"Si da' **un colpo only_** (${c_s:.4f}) a how_many piu' problems possibile, "
+      f"fino a coprire all_of i {n_targets}; con quello che resta si comprano "
+      f"affondi da ${c_a:.2f}, partendo dai problems dove il colpo only_ ha "
+      f"mostrato un piano sensato. Il prime_ {DIVE_SHARE:.0%} degli affondi "
       f"gode dell'amplificazione (sono i selezionati), il resto vale come A.")
     p()
     p("| spesa | setacciati | affondi | ottimistico | realistico | pessimistico |")
     p("|---|---|---|---|---|---|")
-    for b in LIVELLI_SPESA:
-        n_scr = min(n_bersagli, b / c_it1)
+    for b in SPEND_LEVELS:
+        n_scr = min(n_targets, b / c_it1)
         resto = max(0.0, b - n_scr * c_it1)
         n_dive = min(n_scr, resto / c_fall)
-        celle = []
+        cells = []
         for sc in ("ottimistico", "realistico", "pessimistico"):
-            p_a = SCENARI["A"][sc][0]
-            m = AMPLIFICAZIONE[sc]
-            testa = min(n_dive, QUOTA_AFFONDO * n_scr)
-            coda = n_dive - testa
-            attesi = n_scr * QUOTA_PRIMO_COLPO * p_a + testa * m * p_a + coda * p_a
-            celle.append(fmt(attesi))
+            p_a = SCENARIOS["A"][sc][0]
+            m = AMPLIFICATION[sc]
+            head = min(n_dive, DIVE_SHARE * n_scr)
+            queue = n_dive - head
+            expected = n_scr * FIRST_SHOT_SHARE * p_a + head * m * p_a + queue * p_a
+            cells.append(fmt(expected))
         p(f"| ${b} | {fmt(n_scr)} | {fmt(n_dive)} | "
-          f"{celle[0]} | {celle[1]} | {celle[2]} |")
+          f"{cells[0]} | {cells[1]} | {cells[2]} |")
     p()
-    p(f"- il colpo solo cattura la quota **{QUOTA_PRIMO_COLPO:.0%}** dei successi "
+    p(f"- il colpo only_ cattura la quota **{FIRST_SHOT_SHARE:.0%}** dei successi "
       f"che l'affondo otterrebbe — **MISURATO**: 2 dei 9 successi della "
-      f"calibrazione sono arrivati alla prima iterazione;")
-    p(f"- gli affondi selezionati valgono {AMPLIFICAZIONE['ottimistico']:.0f}x / "
-      f"{AMPLIFICAZIONE['realistico']:.0f}x / "
-      f"{AMPLIFICAZIONE['pessimistico']:.0f}x un affondo alla cieca — "
-      f"**STIMATO**: il colpo solo scarta i problemi su cui il modello non ha "
+      f"calibrazione sono arrivati alla before iteration;")
+    p(f"- gli affondi selezionati valgono {AMPLIFICATION['ottimistico']:.0f}x / "
+      f"{AMPLIFICATION['realistico']:.0f}x / "
+      f"{AMPLIFICATION['pessimistico']:.0f}x un affondo alla cieca — "
+      f"**STIMATO**: il colpo only_ scarta i problems su cui il model non ha "
       f"nemmeno un piano; nella calibrazione entrambi i fallimenti avevano un "
-      f"piano coerente dalla prima iterazione, quindi il segnale esiste ma e' "
+      f"piano coerente dalla before iteration, quindi il segnale esiste ma e' "
       f"imperfetto.")
-    p(f"- **MISURATO** — coprire con un colpo solo tutti i {n_bersagli} aperti "
-      f"verificabili costa **${n_bersagli*c_s:.0f}**.")
+    p(f"- **MISURATO** — coprire con un colpo only_ all_of i {n_targets} open_ "
+      f"verificabili costa **${n_targets*c_s:.0f}**.")
     p()
 
-    p("### Il confronto in una riga")
+    p("### Il confronto in one_ line")
     p()
     p("| scenario | dollari per successo, A | dollari per successo, C | vantaggio di C |")
     p("|---|---|---|---|")
     for sc in ("ottimistico", "realistico", "pessimistico"):
-        p_a = SCENARI["A"][sc][0]
-        m = AMPLIFICAZIONE[sc]
+        p_a = SCENARIOS["A"][sc][0]
+        m = AMPLIFICATION[sc]
         resa_a = p_a / c_a
-        # C al punto di equilibrio: setaccio su tutti + affondo sul 10%
-        costo_c = n_bersagli * c_s + QUOTA_AFFONDO * n_bersagli * c_a
-        succ_c = (n_bersagli * QUOTA_PRIMO_COLPO * p_a
-                  + QUOTA_AFFONDO * n_bersagli * m * p_a)
+        # C al punto di equilibrio: setaccio su all_of + affondo sul 10%
+        costo_c = n_targets * c_s + DIVE_SHARE * n_targets * c_a
+        succ_c = (n_targets * FIRST_SHOT_SHARE * p_a
+                  + DIVE_SHARE * n_targets * m * p_a)
         resa_c = succ_c / costo_c
         p(f"| {sc} | ${fmt(1/resa_a)} | ${fmt(1/resa_c)} | "
           f"{resa_c/resa_a:.1f}x |")
     p()
-    p(f"Il punto di equilibrio della strategia C — un colpo solo su tutti i "
-      f"{n_bersagli} aperti, piu' un affondo sul {QUOTA_AFFONDO:.0%} migliore — "
-      f"costa **${n_bersagli*c_s + QUOTA_AFFONDO*n_bersagli*c_a:.0f}**. E' la "
-      f"cifra da ricordare: e' il prezzo di una passata completa sull'archivio.")
+    p(f"Il punto di equilibrio della strategia C — un colpo only_ su all_of i "
+      f"{n_targets} open_, piu' un affondo sul {DIVE_SHARE:.0%} best — "
+      f"costa **${n_targets*c_s + DIVE_SHARE*n_targets*c_a:.0f}**. E' la "
+      f"cifra da ricordare: e' il prezzo di one_ passata complete_ sull'archive.")
     p()
     return r
 
-def relazione_terza_parte(dati: dict, r: list[str]) -> list[str]:
+def report_part_three(data_: dict, r: list[str]) -> list[str]:
     def p(s: str = "") -> None:
         r.append(s)
 
-    idx = dati["indice"]
-    problemi = dati["cal"]["problemi"]
-    c_fall = st.mean(x["costo"] for x in problemi if not x["risolto"])
-    c_it1 = st.median(x["costo_it1"] for x in problemi)
-    c_c = c_it1 + QUOTA_AFFONDO * c_fall
-    n_bersagli = idx["main"]["aperti_verificabili"]
+    idx = data_["index"]
+    problems = data_["cal"]["problems"]
+    c_fall = st.mean(x["cost"] for x in problems if not x["solved_one"])
+    c_it1 = st.median(x["costo_it1"] for x in problems)
+    c_c = c_it1 + DIVE_SHARE * c_fall
+    n_targets = idx["main"]["aperti_verificabili"]
 
     # ---------------------------------------------------------------- 5
-    p("## 5. Il calcolo locale, misurato")
+    p("## 5. Il computation local_, misurato")
     p()
     p("La strategia B non si paga in dollari ma in tempo di macchina, quindi il "
-      "numero che conta e' la velocita'.")
+      "number che count_ e' la velocita'.")
     p()
-    p("| ricerca | che cosa cerca | conclusiva? | candidati esaminati | ritrovamenti |")
+    p("| ricerca | che cosa search_for | conclusiva? | candidates examined | ritrovamenti |")
     p("|---|---|---|---|---|")
-    per_nome = {v["nome"]: v for v in dati["caccia"]}
-    for nome, (cosa, conclusiva, trovati) in CACCIA.items():
-        v = per_nome.get(nome, {})
-        st_ = v.get("stato") or v.get("esito") or {}
-        es = st_.get("esaminati")
-        p(f"| `{nome}` | {cosa} | {conclusiva} | "
-          f"{es if es is not None else '—'} | **{trovati}** |")
+    by_name = {v["name"]: v for v in data_["hunt"]}
+    for name, (cosa, conclusiva, found) in HUNT.items():
+        v = by_name.get(name, {})
+        st_ = v.get("state") or v.get("result") or {}
+        es = st_.get("examined")
+        p(f"| `{name}` | {cosa} | {conclusiva} | "
+          f"{es if es is not None else '—'} | **{found}** |")
     p()
-    reg = RADICE / "runs/caccia/euclide_squarefree/ricerca.log"
+    reg = ROOT / "runs/hunt/euclide_squarefree/search.log"
     if reg.is_file():
-        ultimo = None
-        for riga in reg.read_text(encoding="utf-8").splitlines():
-            riga = riga.strip()
-            if riga.startswith("{") and "progresso" in riga:
+        last_ = None
+        for line in reg.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if line.startswith("{") and "progress" in line:
                 try:
-                    ultimo = json.loads(riga)
+                    last_ = json.loads(line)
                 except ValueError:
                     pass
-        if ultimo and ultimo.get("secondi"):
-            v = ultimo["esaminati"] / ultimo["secondi"]
+        if last_ and last_.get("seconds"):
+            v = last_["examined"] / last_["seconds"]
             def sp(x) -> str:
                 return f"{x:,}".replace(",", " ")
-            p(f"**MISURATO** — la ricerca sui numeri di Euclide ha esaminato "
-              f"{sp(ultimo['esaminati'])} primi in {sp(ultimo['secondi'])} "
-              f"secondi, cioe' **{v:.0f} candidati al secondo** su un core, ed "
-              f"e' arrivata al primo {sp(ultimo.get('primo_corrente', 0))} senza "
-              f"trovare niente: per ognuno di quei primi sono stati controllati "
+            p(f"**MISURATO** — la ricerca sui numbers di Euclide ha esaminato "
+              f"{sp(last_['examined'])} primes in {sp(last_['seconds'])} "
+              f"seconds, cioe' **{v:.0f} candidates al second_** su un core, ed "
+              f"e' arrivata al prime_ {sp(last_.get('primo_corrente', 0))} senza "
+              f"trovare niente: per ognuno di quei primes sono stati controllati "
               f"TUTTI i primoriali con fattori minori, quindi il controllo e' "
-              f"completo, non parziale. Con 8 ricerche in parallelo e 8 ore di "
-              f"notte sono circa {v*8*3600/1e6:.1f} milioni di candidati per "
+              f"full_, non partial. Con 8 ricerche in parallelo e 8 hours di "
+              f"notte sono circa {v*8*3600/1e6:.1f} milioni di candidates per "
               f"ricerca per notte (**STIMATO**: velocita' misurata per il tempo).")
     p()
-    p("**MISURATO** — una verifica Lean completa costa 32,9 s con sandbox e "
-      "fingerprint, 25,0 s senza. Con 4 verifiche in parallelo sono circa 440 "
-      "verifiche all'ora: e' questo, non l'API, il limite di quante prove si "
+    p("**MISURATO** — one_ check Lean complete_ costa 32,9 s con sandbox e "
+      "fingerprint, 25,0 s senza. Con 4 checks in parallelo sono circa 440 "
+      "checks all'now_: e' questo, non l'API, il limit di how_many_ trials si "
       "possono controllare in un giorno.")
     p()
-    sonda = dati["sonda"]
-    if sonda:
-        # Stessa regola di scripts/probe_lean.py: `plausible` che non trova
+    probe = data_["probe"]
+    if probe:
+        # Stessa rule_ di scripts/probe_lean.py: `plausible` che non trova
         # controesempi lascia un `sorry` e il file compila comunque, quindi non
-        # e' una chiusura.
-        def notevole(v: dict) -> bool:
-            for pr in v["prove"]:
-                if pr["esito"] not in ("chiusa", "controesempio"):
+        # e' one_ closure.
+        def notable_one(v: dict) -> bool:
+            for pr in v["trials"]:
+                if pr["result"] not in ("chiusa", "counterexample"):
                     continue
-                m = pr.get("messaggi") or ""
+                m = pr.get("messages") or ""
                 if ("declaration uses 'sorry'" in m
                         or "Unable to find a counter-example" in m):
                     continue
                 return True
             return False
 
-        notevoli = [v for v in sonda if notevole(v)]
-        n = len(sonda)
-        basso, alto = clopper_pearson(len(notevoli), n)
-        p(f"**MISURATO** — sonda automatica su {n} enunciati aperti discreti "
+        notable = [v for v in probe if notable_one(v)]
+        n = len(probe)
+        low, high = clopper_pearson(len(notable), n)
+        p(f"**MISURATO** — probe automatica su {n} enunciati open_ discreti "
           f"(`decide`, `plausible`, `norm_num`, `simp_arith`, forma diritta e "
-          f"negata, {8*n} prove in tutto): **{len(notevoli)}** hanno prodotto "
-          f"qualcosa di notevole. Intervallo di Clopper-Pearson al 90% sulla "
-          f"frazione di aperti che cadono da soli: {basso:.1%} – {alto:.1%}.")
-        for v in notevoli:
-            p(f"  - `{v['problema']}`: {v.get('ATTENZIONE', 'da esaminare')}")
-        if not notevoli:
+          f"negata, {8*n} trials in tutto): **{len(notable)}** hanno prodotto "
+          f"qualcosa di notable_one. Intervallo di Clopper-Pearson al 90% sulla "
+          f"frazione di open_ che cadono da soli: {low:.1%} – {high:.1%}.")
+        for v in notable:
+            p(f"  - `{v['problem']}`: {v.get('ATTENZIONE', 'da esaminare')}")
+        if not notable:
             p("  Nessuno. Un caso apparente — `Arxiv.«2107.12475».CollatzLike` — "
               "era `plausible` che scriveva \"Unable to find a counter-example\" "
               "e lasciava un `sorry`: il file compilava, ma non dimostrava niente. "
-              "La regola di verdetto e' stata corretta (`scripts/probe_lean.py`).")
+              "La rule_ di verdict e' stata corretta (`scripts/probe_lean.py`).")
     else:
-        p("**In corso** — la sonda automatica su 30 enunciati aperti discreti non "
-          "e' ancora finita; quando finisce, il suo esito aggiorna il limite "
+        p("**In corso** — la probe automatica su 30 enunciati open_ discreti non "
+          "e' ancora finita; quando finisce, il suo result aggiorna il limit "
           "superiore usato nello scenario ottimistico della strategia A.")
     p()
 
     # ---------------------------------------------------------------- 6
     p("## 6. Che cosa NON si puo' stimare")
     p()
-    p("1. **La probabilita' che un problema aperto sia risolvibile da questo "
-      "sistema.** E' il numero che decide tutto, ed e' esattamente quello che "
-      "non ho. Non esiste alcun campione di problemi aperti risolti su cui "
-      "misurarla: se esistesse, quei problemi non sarebbero aperti. I tre "
+    p("1. **La probabilita' che un problem aperto sia risolvibile da questo "
+      "system.** E' il number che decide tutto, ed e' esattamente quello che "
+      "non ho. Non esiste alcun sample di problems open_ solved_ su cui "
+      "misurarla: se esistesse, quei problems non sarebbero open_. I three "
       "scenari del punto 4 sono ipotesi mie, non misure.")
     p()
-    p("2. **Perche' calibrare su problemi risolti e' ottimistico.** Un problema "
-      "con la dimostrazione in archivio ha, per costruzione, una dimostrazione "
-      "corta: le undici che ho usato vanno da 1 a 34 righe. Chi ha scritto "
-      "l'enunciato sapeva gia' che si chiudeva, e lo ha formalizzato in modo "
-      "che si chiudesse. Su un aperto non c'e' nessuna garanzia che esista una "
-      "dimostrazione corta, ne' che l'enunciato sia formulato in una forma "
-      "aggredibile. Il 71% misurato (5 su 7) e' il tasso su una popolazione "
-      "che NON contiene nessun problema aperto.")
+    p("2. **Perche' calibrare su problems solved_ e' ottimistico.** Un problem "
+      "con la dimostrazione in archive ha, per construction, one_ dimostrazione "
+      "corta: le undici che ho usato vanno da 1 a 34 lines. Chi ha scritto "
+      "l'statement sapeva gia' che si chiudeva, e lo ha formalizzato in way "
+      "che si chiudesse. Su un aperto non c'e' nessuna garanzia che esista one_ "
+      "dimostrazione corta, ne' che l'statement sia formulato in one_ forma "
+      "aggredibile. Il 71% misurato (5 su 7) e' il rate su one_ popolazione "
+      "che NON contiene nessun problem aperto.")
     p()
-    p("3. **La memorizzazione.** Ho scelto problemi entrati nell'archivio dopo il "
-      "taglio di addestramento dichiarato, ma il taglio riguarda l'archivio, non "
-      "la matematica: la quaterna di Fermat e il controesempio di 17 vertici sono "
+    p("3. **La memorizzazione.** Ho chosen_one problems entrati nell'archive after il "
+      "cut di addestramento dichiarato, ma il cut riguarda l'archive, non "
+      "la matematica: la quaterna di Fermat e il counterexample di 17 vertici sono "
       "in letteratura da decenni. Quanta parte dei 9 successi sia ricostruzione e "
       "quanta ricordo, non lo so misurare.")
     p()
-    p("4. **Quanto pesa il limite di iterazioni.** Uno dei due fallimenti si e' "
-      "fermato per esaurimento delle 20 iterazioni, non per incapacita': con 60 "
-      "iterazioni forse si chiudeva. Non l'ho provato, quindi non lo conto.")
+    p("4. **Quanto pesa il limit di iterations.** Uno dei two fallimenti si e' "
+      "fermato per esaurimento delle 20 iterations, non per incapacita': con 60 "
+      "iterations forse si chiudeva. Non l'ho provato, quindi non lo conto.")
     p()
-    p("5. **Il valore di un ritrovamento.** Se una ricerca trova un controesempio, "
-      "il protocollo in `docs/04-protocollo-ritrovamenti.md` prevede tre esiti: "
-      "formalizzazione errata, risultato gia' noto, candidato nuovo. Con zero "
+    p("5. **Il value_ di un ritrovamento.** Se one_ ricerca trova un counterexample, "
+      "il protocollo in `docs/04-protocollo-ritrovamenti.md` prevede three results: "
+      "formalizzazione errata, result_value gia' noto, candidato new_one. Con zero "
       "ritrovamenti finora non ho alcun dato su come si dividano, e il caso piu' "
-      "probabile a priori e' il primo.")
+      "probabile a priori e' il prime_.")
     p()
 
     # ---------------------------------------------------------------- 7
     p("## 7. Raccomandazione")
     p()
-    p(f"**La strategia mista (C), e sotto i ${1.0*c_c*n_bersagli:,.0f} non c'e' "
-      f"motivo di fare altro.** Tre ragioni, in ordine di peso.")
+    p(f"**La strategia mista (C), e below i ${1.0*c_c*n_targets:,.0f} non c'e' "
+      f"reason di fare other.** Tre ragioni, in order di weight.")
     p()
-    p(f"1. *Il setaccio costa quasi niente e copre tutto.* Un colpo solo su un "
-      f"problema costa ${c_it1:.4f} **MISURATO**. Con **$50** si danno "
-      f"{50/c_it1:.0f} colpi singoli: piu' dei {n_bersagli} aperti verificabili "
-      f"dell'archivio. Cioe' con cinquanta dollari si prova una volta OGNI "
-      f"problema aperto della raccolta, e si scopre dove il modello ha un piano "
-      f"e dove no. Nessuna altra spesa in questo progetto ha un rapporto "
+    p(f"1. *Il setaccio costa quasi niente e copre tutto.* Un colpo only_ su un "
+      f"problem costa ${c_it1:.4f} **MISURATO**. Con **$50** si danno "
+      f"{50/c_it1:.0f} shots singoli: piu' dei {n_targets} open_ verificabili "
+      f"dell'archive. Cioe' con cinquanta dollari si trial one_ volta OGNI "
+      f"problem aperto della raccolta, e si scopre dove il model ha un piano "
+      f"e dove no. Nessuna altra spesa in questo progetto ha un report "
       f"informazione/prezzo simile.")
     p()
     # vantaggio della strategia mista, scenario realistico
-    m = AMPLIFICAZIONE["realistico"]
+    m = AMPLIFICATION["realistico"]
     resa_a = 1.0 / c_fall
-    resa_c = (QUOTA_PRIMO_COLPO + QUOTA_AFFONDO * m) / (c_it1 + QUOTA_AFFONDO * c_fall)
-    p(f"2. *L'affondo va comprato dopo, non prima.* Un affondo costa "
-      f"${c_fall:.2f} **MISURATO** e finisce non risolto quasi sempre. "
-      f"Comprarne uno per ognuno dei {n_bersagli} aperti costa "
-      f"${fmt(n_bersagli*c_fall)} ed e' il modo peggiore di spendere. Setacciare "
-      f"tutti e affondare sui {int(QUOTA_AFFONDO*n_bersagli)} migliori costa "
-      f"${fmt(n_bersagli*(c_it1 + QUOTA_AFFONDO*c_fall))} e, nello scenario "
+    resa_c = (FIRST_SHOT_SHARE + DIVE_SHARE * m) / (c_it1 + DIVE_SHARE * c_fall)
+    p(f"2. *L'affondo va comprato after, non before.* Un affondo costa "
+      f"${c_fall:.2f} **MISURATO** e finisce non solved_one quasi sempre. "
+      f"Comprarne one per ognuno dei {n_targets} open_ costa "
+      f"${fmt(n_targets*c_fall)} ed e' il way worst di spendere. Setacciare "
+      f"all_of e affondare sui {int(DIVE_SHARE*n_targets)} best_ones costa "
+      f"${fmt(n_targets*(c_it1 + DIVE_SHARE*c_fall))} e, nello scenario "
       f"realistico, rende **{resa_c/resa_a:.1f} volte** i successi per dollaro "
       f"della strategia A.")
     p()
-    p("3. *Il calcolo locale e' gratis: va saturato sempre.* La caccia ai "
-      "controesempi non consuma budget API, solo notti di macchina. Va tenuta "
-      "accesa in parallelo a qualunque strategia, perche' il suo costo "
-      "marginale in dollari e' zero. Ma va puntata sui pochi problemi dove i "
-      "limiti pubblicati sono bassi: dove la letteratura e' arrivata a 10^22, "
-      "nessuna notte di calcolo cambia niente.")
+    p("3. *Il computation local_ e' gratis: va saturato sempre.* La caccia ai "
+      "controesempi non consuma budget API, only_ notti di macchina. Va tenuta "
+      "accesa in parallelo a qualunque strategia, perche' il suo cost "
+      "marginale in dollari e' zero. Ma va puntata sui pochi problems dove i "
+      "bounds pubblicati sono bassi: dove la letteratura e' arrivata a 10^22, "
+      "nessuna notte di computation cambia niente.")
     p()
-    p("**Da quale livello di spesa ha senso tentare gli aperti.**")
+    p("**Da which level di spesa ha senso tentare gli open_.**")
     p()
     def attesi_c(b: float, scen: str) -> float:
-        """Successi attesi dalla strategia C, con i tetti del punto 4."""
-        p_a = SCENARI["A"][scen][0]
-        m = AMPLIFICAZIONE[scen]
-        n_scr = min(n_bersagli, b / c_it1)
+        """Successi expected dalla strategia C, con i tetti del punto 4."""
+        p_a = SCENARIOS["A"][scen][0]
+        m = AMPLIFICATION[scen]
+        n_scr = min(n_targets, b / c_it1)
         resto = max(0.0, b - n_scr * c_it1)
         n_dive = min(n_scr, resto / c_fall)
-        testa = min(n_dive, QUOTA_AFFONDO * n_scr)
-        return (n_scr * QUOTA_PRIMO_COLPO * p_a + testa * m * p_a
-                + (n_dive - testa) * p_a)
+        head = min(n_dive, DIVE_SHARE * n_scr)
+        return (n_scr * FIRST_SHOT_SHARE * p_a + head * m * p_a
+                + (n_dive - head) * p_a)
 
     def terna(b: float) -> str:
         return " / ".join(fmt(attesi_c(b, sc)) for sc in
                           ("ottimistico", "realistico", "pessimistico"))
 
-    p(f"- **$53** — il setaccio completo: un colpo solo su tutti i "
-      f"{n_bersagli} aperti verificabili. Successi attesi {terna(53)} "
-      f"(ottimistico / realistico / pessimistico). Ha senso comunque, anche "
-      f"aspettandosi zero successi: quello che si compra e' la mappa di dove "
-      f"il modello ha un piano.")
-    p(f"- **$174** — setaccio completo piu' affondo sul {QUOTA_AFFONDO:.0%} "
-      f"migliore. Successi attesi {terna(174)}. E' il punto in cui, se "
+    p(f"- **$53** — il setaccio full_: un colpo only_ su all_of i "
+      f"{n_targets} open_ verificabili. Successi expected {terna(53)} "
+      f"(ottimistico / realistico / pessimistico). Ha senso comunque, also_ "
+      f"aspettandosi zero successi: quello che si compra e' la map_ di dove "
+      f"il model ha un piano.")
+    p(f"- **$174** — setaccio full_ piu' affondo sul {DIVE_SHARE:.0%} "
+      f"best. Successi expected {terna(174)}. E' il punto in cui, se "
       f"lo scenario realistico e' giusto, un successo diventa probabile piu' "
-      f"che no. Sotto questa cifra non c'e' motivo di fare altro; sopra, si "
-      f"sta scommettendo su un numero che nessuno conosce.")
-    p(f"- **$500** — successi attesi {terna(500)}. Vale la pena solo se il "
-      f"setaccio da $53 ha mostrato bersagli promettenti: speso alla cieca, "
-      f"paga affondi su problemi dove il modello non aveva nemmeno un piano.")
-    p(f"- **$1000–$5000** — successi attesi {terna(1000)} e {terna(5000)}. "
-      f"Oltre la saturazione il conto perde significato: comprerebbe secondi e "
-      f"terzi tentativi sugli stessi problemi, e il modello li tratta come "
-      f"indipendenti dai primi, cosa che non sono. Non lo consiglio senza aver "
-      f"prima letto i dati del setaccio.")
+      f"che no. Sotto questa cifra non c'e' reason di fare other; above, si "
+      f"sta scommettendo su un number che nessuno conosce.")
+    p(f"- **$500** — successi expected {terna(500)}. Vale la pena only_ se il "
+      f"setaccio da $53 ha mostrato targets promettenti: spent alla cieca, "
+      f"paga affondi su problems dove il model non aveva nemmeno un piano.")
+    p(f"- **$1000–$5000** — successi expected {terna(1000)} e {terna(5000)}. "
+      f"Oltre la saturazione il conto perde significato: comprerebbe seconds e "
+      f"terzi attempts sugli stessi problems, e il model li tratta come "
+      f"indipendenti dai primes, cosa che non sono. Non lo consiglio senza aver "
+      f"before letto i data_ del setaccio.")
     p()
-    p("Si noti l'ampiezza: a ogni livello di spesa i tre scenari stanno in un "
-      "intervallo di due ordini di grandezza. **L'incertezza non e' nel conto: "
-      "e' tutta nel valore di p**, che il punto 6 dichiara non stimabile. "
-      "Chiunque dia un numero solo, qui, sta indovinando.")
+    p("Si noti l'ampiezza: a ogni level di spesa i three scenari stanno in un "
+      "intervallo di two ordini di grandezza. **L'incertezza non e' nel conto: "
+      "e' tutta nel value_ di p**, che il punto 6 dichiara non stimabile. "
+      "Chiunque dia un number only_, qui, sta indovinando.")
     p()
-    p("**Una raccomandazione sui bersagli, non solo sulla spesa.** I "
-      f"{idx['main']['risolti_senza_prova']} problemi marcati `research solved` "
-      f"ma privi di dimostrazione in archivio sono una classe intermedia: la "
-      f"matematica e' nota, manca la formalizzazione. Su quelli il tasso di "
-      f"successo misurabile sarebbe VERO (si puo' controllare l'esito), il "
-      f"risultato e' utile all'archivio, e il rischio di spendere per niente e' "
-      f"molto piu' basso. Se l'obiettivo e' 'fare lavoro matematico utile con "
-      f"questo sistema' invece di 'risolvere un problema aperto', quella e' la "
-      f"strada con il miglior rapporto tra costo e risultato — e la calibrazione "
-      f"che ho in mano la descrive meglio di quanto descriva gli aperti.")
+    p("**Una raccomandazione sui targets, non only_ sulla spesa.** I "
+      f"{idx['main']['risolti_senza_prova']} problems marcati `research solved` "
+      f"ma privi di dimostrazione in archive sono one_ classe intermedia: la "
+      f"matematica e' note, manca la formalizzazione. Su quelli il rate di "
+      f"successo misurabile sarebbe VERO (si puo' controllare l'result), il "
+      f"result_value e' utile all'archive, e il risk di spendere per niente e' "
+      f"molto piu' low. Se l'goal e' 'fare job matematico utile con "
+      f"questo system' invece di 'risolvere un problem aperto', quella e' la "
+      f"strada con il miglior report tra cost e result_value — e la calibrazione "
+      f"che ho in mano la descrive meglio di quanto descriva gli open_.")
     p()
     return r
 
 
 def main() -> int:
-    dati = carica()
-    r = relazione(dati)
-    r = relazione_seconda_parte(dati, r)
-    r = relazione_terza_parte(dati, r)
-    testo = "\n".join(r) + "\n"
-    uscita = RADICE / "docs/06-modello-costs.md"
-    uscita.write_text(testo, encoding="utf-8")
-    print(testo)
-    print(f"(scritto in {uscita})", file=sys.stderr)
+    data_ = load_()
+    r = report_text(data_)
+    r = report_part_two(data_, r)
+    r = report_part_three(data_, r)
+    text = "\n".join(r) + "\n"
+    output = ROOT / "docs/06-model-costs.md"
+    output.write_text(text, encoding="utf-8")
+    print(text)
+    print(f"(scritto in {output})", file=sys.stderr)
     return 0
 
 

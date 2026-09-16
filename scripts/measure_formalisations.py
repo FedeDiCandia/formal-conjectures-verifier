@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """
-Legge il rapporto di un giro dell'agent sulle prove note e ne ricava i numeri
+Legge il report di un giro dell'agent sulle trials note e ne ricava i numbers
 del punto 2 (misura) e del punto 3 (proiezione).
 
-Ogni numero viene dal rapporto JSON scritto da agent/agent.py o dall'elenco dei
-candidati di scripts/select_formalisations.py: niente ricopiato a mano.
+Ogni number viene dal report JSON scritto da agent/agent.py o dall'listing dei
+candidates di scripts/select_formalisations.py: niente ricopiato a mano.
 
-LIMITE DICHIARATO DI QUESTO GIRO: e' stato lanciato con `--silenzioso`, quindi
-il registro non contiene i messaggi di errore di Lean. La diagnosi dei fallimenti
-si fa sulla natura delle verifiche consegnate (non compila / compila con un buco /
-enunciato diverso) e sul riassunto del ragionamento del modello, iterazione per
-iterazione, che il rapporto conserva.
+LIMIT DICHIARATO DI QUESTO GIRO: e' state lanciato con `--silenzioso`, quindi
+il log_ non contiene i messages di error di Lean. La diagnosi dei fallimenti
+si fa sulla kind delle checks consegnate (non compila / compila con un buco /
+statement diverso) e sul riassunto del reasoning del model, iteration per
+iteration, che il report conserva.
 
 Uso:
   .venv/bin/python scripts/measure_formalisations.py runs/formalizzazioni-lotto20.json
@@ -24,9 +24,9 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-CANDIDATI = ROOT / "research_data" / "formalizzazioni_candidati.json"
+CANDIDATES = ROOT / "research_data" / "formalizzazioni_candidati.json"
 
-#: segni, nel ragionamento del modello, di un ostacolo di API e non di matematica
+#: segni, nel reasoning del model, di un ostacolo di API e non di matematica
 _API = re.compile(r"unknown (identifier|constant)|not found|doesn't exist|does not exist|"
                   r"deprecated|renamed|failed to synthesize|instance|coercion|cast|"
                   r"Mathlib (lemma|name|API)|lemma name|exact\?|apply\?|simp lemma|"
@@ -38,109 +38,109 @@ _MATE = re.compile(r"(don't|do not|can't|cannot) (see|find) (a|the|how)|need(s)?
                    r"false as stated|misformaliz", re.I)
 
 
-def fascia(c: dict) -> str:
-    m = set(c["motivi"])
-    duro = m & {"fonte: articolo", "fonte: teorema profondo",
-                "enunciato: infinito/analisi", "calcolo grande"}
-    if "fonte: prova corta" in m and not duro:
+def band(c: dict) -> str:
+    m = set(c["reasons"])
+    hard = m & {"source_: articolo", "source_: theorem_ profondo",
+                "statement: infinito/analisi", "computation grande"}
+    if "source_: trial corta" in m and not hard:
         return "A"
-    if c["categoria"] == "textbook" and not duro:
+    if c["categoria"] == "textbook" and not hard:
         return "B"
-    if not duro:
+    if not hard:
         return "C"
-    if duro == {"fonte: articolo"}:
+    if hard == {"source_: articolo"}:
         return "D"
     return "E"
 
 
 DESCRIZIONE = {
-    "A": "la fonte dice che la prova e' corta, niente di duro",
-    "B": "textbook, niente di duro",
+    "A": "la source_ dice che la trial e' corta, niente di hard",
+    "B": "textbook, niente di hard",
     "C": "research solved senza segnali",
-    "D": "prova citata da un articolo",
-    "E": "segnali duri (teorema profondo, infinito/analisi, calcolo grande)",
+    "D": "trial citata da un articolo",
+    "E": "segnali duri (theorem_ profondo, infinito/analisi, computation grande)",
 }
 
 
 def ostacolo(t: dict) -> str:
-    """Matematica, API di Mathlib, o indeterminato, dal ragionamento e dalle verifiche."""
-    if t["risolto"]:
+    """Matematica, API di Mathlib, o indeterminato, dal reasoning e dalle checks."""
+    if t["solved_one"]:
         return "-"
     if not t.get("iterazioni_dettaglio"):
-        return (f"non determinabile dal rapporto ({t.get('fonte', 'niente dettaglio')}); "
-                f"{t['esplorazioni']} esplorazioni, {t['verifiche']} verifiche")
-    testo =" ".join(it.get("ragionamento", "") for it in t["iterazioni_dettaglio"])
-    api, mate = len(_API.findall(testo)), len(_MATE.findall(testo))
-    nat = t.get("verifiche_per_natura") or {}
-    if not t["verifiche"]:
+        return (f"non determinabile dal report ({t.get('source_', 'niente detail')}); "
+                f"{t['explorations']} explorations, {t['checks']} checks")
+    text =" ".join(it.get("reasoning", "") for it in t["iterazioni_dettaglio"])
+    api, mate = len(_API.findall(text)), len(_MATE.findall(text))
+    nat = t.get("verifications_by_kind") or {}
+    if not t["checks"]:
         base = "nessun candidato consegnato"
     elif nat.get("buco_o_assioma") or nat.get("enunciato_sbagliato"):
-        base = "ha compilato, la prova non c'era"
+        base = "ha compilato, la trial non c'era"
     else:
-        base = "i candidati non compilavano"
+        base = "i candidates non compilavano"
     if api > 2 * max(mate, 1):
-        verdetto = "API di Mathlib"
+        verdict = "API di Mathlib"
     elif mate > api:
-        verdetto = "matematica"
+        verdict = "matematica"
     else:
-        verdetto = "misto"
-    return f"{verdetto} ({base}; segni API {api}, segni matematica {mate})"
+        verdict = "misto"
+    return f"{verdict} ({base}; segni API {api}, segni matematica {mate})"
 
 
 def main() -> int:
-    # Piu' rapporti si sommano, nell'ordine dato: il giro del 12 settembre e' stato
-    # interrotto da un errore di rete ed e' ripreso in un secondo processo.
-    rapporti = [json.loads(Path(a).read_text(encoding="utf-8")) for a in sys.argv[1:]]
-    rapporto = rapporti[0]
-    candidati = json.loads(CANDIDATI.read_text(encoding="utf-8"))
-    per_nome = {c["problema"]: c for c in candidati}
-    tentativi = [t for r in rapporti for t in r["tentativi"]]
-    speso = sum(r["speso"] for r in rapporti)
-    non_registrato = sum(1.0 for r in rapporti if r.get("interruzione"))
+    # Piu' reports si sommano, nell'order dato: il giro del 12 settembre e' state
+    # interrotto da un error di rete ed e' ripreso in un second_ processo.
+    reports = [json.loads(Path(a).read_text(encoding="utf-8")) for a in sys.argv[1:]]
+    report = reports[0]
+    candidates = json.loads(CANDIDATES.read_text(encoding="utf-8"))
+    by_name = {c["problem"]: c for c in candidates}
+    attempts = [t for r in reports for t in r["attempts"]]
+    spent = sum(r["spent"] for r in reports)
+    non_registrato = sum(1.0 for r in reports if r.get("interruzione"))
 
-    print(f"modello {rapporto['modello']}, effort {rapporto['effort']}, istruzioni "
-          f"{rapporto['istruzioni']}, tetto ${rapporto['tetto_problema']:.2f}")
-    print(f"spesa misurata: ${speso:.4f}" + (
-        f"  + al massimo ${non_registrato:.2f} non registrati (tentativi interrotti "
-        f"dalla rete: {', '.join(r['interruzione']['problema'] for r in rapporti if r.get('interruzione'))})"
+    print(f"model {report['model']}, effort {report['effort']}, istruzioni "
+          f"{report['istruzioni']}, cap ${report['problem_cap']:.2f}")
+    print(f"spesa misurata: ${spent:.4f}" + (
+        f"  + al maximum ${non_registrato:.2f} non registrati (attempts interrotti "
+        f"dalla rete: {', '.join(r['interruzione']['problem'] for r in reports if r.get('interruzione'))})"
         if non_registrato else ""))
     print()
-    print(f"{'#':>2} {'fascia':6} {'esito':11} {'costo':>7} {'it':>3} {'ver':>3}  problema")
-    for i, t in enumerate(tentativi, 1):
-        f = fascia(per_nome[t["problema"]]) if t["problema"] in per_nome else "?"
-        print(f"{i:2d} {f:6} {'ACCETTATO' if t['risolto'] else 'non chiuso':11} "
-              f"${t['costo']:6.3f} {t['iterazioni']:3d} {t['verifiche']:3d}  {t['problema']}")
-        if not t["risolto"]:
-            print(f"{'':26}{t['motivo'][:90]}")
+    print(f"{'#':>2} {'band':6} {'result':11} {'cost':>7} {'it':>3} {'ver':>3}  problem")
+    for i, t in enumerate(attempts, 1):
+        f = band(by_name[t["problem"]]) if t["problem"] in by_name else "?"
+        print(f"{i:2d} {f:6} {'ACCETTATO' if t['solved_one'] else 'non chiuso':11} "
+              f"${t['cost']:6.3f} {t['iterations']:3d} {t['checks']:3d}  {t['problem']}")
+        if not t["solved_one"]:
+            print(f"{'':26}{t['reason'][:90]}")
             print(f"{'':26}ostacolo: {ostacolo(t)}")
 
-    risolti = [t for t in tentativi if t["risolto"]]
-    # la spesa dei tentativi interrotti non e' registrata: si conta al suo massimo
-    spesa = speso + non_registrato
-    print(f"\nACCETTATI DAL VERIFICATORE: {len(risolti)} su {len(set(t['problema'] for t in tentativi))} "
-          f"problemi tentati")
-    if risolti:
-        print(f"costo per successo (spesa totale / successi): ${spesa / len(risolti):.3f}"
-              + (" (con la spesa non registrata al massimo)" if non_registrato else ""))
-        print(f"costo medio di un successo, da solo: "
-              f"${sum(t['costo'] for t in risolti) / len(risolti):.3f}")
-    falliti = [t for t in tentativi if not t["risolto"]]
-    if falliti:
-        print(f"costo medio di un fallimento: ${sum(t['costo'] for t in falliti) / len(falliti):.3f}")
+    solved_ = [t for t in attempts if t["solved_one"]]
+    # la spesa dei attempts interrotti non e' registrata: si count_ al suo maximum
+    spesa = spent + non_registrato
+    print(f"\nACCETTATI DAL VERIFICATORE: {len(solved_)} su {len(set(t['problem'] for t in attempts))} "
+          f"problems tentati")
+    if solved_:
+        print(f"cost per successo (spesa total / successi): ${spesa / len(solved_):.3f}"
+              + (" (con la spesa non registrata al maximum)" if non_registrato else ""))
+        print(f"cost mean_ di un successo, da only_: "
+              f"${sum(t['cost'] for t in solved_) / len(solved_):.3f}")
+    failed_ = [t for t in attempts if not t["solved_one"]]
+    if failed_:
+        print(f"cost mean_ di un failure: ${sum(t['cost'] for t in failed_) / len(failed_):.3f}")
 
     # --- proiezione
-    tasso: dict[str, tuple[int, int]] = {}
-    for t in tentativi:
-        if t["problema"] in per_nome:
-            f = fascia(per_nome[t["problema"]])
-            ok, n = tasso.get(f, (0, 0))
-            tasso[f] = (ok + t["risolto"], n + 1)
-    conta = collections.Counter(fascia(c) for c in candidati)
+    rate: dict[str, tuple[int, int]] = {}
+    for t in attempts:
+        if t["problem"] in by_name:
+            f = band(by_name[t["problem"]])
+            ok, n = rate.get(f, (0, 0))
+            rate[f] = (ok + t["solved_one"], n + 1)
+    count_ = collections.Counter(band(c) for c in candidates)
     print("\nPROIEZIONE PER FASCIA")
     for f in "ABCDE":
-        ok, n = tasso.get(f, (0, 0))
+        ok, n = rate.get(f, (0, 0))
         misurato = f"{ok}/{n} misurati" if n else "non misurata"
-        print(f"  {f} {conta[f]:5d} candidati  {misurato:15s}  {DESCRIZIONE[f]}")
+        print(f"  {f} {count_[f]:5d} candidates  {misurato:15s}  {DESCRIZIONE[f]}")
     return 0
 
 

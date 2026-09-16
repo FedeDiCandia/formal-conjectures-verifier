@@ -1,22 +1,22 @@
 """
-L'attacco vero: seme invariante sotto un gruppo, poi salita a gradini.
+L'attacco vero: seed invariante below un group, poi salita a steps_.
 
 I TRE MOTORI, E PERCHÉ SERVONO TUTTI E TRE (misurato l'11-12 settembre 2026)
 ---------------------------------------------------------------------------
-  * **orbite** — pareggia subito dove il record è invariante sotto un gruppo
+  * **orbits** — pareggia subito dove il record è invariante below un group
     (A(19,6,5) = 76 in 0,8 s) e si blocca dove non lo è: su A(17,6,6) arriva a 85
-    contro 113, perché 113 non è somma di taglie di orbite sotto Z17.
-  * **ricerca locale da parole casuali** — 1 cella pareggiata su 34, residui di
-    69–441 violazioni. Lo spazio è troppo grande per partire dal nulla.
-  * **conflitti precalcolati** — la matrice dei conflitti si costruisce una volta, e
-    una mossa costa una somma di N interi invece di N·m conteggi di bit. Da migliaia
-    di mosse a centinaia di migliaia.
+    against 113, perché 113 non è total_sum di sizes di orbits below Z17.
+  * **ricerca local_ da words casuali** — 1 cell pareggiata su 34, residui di
+    69–441 violations. Lo spazio è troppo grande per partire dal nulla.
+  * **conflitti precalcolati** — la matrice dei conflitti si costruisce one_ volta, e
+    one_ mossa costa one_ total_sum di N interi invece di N·m conteggi di bit. Da migliaia
+    di moves a centinaia di migliaia.
 
-Questo script li mette in fila come li mette in fila la letteratura: **il gruppo dà
-la struttura, la salita a gradini la estende una parola alla volta.** Ogni gradino
-parte da un codice valido, quindi la riparazione deve sistemare poco.
+Questo script li mette in fila come li mette in fila la letteratura: **il group dà
+la struttura, la salita a steps_ la estende one_ word alla volta.** Ogni gradino
+parte da un code valid, quindi la riparazione deve sistemare poco.
 
-Un successo passa dal giudice lento di `codes.py` e poi da `docs/04` per intero.
+Un successo passa dal giudice slow_ di `codes.py` e poi da `docs/04` per intero.
 """
 from __future__ import annotations
 
@@ -28,89 +28,89 @@ from math import comb
 from multiprocessing import Pool
 from pathlib import Path
 
-RADICE = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(RADICE / "search"))
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "search"))
 
-from codes import verifica                                  # noqa: E402
-from hybrid import estendi, miglior_invariante                # noqa: E402
-from push import bersagli                                   # noqa: E402
-from tabu import _tutte_le_parole                             # noqa: E402
-from fast import TETTO_MEMORIA_BYTE, sali                    # noqa: E402
+from codes import check                                  # noqa: E402
+from hybrid import extend, best_invariant                # noqa: E402
+from push import targets                                   # noqa: E402
+from tabu import _all_words                             # noqa: E402
+from fast import MEMORY_CAP_BYTES, climb                    # noqa: E402
 
-DATI = RADICE / "research_data"
+DATA_DIR = ROOT / "research_data"
 
 
-def una(argomenti) -> dict:
-    n, d, w, voce, mosse, riavvii = argomenti
+def one_(arguments) -> dict:
+    n, d, w, entry, moves, restarts = arguments
     t0 = time.time()
-    esito = {"cella": f"A({n},{d},{w})", "pubblicato": voce["inferiore"],
-             "superiore": voce["superiore"], "fonte": voce["fonte"],
+    result = {"cell": f"A({n},{d},{w})", "pubblicato": entry["inferiore"],
+             "superiore": entry["superiore"], "source_": entry["source_"],
              "candidate": comb(n, w)}
     N = comb(n, w)
-    if N * ((N + 7) // 8) > TETTO_MEMORIA_BYTE:
-        esito["saltata"] = f"matrice da {N * ((N + 7) // 8) / 1e9:.1f} GB"
-        return esito
+    if N * ((N + 7) // 8) > MEMORY_CAP_BYTES:
+        result["saltata"] = f"matrice da {N * ((N + 7) // 8) / 1e9:.1f} GB"
+        return result
     try:
-        seme, gruppo = miglior_invariante(n, d, w, riavvii=riavvii)
-        tutte = _tutte_le_parole(n, w)
-        seme = estendi(seme, tutte, d)
-        esito.update({"invariante": len(seme), "gruppo": gruppo})
-        r = sali(n, d, w, seme, voce["inferiore"] + 1,
-                 mosse_per_gradino=mosse, seme=1, tentativi=3)
-        esito.update({"raggiunto": r["dimensione"], "valido": r["valido"],
-                      "gradini_riusciti": sum(1 for v in r["gradini"].values()
-                                              if v == "riuscito")})
-        if r["dimensione"] > voce["inferiore"] and r["valido"]:
-            g = verifica(r["parole"], n, d, w)
-            esito["giudice_lento"] = g.ok
+        seed, group = best_invariant(n, d, w, restarts=restarts)
+        all_of = _all_words(n, w)
+        seed = extend(seed, all_of, d)
+        result.update({"invariante": len(seed), "group": group})
+        r = climb(n, d, w, seed, entry["inferiore"] + 1,
+                 moves_per_step=moves, seed=1, attempts=3)
+        result.update({"reached": r["size"], "valid": r["valid"],
+                      "gradini_riusciti": sum(1 for v in r["steps_"].values()
+                                              if v == "succeeded")})
+        if r["size"] > entry["inferiore"] and r["valid"]:
+            g = check(r["words"], n, d, w)
+            result["giudice_lento"] = g.ok
             if g.ok:
-                esito["parole"] = r["parole"]
+                result["words"] = r["words"]
     except MemoryError as e:
-        esito["saltata"] = str(e)
-    esito["secondi"] = round(time.time() - t0, 1)
-    return esito
+        result["saltata"] = str(e)
+    result["seconds"] = round(time.time() - t0, 1)
+    return result
 
 
 def main() -> int:
-    mosse = int(sys.argv[1]) if len(sys.argv) > 1 else 150_000
-    quanti = int(sys.argv[2]) if len(sys.argv) > 2 else 34
-    massimo = int(sys.argv[3]) if len(sys.argv) > 3 else 120_000
-    riavvii = int(sys.argv[4]) if len(sys.argv) > 4 else 250
-    lista = bersagli(massimo, quanti)
-    print(f"{len(lista)} celle con divario aperto. Seme invariante + salita a "
-          f"gradini, {mosse:,} mosse per gradino.\n")
-    lavori = [(n, d, w, v, mosse, riavvii) for _, n, d, w, v in lista]
-    esiti = []
-    with Pool(processes=min(6, os.cpu_count() or 1)) as piscina:
-        for e in piscina.imap_unordered(una, lavori):
-            esiti.append(e)
+    moves = int(sys.argv[1]) if len(sys.argv) > 1 else 150_000
+    how_many = int(sys.argv[2]) if len(sys.argv) > 2 else 34
+    maximum = int(sys.argv[3]) if len(sys.argv) > 3 else 120_000
+    restarts = int(sys.argv[4]) if len(sys.argv) > 4 else 250
+    list_ = targets(maximum, how_many)
+    print(f"{len(list_)} cells con divario aperto. Seme invariante + salita a "
+          f"steps_, {moves:,} moves per gradino.\n")
+    jobs = [(n, d, w, v, moves, restarts) for _, n, d, w, v in list_]
+    results = []
+    with Pool(processes=min(6, os.cpu_count() or 1)) as pool:
+        for e in pool.imap_unordered(one_, jobs):
+            results.append(e)
             if "saltata" in e:
-                print(f"    saltata  {e['cella']:<13} {e['saltata']}")
+                print(f"    saltata  {e['cell']:<13} {e['saltata']}")
             else:
-                scarto = e["raggiunto"] - e["pubblicato"]
-                marca = ("SUPERATO" if scarto > 0 else
-                         "pareggiato" if scarto == 0 else f"{scarto:+d}")
-                print(f"{marca:>11}  {e['cella']:<13} pubbl {e['pubblicato']:>5} "
-                      f"invariante {e['invariante']:>5} ({e['gruppo']:<13}) "
-                      f"-> {e['raggiunto']:>5}  "
-                      f"+{e['gradini_riusciti']} gradini  {e['secondi']:>7.1f}s")
+                discard = e["reached"] - e["pubblicato"]
+                mark = ("SUPERATO" if discard > 0 else
+                         "pareggiato" if discard == 0 else f"{discard:+d}")
+                print(f"{mark:>11}  {e['cell']:<13} pubbl {e['pubblicato']:>5} "
+                      f"invariante {e['invariante']:>5} ({e['group']:<13}) "
+                      f"-> {e['reached']:>5}  "
+                      f"+{e['gradini_riusciti']} steps_  {e['seconds']:>7.1f}s")
             sys.stdout.flush()
-            (DATI / "fase3_attacco.json").write_text(json.dumps(esiti, indent=1))
-    utili = [e for e in esiti if "saltata" not in e]
-    vinti = [e for e in utili if e["raggiunto"] > e["pubblicato"]]
-    pari = sum(1 for e in utili if e["raggiunto"] == e["pubblicato"])
-    print(f"\n{'=' * 74}\n{len(utili)} celle tentate: "
-          f"pareggiate {pari}, superate {len(vinti)}")
-    for e in vinti:
-        print(f"  {e['cella']}: {e['raggiunto']} invece di {e['pubblicato']}. "
-              f"Giudice lento: {e.get('giudice_lento')}. APPLICARE docs/04.")
-    if utili and not vinti:
-        vicine = sorted(utili, key=lambda e: e["pubblicato"] - e["raggiunto"])[:6]
-        print("Le celle piu' vicine:")
-        for e in vicine:
-            print(f"  {e['cella']}: {e['raggiunto']} contro {e['pubblicato']} "
-                  f"({e['raggiunto'] - e['pubblicato']:+d}), "
-                  f"invariante {e['invariante']} sotto {e['gruppo']}")
+            (DATA_DIR / "fase3_attacco.json").write_text(json.dumps(results, indent=1))
+    useful = [e for e in results if "saltata" not in e]
+    won_ = [e for e in useful if e["reached"] > e["pubblicato"]]
+    even = sum(1 for e in useful if e["reached"] == e["pubblicato"])
+    print(f"\n{'=' * 74}\n{len(useful)} cells tentate: "
+          f"pareggiate {even}, superate {len(won_)}")
+    for e in won_:
+        print(f"  {e['cell']}: {e['reached']} invece di {e['pubblicato']}. "
+              f"Giudice slow_: {e.get('giudice_lento')}. APPLICARE docs/04.")
+    if useful and not won_:
+        neighbours = sorted(useful, key=lambda e: e["pubblicato"] - e["reached"])[:6]
+        print("Le cells piu' neighbours:")
+        for e in neighbours:
+            print(f"  {e['cell']}: {e['reached']} against {e['pubblicato']} "
+                  f"({e['reached'] - e['pubblicato']:+d}), "
+                  f"invariante {e['invariante']} below {e['group']}")
     return 0
 
 

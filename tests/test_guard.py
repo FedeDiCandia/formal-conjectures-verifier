@@ -1,17 +1,17 @@
 """
 Test del controllo sintattico preventivo (verifier/guard.py).
 
-Sono test veloci: non fanno partire Lean. Servono a garantire due cose:
-  * il guard NON da' falsi allarmi su codice legittimo (altrimenti rifiuterebbe
-    dimostrazioni valide, che e' l'errore peggiore per l'utilita' del sistema);
+Sono test veloci: non fanno partire Lean. Servono a garantire two cose:
+  * il guard NON da' falsi allarmi su code legittimo (altrimenti rifiuterebbe
+    dimostrazioni valide, che e' l'error worst per l'utility' del system);
   * il guard blocca i costrutti pericolosi.
 """
 import guard
 
 
-# --- codice legittimo: NON deve essere rifiutato ---------------------------
+# --- code legittimo: NON deve essere rifiutato ---------------------------
 
-CODICE_BUONO = {
+GOOD_CODE = {
     "dimostrazione normale": """
 import FormalConjectures.Util.ProblemImports
 
@@ -24,16 +24,16 @@ end Esempio
 """,
     "commento che nomina i costrutti vietati": """
 -- Attenzione: qui NON usiamo sorry, ne' native_decide, ne' axiom.
-/- Nemmeno in un commento a blocco: sorry, admit, #eval. -/
-/-- Docstring: la parola sorry compare ma e' solo testo. -/
+/- Nemmeno in un commento a block: sorry, admit, #eval. -/
+/-- Docstring: la word sorry compare ma e' only_ text. -/
 theorem t : True := trivial
 """,
-    "identificatori che contengono le parole vietate": """
+    "identificatori che contengono le words vietate": """
 theorem sorryFree_lemma : True := trivial
 def axiomatic_thing : Nat := 0
 theorem uses_admitted_style : True := trivial
 """,
-    "stringa contenente parole vietate": '''
+    "stringa contenente words vietate": '''
 theorem t : True := by
   have msg := "sorry native_decide axiom"
   trivial
@@ -43,7 +43,7 @@ set_option maxHeartbeats 1000000 in
 set_option maxRecDepth 4000 in
 theorem t : True := trivial
 """,
-    "set_option usati dall'archivio": """
+    "set_option usati dall'archive": """
 set_option quotPrecheck false
 theorem t : True := trivial
 """,
@@ -51,7 +51,7 @@ theorem t : True := trivial
 -- `+kernel` fa controllare il KERNEL, il contrario di `+native`
 theorem t : (2:Nat) + 2 = 4 := by decide +kernel
 """,
-    "altre opzioni di tattica lecite": """
+    "others opzioni di tactic lecite": """
 theorem t : True := by simp +arith +decide
 """,
     "import leciti": """
@@ -64,18 +64,18 @@ theorem t : True := trivial
 
 
 def test_codice_legittimo_non_viene_rifiutato():
-    for nome, src in CODICE_BUONO.items():
+    for name, src in GOOD_CODE.items():
         r = guard.check_source(src)
-        assert r.ok, f"falso allarme su «{nome}»: {[str(f) for f in r.findings]}"
+        assert r.ok, f"falso allarme su «{name}»: {[str(f) for f in r.findings]}"
 
 
-# --- codice pericoloso: DEVE essere rifiutato ------------------------------
+# --- code pericoloso: DEVE essere rifiutato ------------------------------
 
-CODICE_CATTIVO = {
+BAD_CODE = {
     "sorry":            ("theorem t : True := by sorry", "token:sorry"),
     "sorry annidato":   ("theorem t : True := by\n  have h : False := by sorry\n  trivial", "token:sorry"),
     "admit":            ("theorem t : True := by admit", "token:admit"),
-    "axiom":            ("axiom imbroglio : False\ntheorem t : True := trivial", "comando:axiom"),
+    "axiom":            ("axiom imbroglio : False\ntheorem t : True := trivial", "command:axiom"),
     "native_decide":    ("theorem t : True := by native_decide", "token:native_decide"),
     "sorryAx diretto":  ("theorem t : True := sorryAx True", "token:sorryAx"),
     "skipKernelTC":     ("set_option debug.skipKernelTC true in\ntheorem t : True := trivial",
@@ -83,65 +83,65 @@ CODICE_CATTIVO = {
     "google.answer":    ("set_option google.answer postpone in\ntheorem t : True := trivial",
                          "opzione:google.answer"),
     "opzione ignota":   ("set_option qualcosa.di.strano true", "opzione:qualcosa.di.strano"),
-    "#eval":            ('#eval IO.println "ciao"', "comando:#eval"),
-    "#exit":            ("#exit", "comando:#exit"),
-    "run_cmd":          ("run_cmd Lean.logInfo \"x\"", "comando:run_cmd"),
-    "macro":            ('macro "trucco" : term => `(1)', "comando:macro"),
-    "elab":             ('elab "trucco" : term => return default', "comando:elab"),
-    "unsafe":           ("unsafe def f : Nat := 0", "comando:unsafe"),
-    "implemented_by":   ("@[implemented_by altro] def f : Nat := 0", "attributo:implemented_by"),
+    "#eval":            ('#eval IO.println "ciao"', "command:#eval"),
+    "#exit":            ("#exit", "command:#exit"),
+    "run_cmd":          ("run_cmd Lean.logInfo \"x\"", "command:run_cmd"),
+    "macro":            ('macro "trucco" : term => `(1)', "command:macro"),
+    "elab":             ('elab "trucco" : term => return default', "command:elab"),
+    "unsafe":           ("unsafe def f : Nat := 0", "command:unsafe"),
+    "implemented_by":   ("@[implemented_by other] def f : Nat := 0", "attributo:implemented_by"),
     "import Lean":      ("import Lean", "import"),
-    "import del problema": ("import FormalConjectures.ErdosProblems.10", "import"),
+    "import del problem": ("import FormalConjectures.ErdosProblems.10", "import"),
 }
 
 
 def test_codice_pericoloso_viene_rifiutato():
-    for nome, (src, regola_attesa) in CODICE_CATTIVO.items():
+    for name, (src, expected_rule) in BAD_CODE.items():
         r = guard.check_source(src)
-        assert not r.ok, f"NON rifiutato: «{nome}»"
-        regole = {f.rule for f in r.findings}
-        assert regola_attesa in regole, \
-            f"«{nome}»: attesa la regola {regola_attesa}, trovate {regole}"
+        assert not r.ok, f"NON rifiutato: «{name}»"
+        rules = {f.rule for f in r.findings}
+        assert expected_rule in rules, \
+            f"«{name}»: expected_value la rule_ {expected_rule}, found {rules}"
 
 
 def test_i_numeri_di_riga_sono_corretti():
     src = "theorem a : True := trivial\ntheorem b : True := trivial\ntheorem c : True := by sorry\n"
     r = guard.check_source(src)
     assert not r.ok
-    assert r.findings[0].line == 3, f"riga attesa 3, trovata {r.findings[0].line}"
+    assert r.findings[0].line == 3, f"line expected_value 3, trovata {r.findings[0].line}"
 
 
 def test_i_commenti_non_alterano_i_numeri_di_riga():
-    src = "/- commento\n   su piu' righe\n   ancora -/\ntheorem t : True := by sorry\n"
+    src = "/- commento\n   su piu' lines\n   ancora -/\ntheorem t : True := by sorry\n"
     r = guard.check_source(src)
     assert not r.ok
-    assert r.findings[0].line == 4, f"riga attesa 4, trovata {r.findings[0].line}"
+    assert r.findings[0].line == 4, f"line expected_value 4, trovata {r.findings[0].line}"
 
 
 # ---------------------------------------------------------------------------
-# Costrutti che ESEGUONO CODICE durante la compilazione
+# Costrutti che ESEGUONO CODE durante la compilazione
 # ---------------------------------------------------------------------------
 # Elenco ricavato leggendo i sorgenti di Lean 4.27
 # (src/lean/Lean/Elab/BuiltinCommand.lean: gli `@[builtin_command_elab ...]`)
-# e censendo gli attributi usati in Mathlib che registrano codice eseguibile.
+# e censendo gli attributi usati in Mathlib che registrano code eseguibile.
 #
-# Ognuno di questi PASSAVA il guard prima di questo controllo: erano 19 buchi
-# veri, non ipotetici.
+# Ognuno di questi PASSAVA il guard before di questo controllo: erano 19 buchi
+# real_ones, non ipotetici.
 
-CODICE_ESEGUIBILE = {
-    # --- comandi
-    "#eval!": ('#eval! IO.println "ciao"', "comando:#eval!"),
-    "run_meta": ("run_meta Lean.logInfo \"x\"", "comando:run_meta"),
-    "simproc": ("simproc miaProc (_ + 0) := fun e => return .continue", "comando:simproc"),
+EXECUTABLE_CODE = {
+    # --- commands
+    "#eval!": ('#eval! IO.println "ciao"', "command:#eval!"),
+    "run_meta": ("run_meta Lean.logInfo \"x\"", "command:run_meta"),
+    "simproc": ("simproc miaProc (_ + 0) := fun e => return .continue", "command:simproc"),
     "simproc_decl": ("simproc_decl miaProc (_ + 0) := fun e => return .continue",
-                     "comando:simproc_decl"),
-    "register_simp_attr": ("register_simp_attr mio_simp", "comando:register_simp_attr"),
-    "declare_syntax_cat": ("declare_syntax_cat miaCat", "comando:declare_syntax_cat"),
-    "notation3": ('notation3 "foo" => 1', "comando:notation3"),
-    "meta def": ("meta def cattivo : Unit := ()", "comando:meta"),
-    "public meta section": ("public meta section", "comando:meta"),
+                     "command:simproc_decl"),
+    "register_simp_attr": ("register_simp_attr mio_simp", "command:register_simp_attr"),
+    "declare_syntax_cat": ("declare_syntax_cat miaCat", "command:declare_syntax_cat"),
+    "notation3": ('notation3 "foo" => 1', "command:notation3"),
+    "meta def": ("meta def cattivo : Unit := ()", "command:meta"),
+    "public meta section": ("public meta section", "command:meta"),
 
-    # --- attributi che registrano codice presso un elaboratore o una tattica
+    # --- attributi che registrano code presso un elaboratore o one_ tactic
     "@[simproc]": ("@[simproc] def p := 1", "attributo:simproc"),
     "@[tactic]": ("@[tactic myTac] def t := 1", "attributo:tactic"),
     "@[command_elab]": ("@[command_elab myCmd] def c := 1", "attributo:command_elab"),
@@ -154,17 +154,17 @@ CODICE_ESEGUIBILE = {
     "@[fun_prop]": ("@[fun_prop] def f := 1", "attributo:fun_prop"),
     "@[export]": ("@[export mio_simbolo] def x := 1", "attributo:export"),
 
-    # --- `decide +native` e' `native_decide` con la sintassi nuova: lascia lo
+    # --- `decide +native` e' `native_decide` con la sintassi new_: lascia lo
     # stesso assioma `Lean.ofReduceBool`. Non e' un caso ipotetico: 87
-    # dimostrazioni dell'archivio la usano.
+    # dimostrazioni dell'archive la usano.
     "decide +native": ("theorem t : True := by decide +native", "opzione:+native"),
     "decide+native": ("theorem t : True := by decide+native", "opzione:+native"),
     "simp +native": ("theorem t : True := by simp +native", "opzione:+native"),
     "@[init]": ("@[init mioInit] def y := 1", "attributo:init"),
     "attribute [simproc]": ("attribute [simproc] qualcosa", "attributo:simproc"),
 
-    # --- dichiarazioni in una monade di elaborazione o di input/output.
-    # E' il controllo STRUTTURALE: non insegue i comandi uno per uno, ma
+    # --- dichiarazioni in one_ monade di elaborazione o di input/output.
+    # E' il controllo STRUTTURALE: non insegue i commands one per one, ma
     # rifiuta il file che parla il linguaggio della metaprogrammazione.
     "def in IO": ("def cattivo : IO Unit := pure ()", "metaprogrammazione:IO"),
     "def in MetaM": ("def cattivo : MetaM Unit := pure ()", "metaprogrammazione:MetaM"),
@@ -180,48 +180,48 @@ CODICE_ESEGUIBILE = {
 
 
 def test_costrutti_che_eseguono_codice_vengono_rifiutati():
-    """Ogni costrutto qui elencato passava il guard prima di questo controllo."""
+    """Ogni costrutto qui elencato passava il guard before di questo controllo."""
     non_bloccati = []
-    regola_sbagliata = []
-    for nome, (src, regola_attesa) in CODICE_ESEGUIBILE.items():
+    wrong_rule = []
+    for name, (src, expected_rule) in EXECUTABLE_CODE.items():
         r = guard.check_source(src)
         if r.ok:
-            non_bloccati.append(nome)
+            non_bloccati.append(name)
             continue
-        if regola_attesa not in {f.rule for f in r.findings}:
-            regola_sbagliata.append((nome, regola_attesa, {f.rule for f in r.findings}))
+        if expected_rule not in {f.rule for f in r.findings}:
+            wrong_rule.append((name, expected_rule, {f.rule for f in r.findings}))
     assert not non_bloccati, f"NON bloccati: {non_bloccati}"
-    assert not regola_sbagliata, f"regola inattesa: {regola_sbagliata}"
+    assert not wrong_rule, f"rule_ inattesa: {wrong_rule}"
 
 
 def test_il_guard_non_disturba_i_file_veri_dell_archivio():
-    """Il controllo piu' importante contro i falsi allarmi: le regole sulla
-    metaprogrammazione non devono scattare su nessuno dei file di problemi
-    dell'archivio, che sono matematica ordinaria scritta da esseri umani."""
+    """Il controllo piu' importante against i falsi allarmi: le rules sulla
+    metaprogrammazione non devono scattare su nessuno dei file di problems
+    dell'archive, che sono matematica ordinaria scritta da esseri umani."""
     import sys
     from pathlib import Path
-    radice = Path(__file__).resolve().parent.parent / "external" / "formal-conjectures"
-    problemi = radice / "FormalConjectures"
-    if not problemi.is_dir():
+    root = Path(__file__).resolve().parent.parent / "external" / "formal-conjectures"
+    problems = root / "FormalConjectures"
+    if not problems.is_dir():
         import pytest
-        pytest.skip("archivio non clonato")
-    # Util/ e' metaprogrammazione per costruzione: e' giusto che venga segnalata
-    files = [f for f in problemi.rglob("*.lean") if "Util" not in f.parts]
-    assert len(files) > 100, "mi aspetto centinaia di file di problemi"
+        pytest.skip("archive non clonato")
+    # Util/ e' metaprogrammazione per construction: e' giusto che venga segnalata
+    files = [f for f in problems.rglob("*.lean") if "Util" not in f.parts]
+    assert len(files) > 100, "mi aspetto centinaia di file di problems"
 
-    colpevoli = []
+    culprits = []
     for f in files:
         r = guard.check_source(f.read_text(encoding="utf-8"))
         # `opzione:+native` NON va inclusa qui: e' un VERO positivo.
-        # 87 dimostrazioni dell'archivio usano `decide +native`, e il
-        # verificatore le rifiuta a ragione (lasciano l'assioma
-        # Lean.ofReduceBool). Non e' un falso allarme: e' il motivo per cui un
-        # problema "gia' risolto nell'archivio" non e' detto sia risolvibile
-        # sotto le nostre regole.
-        nuove = [x for x in r.findings
+        # 87 dimostrazioni dell'archive usano `decide +native`, e il
+        # verifier le rifiuta a ragione (lasciano l'assioma
+        # Lean.ofReduceBool). Non e' un falso allarme: e' il reason per cui un
+        # problem "gia' solved_one nell'archive" non e' detto sia risolvibile
+        # below le nostre rules.
+        new_ones = [x for x in r.findings
                  if x.rule.startswith(("metaprogrammazione:", "attributo:"))
-                 or x.rule in ("comando:meta", "comando:simproc", "comando:run_meta",
-                               "comando:notation3")]
-        if nuove:
-            colpevoli.append((f.name, [x.rule for x in nuove]))
-    assert not colpevoli, f"falsi allarmi su file veri: {colpevoli[:5]}"
+                 or x.rule in ("command:meta", "command:simproc", "command:run_meta",
+                               "command:notation3")]
+        if new_ones:
+            culprits.append((f.name, [x.rule for x in new_ones]))
+    assert not culprits, f"falsi allarmi su file real_ones: {culprits[:5]}"

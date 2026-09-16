@@ -1,23 +1,23 @@
 """
-Esecuzione di ricerche lunghe, isolate, con checkpoint e ripresa.
+Running long searches: isolated, with checkpoints and resumption.
 
-A COSA SERVE
-------------
-Cercare un controesempio a una congettura puo' richiedere ore o giorni. Una
-ricerca del genere ha tre esigenze che uno script normale non copre:
+WHAT IT IS FOR
+--------------
+Looking for a counterexample to a conjecture can take hours or days. A search
+like that has three needs an ordinary script does not cover:
 
-  * ISOLAMENTO — il programma di ricerca e' scritto da un modello linguistico e
-    non ha motivo di toccare la rete o il resto del disco. Gira dentro
-    `sandbox-exec`, come tutto il resto del progetto.
-  * CHECKPOINT — se il computer si spegne dopo sei ore, ricominciare da capo e'
-    inaccettabile. Il programma salva a intervalli regolari a che punto e'
-    arrivato, e alla ripartenza riprende da li'.
-  * RESOCONTO — una ricerca che non trova niente non e' un fallimento: dice
-    "fino a N non c'e' nulla", che e' un'informazione. Va registrata.
+  * ISOLATION — the search program is written by a language model and has no
+    reason to touch the network or the rest of the disk. It runs inside
+    `sandbox-exec`, like everything else in this project.
+  * CHECKPOINTS — if the machine dies after six hours, starting again from the
+    beginning is unacceptable. The program saves how far it has got at regular
+    intervals, and resumes from there.
+  * A REPORT — a search that finds nothing is not a failure: it says "up to N
+    there is nothing", which is information. It has to be recorded.
 
-Il programma di ricerca deve rispettare un piccolo contratto, descritto in
-`CONTRATTO` qui sotto: legge da dove ripartire, stampa i progressi in JSON,
-e si ferma con garbo quando riceve il segnale di arresto.
+The search program has to honour a small contract, set out in `CONTRACT` below:
+it reads where to resume from, prints progress as JSON, and stops gracefully when
+it receives the stop signal.
 """
 from __future__ import annotations
 
@@ -36,201 +36,202 @@ import config
 import sandbox
 
 
-CONTRATTO = """
-CONTRATTO DEL PROGRAMMA DI RICERCA
-==================================
-Il tuo programma riceve due variabili d'ambiente:
+CONTRACT = """
+CONTRACT FOR A SEARCH PROGRAM
+=============================
+Your program receives two environment variables:
 
-  RICERCA_CHECKPOINT  percorso di un file JSON. Se esiste, contiene il punto
-                      da cui ripartire, nella forma che hai deciso tu.
-  RICERCA_STATO       percorso su cui SCRIVERE il checkpoint aggiornato.
+  SEARCH_CHECKPOINT   path to a JSON file. If it exists, it holds the point to
+                      resume from, in whatever shape you chose.
+  SEARCH_STATE        path to WRITE the updated checkpoint to.
 
-Devi:
+You must:
 
-1. All'avvio, se RICERCA_CHECKPOINT esiste, leggerlo e ripartire da li'.
-   Altrimenti partire dall'inizio.
+1. At startup, if SEARCH_CHECKPOINT exists, read it and resume from there.
+   Otherwise start from the beginning.
 
-2. Ogni tanto (almeno ogni 30 secondi) scrivere su RICERCA_STATO un JSON con
-   almeno questi campi:
-       {"posizione": <dove sei arrivato>, "esaminati": <quanti casi>,
-        "trovati": [<eventuali risultati>]}
-   Scrivilo prima su un file temporaneo e poi rinominalo, cosi' un'interruzione
-   a meta' non lascia un checkpoint corrotto.
+2. Every so often (at least every 30 seconds) write to SEARCH_STATE a JSON
+   object with at least these fields:
+       {"position": <how far you have got>, "examined": <how many cases>,
+        "found": [<any results>]}
+   Write it to a temporary file first and then rename it, so that an interruption
+   half-way through does not leave a corrupted checkpoint.
 
-3. Stampare su stdout una riga JSON per ogni avanzamento importante:
-       {"evento": "progresso", "posizione": ..., "esaminati": ...}
-       {"evento": "trovato", "dettaglio": {...}}
-   Le righe che non sono JSON valido vengono conservate nel log ma ignorate.
+3. Print one JSON line on stdout for every significant step:
+       {"event": "progress", "position": ..., "examined": ...}
+       {"event": "found", "detail": {...}}
+   Lines that are not valid JSON are kept in the log but ignored.
 
-4. Gestire SIGTERM: salvare il checkpoint e uscire con codice 0.
-   Il contenitore ti manda SIGTERM quando l'utente ferma la ricerca.
+4. Handle SIGTERM: save the checkpoint and exit with code 0.
+   The runner sends SIGTERM when the user stops the search.
 
-5. Non usare la rete (e' bloccata) e non scrivere fuori dalla tua cartella.
+5. Do not use the network (it is blocked) and do not write outside your own
+   directory.
 """
 
 
 @dataclass
-class EsitoRicerca:
-    nome: str
-    conclusa: bool = False
-    interrotta: bool = False
-    secondi: float = 0.0
-    posizione: object = None
-    esaminati: int = 0
-    trovati: list = field(default_factory=list)
-    codice_uscita: int | None = None
-    errore: str = ""
+class SearchResult:
+    name: str
+    completed: bool = False
+    interrupted: bool = False
+    seconds: float = 0.0
+    position: object = None
+    examined: int = 0
+    found: list = field(default_factory=list)
+    exit_code: int | None = None
+    error: str = ""
 
     def to_json(self) -> str:
         return json.dumps(asdict(self), ensure_ascii=False, indent=2, default=str)
 
 
-class Ricerca:
-    """Una ricerca lunga, isolata, ripartibile."""
+class Search:
+    """One long, isolated, resumable search."""
 
-    def __init__(self, nome: str, programma: str, cartella: Path | None = None,
-                 interprete: Path | None = None, variabili: dict | None = None):
-        self.nome = nome
-        self.programma = programma
-        #: Parametri passati al programma come variabili d'ambiente.
-        #: L'ambiente del processo figlio e' volutamente minimo (nessuna chiave
-        #: API, nessun PATH del progetto), quindi i parametri vanno passati
-        #: esplicitamente qui: quello che sta nell'ambiente di chi lancia NON
-        #: arriva al programma di ricerca.
-        self.variabili = dict(variabili or {})
-        self.cartella = (cartella or (config.ROOT / "runs" / "caccia" / nome))
-        self.cartella.mkdir(parents=True, exist_ok=True)
-        #: l'ambiente di calcolo, con numpy, sympy e numba
-        self.interprete = interprete or (config.ROOT / ".venv-calcolo" / "bin" / "python")
-        if not self.interprete.is_file():
-            self.interprete = Path(sys.base_prefix) / "bin" / "python3"
+    def __init__(self, name: str, program: str, folder: Path | None = None,
+                 interpreter: Path | None = None, variables: dict | None = None):
+        self.name = name
+        self.program = program
+        #: Parameters passed to the program as environment variables.
+        #: The child process's environment is deliberately minimal (no API key,
+        #: none of the project's PATH), so parameters have to be passed
+        #: explicitly here: whatever is in the launcher's environment does NOT
+        #: reach the search program.
+        self.variables = dict(variables or {})
+        self.folder = (folder or (config.ROOT / "runs" / "hunt" / name))
+        self.folder.mkdir(parents=True, exist_ok=True)
+        #: the computation environment, with numpy, sympy and numba
+        self.interpreter = interpreter or (config.ROOT / ".venv-compute" / "bin" / "python")
+        if not self.interpreter.is_file():
+            self.interpreter = Path(sys.base_prefix) / "bin" / "python3"
 
-    # --- file
+    # --- files
     @property
-    def file_programma(self) -> Path:
-        return self.cartella / "programma.py"
-
-    @property
-    def file_checkpoint(self) -> Path:
-        return self.cartella / "checkpoint.json"
+    def program_file(self) -> Path:
+        return self.folder / "program.py"
 
     @property
-    def file_log(self) -> Path:
-        return self.cartella / "ricerca.log"
+    def checkpoint_file(self) -> Path:
+        return self.folder / "checkpoint.json"
 
     @property
-    def file_esito(self) -> Path:
-        return self.cartella / "esito.json"
+    def log_file(self) -> Path:
+        return self.folder / "search.log"
 
-    # --- esecuzione
-    def _profilo(self, tmp: Path) -> Path | None:
-        if not (config.USA_SANDBOX and sandbox.disponibile()):
+    @property
+    def result_file(self) -> Path:
+        return self.folder / "result.json"
+
+    # --- execution
+    def _profile(self, tmp: Path) -> Path | None:
+        if not (config.USE_SANDBOX and sandbox.available()):
             return None
-        scrivibili = [self.cartella, tmp]
-        for d in scrivibili:
+        writable = [self.folder, tmp]
+        for d in writable:
             d.mkdir(parents=True, exist_ok=True)
-        return sandbox.scrivi_profilo(tmp / "ricerca.sb", scrivibili, config.ROOT)
+        return sandbox.write_profile(tmp / "search.sb", writable, config.ROOT)
 
-    def esegui(self, *, secondi_massimi: float | None = None,
-               riprendi: bool = True, verboso: bool = True) -> EsitoRicerca:
-        self.file_programma.write_text(self.programma, encoding="utf-8")
-        esito = EsitoRicerca(nome=self.nome)
+    def run(self, *, max_seconds: float | None = None,
+            resume: bool = True, verbose: bool = True) -> SearchResult:
+        self.program_file.write_text(self.program, encoding="utf-8")
+        result = SearchResult(name=self.name)
 
-        if not riprendi:
-            self.file_checkpoint.unlink(missing_ok=True)
+        if not resume:
+            self.checkpoint_file.unlink(missing_ok=True)
 
-        stato_nuovo = self.cartella / "stato.json"
-        ambiente = {
+        new_state = self.folder / "state.json"
+        environment = {
             "PATH": "/usr/bin:/bin",
-            "HOME": str(self.cartella),
-            "TMPDIR": str(self.cartella),
+            "HOME": str(self.folder),
+            "TMPDIR": str(self.folder),
             "LANG": "C.UTF-8",
             "PYTHONUNBUFFERED": "1",
             "PYTHONDONTWRITEBYTECODE": "1",
-            "RICERCA_CHECKPOINT": str(self.file_checkpoint),
-            "RICERCA_STATO": str(stato_nuovo),
+            "SEARCH_CHECKPOINT": str(self.checkpoint_file),
+            "SEARCH_STATE": str(new_state),
         }
-        ambiente.update({k: str(v) for k, v in self.variabili.items()})
+        environment.update({k: str(v) for k, v in self.variables.items()})
 
         import tempfile
-        with tempfile.TemporaryDirectory(prefix=f"ricerca_{self.nome}_") as tmp:
+        with tempfile.TemporaryDirectory(prefix=f"search_{self.name}_") as tmp:
             tmp_dir = Path(tmp)
-            profilo = self._profilo(tmp_dir)
-            comando = [str(self.interprete), "-u", str(self.file_programma)]
-            if profilo is not None:
-                comando = sandbox.avvolgi(comando, profilo)
+            profile = self._profile(tmp_dir)
+            command = [str(self.interpreter), "-u", str(self.program_file)]
+            if profile is not None:
+                command = sandbox.wrap(command, profile)
 
-            avvio = time.time()
-            with open(self.file_log, "a", encoding="utf-8") as log:
-                log.write(f"\n=== avvio {time.strftime('%Y-%m-%d %H:%M:%S')} ===\n")
+            start = time.time()
+            with open(self.log_file, "a", encoding="utf-8") as log:
+                log.write(f"\n=== start {time.strftime('%Y-%m-%d %H:%M:%S')} ===\n")
                 log.flush()
                 proc = subprocess.Popen(
-                    comando, cwd=str(self.cartella), env=ambiente,
+                    command, cwd=str(self.folder), env=environment,
                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                     text=True, start_new_session=True, bufsize=1)
 
-                def termina(_s=None, _f=None):
+                def terminate(_s=None, _f=None):
                     try:
                         os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
                     except ProcessLookupError:
                         pass
 
-                originale = signal.getsignal(signal.SIGTERM)
+                original = signal.getsignal(signal.SIGTERM)
                 try:
-                    signal.signal(signal.SIGTERM, termina)
+                    signal.signal(signal.SIGTERM, terminate)
                 except ValueError:
-                    pass   # non siamo nel thread principale
+                    pass   # not on the main thread
 
                 try:
-                    for riga in proc.stdout:
-                        log.write(riga)
+                    for line in proc.stdout:
+                        log.write(line)
                         log.flush()
-                        riga = riga.strip()
-                        if verboso and riga:
-                            print(f"  [{self.nome}] {riga[:150]}", flush=True)
+                        line = line.strip()
+                        if verbose and line:
+                            print(f"  [{self.name}] {line[:150]}", flush=True)
                         try:
-                            evento = json.loads(riga)
+                            event = json.loads(line)
                         except Exception:
-                            evento = None
-                        if isinstance(evento, dict):
-                            if evento.get("evento") == "trovato":
-                                esito.trovati.append(evento.get("dettaglio"))
-                            if "posizione" in evento:
-                                esito.posizione = evento["posizione"]
-                            if "esaminati" in evento:
-                                esito.esaminati = evento["esaminati"]
-                        if secondi_massimi and time.time() - avvio > secondi_massimi:
-                            esito.interrotta = True
-                            termina()
+                            event = None
+                        if isinstance(event, dict):
+                            if event.get("event") == "found":
+                                result.found.append(event.get("detail"))
+                            if "position" in event:
+                                result.position = event["position"]
+                            if "examined" in event:
+                                result.examined = event["examined"]
+                        if max_seconds and time.time() - start > max_seconds:
+                            result.interrupted = True
+                            terminate()
                             break
                     proc.wait(timeout=60)
                 except KeyboardInterrupt:
-                    esito.interrotta = True
-                    termina()
+                    result.interrupted = True
+                    terminate()
                     proc.wait(timeout=60)
                 finally:
                     try:
-                        signal.signal(signal.SIGTERM, originale)
+                        signal.signal(signal.SIGTERM, original)
                     except ValueError:
                         pass
 
-            esito.codice_uscita = proc.returncode
-            esito.secondi = time.time() - avvio
+            result.exit_code = proc.returncode
+            result.seconds = time.time() - start
 
-        # il checkpoint scritto dal programma diventa quello da cui si riparte
-        if stato_nuovo.is_file():
-            shutil.move(str(stato_nuovo), str(self.file_checkpoint))
-        if self.file_checkpoint.is_file():
+        # the checkpoint the program wrote becomes the one to resume from
+        if new_state.is_file():
+            shutil.move(str(new_state), str(self.checkpoint_file))
+        if self.checkpoint_file.is_file():
             try:
-                dati = json.loads(self.file_checkpoint.read_text(encoding="utf-8"))
-                esito.posizione = dati.get("posizione", esito.posizione)
-                esito.esaminati = dati.get("esaminati", esito.esaminati)
-                for t in dati.get("trovati", []):
-                    if t not in esito.trovati:
-                        esito.trovati.append(t)
+                data = json.loads(self.checkpoint_file.read_text(encoding="utf-8"))
+                result.position = data.get("position", result.position)
+                result.examined = data.get("examined", result.examined)
+                for t in data.get("found", []):
+                    if t not in result.found:
+                        result.found.append(t)
             except Exception as e:
-                esito.errore = f"checkpoint illeggibile: {e}"
+                result.error = f"unreadable checkpoint: {e}"
 
-        esito.conclusa = (esito.codice_uscita == 0 and not esito.interrotta)
-        self.file_esito.write_text(esito.to_json(), encoding="utf-8")
-        return esito
+        result.completed = (result.exit_code == 0 and not result.interrupted)
+        self.result_file.write_text(result.to_json(), encoding="utf-8")
+        return result

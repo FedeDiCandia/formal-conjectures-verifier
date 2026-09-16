@@ -1,23 +1,23 @@
 """
-Passo zero della fase 1: **verificare in modo indipendente i record pubblicati.**
+Passo zero della fase 1: **verificare in way indipendente i record pubblicati.**
 
 PERCHÉ QUESTO PRIMA DI CERCARE
 ------------------------------
 Prima di provare a battere un record bisogna essere capaci di leggerlo e di
-controllarlo. Se non riusciamo a verificare un codice che qualcuno ha già
-pubblicato, non siamo in condizione di dire niente su uno che troviamo noi — ed è
-esattamente l'errore che questo progetto ha già fatto cinque volte.
+controllarlo. Se non riusciamo a verificare un code che qualcuno ha già
+pubblicato, non siamo in condizione di dire niente su one che troviamo noi — ed è
+esattamente l'error che questo progetto ha già fatto cinque volte.
 
-Questo script scarica i codici espliciti delle tabelle di Brouwer, li espande, li
-verifica con il nostro giudice e confronta la dimensione con il limite inferiore
-che la tabella rivendica. Tre esiti possibili, e tutti e tre sono informazione:
+Questo script download i codici espliciti delle tables di Brouwer, li espande, li
+check con il nostro giudice e compare la size con il limit inferiore
+che la tabella rivendica. Tre results possibili, e all_of e three sono informazione:
 
-  CONFERMATO   la dimensione e la validità corrispondono alla tabella
-  DISCORDE     il codice è valido ma di dimensione diversa da quella dichiarata
-  NON VALIDO   il codice non soddisfa i vincoli (quasi certamente colpa nostra:
-               un formato che non sappiamo leggere)
+  CONFERMATO   la size e la validità corrispondono alla tabella
+  DISCORDE     il code è valid ma di size diversa da quella dichiarata
+  NON VALIDO   il code non soddisfa i vincoli (quasi certamente colpa nostra:
+               un format_ che non sappiamo leggere)
 
-I file si scaricano una volta sola e restano in `research_data/codici/`.
+I file si scaricano one_ volta sola e restano in `research_data/codici/`.
 """
 from __future__ import annotations
 
@@ -27,119 +27,119 @@ import time
 import subprocess
 from pathlib import Path
 
-RADICE = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(RADICE / "search"))
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "search"))
 
-from codes import Esito, leggi, verifica, verifica_veloce   # noqa: E402
-from orbits import espandi, espandi_ciclico                  # noqa: E402
+from codes import Result, read_, check, fast_check   # noqa: E402
+from orbits import expand, expand_cyclic                  # noqa: E402
 
-DATI = RADICE / "research_data"
-CACHE = DATI / "codici"
+DATA_DIR = ROOT / "research_data"
+CACHE = DATA_DIR / "codici"
 BASE = "https://aeb.win.tue.nl/codes/"
-PAUSA = 0.4      # cortesia verso un server universitario
+PAUSE = 0.4      # cortesia verso un server universitario
 
 
-def scarica(relativo: str) -> Path:
-    locale = CACHE / relativo.replace("/", "_")
-    if locale.is_file() and locale.stat().st_size > 0:
-        return locale
+def download(relative: str) -> Path:
+    local_ = CACHE / relative.replace("/", "_")
+    if local_.is_file() and local_.stat().st_size > 0:
+        return local_
     CACHE.mkdir(parents=True, exist_ok=True)
     # `curl` e non urllib: il Python di questo Mac non ha i certificati di
-    # sistema e ogni https fallisce con CERTIFICATE_VERIFY_FAILED.
-    esito = subprocess.run(
+    # system e ogni https fallisce con CERTIFICATE_VERIFY_FAILED.
+    result = subprocess.run(
         ["curl", "-sS", "-L", "--max-time", "45", "-A",
-         "ricerca-codici/1.0 (verifica indipendente di limiti pubblicati)",
-         "-o", str(locale), BASE + relativo],
+         "ricerca-codici/1.0 (check indipendente di bounds pubblicati)",
+         "-o", str(local_), BASE + relative],
         capture_output=True, text=True)
-    if esito.returncode != 0 or not locale.is_file() or locale.stat().st_size == 0:
-        locale.unlink(missing_ok=True)
-        raise OSError(f"curl ha fallito ({esito.returncode}): "
-                      f"{esito.stderr.strip()[:120]}")
-    time.sleep(PAUSA)
-    return locale
+    if result.returncode != 0 or not local_.is_file() or local_.stat().st_size == 0:
+        local_.unlink(missing_ok=True)
+        raise OSError(f"curl ha failed ({result.returncode}): "
+                      f"{result.stderr.strip()[:120]}")
+    time.sleep(PAUSE)
+    return local_
 
 
-def carica(percorso: Path) -> tuple[list[int], int, str]:
-    """Legge un codice in qualunque dei formati in cui è pubblicato."""
-    grezzo = percorso.read_text(errors="replace").lstrip()
-    testa = grezzo[:200].lower()
-    if testa.startswith("$base=16"):
-        # elenco di parole in esadecimale
-        parole = [int(r.strip(), 16) for r in grezzo.splitlines()[1:] if r.strip()]
-        larghezza = max((len(r.strip()) for r in grezzo.splitlines()[1:] if r.strip()),
+def load_(path: Path) -> tuple[list[int], int, str]:
+    """Legge un code in qualunque dei formati in cui è pubblicato."""
+    raw_ = path.read_text(errors="replace").lstrip()
+    head = raw_[:200].lower()
+    if head.startswith("$base=16"):
+        # listing di words in esadecimale
+        words = [int(r.strip(), 16) for r in raw_.splitlines()[1:] if r.strip()]
+        width = max((len(r.strip()) for r in raw_.splitlines()[1:] if r.strip()),
                         default=0)
-        # la larghezza in cifre esadecimali non dice n: gli zeri in testa si
-        # perdono. Si restituisce 0 e chi chiama usa l'n della cella.
-        del larghezza
-        return parole, 0, "elenco esadecimale"
-    if testa.startswith("$exec orbit"):
-        parole, n, info = espandi(percorso)
-        return parole, n, f"orbite (|G|={info['ordine_gruppo']}, {info['semi']} semi)"
-    if testa.startswith("$exec cycle"):
-        parole, n, info = espandi_ciclico(percorso)
-        return parole, n, (f"cicli {info['blocchi']} (|G|={info['ordine_gruppo']}, "
-                           f"{info['semi']} semi)")
-    if testa.startswith("$exec"):
-        raise ValueError(f"comando $EXEC non gestito: {testa.splitlines()[0]!r}")
-    parole, n = leggi(percorso)
-    return parole, n, "elenco di parole"
+        # la width in digits esadecimali non dice n: gli zeri in head si
+        # perdono. Si restituisce 0 e chi chiama usa l'n della cell.
+        del width
+        return words, 0, "listing esadecimale"
+    if head.startswith("$exec orbit"):
+        words, n, info = expand(path)
+        return words, n, f"orbits (|G|={info['ordine_gruppo']}, {info['seeds']} seeds)"
+    if head.startswith("$exec cycle"):
+        words, n, info = expand_cyclic(path)
+        return words, n, (f"cicli {info['blocks']} (|G|={info['ordine_gruppo']}, "
+                           f"{info['seeds']} seeds)")
+    if head.startswith("$exec"):
+        raise ValueError(f"command $EXEC non gestito: {head.splitlines()[0]!r}")
+    words, n = read_(path)
+    return words, n, "listing di words"
 
 
-def una(chiave: str, voce: dict) -> dict:
-    n, d, w = (int(x) for x in chiave.split(","))
-    esito = {"cella": f"A({n},{d},{w})", "atteso": voce["inferiore"],
-             "fonte": voce["fonte"], "file": voce["codice"]}
+def one_(key_: str, entry: dict) -> dict:
+    n, d, w = (int(x) for x in key_.split(","))
+    result = {"cell": f"A({n},{d},{w})", "expected_one": entry["inferiore"],
+             "source_": entry["source_"], "file": entry["code"]}
     try:
-        percorso = scarica(voce["codice"])
-        parole, letto_n, formato = carica(percorso)
-        esito["formato"] = formato
-        if letto_n and letto_n != n:
-            esito["stato"] = "DISCORDE"
-            esito["nota"] = f"lunghezza letta {letto_n}, attesa {n}"
-            return esito
-        v = verifica_veloce(parole, n, d, w)
-        esito["trovato"] = v.dimensione
+        path = download(entry["code"])
+        words, read_n, format_ = load_(path)
+        result["format_"] = format_
+        if read_n and read_n != n:
+            result["state"] = "DISCORDE"
+            result["note"] = f"length letta {read_n}, expected_value {n}"
+            return result
+        v = fast_check(words, n, d, w)
+        result["found"] = v.size
         if not v.ok:
-            esito["stato"] = "NON VALIDO"
-            esito["nota"] = v.difetti[0]
-        elif v.dimensione != voce["inferiore"]:
-            esito["stato"] = "DISCORDE"
-            esito["nota"] = (f"valido ma {v.dimensione} parole invece di "
-                             f"{voce['inferiore']}")
+            result["state"] = "NON VALIDO"
+            result["note"] = v.findings[0]
+        elif v.size != entry["inferiore"]:
+            result["state"] = "DISCORDE"
+            result["note"] = (f"valid ma {v.size} words invece di "
+                             f"{entry['inferiore']}")
         else:
-            esito["stato"] = "CONFERMATO"
+            result["state"] = "CONFERMATO"
     except OSError as e:
-        esito["stato"] = "NON SCARICATO"
-        esito["nota"] = str(e)[:120]
+        result["state"] = "NON SCARICATO"
+        result["note"] = str(e)[:120]
     except Exception as e:                                   # noqa: BLE001
-        esito["stato"] = "NON LETTO"
-        esito["nota"] = f"{type(e).__name__}: {e}"[:160]
-    return esito
+        result["state"] = "NON LETTO"
+        result["note"] = f"{type(e).__name__}: {e}"[:160]
+    return result
 
 
 def main() -> int:
-    limiti = json.loads((DATI / "limiti_cwc.json").read_text())
-    da_fare = {k: v for k, v in limiti.items() if v["codice"]}
-    print(f"{len(da_fare)} celle con codice esplicito pubblicato.\n")
-    esiti = []
-    conta: dict[str, int] = {}
-    for i, (k, v) in enumerate(sorted(da_fare.items(),
+    bounds = json.loads((DATA_DIR / "limiti_cwc.json").read_text())
+    to_do = {k: v for k, v in bounds.items() if v["code"]}
+    print(f"{len(to_do)} cells con code esplicito pubblicato.\n")
+    results = []
+    count_: dict[str, int] = {}
+    for i, (k, v) in enumerate(sorted(to_do.items(),
                                       key=lambda kv: kv[1]["inferiore"]), 1):
-        e = una(k, v)
-        esiti.append(e)
-        conta[e["stato"]] = conta.get(e["stato"], 0) + 1
-        marca = {"CONFERMATO": "ok", "DISCORDE": "??", "NON VALIDO": "XX"}.get(
-            e["stato"], "--")
-        print(f"[{i:3d}/{len(da_fare)}] {marca} {e['cella']:<14} "
-              f"atteso {e['atteso']:>6}  "
-              f"trovato {str(e.get('trovato', '-')):>6}  "
-              f"{e.get('formato', '')}  {e.get('nota', '')}")
+        e = one_(k, v)
+        results.append(e)
+        count_[e["state"]] = count_.get(e["state"], 0) + 1
+        mark = {"CONFERMATO": "ok", "DISCORDE": "??", "NON VALIDO": "XX"}.get(
+            e["state"], "--")
+        print(f"[{i:3d}/{len(to_do)}] {mark} {e['cell']:<14} "
+              f"expected_one {e['expected_one']:>6}  "
+              f"found {str(e.get('found', '-')):>6}  "
+              f"{e.get('format_', '')}  {e.get('note', '')}")
         sys.stdout.flush()
-    (DATI / "riproduzione.json").write_text(json.dumps(esiti, indent=1))
+    (DATA_DIR / "riproduzione.json").write_text(json.dumps(results, indent=1))
     print("\n" + "=" * 70)
-    for stato, quanti in sorted(conta.items(), key=lambda kv: -kv[1]):
-        print(f"  {stato:<14} {quanti}")
-    print(f"\nRapporto in {DATI / 'riproduzione.json'}")
+    for state, how_many in sorted(count_.items(), key=lambda kv: -kv[1]):
+        print(f"  {state:<14} {how_many}")
+    print(f"\nRapporto in {DATA_DIR / 'riproduzione.json'}")
     return 0
 
 

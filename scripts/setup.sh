@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ---------------------------------------------------------------------------
-# Installa da zero tutto l'ambiente del progetto.
+# Installa da zero tutto l'environment del progetto.
 # Idempotente: si puo' rieseguire senza danni.
 #
 # Uso:  bash scripts/setup.sh
@@ -12,19 +12,19 @@ EXT="$ROOT/external"
 BIN="$ROOT/tools/bin"
 
 # --- Versioni bloccate -----------------------------------------------------
-# Il tag di benchmark decide TUTTO il resto: fissa la versione di Lean.
+# Il tag di benchmark decide TUTTO il resto: fix_ la versione di Lean.
 FC_TAG="bench-v1-lean4.27.0"
 LEAN_VERSION="v4.27.0"
 
-# comparator: usiamo l'ultima versione. NON deve girare sulla stessa versione
-# di Lean del progetto (vedi docs/02-verificatore.md), ma deve essere recente
-# abbastanza da capire il formato di export corrente e da supportare i
-# "buchi di definizione" (definition_names), che ci servono per answer( ).
+# comparator: usiamo l'last_one versione. NON deve girare sulla stessa versione
+# di Lean del progetto (vedi docs/02-verifier.md), ma deve essere recente
+# abbastanza da capire il format_ di export current e da supportare i
+# "buchi di definition" (definition_names), che ci servono per answer( ).
 COMPARATOR_REV="2312244"
 
-# lean4export: il sorgente e' quello recente (formato di export compatibile con
+# lean4export: il source_text e' quello recente (format_ di export compatibile con
 # comparator) MA compilato con Lean 4.27.0, perche' deve leggere gli .olean
-# dell'archivio, che sono legati alla versione di Lean.
+# dell'archive, che sono legati alla versione di Lean.
 LEAN4EXPORT_REV="master"
 
 step() { echo; echo "==============================================================="; echo "  $*"; echo "==============================================================="; }
@@ -43,7 +43,7 @@ fi
 elan toolchain install "leanprover/lean4:$LEAN_VERSION"
 elan --version
 
-# --- 2. archivio dei problemi ----------------------------------------------
+# --- 2. archive dei problems ----------------------------------------------
 step "2/7  formal-conjectures @ $FC_TAG"
 mkdir -p "$EXT"
 if [ ! -d "$EXT/formal-conjectures/.git" ]; then
@@ -54,7 +54,7 @@ git -C "$EXT/formal-conjectures" checkout --quiet "$FC_TAG"
 test "$(cat "$EXT/formal-conjectures/lean-toolchain")" = "leanprover/lean4:$LEAN_VERSION" \
   || { echo "ERRORE: il tag richiede un Lean diverso da $LEAN_VERSION"; exit 1; }
 
-step "3/7  Cache di Mathlib + compilazione dell'archivio (LUNGO: ~30-60 min)"
+step "3/7  Cache di Mathlib + compilazione dell'archive (LUNGO: ~30-60 min)"
 ( cd "$EXT/formal-conjectures" && lake exe cache get && lake build )
 
 # --- 3. lean4export ---------------------------------------------------------
@@ -78,8 +78,8 @@ git -C "$EXT/comparator" fetch --quiet
 git -C "$EXT/comparator" checkout --quiet "$COMPARATOR_REV"
 ( cd "$EXT/comparator" && lake build comparator )
 
-# --- 5. ambiente Python -----------------------------------------------------
-step "6/7  Ambiente Python isolato (.venv)"
+# --- 5. environment Python -----------------------------------------------------
+step "6/7  Ambiente Python isolated (.venv)"
 if [ ! -d "$ROOT/.venv" ]; then
   python3 -m venv "$ROOT/.venv"
 fi
@@ -87,7 +87,7 @@ fi
 "$ROOT/.venv/bin/pip" install --quiet -r "$ROOT/requirements.txt"
 "$ROOT/.venv/bin/python" -c "import pytest, anthropic; print('  pytest', pytest.__version__, '| anthropic', anthropic.__version__)"
 
-# --- 6. verifica finale -----------------------------------------------------
+# --- 6. check finale -----------------------------------------------------
 step "7/7  Controllo dei binari"
 for f in "$EXT/comparator/.lake/build/bin/comparator" \
          "$EXT/lean4export-427/.lake/build/bin/lean4export" \
@@ -95,7 +95,7 @@ for f in "$EXT/comparator/.lake/build/bin/comparator" \
   if [ -x "$f" ]; then echo "  OK  $f"; else echo "  MANCANTE  $f"; exit 1; fi
 done
 echo
-echo "Ambiente pronto."
-echo "Prossimi passi:"
-echo "  ./.venv/bin/python verifier/index.py --build   # costruisce l\x27indice dei problemi"
-echo "  ./.venv/bin/python -m pytest tests/ -v         # esegue i test del verificatore"
+echo "Ambiente ready."
+echo "Prossimi steps:"
+echo "  ./.venv/bin/python verifier/index.py --build   # costruisce l\x27indice dei problems"
+echo "  ./.venv/bin/python -m pytest tests/ -v         # esegue i test del verifier"

@@ -1,14 +1,14 @@
 """
-Avvia un comando DISTACCATO dal processo che lo lancia.
+Avvia un command DISTACCATO dal processo che lo lancia.
 
-Perche' serve: `nohup ... &` da una shell che poi esce non basta sempre — su
-macOS il gruppo di processi viene comunque terminato quando la shell chiamante
-muore. `start_new_session=True` mette il comando in una sessione tutta sua, e
+Perche' serve: `nohup ... &` da one_ shell che poi exits non basta sempre — su
+macOS il group di processi viene comunque terminato quando la shell chiamante
+muore. `start_new_session=True` mette il command in one_ sessione tutta sua, e
 li' sopravvive.
 
 Uso:
-    python scripts/distacca.py NOME_LAVORO -- comando e argomenti
-Il log finisce in runs/lavori/NOME.log, il PID in runs/lavori/NOME.pid.
+    python scripts/distacca.py NOME_LAVORO -- command e arguments
+Il log finisce in runs/jobs/NOME.log, il PID in runs/jobs/NOME.pid.
 """
 from __future__ import annotations
 
@@ -17,42 +17,42 @@ import subprocess
 import sys
 from pathlib import Path
 
-RADICE = Path(__file__).resolve().parent.parent
-LAVORI = RADICE / "runs" / "lavori"
+ROOT = Path(__file__).resolve().parent.parent
+JOBS = ROOT / "runs" / "jobs"
 
 
 def main() -> int:
     if "--" not in sys.argv:
         print(__doc__)
         return 2
-    taglio = sys.argv.index("--")
-    nome = sys.argv[1]
-    comando = sys.argv[taglio + 1:]
-    if not comando:
-        print("manca il comando dopo --")
+    cut = sys.argv.index("--")
+    name = sys.argv[1]
+    command = sys.argv[cut + 1:]
+    if not command:
+        print("manca il command after --")
         return 2
 
-    LAVORI.mkdir(parents=True, exist_ok=True)
-    log = LAVORI / f"{nome}.log"
-    pid_file = LAVORI / f"{nome}.pid"
+    JOBS.mkdir(parents=True, exist_ok=True)
+    log = JOBS / f"{name}.log"
+    pid_file = JOBS / f"{name}.pid"
 
-    # se ne sta girando uno con lo stesso nome, non si raddoppia
+    # se ne sta girando one con lo stesso name, non si raddoppia
     if pid_file.is_file():
         try:
-            vecchio = int(pid_file.read_text().strip())
-            os.kill(vecchio, 0)
-            print(f"il lavoro '{nome}' sta gia' girando (PID {vecchio})")
+            old_ = int(pid_file.read_text().strip())
+            os.kill(old_, 0)
+            print(f"il job '{name}' sta gia' girando (PID {old_})")
             return 1
         except (ValueError, ProcessLookupError, PermissionError):
             pass
 
     with open(log, "a", encoding="utf-8") as f:
         proc = subprocess.Popen(
-            comando, stdout=f, stderr=subprocess.STDOUT,
-            cwd=str(RADICE), start_new_session=True,
+            command, stdout=f, stderr=subprocess.STDOUT,
+            cwd=str(ROOT), start_new_session=True,
             env=dict(os.environ))
     pid_file.write_text(str(proc.pid), encoding="utf-8")
-    print(f"avviato '{nome}' (PID {proc.pid})")
+    print(f"avviato '{name}' (PID {proc.pid})")
     print(f"  log:  {log}")
     return 0
 

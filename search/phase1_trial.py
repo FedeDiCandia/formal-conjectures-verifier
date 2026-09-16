@@ -1,12 +1,12 @@
 """
-Fase 1 vera: la nostra ricerca, da zero, contro i limiti pubblicati.
+Fase 1 vera: la nostra ricerca, da zero, against i bounds pubblicati.
 
-Il passo zero (`riproduci.py`) ha mostrato che sappiamo leggere e verificare i
-record. Qui si misura la cosa che conta: **partendo da niente, quanto ci
-avviciniamo?** Per ogni cella si prova un repertorio di gruppi, si cerca la clique
-pesata massima fra le orbite, e si confronta con la tabella.
+Il step zero (`riproduci.py`) ha mostrato che sappiamo leggere e verificare i
+record. Qui si misura la cosa che count_: **partendo da niente, quanto ci
+avviciniamo?** Per ogni cell si trial un repertorio di groups, si search_for la clique
+pesata massima fra le orbits, e si compare con la tabella.
 
-Tre esiti: PAREGGIATO (uguale al limite pubblicato), SOTTO (di quanto), SOPRA
+Tre results: PAREGGIATO (uguale al limit pubblicato), SOTTO (di quanto), SOPRA
 (record battuto — da trattare con il protocollo di docs/04, non da annunciare).
 """
 from __future__ import annotations
@@ -16,77 +16,77 @@ import sys
 import time
 from pathlib import Path
 
-RADICE = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(RADICE / "search"))
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "search"))
 
-from search_core import cerca                    # noqa: E402
-from codes import verifica                # noqa: E402
-from groups import nome_gruppi             # noqa: E402
+from search_core import search_for                    # noqa: E402
+from codes import check                # noqa: E402
+from groups import group_names             # noqa: E402
 
-DATI = RADICE / "research_data"
+DATA_DIR = ROOT / "research_data"
 
 
-def scegli(limiti: dict, *, massimo_parole: int, massimo_combinazioni: int,
-           quante: int) -> list[tuple[str, dict]]:
-    """Celle alla portata di un primo giro: piccole, e con un limite pubblicato."""
+def select(bounds: dict, *, max_words: int, max_combinations: int,
+           how_many_: int) -> list[tuple[str, dict]]:
+    """Celle alla portata di un prime_ giro: piccole, e con un limit pubblicato."""
     candidate = []
-    for k, v in limiti.items():
+    for k, v in bounds.items():
         n, d, w = (int(x) for x in k.split(","))
-        if v["inferiore"] > massimo_parole or d % 2:
+        if v["inferiore"] > max_words or d % 2:
             continue
         from math import comb
-        if comb(n, w) > massimo_combinazioni:
+        if comb(n, w) > max_combinations:
             continue
         candidate.append((k, v))
     candidate.sort(key=lambda kv: (-int(kv[1]["superiore"] is not None
                                        and kv[1]["superiore"] > kv[1]["inferiore"]),
                                    kv[1]["inferiore"]))
-    return candidate[:quante]
+    return candidate[:how_many_]
 
 
 def main() -> int:
-    limiti = json.loads((DATI / "limiti_cwc.json").read_text())
-    celle = scegli(limiti, massimo_parole=400, massimo_combinazioni=300_000,
-                   quante=int(sys.argv[1]) if len(sys.argv) > 1 else 12)
-    print(f"{len(celle)} celle nel primo giro.\n")
-    print(f"{'cella':<14}{'pubbl.':>8}{'nostro':>8}{'esito':>12}  "
-          f"{'gruppo':<14}{'fonte':<8}{'tempo':>7}")
+    bounds = json.loads((DATA_DIR / "limiti_cwc.json").read_text())
+    cells = select(bounds, max_words=400, max_combinations=300_000,
+                   how_many_=int(sys.argv[1]) if len(sys.argv) > 1 else 12)
+    print(f"{len(cells)} cells nel prime_ giro.\n")
+    print(f"{'cell':<14}{'pubbl.':>8}{'nostro':>8}{'result':>12}  "
+          f"{'group':<14}{'source_':<8}{'tempo':>7}")
     print("-" * 78)
-    esiti = []
-    conta = {"PAREGGIATO": 0, "SOTTO": 0, "SOPRA": 0}
-    for k, v in celle:
+    results = []
+    count_ = {"PAREGGIATO": 0, "SOTTO": 0, "SOPRA": 0}
+    for k, v in cells:
         n, d, w = (int(x) for x in k.split(","))
         t0 = time.time()
-        r = cerca(n, d, w, nome_gruppi(n), riavvii=60)
-        mio = r["migliore"]["dimensione"]
+        r = search_for(n, d, w, group_names(n), restarts=60)
+        mio = r["best"]["size"]
         if mio > v["inferiore"]:
-            stato = "SOPRA"
+            state = "SOPRA"
         elif mio == v["inferiore"]:
-            stato = "PAREGGIATO"
+            state = "PAREGGIATO"
         else:
-            stato = "SOTTO"
-        conta[stato] += 1
+            state = "SOTTO"
+        count_[state] += 1
         dt = time.time() - t0
         print(f"A({n},{d},{w})".ljust(14)
-              + f"{v['inferiore']:>8}{mio:>8}{stato:>12}  "
-              + f"{str(r['migliore']['gruppo']):<14}{v['fonte']:<8}{dt:>6.1f}s")
+              + f"{v['inferiore']:>8}{mio:>8}{state:>12}  "
+              + f"{str(r['best']['group']):<14}{v['source_']:<8}{dt:>6.1f}s")
         sys.stdout.flush()
-        voce = {"cella": f"A({n},{d},{w})", "pubblicato": v["inferiore"],
-                "nostro": mio, "stato": stato, "fonte": v["fonte"],
-                "gruppo": r["migliore"]["gruppo"], "secondi": round(dt, 1),
+        entry = {"cell": f"A({n},{d},{w})", "pubblicato": v["inferiore"],
+                "nostro": mio, "state": state, "source_": v["source_"],
+                "group": r["best"]["group"], "seconds": round(dt, 1),
                 "per_gruppo": r["per_gruppo"]}
-        if stato == "SOPRA":
-            # il giudice lento, non quello rapido, e le parole per esteso
-            g = verifica(r["migliore"]["parole"], n, d, w)
-            voce["giudice_lento"] = g.ok
-            voce["parole"] = r["migliore"]["parole"]
-            print(f"    ATTENZIONE: sopra il limite pubblicato. "
-                  f"Giudice lento: {'valido' if g.ok else g.difetti[:2]}. "
-                  f"Applicare docs/04 prima di chiamarlo risultato.")
-        esiti.append(voce)
-    (DATI / "fase1_ricerca.json").write_text(json.dumps(esiti, indent=1))
+        if state == "SOPRA":
+            # il giudice slow_, non quello fast_, e le words per esteso
+            g = check(r["best"]["words"], n, d, w)
+            entry["giudice_lento"] = g.ok
+            entry["words"] = r["best"]["words"]
+            print(f"    ATTENZIONE: above il limit pubblicato. "
+                  f"Giudice slow_: {'valid' if g.ok else g.findings[:2]}. "
+                  f"Applicare docs/04 before di chiamarlo result_value.")
+        results.append(entry)
+    (DATA_DIR / "fase1_ricerca.json").write_text(json.dumps(results, indent=1))
     print("-" * 78)
-    print("  ".join(f"{s}: {c}" for s, c in conta.items()))
+    print("  ".join(f"{s}: {c}" for s, c in count_.items()))
     return 0
 
 

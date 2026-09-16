@@ -1,13 +1,13 @@
 """
-Stima quanto costerebbe far lavorare l'agent su certi problemi.
+Stima quanto costerebbe far lavorare l'agent su certi problems.
 
-Non chiama l'API e non spende niente: usa il conteggio dei token, che e'
-gratuito, e i dati MISURATI nelle esecuzioni precedenti.
+Non chiama l'API e non spende niente: usa il count dei token, che e'
+gratuito, e i data_ MISURATI nelle esecuzioni precedenti.
 
-Ogni numero prodotto dice da dove viene:
+Ogni number prodotto dice da dove viene:
   MISURATO  osservato in un'esecuzione vera
-  CONTATO   calcolato esattamente (token, prezzi di listino)
-  STIMATO   dedotto dai due precedenti, con il ragionamento a fianco
+  CONTATO   calcolato esattamente (token, prices di listino)
+  STIMATO   inferred dai two precedenti, con il reasoning a fianco
 """
 from __future__ import annotations
 
@@ -16,17 +16,17 @@ import json
 import sys
 from pathlib import Path
 
-RADICE = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(RADICE / "verifier"))
-sys.path.insert(0, str(RADICE / "agent"))
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "verifier"))
+sys.path.insert(0, str(ROOT / "agent"))
 
 import costs
 from index import ProblemIndex
 
-#: MISURATO sull'unico problema portato a termine nel test da 5 dollari
-#: (ComplexityTheory.P_subset_coNP, 9 chiamate, effort high).
+#: MISURATO sull'unico problem portato a termine nel test da 5 dollari
+#: (ComplexityTheory.P_subset_coNP, 9 calls, effort high).
 #: Vedi docs/data/measurements.md e runs/test_5_dollari_interrotto.log
-MISURA = {
+MEASURE = {
     "costo_medio_chiamata": 0.2015,
     "costo_mediano_chiamata": 0.0796,
     "costo_massimo_chiamata": 0.7090,
@@ -36,92 +36,92 @@ MISURA = {
 }
 
 
-def stima(problemi: list[str], budget: float, effort: str, max_iterazioni: int,
-          modello: str) -> None:
-    p = costs.prezzi(modello)
-    n = max(1, len(problemi))
-    tetto = budget / n
+def estimate(problems: list[str], budget: float, effort: str, max_iterations: int,
+          model: str) -> None:
+    p = costs.prices(model)
+    n = max(1, len(problems))
+    cap = budget / n
 
-    print("STIMA — nessuna chiamata all'API, nessuna spesa")
+    print("STIMA — nessuna call all'API, nessuna spesa")
     print("=" * 70)
-    print(f"  modello        {modello}   (input ${p.input}/Mtok, output ${p.output}/Mtok)")
+    print(f"  model        {model}   (input ${p.input}/Mtok, output ${p.output}/Mtok)")
     print(f"  effort         {effort}")
-    print(f"  problemi       {n}")
-    print(f"  budget totale  ${budget:.2f}   (tetto per problema ${tetto:.2f})")
+    print(f"  problems       {n}")
+    print(f"  budget total  ${budget:.2f}   (cap per problem ${cap:.2f})")
     print()
 
     print("DA COSA PARTO (MISURATO)")
     print("-" * 70)
-    print(f"  Una sola esecuzione vera, su un solo problema, con effort high:")
-    print(f"    {MISURA['chiamate_osservate']} chiamate")
-    print(f"    costo medio per chiamata     ${MISURA['costo_medio_chiamata']:.4f}")
-    print(f"    costo mediano per chiamata   ${MISURA['costo_mediano_chiamata']:.4f}")
-    print(f"    costo massimo per chiamata   ${MISURA['costo_massimo_chiamata']:.4f}")
-    print(f"    tempo medio per iterazione   {MISURA['secondi_per_iterazione']} s")
+    print(f"  Una sola esecuzione vera, su un only_ problem, con effort high:")
+    print(f"    {MEASURE['chiamate_osservate']} calls")
+    print(f"    cost mean_ per call     ${MEASURE['costo_medio_chiamata']:.4f}")
+    print(f"    cost median_ per call   ${MEASURE['costo_mediano_chiamata']:.4f}")
+    print(f"    cost maximum per call   ${MEASURE['costo_massimo_chiamata']:.4f}")
+    print(f"    tempo mean_ per iteration   {MEASURE['secondi_per_iterazione']} s")
     print()
-    print("  ATTENZIONE: un solo problema osservato. Questi numeri servono a")
+    print("  ATTENZIONE: un only_ problem osservato. Questi numbers servono a")
     print("  farsi un'idea, non a fare previsioni precise. La distribuzione era")
-    print("  molto storta: due chiamate su nove valevano il 60% della spesa.")
+    print("  molto storta: two calls su nove valevano il 60% della spesa.")
     print()
 
-    fattore = {"low": 0.35, "medium": 0.6, "high": 1.0, "xhigh": 1.8, "max": 3.0}[effort]
+    factor = {"low": 0.35, "medium": 0.6, "high": 1.0, "xhigh": 1.8, "max": 3.0}[effort]
     if effort != "high":
-        print(f"  Correzione per effort '{effort}': x{fattore} (STIMATO, non misurato:")
+        print(f"  Correzione per effort '{effort}': x{factor} (STIMATO, non misurato:")
         print(f"  l'unica esecuzione vera era con effort high)")
         print()
 
     print("QUANTO POTREBBE COSTARE (STIMATO)")
     print("-" * 70)
-    medio = MISURA["costo_medio_chiamata"] * fattore
-    mediano = MISURA["costo_mediano_chiamata"] * fattore
-    for etichetta, per_chiamata, iterazioni in [
-        ("ottimistico (poche iterazioni, chiamate corte)", mediano, 5),
-        ("realistico  (come l'unica esecuzione osservata)", medio, 9),
-        ("pessimistico (arriva al tetto di spesa)", medio, max_iterazioni),
+    mean_ = MEASURE["costo_medio_chiamata"] * factor
+    median_ = MEASURE["costo_mediano_chiamata"] * factor
+    for label, per_call, iterations in [
+        ("ottimistico (poche iterations, calls corte)", median_, 5),
+        ("realistico  (come l'unica esecuzione osservata)", mean_, 9),
+        ("pessimistico (arriva al cap di spesa)", mean_, max_iterations),
     ]:
-        totale = min(per_chiamata * iterazioni, tetto) * n
-        minuti = iterazioni * MISURA["secondi_per_iterazione"] * n / 60
-        print(f"  {etichetta}")
-        print(f"      ${totale:.2f} in tutto, circa {minuti:.0f} minuti")
+        total = min(per_call * iterations, cap) * n
+        minuti = iterations * MEASURE["secondi_per_iterazione"] * n / 60
+        print(f"  {label}")
+        print(f"      ${total:.2f} in tutto, circa {minuti:.0f} minuti")
     print()
-    print(f"  LIMITE RIGIDO: ${budget:.2f}. Non puo' essere superato: prima di")
-    print(f"  ogni chiamata si calcola il costo massimo possibile e, se non ci")
-    print(f"  sta nel residuo, la chiamata non parte.")
+    print(f"  LIMIT RIGIDO: ${budget:.2f}. Non puo' essere passed_one: before di")
+    print(f"  ogni call si compute il cost maximum possibile e, se non ci")
+    print(f"  sta nel residue, la call non parte.")
     print()
 
-    if problemi:
+    if problems:
         print("I PROBLEMI SCELTI")
         print("-" * 70)
         try:
             idx = ProblemIndex.load()
         except FileNotFoundError:
-            print("  (indice non costruito: non posso descriverli)")
+            print("  (index non built_: non posso descriverli)")
             return
-        for nome in problemi:
+        for name in problems:
             try:
-                pr = idx.get(nome)
+                pr = idx.get(name)
             except KeyError as e:
-                print(f"  ! {nome}: {str(e)[:80]}")
+                print(f"  ! {name}: {str(e)[:80]}")
                 continue
-            stato = ("risolto nell'archivio con prova pulita"
+            state = ("solved_one nell'archive con trial pulita"
                      if pr.archive_proof_is_clean else
-                     "risolto nell'archivio ma con assiomi non ammessi"
+                     "solved_one nell'archive ma con axioms non permitted"
                      if pr.proof_is_sorry_free else "APERTO")
-            print(f"  {nome}")
-            print(f"      {pr.category} | {stato} | enunciato {len(pr.statement)} caratteri")
+            print(f"  {name}")
+            print(f"      {pr.category} | {state} | statement {len(pr.statement)} chars")
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Stima il costo di un'esecuzione dell'agent.")
-    ap.add_argument("--problemi", default="", help="nomi separati da spazi")
+    ap = argparse.ArgumentParser(description="Stima il cost di un'esecuzione dell'agent.")
+    ap.add_argument("--problems", default="", help="names separati da spazi")
     ap.add_argument("--budget", type=float, default=5.0)
     ap.add_argument("--effort", default="high",
                     choices=["low", "medium", "high", "xhigh", "max"])
-    ap.add_argument("--max-iterazioni", type=int, default=30)
-    ap.add_argument("--modello", default="claude-opus-5")
+    ap.add_argument("--max-iterations", type=int, default=30)
+    ap.add_argument("--model", default="claude-opus-5")
     args, _ignoti = ap.parse_known_args()
-    stima([x for x in args.problemi.split() if x], args.budget, args.effort,
-          args.max_iterazioni, args.modello)
+    estimate([x for x in args.problems.split() if x], args.budget, args.effort,
+          args.max_iterations, args.model)
     return 0
 
 

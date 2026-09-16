@@ -1,25 +1,25 @@
 """
-Verificatore esatto di codici binari.
+Verificatore exact di codici binari.
 
 PERCHÉ QUESTO FILE È LA COSA PIÙ IMPORTANTE DELLA STRADA A
 ----------------------------------------------------------
-Tutto il progetto finora si è appoggiato a un verificatore complicato: Lean, il
-kernel, il comparator, la sandbox, l'fingerprint dell'archivio. Cinque volte ha
-dovuto fermare la nostra stessa macchina che diceva «trovato».
+Tutto il progetto finora si è appoggiato a un verifier complicato: Lean, il
+kernel, il comparator, la sandbox, l'fingerprint dell'archive. Cinque volte ha
+dovuto fermare la nostra stessa macchina che diceva «found».
 
-Qui il verificatore è **questo file**, e si legge in cinque minuti. Un codice
-binario a peso costante è una lista di parole; è valido se ogni parola ha la
-lunghezza e il peso giusti e se ogni coppia dista almeno `d`. Sono confronti fra
-interi: non c'è niente da interpretare, niente da elaborare, nessun ambiente che
-possa essere configurato male, nessuna tattica che possa lasciare un `sorry`.
+Qui il verifier è **questo file**, e si legge in cinque minuti. Un code
+binario a weight costante è one_ list_ di words; è valid se ogni word ha la
+length e il weight giusti e se ogni coppia dista almeno `d`. Sono confronti fra
+interi: non c'è niente da interpretare, niente da elaborare, nessun environment che
+possa essere configurato male, nessuna tactic che possa lasciare un `sorry`.
 
-**La regola di questo file: non ottimizzare mai per velocità a costo della
-chiarezza.** Se serve velocità, va in un altro file e questo resta il giudice.
+**La rule_ di questo file: non ottimizzare mai per velocità a cost della
+chiarezza.** Se serve velocità, va in un other file e questo resta il giudice.
 
 CONVENZIONE
 -----------
-Una parola di lunghezza n è un `int`: il bit i (valore 2^i) dice se la posizione
-i è a 1. Il peso è `int.bit_count()`. La distanza di Hamming fra due parole è
+Una word di length n è un `int`: il bit i (value_ 2^i) dice se la position
+i è a 1. Il weight è `int.bit_count()`. La distance di Hamming fra two words è
 `(a ^ b).bit_count()`.
 """
 from __future__ import annotations
@@ -30,191 +30,191 @@ from pathlib import Path
 
 
 @dataclass
-class Esito:
-    """Il verdetto. `ok` è vero solo se non c'è nessun difetto."""
+class Result:
+    """Il verdict. `ok` è vero only_ se non c'è nessun finding."""
     ok: bool
-    dimensione: int
-    difetti: list[str] = field(default_factory=list)
+    size: int
+    findings: list[str] = field(default_factory=list)
 
     def __str__(self) -> str:
         if self.ok:
-            return f"VALIDO, {self.dimensione} parole"
-        return (f"NON VALIDO ({len(self.difetti)} difetti): "
-                + "; ".join(self.difetti[:5]))
+            return f"VALIDO, {self.size} words"
+        return (f"NON VALIDO ({len(self.findings)} findings): "
+                + "; ".join(self.findings[:5]))
 
 
-def peso(parola: int) -> int:
-    return parola.bit_count()
+def weight(word: int) -> int:
+    return word.bit_count()
 
 
-def distanza(a: int, b: int) -> int:
+def distance(a: int, b: int) -> int:
     return (a ^ b).bit_count()
 
 
-def verifica(parole, n: int, d: int, w: int | None = None,
-             massimo_difetti: int = 20) -> Esito:
-    """Verifica esatta di un codice binario.
+def check(words, n: int, d: int, w: int | None = None,
+             max_findings: int = 20) -> Result:
+    """Verifica esatta di un code binario.
 
-    `w` non None: codice a peso costante. Nessuna scorciatoia, nessuna euristica:
-    si controllano **tutte** le coppie.
+    `w` non None: code a weight costante. Nessuna scorciatoia, nessuna euristica:
+    si controllano **all_of** le pairs.
     """
-    parole = list(parole)
-    difetti: list[str] = []
+    words = list(words)
+    findings: list[str] = []
 
-    def segnala(msg: str) -> bool:
-        difetti.append(msg)
-        return len(difetti) >= massimo_difetti
+    def report_(msg: str) -> bool:
+        findings.append(msg)
+        return len(findings) >= max_findings
 
     if n <= 0:
-        segnala(f"lunghezza n={n} non valida")
-    limite = 1 << n
-    visti: dict[int, int] = {}
-    for i, p in enumerate(parole):
+        report_(f"length n={n} non valida")
+    limit = 1 << n
+    seen: dict[int, int] = {}
+    for i, p in enumerate(words):
         if not isinstance(p, int) or p < 0:
-            if segnala(f"parola {i}: non è un intero non negativo ({p!r})"):
+            if report_(f"word {i}: non è un intero non negativo ({p!r})"):
                 break
             continue
-        if p >= limite:
-            if segnala(f"parola {i}: usa bit oltre la posizione {n - 1}"):
+        if p >= limit:
+            if report_(f"word {i}: usa bit oltre la position {n - 1}"):
                 break
             continue
-        if w is not None and peso(p) != w:
-            if segnala(f"parola {i}: peso {peso(p)}, atteso {w}"):
+        if w is not None and weight(p) != w:
+            if report_(f"word {i}: weight {weight(p)}, expected_one {w}"):
                 break
             continue
-        if p in visti:
-            if segnala(f"parola {i}: duplicato della parola {visti[p]}"):
+        if p in seen:
+            if report_(f"word {i}: duplicato della word {seen[p]}"):
                 break
             continue
-        visti[p] = i
+        seen[p] = i
 
-    if not difetti:
-        for (i, a), (j, b) in combinations(list(enumerate(parole)), 2):
-            dist = distanza(a, b)
+    if not findings:
+        for (i, a), (j, b) in combinations(list(enumerate(words)), 2):
+            dist = distance(a, b)
             if dist < d:
-                if segnala(f"parole {i} e {j}: distanza {dist} < {d}"):
+                if report_(f"words {i} e {j}: distance {dist} < {d}"):
                     break
 
-    return Esito(ok=not difetti, dimensione=len(parole), difetti=difetti)
+    return Result(ok=not findings, size=len(words), findings=findings)
 
 
 # ---------------------------------------------------------------- lettura file
 
-def leggi(percorso: str | Path, n: int | None = None) -> tuple[list[int], int]:
-    """Legge un codice da un file di testo e restituisce (parole, n).
+def read_(path: str | Path, n: int | None = None) -> tuple[list[int], int]:
+    """Legge un code da un file di text e restituisce (words, n).
 
-    Riconosce i due formati in cui questi codici circolano:
+    Riconosce i two formati in cui questi codici circolano:
 
-      * **posizioni**: ogni riga è la lista delle posizioni a 1, per es.
+      * **positions**: ogni line è la list_ delle positions a 1, per es.
         `1 2 3 7` oppure `1,2,3,7`;
-      * **bit**: ogni riga è una stringa di `0` e `1` della stessa lunghezza.
+      * **bit**: ogni line è one_ stringa di `0` e `1` della stessa length.
 
-    Il formato si riconosce dalla prima riga utile, e poi si applica a tutte: un
-    file misto è un errore, non un'occasione di indovinare.
+    Il format_ si riconosce dalla before line utile, e poi si apply_ a all_of: un
+    file misto è un error, non un'occasione di indovinare.
     """
-    righe = [r.strip() for r in Path(percorso).read_text().splitlines()]
-    righe = [r for r in righe if r and not r.startswith("#")]
-    if not righe:
-        raise ValueError(f"{percorso}: nessuna riga utile")
+    lines = [r.strip() for r in Path(path).read_text().splitlines()]
+    lines = [r for r in lines if r and not r.startswith("#")]
+    if not lines:
+        raise ValueError(f"{path}: nessuna line utile")
 
-    a_bit = all(c in "01" for c in righe[0]) and len(righe[0]) > 1
-    parole: list[int] = []
+    a_bit = all(c in "01" for c in lines[0]) and len(lines[0]) > 1
+    words: list[int] = []
     if a_bit:
-        lung = len(righe[0])
-        for k, r in enumerate(righe):
-            if len(r) != lung or any(c not in "01" for c in r):
-                raise ValueError(f"{percorso}: riga {k + 1} non è una stringa di "
-                                 f"{lung} bit: {r[:40]!r}")
-            parole.append(int(r[::-1], 2))
-        dedotto = lung
+        len_ = len(lines[0])
+        for k, r in enumerate(lines):
+            if len(r) != len_ or any(c not in "01" for c in r):
+                raise ValueError(f"{path}: line {k + 1} non è one_ stringa di "
+                                 f"{len_} bit: {r[:40]!r}")
+            words.append(int(r[::-1], 2))
+        inferred = len_
     else:
-        massimo = 0
-        for k, r in enumerate(righe):
-            pezzi = r.replace(",", " ").split()
+        maximum = 0
+        for k, r in enumerate(lines):
+            pieces = r.replace(",", " ").split()
             try:
-                pos = [int(x) for x in pezzi]
+                pos = [int(x) for x in pieces]
             except ValueError:
-                raise ValueError(f"{percorso}: riga {k + 1} non è una lista di "
-                                 f"posizioni: {r[:40]!r}") from None
+                raise ValueError(f"{path}: line {k + 1} non è one_ list_ di "
+                                 f"positions: {r[:40]!r}") from None
             if len(set(pos)) != len(pos):
-                raise ValueError(f"{percorso}: riga {k + 1} ripete una posizione")
+                raise ValueError(f"{path}: line {k + 1} ripete one_ position")
             base = 1 if min(pos) >= 1 else 0
-            massimo = max(massimo, max(pos))
-            parole.append(sum(1 << (p - base) for p in pos))
-        dedotto = massimo  # posizioni 1..n
-    return parole, (n if n is not None else dedotto)
+            maximum = max(maximum, max(pos))
+            words.append(sum(1 << (p - base) for p in pos))
+        inferred = maximum  # positions 1..n
+    return words, (n if n is not None else inferred)
 
 
-# ------------------------------------------------- verifica rapida, ed esatta
+# ------------------------------------------------- check rapida, ed esatta
 #
-# Per codici grandi il controllo di tutte le coppie è troppo lento in Python:
-# 50.000 parole sono 1,25 miliardi di coppie. Esiste però un criterio
-# **equivalente** e quasi istantaneo, valido per i codici a peso costante.
+# Per codici grandi il controllo di all_of le pairs è troppo slow_ in Python:
+# 50.000 words sono 1,25 miliardi di pairs. Esiste però un criterio
+# **equivalente** e quasi istantaneo, valid per i codici a weight costante.
 #
-# Due parole distinte di peso w a distanza di Hamming `dist` hanno
+# Due words distinte di weight w a distance di Hamming `dist` hanno
 #
 #     dist = 2 · (w − |A ∩ B|)
 #
-# dove A e B sono i loro supporti: ogni posizione in A ma non in B, e viceversa,
-# contribuisce 1. Quindi, per d pari,
+# dove A e B sono i loro supports: ogni position in A ma non in B, e viceversa,
+# contribuisce 1. Quindi, per d even,
 #
 #     dist ≥ d   ⟺   |A ∩ B| ≤ w − d/2 =: t
 #
-# e una violazione significa |A ∩ B| ≥ t+1, cioè **le due parole condividono un
-# sottoinsieme di t+1 posizioni**. Basta allora elencare, per ogni parola, tutti i
-# suoi sottoinsiemi di taglia t+1: il codice è valido se e solo se nessun
-# sottoinsieme compare due volte. Il costo è m · C(w, t+1) invece di m²/2, e per i
-# casi che ci interessano è quattro ordini di grandezza meno.
+# e one_ violazione significa |A ∩ B| ≥ t+1, cioè **le two words condividono un
+# sottoinsieme di t+1 positions**. Basta allora elencare, per ogni word, all_of i
+# suoi sottoinsiemi di size_ t+1: il code è valid se e only_ se nessun
+# sottoinsieme compare two volte. Il cost è m · C(w, t+1) invece di m²/2, e per i
+# cases che ci interessano è quattro ordini di grandezza meno.
 #
 # Non è un'euristica né un'approssimazione: è lo stesso criterio, riscritto. Il
-# test `test_rapido_e_lento_concordano` lo confronta con il giudice su migliaia di
-# casi casuali, e `verifica` resta il giudice per i risultati che dichiariamo.
+# test `test_rapido_e_lento_concordano` lo compare con il giudice su migliaia di
+# cases casuali, e `check` resta il giudice per i results che dichiariamo.
 
-def posizioni(parola: int) -> tuple[int, ...]:
-    fuori = []
+def positions(word: int) -> tuple[int, ...]:
+    out_of = []
     i = 0
-    while parola:
-        if parola & 1:
-            fuori.append(i)
-        parola >>= 1
+    while word:
+        if word & 1:
+            out_of.append(i)
+        word >>= 1
         i += 1
-    return tuple(fuori)
+    return tuple(out_of)
 
 
-def verifica_veloce(parole, n: int, d: int, w: int) -> Esito:
-    """Come `verifica`, per codici a peso costante con d pari, ma per m grandi."""
+def fast_check(words, n: int, d: int, w: int) -> Result:
+    """Come `check`, per codici a weight costante con d even, ma per m grandi."""
     if d % 2:
-        raise ValueError(f"il criterio vale per d pari, ricevuto d={d}")
-    parole = list(parole)
+        raise ValueError(f"il criterio vale per d even, ricevuto d={d}")
+    words = list(words)
     t = w - d // 2
     if t < 0:
-        return Esito(ok=False, dimensione=len(parole),
-                     difetti=[f"d={d} è troppo grande per w={w}"])
+        return Result(ok=False, size=len(words),
+                     findings=[f"d={d} è troppo grande per w={w}"])
     if t >= w:
-        return verifica(parole, n, d, w)      # nessun vincolo utile: giudice
+        return check(words, n, d, w)      # nessun vincolo utile: giudice
 
-    difetti: list[str] = []
-    limite = 1 << n
-    for i, p in enumerate(parole):
-        if not isinstance(p, int) or p < 0 or p >= limite:
-            difetti.append(f"parola {i}: fuori dall'intervallo [0, 2^{n})")
-        elif peso(p) != w:
-            difetti.append(f"parola {i}: peso {peso(p)}, atteso {w}")
-        if len(difetti) >= 20:
+    findings: list[str] = []
+    limit = 1 << n
+    for i, p in enumerate(words):
+        if not isinstance(p, int) or p < 0 or p >= limit:
+            findings.append(f"word {i}: out_of dall'intervallo [0, 2^{n})")
+        elif weight(p) != w:
+            findings.append(f"word {i}: weight {weight(p)}, expected_one {w}")
+        if len(findings) >= 20:
             break
-    if difetti:
-        return Esito(ok=False, dimensione=len(parole), difetti=difetti)
+    if findings:
+        return Result(ok=False, size=len(words), findings=findings)
 
-    visti: dict[tuple[int, ...], int] = {}
-    for i, p in enumerate(parole):
-        for sotto in combinations(posizioni(p), t + 1):
-            altro = visti.get(sotto)
-            if altro is not None:
-                difetti.append(
-                    f"parole {altro} e {i}: condividono le {t + 1} posizioni "
-                    f"{list(sotto)}, quindi distano al più {2 * (w - t - 1)} < {d}")
-                if len(difetti) >= 20:
-                    return Esito(ok=False, dimensione=len(parole), difetti=difetti)
+    seen: dict[tuple[int, ...], int] = {}
+    for i, p in enumerate(words):
+        for below in combinations(positions(p), t + 1):
+            other = seen.get(below)
+            if other is not None:
+                findings.append(
+                    f"words {other} e {i}: condividono le {t + 1} positions "
+                    f"{list(below)}, quindi distano al più {2 * (w - t - 1)} < {d}")
+                if len(findings) >= 20:
+                    return Result(ok=False, size=len(words), findings=findings)
             else:
-                visti[sotto] = i
-    return Esito(ok=not difetti, dimensione=len(parole), difetti=difetti)
+                seen[below] = i
+    return Result(ok=not findings, size=len(words), findings=findings)

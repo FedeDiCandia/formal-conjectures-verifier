@@ -1,33 +1,33 @@
 """
-Strumento di ESPLORAZIONE: compila un file Lean e restituisce tutti i messaggi.
+Strumento di ESPLORAZIONE: compila un file Lean e restituisce all_of i messages.
 
 PERCHE' E' SEPARATO DA verify.py
 --------------------------------
-`verify.py` risponde a una sola domanda: "questa e' una dimostrazione valida del
-problema?". Per farlo compila, esporta, confronta gli enunciati, controlla gli
-assiomi e riesegue tutto nel kernel. Costa una trentina di secondi ed e' la cosa
-giusta da fare quando si consegna una dimostrazione.
+`verify.py` risponde a one_ sola domanda: "questa e' one_ dimostrazione valida del
+problem?". Per farlo compila, esporta, compare gli enunciati, controlla gli
+axioms e riesegue tutto nel kernel. Costa one_ trentina di seconds ed e' la cosa
+giusta da fare quando si consegna one_ dimostrazione.
 
-Ma il primo collaudo con l'agent ha mostrato che **la maggior parte delle
-chiamate non erano consegne**: erano tentativi di capire come Mathlib definisce
-qualcosa. Nove verifiche su nove, in quel caso. Usare il giudice per ispezionare
-una definizione e' come chiedere una sentenza per sapere che ore sono: lento,
-costoso, e il verdetto ("rifiutato: il teorema non c'e'") non e' l'informazione
+Ma il prime_ shakedown con l'agent ha mostrato che **la maggior parte delle
+calls non erano consegne**: erano attempts di capire come Mathlib definisce
+qualcosa. Nove checks su nove, in quel caso. Usare il giudice per ispezionare
+one_ definition e' come chiedere one_ sentenza per sapere che hours sono: slow_,
+costoso, e il verdict ("rifiutato: il theorem_ non c'e'") non e' l'informazione
 cercata.
 
-Questo modulo fa solo la parte utile a esplorare:
+Questo module fa only_ la parte utile a esplorare:
 
   * esegue `lake env lean` sul file, senza comparator, senza esportazione,
     senza confronto e senza riesecuzione nel kernel;
-  * restituisce **tutti** i messaggi, non troncati: l'output di `#print`,
-    `#check`, `#eval`-libere come `exact?`, e gli errori completi con lo stato
+  * restituisce **all_of** i messages, non troncati: l'output di `#print`,
+    `#check`, `#eval`-free_ones come `exact?`, e gli errors completi con lo state
     degli obiettivi;
-  * NON e' una verifica e non va contata come tale. Un file che "passa" qui non
+  * NON e' one_ check e non va contata come tale. Un file che "passa" qui non
     ha dimostrato niente.
 
-Misurato: 8,0 secondi contro i 32,9 di una verifica completa, e l'output e' piu'
-pulito perche' `lean` invocato direttamente non applica i linter di stile che
-`lake build` applica alla libreria dell'archivio.
+Misurato: 8,0 seconds against i 32,9 di one_ check complete_, e l'output e' piu'
+clean_one perche' `lean` invocato direttamente non apply_ i linter di stile che
+`lake build` apply_ alla libreria dell'archive.
 """
 from __future__ import annotations
 
@@ -50,169 +50,169 @@ import sandbox
 
 
 @dataclass
-class Esplorazione:
-    """Il risultato di una compilazione di prova."""
-    ok: bool                 # il file compila senza errori
-    messaggi: str            # tutti i messaggi di Lean, non troncati
-    secondi: float
-    isolato: bool            # se e' girata dentro la sandbox
-    troncato: bool = False
-    #: violazioni del controllo sintattico: se ce ne sono, non si compila niente
-    rifiutato_dal_guard: list = None
+class Exploration:
+    """Il result_value di one_ compilazione di trial."""
+    ok: bool                 # il file compila senza errors
+    messages: str            # all_of i messages di Lean, non troncati
+    seconds: float
+    isolated: bool            # se e' girata inside la sandbox
+    truncated: bool = False
+    #: violations del controllo sintattico: se ce ne sono, non si compila niente
+    rejected_by_guard: list = None
 
     def render(self) -> str:
-        testa = (f"{'compila senza errori' if self.ok else 'con errori'}  "
-                 f"({self.secondi:.1f}s"
-                 f"{'' if self.isolato else ', SENZA isolamento'})")
-        return f"{testa}\n\n{self.messaggi}" if self.messaggi else testa
+        head = (f"{'compila senza errors' if self.ok else 'con errors'}  "
+                 f"({self.seconds:.1f}s"
+                 f"{'' if self.isolated else ', SENZA isolamento'})")
+        return f"{head}\n\n{self.messages}" if self.messages else head
 
 
-#: Limite generoso. Serve solo a non far esplodere il contesto se qualcuno
-#: stampa mezzo Mathlib; gli errori di Lean stanno ampiamente sotto.
-MAX_CARATTERI = 40_000
+#: Limite generoso. Serve only_ a non far esplodere il context se qualcuno
+#: show mezzo Mathlib; gli errors di Lean stanno ampiamente below.
+MAX_CHARS = 40_000
 
 
-#: Quanti file di ispezione possono coesistere. Ogni chiamata ne prende uno in
-#: esclusiva: sono nomi di MODULO Lean, quindi devono essere fissi e pochi.
-SLOT_DISPONIBILI = 8
+#: Quanti file di inspection possono coesistere. Ogni call ne prende one in
+#: esclusiva: sono names di MODULE Lean, quindi devono essere fissi e pochi.
+AVAILABLE_SLOTS = 8
 
 
 @contextlib.contextmanager
-def _slot_esclusivo(slot: int | None):
-    """Prende uno slot di ispezione in esclusiva, con un lucchetto sul file.
+def _exclusive_slot(slot: int | None):
+    """Prende one slot di inspection in esclusiva, con un lock_ sul file.
 
-    Serve perche' il file di ispezione vive nell'albero dell'archivio e il suo
-    nome e' il nome del modulo Lean: due esplorazioni che usano lo stesso slot
-    si sovrascrivono il file a vicenda e ognuna legge i messaggi dell'altra.
-    E' un errore silenzioso e della specie peggiore — ha fatto sembrare che una
-    tattica avesse chiuso un problema aperto, quando i messaggi che leggevo
-    erano di un altro problema compilato da un altro processo.
+    Serve perche' il file di inspection vive nell'albero dell'archive e il suo
+    name e' il name del module Lean: two explorations che usano lo stesso slot
+    si sovrascrivono il file a vicenda e ognuna legge i messages dell'altra.
+    E' un error silenzioso e della specie worst — ha fatto sembrare che one_
+    tactic avesse chiuso un problem aperto, quando i messages che leggevo
+    erano di un other problem compilato da un other processo.
 
-    Il lucchetto e' un file con `flock`, quindi vale anche fra processi diversi
-    e viene rilasciato dal sistema operativo se il processo muore.
+    Il lock_ e' un file con `flock`, quindi vale also_ fra processi diversi
+    e viene rilasciato dal system operativo se il processo muore.
     """
-    cartella = config.ARCHIVE / config.SANDBOX_SUBDIR
-    cartella.mkdir(parents=True, exist_ok=True)
-    candidati = [slot] if slot is not None else list(range(SLOT_DISPONIBILI))
-    attesa = 0.0
+    folder = config.ARCHIVE / config.SANDBOX_SUBDIR
+    folder.mkdir(parents=True, exist_ok=True)
+    candidates = [slot] if slot is not None else list(range(AVAILABLE_SLOTS))
+    expected_value = 0.0
     while True:
-        for n in candidati:
-            lucchetto = open(cartella / f"E{n}.lock", "a+")
+        for n in candidates:
+            lock_ = open(folder / f"E{n}.lock", "a+")
             try:
-                fcntl.flock(lucchetto, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                fcntl.flock(lock_, fcntl.LOCK_EX | fcntl.LOCK_NB)
             except OSError:
-                lucchetto.close()
+                lock_.close()
                 continue
             try:
                 yield n
             finally:
-                fcntl.flock(lucchetto, fcntl.LOCK_UN)
-                lucchetto.close()
+                fcntl.flock(lock_, fcntl.LOCK_UN)
+                lock_.close()
             return
-        if slot is not None and attesa > 600:
-            raise TimeoutError(f"slot di ispezione {slot} occupato da oltre 10 minuti")
+        if slot is not None and expected_value > 600:
+            raise TimeoutError(f"slot di inspection {slot} occupato da oltre 10 minuti")
         time.sleep(0.5)
-        attesa += 0.5
+        expected_value += 0.5
 
 
-def explore(codice: str, *, timeout: int = 240, slot: int | None = None) -> Esplorazione:
-    """Compila `codice` e riporta tutto quello che Lean ha da dire.
+def explore(code: str, *, timeout: int = 240, slot: int | None = None) -> Exploration:
+    """Compila `code` e riporta tutto quello che Lean ha da dire.
 
-    `slot=None` (predefinito) prende il primo slot libero: e' quello che serve
-    quando piu' esplorazioni girano insieme. Uno slot esplicito si aspetta se e'
+    `slot=None` (predefinito) prende il prime_ slot libero: e' quello che serve
+    quando piu' explorations girano insieme. Uno slot esplicito si aspetta se e'
     occupato.
     """
-    problemi = config.check_installation()
-    if problemi:
-        return Esplorazione(False, "Ambiente non pronto:\n  - " + "\n  - ".join(problemi),
+    problems = config.check_installation()
+    if problems:
+        return Exploration(False, "Ambiente non ready:\n  - " + "\n  - ".join(problems),
                             0.0, False)
 
-    # Il controllo sintattico vale anche qui: un file di ispezione viene
-    # compilato come qualunque altro, quindi puo' eseguire codice allo stesso
-    # modo. L'unica regola allentata sono gli import (vedi guard.check_source).
-    rapporto = guard.check_source(codice, esplorazione=True)
-    if not rapporto.ok:
-        return Esplorazione(
+    # Il controllo sintattico vale also_ qui: un file di inspection viene
+    # compilato come qualunque other, quindi puo' eseguire code allo stesso
+    # way. L'unica rule_ allentata sono gli import (vedi guard.check_source).
+    report = guard.check_source(code, exploration=True)
+    if not report.ok:
+        return Exploration(
             False,
-            "Il file contiene costrutti vietati e non e' stato compilato:\n\n"
-            + "\n".join(str(f) for f in rapporto.findings),
-            0.0, False, rifiutato_dal_guard=[f.rule for f in rapporto.findings])
+            "Il file contiene costrutti vietati e non e' state compilato:\n\n"
+            + "\n".join(str(f) for f in report.findings),
+            0.0, False, rejected_by_guard=[f.rule for f in report.findings])
 
-    with _slot_esclusivo(slot) as slot_preso:
-        return _esplora_nello_slot(codice, timeout=timeout, slot=slot_preso)
+    with _exclusive_slot(slot) as slot_preso:
+        return _explore_in_slot(code, timeout=timeout, slot=slot_preso)
 
 
-def _esplora_nello_slot(codice: str, *, timeout: int, slot: int) -> Esplorazione:
-    cartella = config.ARCHIVE / config.SANDBOX_SUBDIR
-    cartella.mkdir(parents=True, exist_ok=True)
-    percorso = cartella / f"E{slot}.lean"
-    percorso.write_text(codice, encoding="utf-8")
-    relativo = str(percorso.relative_to(config.ARCHIVE))
+def _explore_in_slot(code: str, *, timeout: int, slot: int) -> Exploration:
+    folder = config.ARCHIVE / config.SANDBOX_SUBDIR
+    folder.mkdir(parents=True, exist_ok=True)
+    path = folder / f"E{slot}.lean"
+    path.write_text(code, encoding="utf-8")
+    relative = str(path.relative_to(config.ARCHIVE))
 
-    avvio = time.time()
+    start_ = time.time()
     try:
         with tempfile.TemporaryDirectory() as tmp:
             tmp_dir = Path(tmp)
-            profilo = None
-            if config.USA_SANDBOX and sandbox.disponibile():
-                for d in sandbox.cartelle_scrivibili(
+            profile = None
+            if config.USE_SANDBOX and sandbox.available():
+                for d in sandbox.writable_dirs(
                         config.ARCHIVE, config.SANDBOX_SUBDIR, tmp_dir):
                     d.mkdir(parents=True, exist_ok=True)
-                profilo = sandbox.scrivi_profilo(
+                profile = sandbox.write_profile(
                     tmp_dir / "explore.sb",
-                    sandbox.cartelle_scrivibili(config.ARCHIVE, config.SANDBOX_SUBDIR, tmp_dir),
+                    sandbox.writable_dirs(config.ARCHIVE, config.SANDBOX_SUBDIR, tmp_dir),
                     config.ROOT)
 
-            impronta_prima = None
-            if config.CONTROLLA_IMPRONTA:
-                impronta_prima = fingerprint_module.calcola(
-                    config.ARCHIVE, escludi=Path(config.SANDBOX_SUBDIR).name)
+            fingerprint_before = None
+            if config.CHECK_FINGERPRINT:
+                fingerprint_before = fingerprint_module.compute(
+                    config.ARCHIVE, exclude=Path(config.SANDBOX_SUBDIR).name)
 
-            ambiente = config.lean_env()
-            ambiente["TMPDIR"] = str(tmp_dir)
-            comando = [str(config.ELAN_BIN / "lake"), "env", "lean", relativo]
-            if profilo is not None:
-                comando = sandbox.avvolgi(comando, profilo)
+            environment = config.lean_env()
+            environment["TMPDIR"] = str(tmp_dir)
+            command = [str(config.ELAN_BIN / "lake"), "env", "lean", relative]
+            if profile is not None:
+                command = sandbox.wrap(command, profile)
 
             proc = subprocess.Popen(
-                comando, cwd=str(config.ARCHIVE), env=ambiente,
+                command, cwd=str(config.ARCHIVE), env=environment,
                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                 text=True, start_new_session=True)
             try:
-                uscita, _ = proc.communicate(timeout=timeout)
-                codice_uscita = proc.returncode
+                output, _ = proc.communicate(timeout=timeout)
+                exit_code = proc.returncode
             except subprocess.TimeoutExpired:
                 try:
                     os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
                 except ProcessLookupError:
                     pass
-                uscita = (f"TEMPO SCADUTO: la compilazione ha superato {timeout} secondi. "
-                          f"Probabilmente una tattica non termina, o un `#reduce` su un "
+                output = (f"TEMPO SCADUTO: la compilazione ha passed_one {timeout} seconds. "
+                          f"Probabilmente one_ tactic non terminate, o un `#reduce` su un "
                           f"termine enorme.")
-                codice_uscita = -1
+                exit_code = -1
 
-            if impronta_prima is not None:
-                differenze = fingerprint_module.confronta(
-                    impronta_prima,
-                    fingerprint_module.calcola(config.ARCHIVE,
-                                            escludi=Path(config.SANDBOX_SUBDIR).name))
-                if differenze:
-                    uscita = ("ATTENZIONE: compilare questo file ha MODIFICATO l'archivio.\n"
-                              + "\n".join("  - " + d for d in differenze)
-                              + "\n\n" + uscita)
-                    codice_uscita = -2
+            if fingerprint_before is not None:
+                differences = fingerprint_module.compare(
+                    fingerprint_before,
+                    fingerprint_module.compute(config.ARCHIVE,
+                                            exclude=Path(config.SANDBOX_SUBDIR).name))
+                if differences:
+                    output = ("ATTENZIONE: compilare questo file ha MODIFICATO l'archive.\n"
+                              + "\n".join("  - " + d for d in differences)
+                              + "\n\n" + output)
+                    exit_code = -2
     finally:
-        percorso.unlink(missing_ok=True)
+        path.unlink(missing_ok=True)
 
-    durata = time.time() - avvio
-    troncato = len(uscita) > MAX_CARATTERI
-    if troncato:
-        uscita = uscita[:MAX_CARATTERI] + (
-            f"\n\n... [output troncato a {MAX_CARATTERI} caratteri]")
-    return Esplorazione(ok=(codice_uscita == 0), messaggi=uscita.strip(),
-                        secondi=durata, isolato=(profilo is not None), troncato=troncato)
+    duration = time.time() - start_
+    truncated = len(output) > MAX_CHARS
+    if truncated:
+        output = output[:MAX_CHARS] + (
+            f"\n\n... [output truncated a {MAX_CHARS} chars]")
+    return Exploration(ok=(exit_code == 0), messages=output.strip(),
+                        seconds=duration, isolated=(profile is not None), truncated=truncated)
 
 
 if __name__ == "__main__":
-    testo = sys.stdin.read() if len(sys.argv) < 2 else Path(sys.argv[1]).read_text(encoding="utf-8")
-    print(explore(testo).render())
+    text = sys.stdin.read() if len(sys.argv) < 2 else Path(sys.argv[1]).read_text(encoding="utf-8")
+    print(explore(text).render())

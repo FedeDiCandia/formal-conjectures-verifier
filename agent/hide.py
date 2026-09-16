@@ -1,13 +1,13 @@
 """
-Nasconde le dimostrazioni gia' presenti nell'archivio.
+Nasconde le dimostrazioni gia' presenti nell'archive.
 
-Per collaudare onestamente un agent su un problema gia' risolto bisogna
-togliergli la risposta. Questo modulo prende il file sorgente di un problema e
+Per collaudare onestamente un agent su un problem gia' solved_one bisogna
+togliergli la answer. Questo module prende il file source_text di un problem e
 sostituisce OGNI dimostrazione con `sorry`, ottenendo esattamente l'aspetto che
-il file avrebbe se il problema fosse ancora aperto.
+il file avrebbe se il problem fosse ancora aperto.
 
-Si sostituiscono tutte le dimostrazioni del file, non solo quella del teorema
-bersaglio: i lemmi vicini sono spesso i passaggi intermedi della soluzione e
+Si sostituiscono all_of le dimostrazioni del file, non only_ quella del theorem_
+target_: i lemmi neighbours sono spesso i passaggi intermedi della solution e
 lasciarli sarebbe come lasciare mezzo compito svolto.
 """
 from __future__ import annotations
@@ -20,40 +20,40 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "verifier"))
 from index import ProblemIndex, Problem   # noqa: E402
 
 
-#: Coppie di delimitatori: dentro di esse un `:=` non separa la dimostrazione.
-_APERTURE = "([{⟨"
-_CHIUSURE = ")]}⟩"
+#: Coppie di delimitatori: inside di esse un `:=` non separa la dimostrazione.
+_OPENERS = "([{⟨"
+_CLOSERS = ")]}⟩"
 
 
-def _posizione_separatore(testo: str) -> int | None:
-    """Indice del `:=` che separa l'enunciato dalla dimostrazione.
+def _separator_position(text: str) -> int | None:
+    """Indice del `:=` che separa l'statement dalla dimostrazione.
 
-    Va cercato al livello esterno: in `theorem f (n : ℕ := 3) : P := prova` il
-    primo `:=` sta dentro le parentesi e non c'entra.
+    Va cercato al level esterno: in `theorem f (n : ℕ := 3) : P := trial` il
+    prime_ `:=` sta inside le parentesi e non c'enters.
 
-    E vanno saltati i COMMENTI. Le posizioni che Lean riporta per una
-    dichiarazione partono dal docstring, non dalla parola `theorem`, e un
-    docstring puo' contenere codice di esempio con dentro un `:=`. Senza questo
-    accorgimento il taglio finirebbe dentro la documentazione.
+    E vanno saltati i COMMENTI. Le positions che Lean riporta per one_
+    declaration partono dal docstring, non dalla word `theorem`, e un
+    docstring puo' contenere code di example con inside un `:=`. Senza questo
+    accorgimento il cut finirebbe inside la documentazione.
     """
-    profondita = 0
-    i, n = 0, len(testo)
+    depth = 0
+    i, n = 0, len(text)
     while i < n - 1:
-        c = testo[i]
-        # commento di riga
-        if c == "-" and testo[i + 1] == "-":
-            while i < n and testo[i] != "\n":
+        c = text[i]
+        # commento di line
+        if c == "-" and text[i + 1] == "-":
+            while i < n and text[i] != "\n":
                 i += 1
             continue
-        # commento a blocco, annidabile; comprende i docstring /-- ... -/
-        if c == "/" and testo[i + 1] == "-":
-            livello = 0
+        # commento a block, annidabile; comprende i docstring /-- ... -/
+        if c == "/" and text[i + 1] == "-":
+            level = 0
             while i < n - 1:
-                if testo[i] == "/" and testo[i + 1] == "-":
-                    livello += 1; i += 2; continue
-                if testo[i] == "-" and testo[i + 1] == "/":
-                    livello -= 1; i += 2
-                    if livello == 0:
+                if text[i] == "/" and text[i + 1] == "-":
+                    level += 1; i += 2; continue
+                if text[i] == "-" and text[i + 1] == "/":
+                    level -= 1; i += 2
+                    if level == 0:
                         break
                     continue
                 i += 1
@@ -62,130 +62,130 @@ def _posizione_separatore(testo: str) -> int | None:
         if c == '"':
             i += 1
             while i < n:
-                if testo[i] == "\\":
+                if text[i] == "\\":
                     i += 2; continue
-                if testo[i] == '"':
+                if text[i] == '"':
                     i += 1; break
                 i += 1
             continue
-        if c in _APERTURE:
-            profondita += 1
-        elif c in _CHIUSURE:
-            profondita -= 1
-        elif c == ":" and testo[i + 1] == "=" and profondita == 0:
-            if not _e_legatura(testo, i):
+        if c in _OPENERS:
+            depth += 1
+        elif c in _CLOSERS:
+            depth -= 1
+        elif c == ":" and text[i + 1] == "=" and depth == 0:
+            if not _is_binder(text, i):
                 return i
         i += 1
     return None
 
 
-#: Parole che introducono una LEGATURA, non la dimostrazione. Un `:=` che le
+#: Parole che introducono one_ LEGATURA, non la dimostrazione. Un `:=` che le
 #: segue appartiene a loro.
-_LEGATURE = ("let", "have", "set", "obtain", "suffices", "calc", "fun", "where",
+_BINDERS = ("let", "have", "set", "obtain", "suffices", "calc", "fun", "where",
              "if", "then", "else", "with", "do", "match")
 
 
-def _e_legatura(testo: str, pos: int) -> bool:
+def _is_binder(text: str, pos: int) -> bool:
     """Dice se il `:=` a `pos` appartiene a un `let`, un `have` e simili.
 
-    Serve perche' un enunciato puo' contenere un `let A : Set α := ...` al
-    livello esterno delle parentesi, e prenderlo per l'inizio della
-    dimostrazione TRONCA l'enunciato. E' successo davvero, su
+    Serve perche' un statement puo' contenere un `let A : Set α := ...` al
+    level esterno delle parentesi, e prenderlo per l'start della
+    dimostrazione TRONCA l'statement. E' successo davvero, su
     WrittenOnTheWallII.GraphConjecture65.conjecture65, e il controllo di
     onesta' l'ha intercettato.
     """
-    inizio_riga = testo.rfind("\n", 0, pos) + 1
-    segmento = testo[inizio_riga:pos]
-    parole = segmento.replace("(", " ").replace(")", " ").split()
-    if not parole:
-        # il `:=` sta a inizio riga: si guarda la riga precedente
-        prec = testo.rfind("\n", 0, max(0, inizio_riga - 1)) + 1
-        parole = testo[prec:inizio_riga].replace("(", " ").replace(")", " ").split()
-    # Si guarda a ritroso la prima parola significativa. Un punto e virgola
+    line_start = text.rfind("\n", 0, pos) + 1
+    segment = text[line_start:pos]
+    words = segment.replace("(", " ").replace(")", " ").split()
+    if not words:
+        # il `:=` sta a start line: si guarda la line precedente
+        prec = text.rfind("\n", 0, max(0, line_start - 1)) + 1
+        words = text[prec:line_start].replace("(", " ").replace(")", " ").split()
+    # Si guarda a ritroso la before word significativa. Un punto e virgola
     # CHIUDE la legatura (`let a := 1; resto`), quindi la scansione si ferma li':
     # senza, il `:=` finale di `theorem t : (let a := 1; a = 1) := by rfl`
     # veniva scambiato per quello del `let`.
-    for parola in reversed(parole):
-        if ";" in parola:
+    for word in reversed(words):
+        if ";" in word:
             return False
-        if parola in _LEGATURE:
+        if word in _BINDERS:
             return True
-        if parola in ("theorem", "lemma", "def", "abbrev", "instance", "example"):
+        if word in ("theorem", "lemma", "def", "abbrev", "instance", "example"):
             return False
     return False
 
 
-def sostituisci_dimostrazione(dichiarazione: str) -> str:
-    """`theorem f : P := <prova>`  ->  `theorem f : P := by\\n  sorry`"""
-    pos = _posizione_separatore(dichiarazione)
+def replace_proof(declaration: str) -> str:
+    """`theorem f : P := <trial>`  ->  `theorem f : P := by\\n  sorry`"""
+    pos = _separator_position(declaration)
     if pos is None:
-        return dichiarazione
-    return dichiarazione[:pos].rstrip() + " := by\n  sorry"
+        return declaration
+    return declaration[:pos].rstrip() + " := by\n  sorry"
 
 
-def file_senza_dimostrazioni(problema: Problem, indice: ProblemIndex) -> str:
-    """Il file del problema con tutte le dimostrazioni sostituite da `sorry`."""
-    testo = problema.source_file.read_text(encoding="utf-8")
-    righe = testo.split("\n")
+def file_without_proofs(problem: Problem, index: ProblemIndex) -> str:
+    """Il file del problem con all_of le dimostrazioni sostituite da `sorry`."""
+    text = problem.source_file.read_text(encoding="utf-8")
+    lines = text.split("\n")
 
-    # Tutti i teoremi che stanno in questo file, dal fondo verso l'alto, cosi'
-    # le sostituzioni non spostano le posizioni di quelli ancora da trattare.
-    nel_file = [p for p in indice.problems if p.module == problema.module and p.range]
+    # Tutti i theorems che stanno in questo file, dal fondo verso l'high, cosi'
+    # le substitutions non spostano le positions di quelli ancora da trattare.
+    nel_file = [p for p in index.problems if p.module == problem.module and p.range]
     nel_file.sort(key=lambda p: (p.range["startLine"], p.range["startCol"]), reverse=True)
 
     for p in nel_file:
         r = p.range
-        inizio_riga, fine_riga = r["startLine"] - 1, r["endLine"] - 1
-        blocco = righe[inizio_riga:fine_riga + 1]
-        if not blocco:
+        line_start, line_end = r["startLine"] - 1, r["endLine"] - 1
+        block = lines[line_start:line_end + 1]
+        if not block:
             continue
-        # ritaglia esattamente la dichiarazione
-        coda = blocco[-1][r["endCol"]:]
-        blocco[-1] = blocco[-1][:r["endCol"]]
-        testa = blocco[0][:r["startCol"]]
-        blocco[0] = blocco[0][r["startCol"]:]
-        nuovo = sostituisci_dimostrazione("\n".join(blocco))
-        nuove_righe = (testa + nuovo + coda).split("\n")
-        righe[inizio_riga:fine_riga + 1] = nuove_righe
+        # ritaglia esattamente la declaration
+        queue = block[-1][r["endCol"]:]
+        block[-1] = block[-1][:r["endCol"]]
+        head = block[0][:r["startCol"]]
+        block[0] = block[0][r["startCol"]:]
+        new_one = replace_proof("\n".join(block))
+        new_lines = (head + new_one + queue).split("\n")
+        lines[line_start:line_end + 1] = new_lines
 
-    return "\n".join(righe)
+    return "\n".join(lines)
 
 
-def controlla_che_sia_nascosta(problema: Problem, testo_nascosto: str) -> None:
-    """Verifica che la dimostrazione del teorema BERSAGLIO sia stata sostituita.
+def check_it_is_hidden(problem: Problem, hidden_text: str) -> None:
+    """Verifica che la dimostrazione del theorem_ BERSAGLIO sia stata sostituita.
 
-    Un collaudo in cui la risposta trapela non misura niente, quindi questo
-    controllo deve esserci. Ma va fatto sulla DICHIARAZIONE GIUSTA: la prima
-    versione cercava il testo della dimostrazione in tutto il file, e dava
-    falso allarme quando un altro teorema dello stesso file aveva la stessa
-    dimostrazione di una riga. E' successo con
-    DiophantineTuple.fermat_4_tuple, dove tre teoremi condividono
-    `by norm_num [IsDiophantineTuple]`: il collaudo si e' interrotto pur
-    essendo tutto in ordine.
+    Un shakedown in cui la answer trapela non misura niente, quindi questo
+    controllo deve esserci. Ma va fatto sulla DICHIARAZIONE GIUSTA: la before
+    versione cercava il text della dimostrazione in tutto il file, e dava
+    falso allarme quando un other theorem_ dello stesso file aveva la stessa
+    dimostrazione di one_ line. E' successo con
+    DiophantineTuple.fermat_4_tuple, dove three theorems condividono
+    `by norm_num [IsDiophantineTuple]`: il shakedown si e' interrotto pur
+    essendo tutto in order.
     """
-    corto = problema.theorem.split(".")[-1]
-    # la dichiarazione del bersaglio dentro il testo nascosto
-    m = re.search(rf"(?:theorem|lemma)\s+[\w'.«»]*{re.escape(corto)}(?![\w']) ?[\s\S]*?"
+    short = problem.theorem.split(".")[-1]
+    # la declaration del target_ inside il text nascosto
+    m = re.search(rf"(?:theorem|lemma)\s+[\w'.«»]*{re.escape(short)}(?![\w']) ?[\s\S]*?"
                   rf"(?=\n(?:@\[|/--|theorem |lemma |def |abbrev |instance |end |namespace |"
                   rf"variable |open |section )|\Z)",
-                  testo_nascosto)
+                  hidden_text)
     if m is None:
         raise AssertionError(
-            f"Nel testo consegnato all'agent non trovo la dichiarazione di "
-            f"{problema.theorem}: il problema non sarebbe proponibile.")
-    dichiarazione = m.group(0)
-    pos = _posizione_separatore(dichiarazione)
+            f"Nel text consegnato all'agent non trovo la declaration di "
+            f"{problem.theorem}: il problem non sarebbe proponibile.")
+    declaration = m.group(0)
+    pos = _separator_position(declaration)
     if pos is None:
         raise AssertionError(
-            f"Non riesco a individuare la dimostrazione di {problema.theorem} "
-            f"nel testo nascosto.")
-    # Si togliono i commenti: la dichiarazione estratta puo' portarsi dietro
-    # una riga di commento che segue (per esempio "-- Sanity checks"), e
+            f"Non riesco a individuare la dimostrazione di {problem.theorem} "
+            f"nel text nascosto.")
+    # Si togliono i commenti: la declaration estratta puo' portarsi dietro
+    # one_ line di commento che segue (per example "-- Sanity checks"), e
     # confrontarla come se fosse dimostrazione dava un falso allarme.
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "verifier"))
     from guard import strip_comments_and_strings
-    prova = " ".join(strip_comments_and_strings(dichiarazione[pos + 2:]).split())
-    if prova not in ("by sorry", "sorry"):
+    trial = " ".join(strip_comments_and_strings(declaration[pos + 2:]).split())
+    if trial not in ("by sorry", "sorry"):
         raise AssertionError(
-            f"La dimostrazione di {problema.theorem} NON e' stata nascosta: al "
-            f"suo posto c'e' ancora {prova[:120]!r}. Il collaudo non sarebbe valido.")
+            f"La dimostrazione di {problem.theorem} NON e' stata nascosta: al "
+            f"suo slot_ c'e' ancora {trial[:120]!r}. Il shakedown non sarebbe valid.")

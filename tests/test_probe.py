@@ -1,54 +1,54 @@
-"""Il verdetto della sonda automatica non deve scambiare un `sorry` per una prova."""
+"""Il verdict della probe automatica non deve scambiare un `sorry` per one_ trial."""
 import json
 import sys
 from pathlib import Path
 
-RADICE = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(RADICE / "scripts"))
-sys.path.insert(0, str(RADICE / "verifier"))
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(0, str(ROOT / "verifier"))
 
 import probe_lean
 
 
 def test_plausible_senza_controesempio_non_chiude():
-    messaggi = ("Unable to find a counter-example\n"
+    messages = ("Unable to find a counter-example\n"
                 "FormalConjectures/_Judge/E0.lean:5:0: warning: "
                 "declaration uses 'sorry'")
-    esito, contro = probe_lean.classifica(messaggi, ok=True)
-    assert esito == "aperta"
-    assert contro is None
+    result, against = probe_lean.classify(messages, ok=True)
+    assert result == "aperta"
+    assert against is None
 
 
 def test_controesempio_riconosciuto():
-    esito, contro = probe_lean.classifica(
+    result, against = probe_lean.classify(
         "Found a counter-example!\nn := 4\nissue: 2 ∈ digits failed", ok=False)
-    assert esito == "controesempio"
-    assert "counter-example" in contro
+    assert result == "counterexample"
+    assert "counter-example" in against
 
 
 def test_chiusura_vera():
-    esito, _ = probe_lean.classifica("", ok=True)
-    assert esito == "chiusa"
+    result, _ = probe_lean.classify("", ok=True)
+    assert result == "chiusa"
 
 
 def test_tempo_scaduto_e_heartbeat():
-    assert probe_lean.classifica("TEMPO SCADUTO dopo 60s", ok=False)[0] == "tempo scaduto"
-    assert probe_lean.classifica(
+    assert probe_lean.classify("TEMPO SCADUTO after 60s", ok=False)[0] == "tempo scaduto"
+    assert probe_lean.classify(
         "(deterministic) timeout at `whnf`, maximum number of heartbeats (400000)",
         ok=False)[0] == "heartbeat esauriti"
 
 
 def test_riclassifica_declassa_e_toglie_attenzione(tmp_path):
-    f = tmp_path / "sonda.json"
+    f = tmp_path / "probe.json"
     f.write_text(json.dumps([{
-        "problema": "X", "modulo": "M", "enunciato": "vero", "prove": [{
-            "tattica": "plausible", "negato": False, "esito": "chiusa",
-            "secondi": 5.7, "controesempio": None,
-            "messaggi": "Unable to find a counter-example\ndeclaration uses 'sorry'",
+        "problem": "X", "module": "M", "statement": "vero", "trials": [{
+            "tactic": "plausible", "negated": False, "result": "chiusa",
+            "seconds": 5.7, "counterexample": None,
+            "messages": "Unable to find a counter-example\ndeclaration uses 'sorry'",
         }],
-        "ATTENZIONE": "la tattica plausible ha chiusa la forma diritta",
+        "ATTENZIONE": "la tactic plausible ha chiusa la forma diritta",
     }]), encoding="utf-8")
-    assert probe_lean.riclassifica(f) == 1
-    dati = json.loads(f.read_text(encoding="utf-8"))
-    assert dati[0]["prove"][0]["esito"] == "aperta"
-    assert "ATTENZIONE" not in dati[0]
+    assert probe_lean.reclassify(f) == 1
+    data_ = json.loads(f.read_text(encoding="utf-8"))
+    assert data_[0]["trials"][0]["result"] == "aperta"
+    assert "ATTENZIONE" not in data_[0]

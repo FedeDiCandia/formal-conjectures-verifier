@@ -1,37 +1,37 @@
 """
-Impronta dei file compilati dell'archivio.
+Fingerprint of the archive's compiled files.
 
-PERCHE'
--------
-Il README di comparator elenca fra i suoi assunti (il numero 2):
+WHY
+---
+comparator's README lists among its assumptions (number 2):
 
     "You have not previously tried to compile the Solution file or any other
     potentially adversarial files (as that might compromise your Challenge
     file to make it seem like you are looking for a different proof than you
     actually are)"
 
-Detto in italiano: se compilando il file del candidato qualcosa riscrivesse i
-file compilati dell'archivio, il "Challenge" che comparator esporta non sarebbe
-piu' l'enunciato originale, e la verifica confronterebbe la soluzione con un
-problema alterato. Passerebbe tutto, e non vorrebbe dire niente.
+In other words: if compiling the candidate's file rewrote the archive's compiled
+files, the "Challenge" comparator exports would no longer be the original
+statement, and the verification would compare the solution against an altered
+problem. Everything would pass, and it would mean nothing.
 
-Noi facciamo verifiche a ripetizione nella stessa cartella, quindi quell'assunto
-non lo possiamo dare per buono: dobbiamo controllarlo. Questo modulo prende
-un'fingerprint dell'archivio prima e dopo ogni verifica.
+Here verifications run one after another in the same directory, so that
+assumption cannot be taken on trust: it has to be checked. This module takes a
+fingerprint of the archive before and after every verification.
 
-COME
-----
-Due livelli, scelti misurando i costi reali:
+HOW
+---
+Two levels, chosen by measuring the real costs:
 
-  * i file dell'archivio (i suoi 786 .olean e i 795 sorgenti, 126 MB in tutto)
-    vengono hashati per CONTENUTO, uno per uno. Costa 0,65 secondi e permette
-    di dire *quale* file e' cambiato;
-  * Mathlib e le altre dipendenze (7877 .olean, 6,8 GB) sarebbero troppo lente
-    da hashare per intero, quindi se ne prendono i METADATI (percorso,
-    dimensione, data di modifica al nanosecondo). Costa 0,86 secondi e
-    intercetta qualunque riscrittura.
+  * the archive's files (its 786 .olean files and 795 sources, 126 MB in all) are
+    hashed by CONTENT, one at a time. It costs 0.65 seconds and makes it possible
+    to say *which* file changed;
+  * Mathlib and the other dependencies (7877 .olean files, 6.8 GB) would be far
+    too slow to hash in full, so their METADATA are taken instead (path, size,
+    modification time to the nanosecond). It costs 0.86 seconds and catches any
+    rewrite.
 
-In tutto circa un secondo e mezzo, su una verifica che ne dura venticinque.
+About a second and a half in total, on a verification that lasts twenty-five.
 """
 from __future__ import annotations
 
@@ -41,132 +41,132 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from pathlib import Path
 
-#: Quanti thread usare per l'hashing. `hashlib` rilascia il GIL mentre lavora,
-#: quindi qui i thread aiutano davvero: da 3,2 a meno di un secondo.
+#: How many threads to use for hashing. `hashlib` releases the GIL while it
+#: works, so threads really do help here: from 3.2 seconds to under one.
 N_THREAD = min(8, (os.cpu_count() or 4))
 
 
 @dataclass
-class Impronta:
-    #: percorso relativo -> sha256 del contenuto (file dell'archivio)
-    contenuto: dict[str, str] = field(default_factory=dict)
-    #: un solo digest per i metadati delle dipendenze (Mathlib ecc.)
-    metadati_dipendenze: str = ""
-    n_file_contenuto: int = 0
-    n_file_metadati: int = 0
+class Fingerprint:
+    #: relative path -> sha256 of the content (the archive's files)
+    content: dict[str, str] = field(default_factory=dict)
+    #: a single digest for the dependencies' metadata (Mathlib and the rest)
+    dependency_metadata: str = ""
+    n_content_files: int = 0
+    n_metadata_files: int = 0
 
 
-def _cartelle_archivio(archivio: Path) -> list[Path]:
-    """I file che definiscono l'enunciato: i compilati dell'archivio e i sorgenti."""
+def _archive_dirs(archive: Path) -> list[Path]:
+    """The files that define the statement: the archive's compiled files and sources."""
     return [
-        archivio / ".lake" / "build" / "lib" / "lean",
-        archivio / "FormalConjectures",
-        archivio / "FormalConjecturesForMathlib",
+        archive / ".lake" / "build" / "lib" / "lean",
+        archive / "FormalConjectures",
+        archive / "FormalConjecturesForMathlib",
     ]
 
 
-def _cartelle_dipendenze(archivio: Path) -> list[Path]:
-    return [archivio / ".lake" / "packages"]
+def _dependency_dirs(archive: Path) -> list[Path]:
+    return [archive / ".lake" / "packages"]
 
 
-def _sha256(percorso: Path) -> str:
+def _sha256(path: Path) -> str:
     h = hashlib.sha256()
-    with open(percorso, "rb") as f:
-        while blocco := f.read(1 << 20):
-            h.update(blocco)
+    with open(path, "rb") as f:
+        while block := f.read(1 << 20):
+            h.update(block)
     return h.hexdigest()
 
 
-def calcola(archivio: Path, escludi: str = "_Judge") -> Impronta:
-    """Prende l'fingerprint. `escludi` e' il nome della cartella del modulo
-    temporaneo, che per definizione cambia a ogni verifica."""
-    imp = Impronta()
+def compute(archive: Path, exclude: str = "_Judge") -> Fingerprint:
+    """Take the fingerprint. `exclude` is the name of the temporary module's
+    directory, which by definition changes at every verification."""
+    imp = Fingerprint()
 
-    da_hashare: list[Path] = []
-    for radice in _cartelle_archivio(archivio):
-        if not radice.is_dir():
+    to_hash: list[Path] = []
+    for root in _archive_dirs(archive):
+        if not root.is_dir():
             continue
-        for dirpath, dirnames, filenames in os.walk(radice):
-            dirnames[:] = [d for d in dirnames if d != escludi]
-            da_hashare.extend(Path(dirpath) / nome for nome in filenames)
+        for dirpath, dirnames, filenames in os.walk(root):
+            dirnames[:] = [d for d in dirnames if d != exclude]
+            to_hash.extend(Path(dirpath) / name for name in filenames)
 
-    def uno(p: Path) -> tuple[str, str] | None:
+    def one(p: Path) -> tuple[str, str] | None:
         try:
-            return str(p.relative_to(archivio)), _sha256(p)
+            return str(p.relative_to(archive)), _sha256(p)
         except OSError:
             return None
 
     with ThreadPoolExecutor(max_workers=N_THREAD) as pool:
-        for esito in pool.map(uno, da_hashare):
-            if esito is not None:
-                imp.contenuto[esito[0]] = esito[1]
-    imp.n_file_contenuto = len(imp.contenuto)
+        for result in pool.map(one, to_hash):
+            if result is not None:
+                imp.content[result[0]] = result[1]
+    imp.n_content_files = len(imp.content)
 
-    voci: list[str] = []
-    taglio = len(str(archivio)) + 1
-    for radice in _cartelle_dipendenze(archivio):
-        if radice.is_dir():
-            _metadati_ricorsivo(str(radice), taglio, escludi, voci)
-    voci.sort()
+    entries: list[str] = []
+    cut = len(str(archive)) + 1
+    for root in _dependency_dirs(archive):
+        if root.is_dir():
+            _metadata_recursive(str(root), cut, exclude, entries)
+    entries.sort()
     h = hashlib.sha256()
-    for v in voci:
+    for v in entries:
         h.update(v.encode())
-    imp.metadati_dipendenze = h.hexdigest()
-    imp.n_file_metadati = len(voci)
+    imp.dependency_metadata = h.hexdigest()
+    imp.n_metadata_files = len(entries)
     return imp
 
 
-#: Cartelle irrilevanti per l'enunciato: `.git` di Mathlib da sola contiene
-#: decine di migliaia di file e non viene mai letta da Lean.
-_CARTELLE_IGNORATE = {".git", ".github"}
+#: Directories irrelevant to the statement: Mathlib's `.git` alone holds tens of
+#: thousands of files and is never read by Lean.
+_IGNORED_DIRS = {".git", ".github"}
 
 
-def _metadati_ricorsivo(cartella: str, taglio: int, escludi: str, voci: list[str]) -> None:
-    """Raccoglie percorso, dimensione e data di modifica.
+def _metadata_recursive(folder: str, cut: int, exclude: str, entries: list[str]) -> None:
+    """Collect path, size and modification time.
 
-    Usa `os.scandir` e stringhe invece di `os.walk` con oggetti `Path`: su
-    111 000 file la differenza misurata e' fra 0,3 e 3 secondi, e questa
-    funzione gira due volte per ogni verifica.
+    Uses `os.scandir` and strings rather than `os.walk` with `Path` objects: over
+    111,000 files the measured difference is between 0.3 and 3 seconds, and this
+    function runs twice per verification.
     """
     try:
-        iteratore = os.scandir(cartella)
+        iterator = os.scandir(folder)
     except OSError:
         return
-    with iteratore:
-        for voce in iteratore:
+    with iterator:
+        for entry in iterator:
             try:
-                if voce.is_dir(follow_symlinks=False):
-                    if voce.name != escludi and voce.name not in _CARTELLE_IGNORATE:
-                        _metadati_ricorsivo(voce.path, taglio, escludi, voci)
+                if entry.is_dir(follow_symlinks=False):
+                    if entry.name != exclude and entry.name not in _IGNORED_DIRS:
+                        _metadata_recursive(entry.path, cut, exclude, entries)
                 else:
-                    st = voce.stat(follow_symlinks=False)
-                    voci.append(f"{voce.path[taglio:]}|{st.st_size}|{st.st_mtime_ns}")
+                    st = entry.stat(follow_symlinks=False)
+                    entries.append(f"{entry.path[cut:]}|{st.st_size}|{st.st_mtime_ns}")
             except OSError:
                 continue
 
 
-def confronta(prima: Impronta, dopo: Impronta, max_elenco: int = 12) -> list[str]:
-    """Elenco in italiano delle differenze. Vuoto se l'archivio e' intatto."""
-    differenze: list[str] = []
+def compare(before: Fingerprint, after: Fingerprint, max_listed: int = 12) -> list[str]:
+    """A readable list of the differences. Empty if the archive is intact."""
+    differences: list[str] = []
 
-    modificati = [p for p, d in dopo.contenuto.items()
-                  if p in prima.contenuto and prima.contenuto[p] != d]
-    spariti = [p for p in prima.contenuto if p not in dopo.contenuto]
-    comparsi = [p for p in dopo.contenuto if p not in prima.contenuto]
+    modified = [p for p, d in after.content.items()
+                  if p in before.content and before.content[p] != d]
+    vanished = [p for p in before.content if p not in after.content]
+    appeared = [p for p in after.content if p not in before.content]
 
-    def elenca(etichetta: str, quali: list[str]) -> None:
-        if not quali:
+    def list_them(label: str, which_ones: list[str]) -> None:
+        if not which_ones:
             return
-        mostrati = ", ".join(sorted(quali)[:max_elenco])
-        resto = f" (e altri {len(quali) - max_elenco})" if len(quali) > max_elenco else ""
-        differenze.append(f"{etichetta}: {mostrati}{resto}")
+        shown = ", ".join(sorted(which_ones)[:max_listed])
+        rest = f" (and {len(which_ones) - max_listed} more)" if len(which_ones) > max_listed else ""
+        differences.append(f"{label}: {shown}{rest}")
 
-    elenca(f"{len(modificati)} file dell'archivio MODIFICATI", modificati)
-    elenca(f"{len(spariti)} file dell'archivio CANCELLATI", spariti)
-    elenca(f"{len(comparsi)} file NUOVI dentro l'archivio", comparsi)
+    list_them(f"{len(modified)} archive files MODIFIED", modified)
+    list_them(f"{len(vanished)} archive files DELETED", vanished)
+    list_them(f"{len(appeared)} NEW files inside the archive", appeared)
 
-    if prima.metadati_dipendenze != dopo.metadati_dipendenze:
-        differenze.append(
-            f"i file di Mathlib e delle altre dipendenze sono cambiati "
-            f"(prima {prima.n_file_metadati} file, dopo {dopo.n_file_metadati})")
-    return differenze
+    if before.dependency_metadata != after.dependency_metadata:
+        differences.append(
+            f"the files of Mathlib and the other dependencies have changed "
+            f"(before: {before.n_metadata_files} files, after: {after.n_metadata_files})")
+    return differences

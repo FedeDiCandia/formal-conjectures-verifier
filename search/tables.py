@@ -1,24 +1,24 @@
 """
-Le tabelle dei limiti, lette dalla fonte e messe in forma leggibile da un
-programma.
+Le tables dei bounds, lette dalla source_ e messe in forma leggibile da un
+program.
 
 PERCHÉ
 ------
 Per battere un record bisogna sapere **qual è**, **chi l'ha fatto** e **se esiste
-un codice esplicito**. Le tabelle di Brouwer contengono tutte e tre le cose, ma in
+un code esplicito**. Le tables di Brouwer contengono all_of e three le cose, ma in
 HTML fatto a mano. Questo file le trasforma in JSON, e conserva le attribuzioni:
-senza l'attribuzione non sappiamo se stiamo sfidando un lavoro del 1990 su
-hardware del 1990 o un lavoro del 2026 con un solutore moderno.
+senza l'attribuzione non sappiamo se stiamo sfidando un job del 1990 su
+hardware del 1990 o un job del 2026 con un solutore moderno.
 
 COSA CONSERVA PER OGNI CELLA
 ----------------------------
-  inferiore, superiore   i limiti noti (superiore assente nella tabella d=4)
-  esatto                 vero se la tabella segna un punto (valore ottimo noto)
-  fonte                  la sigla in esponente: vuota = [BSSS] 1990
-  costruzione            c = circolante, g = gruppo di automorfismi, s = accorciato
-  codice                 il percorso relativo del codice esplicito, se c'è
-  perduto                vero se il limite è in rosso: rivendicato ma **il listato
-                         del codice è andato perduto** e nessuno l'ha ricostruito
+  inferiore, superiore   i bounds noti (superiore assente nella tabella d=4)
+  exact                 vero se la tabella segna un punto (value_ ottimo noto)
+  source_                  la tag_ in esponente: vuota = [BSSS] 1990
+  construction            c = circolante, g = group di automorfismi, s = accorciato
+  code                 il path relative del code esplicito, se c'è
+  perduto                vero se il limit è in rosso: rivendicato ma **il listato
+                         del code è andato perduto** e nessuno l'ha ricostruito
 """
 from __future__ import annotations
 
@@ -28,18 +28,18 @@ import subprocess
 from html.parser import HTMLParser
 from pathlib import Path
 
-RADICE = Path(__file__).resolve().parent.parent
-DATI = RADICE / "research_data"
+ROOT = Path(__file__).resolve().parent.parent
+DATA_DIR = ROOT / "research_data"
 
-COSTRUZIONI = set("cgs")
+CONSTRUCTIONS = set("cgs")
 
 
 class _Tabella(HTMLParser):
-    """Estrae le celle di ogni tabella, conservando esponenti, link e classi."""
+    """Estrae le cells di ogni tabella, conservando esponenti, link e classi."""
 
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
-        self.tabelle: list[list[list[dict]]] = []
+        self.tables: list[list[list[dict]]] = []
         self._t: list | None = None
         self._r: list | None = None
         self._c: dict | None = None
@@ -52,8 +52,8 @@ class _Tabella(HTMLParser):
         elif tag == "tr" and self._t is not None:
             self._r = []
         elif tag in ("td", "th") and self._r is not None:
-            self._c = {"testo": "", "sup": "", "link": "", "perduto": False,
-                       "intestazione": tag == "th"}
+            self._c = {"text": "", "sup": "", "link": "", "perduto": False,
+                       "header": tag == "th"}
         elif tag == "sup":
             self._in_sup = True
         elif tag == "a" and self._c is not None and "href" in a:
@@ -80,151 +80,151 @@ class _Tabella(HTMLParser):
         if self._in_sup:
             self._c["sup"] += data.strip()
         else:
-            self._c["testo"] += data
+            self._c["text"] += data
 
 
 _NUM = re.compile(r"\d+")
 
 
-def _limiti(testo: str) -> tuple[int | None, int | None, bool]:
-    """Legge una cella come `232-276`, `80.`, `5616`, `≥ 40`."""
-    testo = testo.replace("–", "-").replace("−", "-").strip()
-    esatto = testo.endswith(".")
-    numeri = [int(x) for x in _NUM.findall(testo)]
-    if not numeri:
+def _limiti(text: str) -> tuple[int | None, int | None, bool]:
+    """Legge one_ cell come `232-276`, `80.`, `5616`, `≥ 40`."""
+    text = text.replace("–", "-").replace("−", "-").strip()
+    exact = text.endswith(".")
+    numbers = [int(x) for x in _NUM.findall(text)]
+    if not numbers:
         return None, None, False
-    if len(numeri) >= 2 and "-" in testo:
-        return numeri[0], numeri[1], esatto
-    return numeri[0], (numeri[0] if esatto else None), esatto
+    if len(numbers) >= 2 and "-" in text:
+        return numbers[0], numbers[1], exact
+    return numbers[0], (numbers[0] if exact else None), exact
 
 
-def _voce(cella: dict) -> dict | None:
-    inf, sup, esatto = _limiti(cella["testo"])
+def _entry(cell: dict) -> dict | None:
+    inf, sup, exact = _limiti(cell["text"])
     if inf is None:
         return None
-    sigla = cella["sup"] or ""
-    # nella tabella generale un esponente numerico e' una potenza: `2` con sup `19`
-    # vuol dire 2^19. Senza questo si legge 2 e si crede che la cella sia vuota.
-    if sigla.isdigit() and inf is not None and inf <= 9:
-        inf = inf ** int(sigla)
-        sigla = ""
-    costruzione = "".join(ch for ch in sigla if ch in COSTRUZIONI and len(sigla) <= 2)
-    fonte = sigla if not costruzione else sigla.replace(costruzione, "")
-    return {"inferiore": inf, "superiore": sup, "esatto": esatto,
-            "fonte": fonte or "BSSS", "costruzione": costruzione,
-            "codice": cella["link"], "perduto": cella["perduto"]}
+    tag_ = cell["sup"] or ""
+    # nella tabella generale un esponente numerico e' one_ potenza: `2` con sup `19`
+    # vuol dire 2^19. Senza questo si legge 2 e si crede che la cell sia vuota.
+    if tag_.isdigit() and inf is not None and inf <= 9:
+        inf = inf ** int(tag_)
+        tag_ = ""
+    construction = "".join(ch for ch in tag_ if ch in CONSTRUCTIONS and len(tag_) <= 2)
+    source_ = tag_ if not construction else tag_.replace(construction, "")
+    return {"inferiore": inf, "superiore": sup, "exact": exact,
+            "source_": source_ or "BSSS", "construction": construction,
+            "code": cell["link"], "perduto": cell["perduto"]}
 
 
 BASE = "https://aeb.win.tue.nl/codes/"
 
 
-def _pagina(nome: str) -> Path:
+def _pagina(name: str) -> Path:
     """La pagina di Brouwer, scaricandola se non c'e'.
 
-    Le pagine non sono versionate (non dichiarano una licenza): un clone pulito
+    Le pagine non sono versionate (non dichiarano one_ licenza): un clone clean_one
     non le ha, e questa funzione le rimette dov'erano. `curl` e non urllib
-    perche' il Python di questo Mac non ha i certificati di sistema.
+    perche' il Python di questo Mac non ha i certificati di system.
     """
-    locale = DATI / nome
-    if locale.is_file() and locale.stat().st_size > 0:
-        return locale
-    DATI.mkdir(parents=True, exist_ok=True)
-    esito = subprocess.run(
+    local_ = DATA_DIR / name
+    if local_.is_file() and local_.stat().st_size > 0:
+        return local_
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    result = subprocess.run(
         ["curl", "-sS", "-L", "--max-time", "45", "-A",
-         "ricerca-codici/1.0 (verifica indipendente di limiti pubblicati)",
-         "-o", str(locale), BASE + nome],
+         "ricerca-codici/1.0 (check indipendente di bounds pubblicati)",
+         "-o", str(local_), BASE + name],
         capture_output=True, text=True)
-    if esito.returncode != 0 or not locale.is_file() or locale.stat().st_size == 0:
-        locale.unlink(missing_ok=True)
-        raise OSError(f"non riesco a scaricare {BASE + nome}: "
-                      f"{esito.stderr.strip()[:120]}")
-    return locale
+    if result.returncode != 0 or not local_.is_file() or local_.stat().st_size == 0:
+        local_.unlink(missing_ok=True)
+        raise OSError(f"non riesco a scaricare {BASE + name}: "
+                      f"{result.stderr.strip()[:120]}")
+    return local_
 
 
-def peso_costante(percorso: Path | None = None) -> dict:
-    """A(n,d,w): una tabella per ogni d, righe n, colonne w."""
-    percorso = percorso or _pagina("Andw.html")
-    testo = percorso.read_text(errors="replace")
-    # i titoli <h1><a name="dK"> dicono a quale d appartiene la tabella che segue
+def constant_weight(path: Path | None = None) -> dict:
+    """A(n,d,w): one_ tabella per ogni d, lines n, columns w."""
+    path = path or _pagina("Andw.html")
+    text = path.read_text(errors="replace")
+    # i titoli <h1><a name="dK"> dicono a which d appartiene la tabella che segue
     marcatori = [(m.start(), int(m.group(1)))
-                 for m in re.finditer(r'<a name="d(\d+)"', testo)]
+                 for m in re.finditer(r'<a name="d(\d+)"', text)]
     p = _Tabella()
-    p.feed(testo)
-    # ricalcolo la posizione di ogni <table> per associarla al suo d
-    posizioni = [m.start() for m in re.finditer(r"<table", testo)]
-    assert len(posizioni) == len(p.tabelle), (len(posizioni), len(p.tabelle))
+    p.feed(text)
+    # ricalcolo la position di ogni <table> per associarla al suo d
+    positions = [m.start() for m in re.finditer(r"<table", text)]
+    assert len(positions) == len(p.tables), (len(positions), len(p.tables))
 
-    fuori: dict[str, dict] = {}
-    for pos, tab in zip(posizioni, p.tabelle):
+    out_of: dict[str, dict] = {}
+    for pos, tab in zip(positions, p.tables):
         d = None
         for mp, md in marcatori:
             if mp < pos:
                 d = md
         if d is None or not tab:
             continue
-        intestazione = tab[0]
-        if not intestazione or "n\\w" not in intestazione[0]["testo"]:
-            continue   # non è la tabella dei limiti (per es. quella del codice perduto)
-        pesi = [int(c["testo"]) for c in intestazione[1:] if _NUM.search(c["testo"])]
-        for riga in tab[1:]:
-            if not riga or not _NUM.search(riga[0]["testo"]):
+        header = tab[0]
+        if not header or "n\\w" not in header[0]["text"]:
+            continue   # non è la tabella dei bounds (per es. quella del code perduto)
+        weights = [int(c["text"]) for c in header[1:] if _NUM.search(c["text"])]
+        for line in tab[1:]:
+            if not line or not _NUM.search(line[0]["text"]):
                 continue
-            n = int(_NUM.search(riga[0]["testo"]).group())
-            for w, cella in zip(pesi, riga[1:]):
-                v = _voce(cella)
+            n = int(_NUM.search(line[0]["text"]).group())
+            for w, cell in zip(weights, line[1:]):
+                v = _entry(cell)
                 if v:
-                    fuori[f"{n},{d},{w}"] = v
-    return fuori
+                    out_of[f"{n},{d},{w}"] = v
+    return out_of
 
 
-def generali(percorso: Path | None = None) -> dict:
-    """A(n,d): righe n, colonne d."""
-    percorso = percorso or _pagina("binary-1.html")
-    testo = percorso.read_text(errors="replace")
+def general_(path: Path | None = None) -> dict:
+    """A(n,d): lines n, columns d."""
+    path = path or _pagina("binary-1.html")
+    text = path.read_text(errors="replace")
     p = _Tabella()
-    p.feed(testo)
-    fuori: dict[str, dict] = {}
-    for tab in p.tabelle:
+    p.feed(text)
+    out_of: dict[str, dict] = {}
+    for tab in p.tables:
         if not tab:
             continue
-        # l'intestazione e' `["", "", "d=4", "d=6", ...]`: una colonna vuota di
-        # spaziatura fra l'etichetta della riga e i dati, presente anche nei dati.
-        testa = [c["testo"].strip() for c in tab[0]]
-        primo = next((i for i, t in enumerate(testa) if t.startswith("d=")), None)
-        if primo is None:
+        # l'header e' `["", "", "d=4", "d=6", ...]`: one_ colonna vuota di
+        # spaziatura fra l'label della line e i data_, presente also_ nei data_.
+        head = [c["text"].strip() for c in tab[0]]
+        prime_ = next((i for i, t in enumerate(head) if t.startswith("d=")), None)
+        if prime_ is None:
             continue
-        dd = [int(_NUM.search(t).group()) for t in testa[primo:] if _NUM.search(t)]
-        for riga in tab[1:]:
-            if not riga or not _NUM.search(riga[0]["testo"]):
+        dd = [int(_NUM.search(t).group()) for t in head[prime_:] if _NUM.search(t)]
+        for line in tab[1:]:
+            if not line or not _NUM.search(line[0]["text"]):
                 continue
-            n = int(_NUM.search(riga[0]["testo"]).group())
-            for d, cella in zip(dd, riga[primo:]):
-                v = _voce(cella)
+            n = int(_NUM.search(line[0]["text"]).group())
+            for d, cell in zip(dd, line[prime_:]):
+                v = _entry(cell)
                 if v:
-                    fuori[f"{n},{d}"] = v
-    return fuori
+                    out_of[f"{n},{d}"] = v
+    return out_of
 
 
 def main() -> None:
-    cwc = peso_costante()
-    gen = generali()
-    DATI.mkdir(exist_ok=True)
-    (DATI / "limiti_cwc.json").write_text(json.dumps(cwc, indent=1, sort_keys=True))
-    (DATI / "limiti_generali.json").write_text(json.dumps(gen, indent=1, sort_keys=True))
+    cwc = constant_weight()
+    gen = general_()
+    DATA_DIR.mkdir(exist_ok=True)
+    (DATA_DIR / "limiti_cwc.json").write_text(json.dumps(cwc, indent=1, sort_keys=True))
+    (DATA_DIR / "limiti_generali.json").write_text(json.dumps(gen, indent=1, sort_keys=True))
 
-    aperte = [k for k, v in cwc.items()
+    open_ones = [k for k, v in cwc.items()
               if v["superiore"] and v["superiore"] > v["inferiore"]]
-    print(f"A(n,d,w): {len(cwc)} celle, {len(aperte)} con divario aperto")
-    print(f"  con codice esplicito scaricabile: "
-          f"{sum(1 for v in cwc.values() if v['codice'])}")
-    print(f"  limiti perduti (nessun codice ricostruito): "
+    print(f"A(n,d,w): {len(cwc)} cells, {len(open_ones)} con divario aperto")
+    print(f"  con code esplicito scaricabile: "
+          f"{sum(1 for v in cwc.values() if v['code'])}")
+    print(f"  bounds perduti (nessun code ricostruito): "
           f"{[k for k, v in cwc.items() if v['perduto']]}")
     from collections import Counter
-    print("  fonti dei limiti inferiori:",
-          dict(Counter(v["fonte"] for v in cwc.values()).most_common(12)))
+    print("  fonti dei bounds inferiori:",
+          dict(Counter(v["source_"] for v in cwc.values()).most_common(12)))
     apg = [k for k, v in gen.items()
            if v["superiore"] and v["superiore"] > v["inferiore"]]
-    print(f"A(n,d): {len(gen)} celle, {len(apg)} con divario aperto")
+    print(f"A(n,d): {len(gen)} cells, {len(apg)} con divario aperto")
 
 
 if __name__ == "__main__":

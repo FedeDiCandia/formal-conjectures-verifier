@@ -1,28 +1,28 @@
 """
-Ricerca locale con il grafo dei conflitti precalcolato.
+Search local_ con il grafo dei conflitti precalcolato.
 
 PERCHÉ, MISURATO
 ----------------
-Il primo motore locale (`tabu.py`) ricalcola a ogni mossa le distanze fra la parola
-che entra e tutte le candidate: N·m conteggi di bit per iterazione. Su A(17,6,6)
-sono un milione di operazioni per mossa, cioè circa 2500 mosse in venti secondi. Con
-così poche mosse la ricerca non riesce nemmeno ad **aggiungere una parola** a un
-codice valido di 85: il salto da 85 a 86 richiede di scambiarne diverse, e 2500
-mosse non bastano.
+Il prime_ motore local_ (`tabu.py`) ricalcola a ogni mossa le distanze fra la word
+che enters e all_of le candidate: N·m conteggi di bit per iteration. Su A(17,6,6)
+sono un milione di operazioni per mossa, cioè circa 2500 moves in venti seconds. Con
+così poche moves la ricerca non riesce nemmeno ad **aggiungere one_ word** a un
+code valid di 85: il salto da 85 a 86 richiede di scambiarne diverse, e 2500
+moves non bastano.
 
-Qui il lavoro si fa una volta sola. Si precalcola la matrice dei **conflitti** — bit
-`j` della riga `i` acceso se le parole `i` e `j` distano meno di `d` — e si tiene un
-contatore `conta[v]` = quante parole scelte sono in conflitto con `v`. Aggiungere o
-togliere una parola costa una somma di N interi, cioè millesimi di quello che
-costava prima. Si passa da migliaia di mosse a milioni.
+Qui il job si fa one_ volta sola. Si precalcola la matrice dei **conflitti** — bit
+`j` della line `i` acceso se le words `i` e `j` distano meno di `d` — e si tiene un
+contatore `count_[v]` = how_many_ words choices sono in conflitto con `v`. Aggiungere o
+togliere one_ word costa one_ total_sum di N interi, cioè millesimi di quello che
+costava before. Si passa da migliaia di moves a milioni.
 
 La matrice occupa N²/8 byte: 19 MB per N = 12.376, 700 MB per N = 74.613. Sopra il
-tetto si torna al motore lento, che è più povero ma non esplode in memoria.
+cap si torna al motore slow_, che è più povero ma non esplode in memoria.
 
 IL CRITERIO È SEMPRE LO STESSO
 ------------------------------
-`conta` conta le violazioni, e un codice è valido quando la somma dei conflitti
-delle parole scelte è zero. Il verdetto finale resta di `codes.verifica`.
+`count_` count_ le violations, e un code è valid quando la total_sum dei conflitti
+delle words choices è zero. Il verdict finale resta di `codes.check`.
 """
 from __future__ import annotations
 
@@ -30,145 +30,145 @@ import os
 
 import numpy as np
 
-from codes import verifica_veloce
-from tabu import _tutte_le_parole
+from codes import fast_check
+from tabu import _all_words
 
-# La matrice dei conflitti occupa N²/8 byte. Il tetto e' configurabile perche' la
-# cella piu' interessante che abbiamo (A(27,8,5), divario 1) ne chiede 0,8 GB, e su
+# La matrice dei conflitti occupa N²/8 byte. Il cap e' configurabile perche' la
+# cell piu' interessante che abbiamo (A(27,8,5), divario 1) ne chiede 0,8 GB, e su
 # 24 GB di RAM c'e' spazio -- ma non se si lanciano sei processi insieme. Chi lancia
-# in parallelo abbassa il tetto o riduce i processi.
-TETTO_MEMORIA_BYTE = int(os.environ.get("RICERCA_TETTO_MEMORIA", 700_000_000))
+# in parallelo abbassa il cap o riduce i processi.
+MEMORY_CAP_BYTES = int(os.environ.get("RICERCA_TETTO_MEMORIA", 700_000_000))
 
 
-def matrice_conflitti(tutte: np.ndarray, d: int) -> np.ndarray:
-    """Bit `j` della riga `i` acceso se `dist(i, j) < d` e `i != j`."""
-    N = len(tutte)
+def conflict_matrix(all_of: np.ndarray, d: int) -> np.ndarray:
+    """Bit `j` della line `i` acceso se `dist(i, j) < d` e `i != j`."""
+    N = len(all_of)
     byte = (N + 7) // 8
-    if N * byte > TETTO_MEMORIA_BYTE:
+    if N * byte > MEMORY_CAP_BYTES:
         raise MemoryError(f"la matrice richiederebbe {N * byte / 1e6:.0f} MB")
     M = np.zeros((N, byte), dtype=np.uint8)
-    blocco = max(1, 8_000_000 // max(N, 1))
-    for i in range(0, N, blocco):
-        fetta = tutte[i:i + blocco]
-        vicino = np.bitwise_count(np.bitwise_xor(fetta[:, None], tutte[None, :])) < d
-        for k in range(len(fetta)):
-            vicino[k, i + k] = False          # niente conflitto con se stessa
-        M[i:i + blocco] = np.packbits(vicino, axis=1)
+    block = max(1, 8_000_000 // max(N, 1))
+    for i in range(0, N, block):
+        slice_ = all_of[i:i + block]
+        neighbour = np.bitwise_count(np.bitwise_xor(slice_[:, None], all_of[None, :])) < d
+        for k in range(len(slice_)):
+            neighbour[k, i + k] = False          # niente conflitto con se stessa
+        M[i:i + block] = np.packbits(neighbour, axis=1)
     return M
 
 
-class Stato:
-    """Un insieme di parole scelte, con il conteggio dei conflitti aggiornato."""
+class State:
+    """Un insieme di words choices, con il count dei conflitti aggiornato."""
 
     def __init__(self, M: np.ndarray, N: int) -> None:
         self.M = M
         self.N = N
-        self.conta = np.zeros(N, dtype=np.int32)
-        self.dentro = np.zeros(N, dtype=bool)
-        self.righe: dict[int, np.ndarray] = {}
+        self.count_ = np.zeros(N, dtype=np.int32)
+        self.inside = np.zeros(N, dtype=bool)
+        self.lines: dict[int, np.ndarray] = {}
 
-    def riga(self, i: int) -> np.ndarray:
-        r = self.righe.get(i)
+    def line(self, i: int) -> np.ndarray:
+        r = self.lines.get(i)
         if r is None:
             r = np.unpackbits(self.M[i], count=self.N).astype(np.int32)
-            if len(self.righe) > 4096:
-                self.righe.clear()
-            self.righe[i] = r
+            if len(self.lines) > 4096:
+                self.lines.clear()
+            self.lines[i] = r
         return r
 
-    def aggiungi(self, i: int) -> None:
-        self.conta += self.riga(i)
-        self.dentro[i] = True
+    def add_(self, i: int) -> None:
+        self.count_ += self.line(i)
+        self.inside[i] = True
 
-    def togli(self, i: int) -> None:
-        self.conta -= self.riga(i)
-        self.dentro[i] = False
-
-    @property
-    def scelte(self) -> np.ndarray:
-        return np.flatnonzero(self.dentro)
+    def strip_(self, i: int) -> None:
+        self.count_ -= self.line(i)
+        self.inside[i] = False
 
     @property
-    def violazioni(self) -> int:
-        return int(self.conta[self.dentro].sum()) // 2
+    def choices(self) -> np.ndarray:
+        return np.flatnonzero(self.inside)
+
+    @property
+    def violations(self) -> int:
+        return int(self.count_[self.inside].sum()) // 2
 
 
-def cerca_dimensione(n: int, d: int, w: int, m: int, *, mosse: int = 200_000,
-                     seme: int = 0, tutte: np.ndarray | None = None,
+def search_size(n: int, d: int, w: int, m: int, *, moves: int = 200_000,
+                     seed: int = 0, all_of: np.ndarray | None = None,
                      M: np.ndarray | None = None,
-                     inizio: list[int] | None = None,
-                     passeggiata: float = 0.3) -> tuple[list[int], int]:
-    """Cerca un codice di `m` parole. Restituisce (parole, violazioni minime viste)."""
-    tutte = _tutte_le_parole(n, w) if tutte is None else tutte
-    N = len(tutte)
+                     start: list[int] | None = None,
+                     walk: float = 0.3) -> tuple[list[int], int]:
+    """Cerca un code di `m` words. Restituisce (words, violations minime seen)."""
+    all_of = _all_words(n, w) if all_of is None else all_of
+    N = len(all_of)
     if m > N:
         return [], m * m
-    M = matrice_conflitti(tutte, d) if M is None else M
-    rng = np.random.default_rng(seme)
-    s = Stato(M, N)
+    M = conflict_matrix(all_of, d) if M is None else M
+    rng = np.random.default_rng(seed)
+    s = State(M, N)
 
-    partenza = (list(inizio) if inizio is not None
+    start_point = (list(start) if start is not None
                 else [int(x) for x in rng.choice(N, size=m, replace=False)])
-    for i in partenza[:m]:
-        s.aggiungi(int(i))
-    while int(s.dentro.sum()) < m:            # completa scegliendo il meno in conflitto
-        costo = np.where(s.dentro, 1 << 30, s.conta)
-        s.aggiungi(int(rng.choice(np.flatnonzero(costo == costo.min()))))
+    for i in start_point[:m]:
+        s.add_(int(i))
+    while int(s.inside.sum()) < m:            # complete_ scegliendo il meno in conflitto
+        cost = np.where(s.inside, 1 << 30, s.count_)
+        s.add_(int(rng.choice(np.flatnonzero(cost == cost.min()))))
 
-    migliore = s.violazioni
-    migliori = s.scelte.copy()
+    best = s.violations
+    best_ones = s.choices.copy()
     tabu = np.zeros(N, dtype=np.int64)
-    for passo in range(mosse):
-        if s.violazioni == 0:
+    for step in range(moves):
+        if s.violations == 0:
             break
-        scelte = s.scelte
-        conf = s.conta[scelte]
+        choices = s.choices
+        conf = s.count_[choices]
         if conf.max() == 0:
             break
-        if rng.random() < passeggiata:
-            colpevoli = scelte[conf > 0]
-            esce = int(rng.choice(colpevoli))
+        if rng.random() < walk:
+            culprits = choices[conf > 0]
+            exits = int(rng.choice(culprits))
         else:
-            esce = int(rng.choice(scelte[conf == conf.max()]))
-        s.togli(esce)
-        tabu[esce] = passo + 4 + int(rng.integers(0, max(2, m // 3)))
-        costo = np.where(s.dentro, 1 << 30, s.conta).astype(np.int64)
-        costo += np.where(tabu > passo, 1 << 10, 0)
-        entra = int(rng.choice(np.flatnonzero(costo == costo.min())))
-        s.aggiungi(entra)
-        if s.violazioni < migliore:
-            migliore = s.violazioni
-            migliori = s.scelte.copy()
-    return [int(tutte[i]) for i in migliori], migliore
+            exits = int(rng.choice(choices[conf == conf.max()]))
+        s.strip_(exits)
+        tabu[exits] = step + 4 + int(rng.integers(0, max(2, m // 3)))
+        cost = np.where(s.inside, 1 << 30, s.count_).astype(np.int64)
+        cost += np.where(tabu > step, 1 << 10, 0)
+        enters = int(rng.choice(np.flatnonzero(cost == cost.min())))
+        s.add_(enters)
+        if s.violations < best:
+            best = s.violations
+            best_ones = s.choices.copy()
+    return [int(all_of[i]) for i in best_ones], best
 
 
-def sali(n: int, d: int, w: int, da: list[int], fino_a: int, *,
-         mosse_per_gradino: int = 100_000, seme: int = 0,
-         tentativi: int = 4) -> dict:
-    """Da un codice valido, una parola alla volta fino a `fino_a` (o finché riesce)."""
-    tutte = _tutte_le_parole(n, w)
-    M = matrice_conflitti(tutte, d)
-    posizione = {int(p): k for k, p in enumerate(tutte)}
-    parole = sorted(da)
-    rng = np.random.default_rng(seme)
-    gradini: dict[int, str] = {}
-    while len(parole) < fino_a:
-        traguardo = len(parole) + 1
-        base = [posizione[p] for p in parole]
-        vinto = None
-        for t in range(tentativi):
-            libere = np.flatnonzero(~np.isin(np.arange(len(tutte)), base))
-            nuove, viol = cerca_dimensione(
-                n, d, w, traguardo, mosse=mosse_per_gradino,
-                seme=seme * 1000 + traguardo * 7 + t, tutte=tutte, M=M,
-                inizio=base + [int(rng.choice(libere))])
+def climb(n: int, d: int, w: int, da: list[int], fino_a: int, *,
+         moves_per_step: int = 100_000, seed: int = 0,
+         attempts: int = 4) -> dict:
+    """Da un code valid, one_ word alla volta fino a `fino_a` (o finché riesce)."""
+    all_of = _all_words(n, w)
+    M = conflict_matrix(all_of, d)
+    position = {int(p): k for k, p in enumerate(all_of)}
+    words = sorted(da)
+    rng = np.random.default_rng(seed)
+    steps_: dict[int, str] = {}
+    while len(words) < fino_a:
+        milestone = len(words) + 1
+        base = [position[p] for p in words]
+        won = None
+        for t in range(attempts):
+            free_ones = np.flatnonzero(~np.isin(np.arange(len(all_of)), base))
+            new_ones, viol = search_size(
+                n, d, w, milestone, moves=moves_per_step,
+                seed=seed * 1000 + milestone * 7 + t, all_of=all_of, M=M,
+                start=base + [int(rng.choice(free_ones))])
             if viol == 0:
-                vinto = nuove
+                won = new_ones
                 break
-        gradini[traguardo] = "riuscito" if vinto else "fallito"
-        if vinto is None:
+        steps_[milestone] = "succeeded" if won else "failed"
+        if won is None:
             break
-        parole = sorted(vinto)
-    v = verifica_veloce(parole, n, d, w)
-    return {"dimensione": len(parole), "valido": v.ok, "gradini": gradini,
-            "parole": parole if v.ok else [], "obiettivo": fino_a}
+        words = sorted(won)
+    v = fast_check(words, n, d, w)
+    return {"size": len(words), "valid": v.ok, "steps_": steps_,
+            "words": words if v.ok else [], "goal": fino_a}

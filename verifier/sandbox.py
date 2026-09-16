@@ -1,52 +1,52 @@
 """
-Isolamento della verifica (macOS).
+Isolating the verification (macOS).
 
-PERCHE'
--------
-Per giudicare una dimostrazione bisogna COMPILARLA, e compilare un file Lean
-significa eseguire codice: elaboratori, macro, tattiche. `comparator` su Linux
-isola questa fase con `landrun`; su macOS `landrun` non esiste.
+WHY
+---
+To judge a proof you have to COMPILE it, and compiling a Lean file means
+executing code: elaborators, macros, tactics. On Linux `comparator` isolates this
+phase with `landrun`; on macOS `landrun` does not exist.
 
-Qui usiamo `sandbox-exec`, il meccanismo di isolamento del kernel di macOS.
-Deprecato da Apple ma funzionante, ed e' l'unico disponibile senza container.
+Here we use `sandbox-exec`, the macOS kernel's isolation mechanism. Deprecated by
+Apple but working, and the only one available without containers.
 
-COSA CONSENTE
--------------
-- lettura: tutto (serve a leggere Mathlib, il toolchain, l'archivio);
-- scrittura: SOLO le tre cartelle dove `lake` deposita il modulo temporaneo del
-  candidato, piu' la cartella dei file temporanei. Misurato sul campo: una
-  verifica non tocca nient'altro;
-- rete: NIENTE.
+WHAT IT ALLOWS
+--------------
+- reading: everything (Mathlib, the toolchain and the archive have to be read);
+- writing: ONLY the three directories where `lake` puts the candidate's
+  temporary module, plus the temporary-file directory. Measured in practice: a
+  verification touches nothing else;
+- network: NOTHING.
 
-Quello che resta fuori dalla sandbox e' il codice del candidato che tentasse di
-riscrivere i file compilati dell'archivio: e' esattamente l'attacco descritto
-nell'assunto 2 del README di comparator ("non devi aver gia' compilato file
-potenzialmente ostili, perche' potrebbero aver alterato il tuo Challenge").
-Come seconda rete di sicurezza, `verifier/fingerprint.py` confronta l'fingerprint
-dell'archivio prima e dopo ogni verifica.
+What the sandbox keeps out is candidate code that tries to rewrite the archive's
+compiled files: exactly the attack described in assumption 2 of comparator's
+README ("you have not previously tried to compile … potentially adversarial
+files, as that might compromise your Challenge file"). As a second safety net,
+`verifier/fingerprint.py` compares the archive's fingerprint before and after
+every verification.
 """
 from __future__ import annotations
 
 import shutil
 from pathlib import Path
 
-#: `(subpath ...)` in un profilo sandbox richiede percorsi assoluti e reali
-#: (senza link simbolici): su macOS /tmp e' un link a /private/tmp, e usare la
-#: forma non risolta fa fallire silenziosamente il permesso.
-def _reale(p: Path) -> str:
+#: `(subpath ...)` in a sandbox profile needs absolute, real paths (no
+#: symlinks): on macOS /tmp is a link to /private/tmp, and using the unresolved
+#: form makes the permission fail silently.
+def _real(p: Path) -> str:
     return str(Path(p).resolve())
 
 
-PROFILO = """(version 1)
+PROFILE = """(version 1)
 (allow default)
 
-; ---- nessun accesso alla rete
+; ---- no network access
 (deny network*)
 
-; ---- nessuna scrittura, tranne dove serve davvero
+; ---- no writing, except where it is really needed
 (deny file-write*)
 (allow file-write*
-{scrivibili}
+{writable}
   (literal "/dev/null")
   (literal "/dev/zero")
   (literal "/dev/random")
@@ -54,46 +54,46 @@ PROFILO = """(version 1)
   (literal "/dev/dtracehelper")
   (literal "/dev/tty"))
 
-; ---- niente lettura dei segreti
+; ---- no reading of secrets
 (deny file-read*
   (subpath "{home}/.ssh")
   (subpath "{home}/.aws")
   (subpath "{home}/.gnupg")
   (subpath "{home}/.config/anthropic")
   (subpath "{home}/.anthropic")
-  (literal "{env_progetto}"))
+  (literal "{project_env}"))
 """
 
 
-def cartelle_scrivibili(archivio: Path, sottocartella_judge: str, tmp: Path) -> list[Path]:
-    """Le uniche cartelle che una verifica ha bisogno di modificare.
+def writable_dirs(archive: Path, judge_subdir: str, tmp: Path) -> list[Path]:
+    """The only directories a verification needs to modify.
 
-    Ricavate misurando quali file cambiano durante una verifica riuscita:
-    i sorgenti del modulo temporaneo e i due rami di `.lake/build` che lo
-    riguardano. Nient'altro.
+    Obtained by measuring which files change during a successful verification:
+    the sources of the temporary module and the two branches of `.lake/build`
+    that concern it. Nothing else.
     """
-    lake = archivio / ".lake" / "build"
+    lake = archive / ".lake" / "build"
     return [
-        archivio / sottocartella_judge,
-        lake / "ir" / sottocartella_judge,
-        lake / "lib" / "lean" / sottocartella_judge,
+        archive / judge_subdir,
+        lake / "ir" / judge_subdir,
+        lake / "lib" / "lean" / judge_subdir,
         tmp,
     ]
 
 
-def scrivi_profilo(destinazione: Path, scrivibili: list[Path], progetto: Path) -> Path:
-    righe = "\n".join(f'  (subpath "{_reale(p)}")' for p in scrivibili)
-    destinazione.write_text(
-        PROFILO.format(scrivibili=righe, home=_reale(Path.home()),
-                       env_progetto=_reale(progetto / ".env")),
+def write_profile(destination: Path, writable: list[Path], project: Path) -> Path:
+    lines = "\n".join(f'  (subpath "{_real(p)}")' for p in writable)
+    destination.write_text(
+        PROFILE.format(writable=lines, home=_real(Path.home()),
+                       project_env=_real(project / ".env")),
         encoding="utf-8")
-    return destinazione
+    return destination
 
 
-def disponibile() -> bool:
+def available() -> bool:
     return shutil.which("sandbox-exec") is not None
 
 
-def avvolgi(comando: list[str], profilo: Path) -> list[str]:
-    """Antepone `sandbox-exec` al comando."""
-    return ["sandbox-exec", "-f", str(profilo)] + comando
+def wrap(command: list[str], profile: Path) -> list[str]:
+    """Prefix the command with `sandbox-exec`."""
+    return ["sandbox-exec", "-f", str(profile)] + command

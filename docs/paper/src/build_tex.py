@@ -18,8 +18,8 @@ ATTACHED = ("Solution.lean", "Challenge.lean", "config.json", "MeaningChecks.lea
 def main() -> None:
     challenge = PUB / "lean" / "Challenge.lean"
     report = json.loads(REPORT.read_text(encoding="utf-8"))
-    if not report["esito"].upper().startswith("ACC"):
-        raise SystemExit(f"verification report is not an acceptance: {report['esito']}")
+    if not report["result"].upper().startswith("ACC"):
+        raise SystemExit(f"verification report is not an acceptance: {report['result']}")
     if REPORT.stat().st_mtime < max(challenge.stat().st_mtime,
                                     (PUB / "lean" / "Solution.lean").stat().st_mtime):
         raise SystemExit("verification report is older than the Lean files: re-verify first")
@@ -27,7 +27,7 @@ def main() -> None:
     lines = len((PUB / "lean" / "Solution.lean").read_text(encoding="utf-8").splitlines())
     (PUB / "build").mkdir(exist_ok=True)
     (PUB / "build" / "values.tex").write_text(
-        f"\\newcommand{{\\VerifySeconds}}{{{round(report['secondi'])}}}\n"
+        f"\\newcommand{{\\VerifySeconds}}{{{round(report['seconds'])}}}\n"
         f"\\newcommand{{\\SolutionLines}}{{{lines}}}\n"
         f"\\newcommand{{\\NumTheorems}}{{{NUMBERS.get(n, n)}}}\n", encoding="utf-8")
     result = subprocess.run(["tectonic", "--keep-logs", "--keep-intermediates",

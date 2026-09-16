@@ -1,25 +1,25 @@
 """
-Espansione dei codici pubblicati dal formato `$EXEC orbit`.
+Espansione dei codici pubblicati dal format_ `$EXEC orbit`.
 
 PERCHÉ SERVE, E COSA CI INSEGNA
 -------------------------------
-I codici record delle tabelle di Brouwer non sono pubblicati come elenchi di
-parole: sono pubblicati come **generatori di un gruppo di permutazioni più alcune
-parole seme**, e il codice è l'unione delle orbite dei semi sotto il gruppo. Un
-codice di 5558 parole sta in venticinque righe.
+I codici record delle tables di Brouwer non sono pubblicati come elenchi di
+words: sono pubblicati come **generators di un group di permutazioni più alcune
+words seed**, e il code è l'unione delle orbits dei seeds below il group. Un
+code di 5558 words sta in venticinque lines.
 
-Questo non è solo un formato: è il **metodo** con cui quasi tutti questi record
-sono stati trovati. Non si cercano 5558 parole una per una — si cerca un gruppo
-adatto e poche parole seme, e il gruppo fa il resto. È l'informazione più utile
-che abbiamo raccolto sulla strada A, e viene gratis dal leggere la fonte.
+Questo non è only_ un format_: è il **method** con cui quasi all_of questi record
+sono stati found. Non si cercano 5558 words one_ per one_ — si search_for un group
+adatto e poche words seed, e il group fa il resto. È l'informazione più utile
+che abbiamo raccolto sulla strada A, e viene gratis dal leggere la source_.
 
 FORMATO
 -------
     $EXEC orbit
-    (23,2,8)(22,1,7)...        <- un generatore per riga, in notazione ciclica
+    (23,2,8)(22,1,7)...        <- un generatore per line, in notazione ciclica
     ...
     ..                         <- separatore
-    000111111111111000000000   <- parole seme, una per riga
+    000111111111111000000000   <- words seed, one_ per line
     ...
 """
 from __future__ import annotations
@@ -30,157 +30,157 @@ from pathlib import Path
 _CICLO = re.compile(r"\(([^)]*)\)")
 
 
-def leggi_permutazione(riga: str, n: int) -> tuple[int, ...]:
-    """Da notazione ciclica a una tupla `p` con `p[i]` = immagine di `i`."""
+def read_permutation(line: str, n: int) -> tuple[int, ...]:
+    """Da notazione ciclica a one_ tupla `p` con `p[i]` = immagine di `i`."""
     p = list(range(n))
-    for corpo in _CICLO.findall(riga):
-        punti = [int(x) for x in corpo.replace(",", " ").split()]
-        for a, b in zip(punti, punti[1:] + punti[:1]):
+    for body in _CICLO.findall(line):
+        points = [int(x) for x in body.replace(",", " ").split()]
+        for a, b in zip(points, points[1:] + points[:1]):
             if not (0 <= a < n and 0 <= b < n):
-                raise ValueError(f"punto fuori intervallo in {riga!r} (n={n})")
+                raise ValueError(f"punto out_of intervallo in {line!r} (n={n})")
             p[a] = b
     return tuple(p)
 
 
-def chiusura(generatori: list[tuple[int, ...]], n: int,
-             massimo: int = 2_000_000) -> list[tuple[int, ...]]:
-    """Il gruppo generato, per visita in ampiezza. Include l'identità."""
+def closure(generators: list[tuple[int, ...]], n: int,
+             maximum: int = 2_000_000) -> list[tuple[int, ...]]:
+    """Il group generato, per visita in ampiezza. Include l'identità."""
     ident = tuple(range(n))
-    visti = {ident}
-    frontiera = [ident]
-    while frontiera:
-        nuova = []
-        for q in frontiera:
-            for g in generatori:
+    seen = {ident}
+    frontier = [ident]
+    while frontier:
+        new_ = []
+        for q in frontier:
+            for g in generators:
                 r = tuple(g[q[i]] for i in range(n))
-                if r not in visti:
-                    visti.add(r)
-                    nuova.append(r)
-                    if len(visti) > massimo:
-                        raise ValueError(f"gruppo troppo grande (> {massimo})")
-        frontiera = nuova
-    return sorted(visti)
+                if r not in seen:
+                    seen.add(r)
+                    new_.append(r)
+                    if len(seen) > maximum:
+                        raise ValueError(f"group troppo grande (> {maximum})")
+        frontier = new_
+    return sorted(seen)
 
 
-def applica(p: tuple[int, ...], parola: int) -> int:
-    """Permuta le posizioni di una parola: il bit in `i` finisce in `p[i]`.
+def apply_(p: tuple[int, ...], word: int) -> int:
+    """Permuta le positions di one_ word: il bit in `i` finisce in `p[i]`.
 
-    La posizione 0 e' il carattere **piu' a destra** della stringa di bit: e' la
+    La position 0 e' il carattere **piu' a destra** della stringa di bit: e' la
     lettura binaria normale, ed e' la convenzione dei file di Brouwer. Provate
-    tutte e quattro le combinazioni (stringa diritta o rovesciata, permutazione o
-    inversa), solo questa riproduce il record pubblicato A(24,6,12) >= 5558; le
-    altre danno 8750 parole con coppie a distanza 4. La convenzione non e'
+    all_of e quattro le combinazioni (stringa diritta o rovesciata, permutazione o
+    inversa), only_ questa riproduce il record pubblicato A(24,6,12) >= 5558; le
+    others danno 8750 words con pairs a distance 4. La convenzione non e'
     documentata sul sito: e' stata dedotta verificando.
     """
-    fuori = 0
+    out_of = 0
     for i in range(len(p)):
-        if parola >> i & 1:
-            fuori |= 1 << p[i]
-    return fuori
+        if word >> i & 1:
+            out_of |= 1 << p[i]
+    return out_of
 
 
-def blocchi(n: int, dichiarati: list[int]) -> list[int]:
-    """Le taglie dei blocchi, completate fino a coprire `n`.
+def blocks(n: int, declared: list[int]) -> list[int]:
+    """Le sizes dei blocks, completate fino a coprire `n`.
 
-    L'intestazione `$EXEC cycle k1 k2 ...` elenca le taglie dei blocchi
-    consecutivi, e la loro somma deve fare n. Quando ne e' elencata una sola (o
-    poche) e la somma e' minore di n, l'ultima si ripete fino a riempire: e' il
+    L'header `$EXEC cycle k1 k2 ...` list_them le sizes dei blocks
+    consecutivi, e la loro total_sum deve fare n. Quando ne e' elencata one_ sola (o
+    poche) e la total_sum e' minore di n, l'last_one si ripete fino a riempire: e' il
     caso di `$EXEC cycle 16` con n=32, che vuol dire 16+16. Un resto piu' piccolo
-    dell'ultima taglia diventa un blocco a se'. Senza argomenti: un solo blocco
-    lungo n, cioe' la rotazione ciclica di tutta la parola.
+    dell'last_one size_ diventa un block a se'. Senza arguments: un only_ block
+    lungo n, cioe' la rotation ciclica di tutta la word.
     """
-    if not dichiarati:
+    if not declared:
         return [n]
-    taglie = list(dichiarati)
-    if sum(taglie) > n:
-        raise ValueError(f"blocchi {taglie} piu' lunghi di n={n}")
-    ultima = taglie[-1]
-    while n - sum(taglie) >= ultima:
-        taglie.append(ultima)
-    # il resto, piu' corto dell'ultima taglia, e' fatto di posizioni ferme: e'
-    # cosi' che tornano A(22,10,7) e A(23,10,9), che con un blocco corto finale
-    # davano orbite troppo grandi e non valide.
-    taglie.extend([1] * (n - sum(taglie)))
-    return taglie
+    sizes = list(declared)
+    if sum(sizes) > n:
+        raise ValueError(f"blocks {sizes} piu' lunghi di n={n}")
+    last_one = sizes[-1]
+    while n - sum(sizes) >= last_one:
+        sizes.append(last_one)
+    # il resto, piu' short dell'last_one size_, e' fatto di positions ferme: e'
+    # cosi' che tornano A(22,10,7) e A(23,10,9), che con un block short finale
+    # davano orbits troppo grandi e non valide.
+    sizes.extend([1] * (n - sum(sizes)))
+    return sizes
 
 
-def rotazione(n: int, taglie: list[int]) -> tuple[int, ...]:
-    """Ruota di uno, contemporaneamente, ogni blocco. I blocchi di 1 sono fermi.
+def rotation(n: int, sizes: list[int]) -> tuple[int, ...]:
+    """Ruota di one, contemporaneamente, ogni block. I blocks di 1 sono fermi.
 
-    I blocchi si contano da **sinistra nella stringa di bit**, cioe' dalle
-    posizioni alte: `cycle 1 24` su n=25 vuol dire che il primo carattere scritto
+    I blocks si contano da **sinistra nella stringa di bit**, cioe' dalle
+    positions alte: `cycle 1 24` su n=25 vuol dire che il prime_ carattere scritto
     e' fisso e i 24 seguenti ruotano. Contandoli dall'altra parte i conteggi
-    tornano ma i codici risultano non validi — e' cosi' che l'errore e' venuto
-    fuori.
+    tornano ma i codici risultano non validi — e' cosi' che l'error e' venuto
+    out_of.
     """
     p = list(range(n))
-    alto = n
-    for k in taglie:
-        base = alto - k
+    high = n
+    for k in sizes:
+        base = high - k
         for i in range(k):
             p[base + i] = base + (i + 1) % k
-        alto = base
+        high = base
     return tuple(p)
 
 
-def espandi_ciclico(percorso: str | Path) -> tuple[list[int], int, dict]:
-    """Il formato `$EXEC cycle k1 k2 ...`: orbita sotto la rotazione a blocchi.
+def expand_cyclic(path: str | Path) -> tuple[list[int], int, dict]:
+    """Il format_ `$EXEC cycle k1 k2 ...`: orbit below la rotation a blocks.
 
-    Le parole sono scritte a gruppi separati da spazi (`11100 10010 ... 00`), che
-    sono proprio i blocchi: gli spazi vanno tolti, non ignorati per caso.
+    Le words sono scritte a groups separati da spazi (`11100 10010 ... 00`), che
+    sono proprio i blocks: gli spazi vanno tolti, non ignorati per caso.
     """
-    righe = [r.rstrip() for r in Path(percorso).read_text().splitlines()]
-    righe = [r for r in righe if r.strip()]
-    dichiarati = [int(x) for x in righe[0].split()[2:]]
-    semi_testo = ["".join(r.split()) for r in righe[1:]
+    lines = [r.rstrip() for r in Path(path).read_text().splitlines()]
+    lines = [r for r in lines if r.strip()]
+    declared = [int(x) for x in lines[0].split()[2:]]
+    seed_text = ["".join(r.split()) for r in lines[1:]
                   if r.strip() and r.strip() != ".."]
-    semi_testo = [r for r in semi_testo if r and all(c in "01" for c in r)]
-    if not semi_testo:
-        raise ValueError(f"{percorso}: nessun seme leggibile")
-    n = max(len(r) for r in semi_testo)
-    scartate = [r for r in semi_testo if len(r) != n]
-    semi_testo = [r for r in semi_testo if len(r) == n]
-    taglie = blocchi(n, dichiarati)
-    gruppo = chiusura([rotazione(n, taglie)], n)
-    parole = set()
-    for s in (int(r, 2) for r in semi_testo):
-        for p in gruppo:
-            parole.add(applica(p, s))
-    info = {"n": n, "generatori": 1, "ordine_gruppo": len(gruppo),
-            "semi": len(semi_testo), "parole": len(parole), "blocchi": taglie,
-            "righe_scartate": len(scartate)}
-    return sorted(parole), n, info
+    seed_text = [r for r in seed_text if r and all(c in "01" for c in r)]
+    if not seed_text:
+        raise ValueError(f"{path}: nessun seed leggibile")
+    n = max(len(r) for r in seed_text)
+    discarded = [r for r in seed_text if len(r) != n]
+    seed_text = [r for r in seed_text if len(r) == n]
+    sizes = blocks(n, declared)
+    group = closure([rotation(n, sizes)], n)
+    words = set()
+    for s in (int(r, 2) for r in seed_text):
+        for p in group:
+            words.add(apply_(p, s))
+    info = {"n": n, "generators": 1, "ordine_gruppo": len(group),
+            "seeds": len(seed_text), "words": len(words), "blocks": sizes,
+            "righe_scartate": len(discarded)}
+    return sorted(words), n, info
 
 
-def espandi(percorso: str | Path) -> tuple[list[int], int, dict]:
-    """Legge un file `$EXEC orbit` e restituisce (parole, n, informazioni)."""
-    righe = [r.rstrip() for r in Path(percorso).read_text().splitlines()]
-    righe = [r for r in righe if r.strip()]
-    if not righe or not righe[0].lower().startswith("$exec"):
-        raise ValueError(f"{percorso}: non è un file $EXEC")
+def expand(path: str | Path) -> tuple[list[int], int, dict]:
+    """Legge un file `$EXEC orbit` e restituisce (words, n, informazioni)."""
+    lines = [r.rstrip() for r in Path(path).read_text().splitlines()]
+    lines = [r for r in lines if r.strip()]
+    if not lines or not lines[0].lower().startswith("$exec"):
+        raise ValueError(f"{path}: non è un file $EXEC")
     try:
-        sep = next(i for i, r in enumerate(righe) if r.strip() == "..")
+        sep = next(i for i, r in enumerate(lines) if r.strip() == "..")
     except StopIteration:
-        raise ValueError(f"{percorso}: manca il separatore '..'") from None
+        raise ValueError(f"{path}: manca il separatore '..'") from None
 
-    # un secondo `..` in fondo e' solo un terminatore: si ignora
-    semi_testo = [r.strip() for r in righe[sep + 1:] if r.strip() and r.strip() != ".."]
-    if not semi_testo or any(c not in "01" for c in semi_testo[0]):
-        raise ValueError(f"{percorso}: i semi non sono stringhe di bit")
-    n = len(semi_testo[0])
-    semi = []
-    for r in semi_testo:
+    # un second_ `..` in fondo e' only_ un terminatore: si ignora
+    seed_text = [r.strip() for r in lines[sep + 1:] if r.strip() and r.strip() != ".."]
+    if not seed_text or any(c not in "01" for c in seed_text[0]):
+        raise ValueError(f"{path}: i seeds non sono stringhe di bit")
+    n = len(seed_text[0])
+    seeds = []
+    for r in seed_text:
         if len(r) != n or any(c not in "01" for c in r):
-            raise ValueError(f"{percorso}: seme di lunghezza diversa: {r[:40]!r}")
-        semi.append(int(r, 2))
+            raise ValueError(f"{path}: seed di length diversa: {r[:40]!r}")
+        seeds.append(int(r, 2))
 
-    gen = [leggi_permutazione(r, n) for r in righe[1:sep] if "(" in r]
-    gruppo = chiusura(gen, n) if gen else [tuple(range(n))]
+    gen = [read_permutation(r, n) for r in lines[1:sep] if "(" in r]
+    group = closure(gen, n) if gen else [tuple(range(n))]
 
-    parole = set()
-    for s in semi:
-        for p in gruppo:
-            parole.add(applica(p, s))
-    info = {"n": n, "generatori": len(gen), "ordine_gruppo": len(gruppo),
-            "semi": len(semi), "parole": len(parole)}
-    return sorted(parole), n, info
+    words = set()
+    for s in seeds:
+        for p in group:
+            words.add(apply_(p, s))
+    info = {"n": n, "generators": len(gen), "ordine_gruppo": len(group),
+            "seeds": len(seeds), "words": len(words)}
+    return sorted(words), n, info

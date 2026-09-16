@@ -1,29 +1,29 @@
-"""I cinque falsi positivi della sonda, uno test per ciascuno.
+"""I cinque falsi positivi della probe, one test per ciascuno.
 
-Cinque «ritrovamenti» annunciati e tutti falsi, per cinque meccanismi diversi.
-La causa common è una sola, e vale la pena scriverla: **la sonda giudicava il
+Cinque «ritrovamenti» annunciati e all_of falsi, per cinque meccanismi diversi.
+La cause common è one_ sola, e vale la pena scriverla: **la probe giudicava il
 proprio output.** Ogni strato di giudizio che le avevo aggiunto — «il file
-compila», «quali righe portano errori», «quali assiomi risultano» — era una
+compila», «which_ones lines portano errors», «which_ones axioms risultano» — era one_
 imitazione più povera di quello che `verify.py` fa per davvero, e ognuna aveva un
 buco diverso.
 
-La correzione strutturale è che la sonda **propone** e `verify.py` **giudica**.
-Questi test proteggono i cinque buchi in modo che, se qualcuno rimette un
-verdetto dentro la sonda, si rompano.
+La correzione strutturale è che la probe **propone** e `verify.py` **giudica**.
+Questi test proteggono i cinque buchi in way che, se qualcuno rimette un
+verdict inside la probe, si rompano.
 """
 import sys
 from pathlib import Path
 
-RADICE = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(RADICE / "scripts"))
-sys.path.insert(0, str(RADICE / "verifier"))
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(0, str(ROOT / "verifier"))
 
 import pytest
-import probe_artefacts as sonda
+import probe_artefacts as probe
 import probe_lean
 
 
-class FintoProblema:
+class FakeProblem:
     theorem = "Foo.bar"
     module = "FormalConjectures.Foo"
 
@@ -33,78 +33,78 @@ class FintoProblema:
 def test_1_plausible_senza_controesempio_non_ha_dimostrato_niente():
     """Primo falso positivo. `plausible`, quando non trova controesempi, scrive
     «Unable to find a counter-example» e lascia un `sorry`: il file compila con un
-    avviso. Il verdetto guardava solo se compilava."""
-    esito, _ = probe_lean.classifica(
+    avviso. Il verdict guardava only_ se compilava."""
+    result, _ = probe_lean.classify(
         "Unable to find a counter-example\n"
         "E0.lean:5:0: warning: declaration uses 'sorry'", ok=True)
-    assert esito == "aperta"
-    # e con il criterio degli assiomi, la stessa cosa
-    r = sonda.leggi("'sonda_plausible' depends on axioms: [sorryAx]",
+    assert result == "aperta"
+    # e con il criterio degli axioms, la stessa cosa
+    r = probe.read_("'sonda_plausible' depends on axioms: [sorryAx]",
                     {"sonda_plausible": ("plausible", False)})
-    assert r["prove"][0]["esito"] == "aperta"
+    assert r["trials"][0]["result"] == "aperta"
 
 
-# --- 2. due esplorazioni che si scambiano i messaggi ------------------------
+# --- 2. two explorations che si scambiano i messages ------------------------
 
 def test_2_gli_slot_di_esplorazione_sono_esclusivi():
-    """Secondo falso positivo. Il file di ispezione aveva un nome fisso
-    (`E0.lean`), quindi due esplorazioni concorrenti si sovrascrivevano il file e
-    ognuna leggeva i messaggi dell'altra: una tattica banale sembrava aver chiuso
-    un problema di topologia, e i messaggi erano di un problema di grafi."""
+    """Secondo falso positivo. Il file di inspection aveva un name fisso
+    (`E0.lean`), quindi two explorations concorrenti si sovrascrivevano il file e
+    ognuna leggeva i messages dell'altra: one_ tactic banale sembrava aver chiuso
+    un problem di topologia, e i messages erano di un problem di grafi."""
     import explore
-    assert hasattr(explore, "_slot_esclusivo"), (
-        "il meccanismo del lucchetto è stato rimosso: due esplorazioni "
+    assert hasattr(explore, "_exclusive_slot"), (
+        "il meccanismo del lock_ è state rimosso: two explorations "
         "concorrenti tornerebbero a mescolarsi")
-    assert explore.SLOT_DISPONIBILI >= 2
+    assert explore.AVAILABLE_SLOTS >= 2
     import inspect
-    assert "flock" in inspect.getsource(explore._slot_esclusivo), (
-        "il lucchetto deve valere FRA PROCESSI, non solo fra thread")
+    assert "flock" in inspect.getsource(explore._exclusive_slot), (
+        "il lock_ deve valere FRA PROCESSI, non only_ fra thread")
 
 
-# --- 3. il verdetto letto dalle righe di errore -----------------------------
+# --- 3. il verdict letto dalle lines di error -----------------------------
 
 def test_3_il_verdetto_si_legge_per_nome_non_per_riga():
-    """Terzo falso positivo. Il lettore attribuiva gli errori di Lean alla
-    dichiarazione sbagliata, e arrivava a dire che un enunciato E la sua negation
+    """Terzo falso positivo. Il lettore attribuiva gli errors di Lean alla
+    declaration sbagliata, e arrivava a dire che un statement E la sua negation
     erano entrambi dimostrati — cosa logicamente impossibile."""
-    uscita = ("E0.lean:9:2: error: qualcosa non va qui\n"
+    output = ("E0.lean:9:2: error: qualcosa non va qui\n"
               "'sonda_decide' depends on axioms: [sorryAx]\n"
               "'sonda_decide_neg' does not depend on any axioms")
-    mappa = {"sonda_decide": ("decide", False), "sonda_decide_neg": ("decide", True)}
-    esiti = {(p["tattica"], p["negato"]): p["esito"]
-             for p in sonda.leggi(uscita, mappa)["prove"]}
-    # la riga di errore non deve spostare nessun verdetto: contano i nomi
-    assert esiti[("decide", False)] == "aperta"
-    assert esiti[("decide", True)] == "confutata"
+    map_ = {"sonda_decide": ("decide", False), "sonda_decide_neg": ("decide", True)}
+    results = {(p["tactic"], p["negated"]): p["result"]
+             for p in probe.read_(output, map_)["trials"]}
+    # la line di error non deve spostare nessun verdict: contano i names
+    assert results[("decide", False)] == "aperta"
+    assert results[("decide", True)] == "confutata"
 
 
-# --- 4. `type_of%` senza `@` prova un enunciato diverso ---------------------
+# --- 4. `type_of%` senza `@` trial un statement diverso ---------------------
 
 def test_4_type_of_va_scritto_con_la_chiocciola():
     """Quarto falso positivo. `type_of% Foo` senza `@` fa istanziare a Lean gli
-    argomenti impliciti come metavariabili: la sonda provava un enunciato DIVERSO
-    da quello dell'archivio, e `aesop` «confutava» la congettura di Agrawal
-    mentre il verificatore vero rifiutava la stessa dimostrazione."""
-    codice, _ = sonda.costruisci(FintoProblema(), 200000)
-    assert "type_of% @Foo.bar" in codice
-    assert "type_of% Foo.bar" not in codice.replace("type_of% @Foo.bar", "")
+    arguments impliciti come metavariabili: la probe provava un statement DIVERSO
+    da quello dell'archive, e `aesop` «confutava» la congettura di Agrawal
+    mentre il verifier vero rifiutava la stessa dimostrazione."""
+    code, _ = probe.build_(FakeProblem(), 200000)
+    assert "type_of% @Foo.bar" in code
+    assert "type_of% Foo.bar" not in code.replace("type_of% @Foo.bar", "")
 
 
-# --- 5. l'ambiente sbagliato -----------------------------------------------
+# --- 5. l'environment sbagliato -----------------------------------------------
 
 def test_5_rifiuta_di_girare_sull_archivio_sbagliato(tmp_path):
-    """Quinto falso positivo. La sonda girava con l'indice predefinito
-    (bench-v1) mentre i bersagli erano scelti su `main`: gli import fallivano, i
-    messaggi erano spazzatura, e il lettore ci leggeva dentro dei successi."""
+    """Quinto falso positivo. La probe girava con l'index predefinito
+    (bench-v1) mentre i targets erano chosen su `main`: gli import fallivano, i
+    messages erano spazzatura, e il lettore ci leggeva inside dei successi."""
     import json
     import config
-    bersagli = tmp_path / "bersagli.json"
-    bersagli.write_text(json.dumps(
-        {"snapshot": "external/fc-main 0a8b856c", "candidati": []}), encoding="utf-8")
+    targets = tmp_path / "targets.json"
+    targets.write_text(json.dumps(
+        {"snapshot": "external/fc-main 0a8b856c", "candidates": []}), encoding="utf-8")
     if "fc-main" in str(config.ARCHIVE):
-        pytest.skip("questo test vale quando l'archivio in uso NON è fc-main")
+        pytest.skip("questo test vale quando l'archive in uso NON è fc-main")
     with pytest.raises(SystemExit) as e:
-        sonda.controlla_ambiente(bersagli)
+        probe.check_environment(targets)
     assert "AMBIENTE SBAGLIATO" in str(e.value)
 
 
@@ -112,23 +112,23 @@ def test_5_rifiuta_di_girare_sull_archivio_sbagliato(tmp_path):
 
 def test_la_sonda_non_segnala_senza_il_verificatore():
     """Il vincolo che rende impossibile un sesto falso positivo della stessa
-    famiglia: il flag di segnalazione si accende SOLO dopo un ACCETTATO che
+    famiglia: il flag di segnalazione si accende SOLO after un ACCETTATO che
     arriva da `verify.py`."""
     import inspect
-    src = inspect.getsource(sonda.main)
-    assert "conferma_col_verificatore" in src, (
-        "la sonda deve passare i candidati al verificatore")
-    # ogni assegnazione del flag deve stare in un ramo che controlla ACCETTATO
-    pezzi = src.split('voce["ATTENZIONE"]')
-    for prima in pezzi[:-1]:
-        assert "ACCETTATO" in prima[-400:], (
-            "un ATTENZIONE viene acceso senza passare dal verificatore")
+    src = inspect.getsource(probe.main)
+    assert "confirm_with_verifier" in src, (
+        "la probe deve passare i candidates al verifier")
+    # ogni assegnazione del flag deve stare in un branch che controlla ACCETTATO
+    pieces = src.split('entry["ATTENZIONE"]')
+    for before in pieces[:-1]:
+        assert "ACCETTATO" in before[-400:], (
+            "un ATTENZIONE viene acceso senza passare dal verifier")
 
 
 def test_conferma_col_verificatore_costruisce_il_candidato_giusto():
     """Nella forma negata deve usare la modalità confutazione e il `@`."""
     import inspect
-    src = inspect.getsource(sonda.conferma_col_verificatore)
-    assert "type_of% @{problema.theorem}" in src
-    assert "CONFUTAZIONE" in src and "STRETTA" in src
-    assert "run_guard=False" in src   # il candidato importa il modulo di proposito
+    src = inspect.getsource(probe.confirm_with_verifier)
+    assert "type_of% @{problem.theorem}" in src
+    assert "REFUTATION" in src and "STRICT" in src
+    assert "run_guard=False" in src   # il candidato importa il module di proposito

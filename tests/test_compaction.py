@@ -1,68 +1,68 @@
-"""La compattazione del contesto: senza, un tentativo lungo muore di contesto.
+"""La compattazione del context: senza, un attempt lungo muore di context.
 
-Test di solo testo, nessuna chiamata all'API.
+Test di only_ text, nessuna call all'API.
 """
 import sys
 from pathlib import Path
 
-RADICE = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(RADICE / "agent"))
-sys.path.insert(0, str(RADICE / "verifier"))
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "agent"))
+sys.path.insert(0, str(ROOT / "verifier"))
 
 import agent
 
 
-def _conversazione(n_iterazioni: int, lunghezza: int = 5000) -> list:
-    """Una conversazione finta: enunciato, poi n giri di strumento."""
-    messaggi = [{"role": "user", "content": "ENUNCIATO DEL PROBLEMA"}]
-    for i in range(n_iterazioni):
-        messaggi.append({"role": "assistant", "content": [
+def _conversation(n_iterations: int, length: int = 5000) -> list:
+    """Una conversazione finta: statement, poi n rounds di strumento."""
+    messages = [{"role": "user", "content": "ENUNCIATO DEL PROBLEM"}]
+    for i in range(n_iterations):
+        messages.append({"role": "assistant", "content": [
             {"type": "tool_use", "id": f"t{i}", "name": "lean_check",
-             "input": {"codice_lean": f"theorem prova{i} : True := trivial"}}]})
-        messaggi.append({"role": "user", "content": [
+             "input": {"lean_code": f"theorem trial{i} : True := trivial"}}]})
+        messages.append({"role": "user", "content": [
             {"type": "tool_result", "tool_use_id": f"t{i}",
-             "content": "ERRORE " * (lunghezza // 7)}]})
-    return messaggi
+             "content": "ERRORE " * (length // 7)}]})
+    return messages
 
 
 def test_accorcia_i_risultati_vecchi_e_lascia_intatti_i_recenti():
-    m = _conversazione(20)
-    prima = sum(len(b["content"]) for msg in m if isinstance(msg["content"], list)
+    m = _conversation(20)
+    before = sum(len(b["content"]) for msg in m if isinstance(msg["content"], list)
                 for b in msg["content"] if b.get("type") == "tool_result")
-    tagliati = agent.compatta_conversazione(m, intatti=8, coda=600)
-    dopo = sum(len(b["content"]) for msg in m if isinstance(msg["content"], list)
+    cut_ = agent.compact_conversation(m, intact=8, queue=600)
+    after = sum(len(b["content"]) for msg in m if isinstance(msg["content"], list)
                for b in msg["content"] if b.get("type") == "tool_result")
-    assert tagliati > 0
-    assert dopo < prima / 3, f"compattazione inefficace: {prima} -> {dopo}"
-    # gli ultimi quattro risultati (dentro gli 8 messaggi intatti) sono interi
-    ultimi = [b["content"] for msg in m[-8:] if isinstance(msg["content"], list)
+    assert cut_ > 0
+    assert after < before / 3, f"compattazione inefficace: {before} -> {after}"
+    # gli last_ones quattro results (inside gli 8 messages intact) sono interi
+    last_ones = [b["content"] for msg in m[-8:] if isinstance(msg["content"], list)
               for b in msg["content"] if b.get("type") == "tool_result"]
-    assert ultimi and all(len(c) > 600 for c in ultimi)
+    assert last_ones and all(len(c) > 600 for c in last_ones)
 
 
 def test_l_enunciato_non_viene_mai_toccato():
-    m = _conversazione(20)
-    agent.compatta_conversazione(m)
-    assert m[0]["content"] == "ENUNCIATO DEL PROBLEMA"
+    m = _conversation(20)
+    agent.compact_conversation(m)
+    assert m[0]["content"] == "ENUNCIATO DEL PROBLEM"
 
 
 def test_il_codice_scritto_dal_modello_resta_intero():
-    m = _conversazione(20)
-    agent.compatta_conversazione(m)
+    m = _conversation(20)
+    agent.compact_conversation(m)
     for msg in m:
         if isinstance(msg["content"], list):
             for b in msg["content"]:
                 if b.get("type") == "tool_use":
-                    assert b["input"]["codice_lean"].startswith("theorem prova")
+                    assert b["input"]["lean_code"].startswith("theorem trial")
 
 
 def test_e_idempotente():
-    m = _conversazione(20)
-    primo = agent.compatta_conversazione(m)
-    secondo = agent.compatta_conversazione(m)
-    assert primo > 0 and secondo == 0
+    m = _conversation(20)
+    prime_ = agent.compact_conversation(m)
+    second_ = agent.compact_conversation(m)
+    assert prime_ > 0 and second_ == 0
 
 
 def test_una_conversazione_corta_non_viene_toccata():
-    m = _conversazione(3)
-    assert agent.compatta_conversazione(m, intatti=8) == 0
+    m = _conversation(3)
+    assert agent.compact_conversation(m, intact=8) == 0

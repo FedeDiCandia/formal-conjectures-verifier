@@ -1,42 +1,42 @@
 """
-Sfide "negate" per i problemi con `answer(sorry)` proposizionale.
+"Negated" challenges for problems with a propositional `answer(sorry)`.
 
-IL PROBLEMA
+THE PROBLEM
 -----------
-Come spiegato in docs/01, l'opzione predefinita dell'archivio
-(`google.answer = always_true`) trasforma `answer(sorry)` in `True` quando il
-tipo atteso e' una proposizione. Quindi una domanda aperta formalizzata cosi':
+As explained in docs/01-the-archive.md, the archive's default option
+(`google.answer = always_true`) turns `answer(sorry)` into `True` when the
+expected type is a proposition. So an open question formalised like this:
 
-    /-- Vale P? -/
-    theorem congettura : answer(sorry) ↔ P := by sorry
+    /-- Does P hold? -/
+    theorem conjecture : answer(sorry) ↔ P := by sorry
 
-viene elaborata come `True ↔ P`, cioe' come l'affermazione che **la risposta e'
-SI'**. Sono 107 problemi ancora aperti dell'archivio.
+elaborates as `True ↔ P`, that is, as the assertion that **the answer is YES**.
+107 of the archive's still-open problems are like that.
 
-Conseguenza: se per uno di quei problemi la risposta giusta fosse NO, il
-teorema com'e' scritto sarebbe FALSO, e nessuno potrebbe dimostrarlo. Chi
-scoprisse la confutazione non avrebbe modo di farla verificare: dovrebbe
-cambiare l'enunciato in `answer(False) ↔ P`, e il verificatore lo rifiuterebbe —
-giustamente, perche' e' un altro enunciato.
+The consequence: if for one of them the right answer were NO, the theorem as
+written would be FALSE, and nobody could prove it. Whoever found the refutation
+would have no way to have it verified: they would have to change the statement to
+`answer(False) ↔ P`, and the verifier would reject it — rightly, because that is a
+different statement.
 
-LA SOLUZIONE
+THE SOLUTION
 ------------
-Per ognuno di quei problemi si puo' generare la sfida **negata**: lo stesso file
-dell'archivio con `answer(sorry)` sostituito da `answer(False)`, cosi' che
-l'enunciato diventi `False ↔ P`, che e' logicamente `¬P`.
+For each of those problems one can generate the **negated** challenge: the same
+archive file with `answer(sorry)` replaced by `answer(False)`, so that the
+statement becomes `False ↔ P`, which is logically `¬P`.
 
-Il punto essenziale e' CHI genera quel file. Lo generiamo noi, meccanicamente,
-dal sorgente dell'archivio: e' un file **fidato**, esattamente come lo e' il
-modulo originale. Non lo scrive chi propone la dimostrazione. Se lo scrivesse
-lui, potrebbe metterci dentro qualunque cosa.
+The essential point is WHO generates that file. We do, mechanically, from the
+archive's source: it is a **trusted** file, exactly as the original module is. It
+is not written by whoever proposes the proof. If it were, they could put anything
+they liked in it.
 
-Cosi' un problema aperto ha due sfide, entrambe fidate ed entrambe verificabili:
+So an open problem has two challenges, both trusted and both verifiable:
 
-    stretta      True  ↔ P     "la risposta e' si'"   (l'enunciato dell'archivio)
-    confutazione False ↔ P     "la risposta e' no"
+    strict      True  ↔ P     "the answer is yes"   (the archive's statement)
+    refutation  False ↔ P     "the answer is no"
 
-e sono enunciati diversi: una dimostrazione di una delle due viene rifiutata
-dall'altra. Il test lo verifica.
+and they are different statements: a proof of one is rejected by the other. The
+tests check exactly that.
 """
 from __future__ import annotations
 
@@ -49,132 +49,129 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from index import Problem   # noqa: E402
 
 
-#: `answer(sorry)` con spazi qualunque fra i pezzi.
-_SEGNAPOSTO = re.compile(r"answer\s*\(\s*sorry\s*\)")
+#: `answer(sorry)` with any spacing between the pieces.
+_PLACEHOLDER = re.compile(r"answer\s*\(\s*sorry\s*\)")
 
 
-class NonNegabile(ValueError):
-    """Il problema non ammette una sfida negata."""
+class NotNegatable(ValueError):
+    """The problem admits no negated challenge."""
 
 
 @dataclass
-class SfidaNegata:
-    problema: str
-    #: il testo del file Lean da compilare come Challenge
-    testo: str
-    #: quante sostituzioni sono state fatte
-    sostituzioni: int
-    #: il nome del teorema da dimostrare nella sfida. Per la via `answer( )` e'
-    #: lo stesso del problema (cambia l'enunciato, non il nome); per la via
-    #: `type_of%` e' un nome derivato.
-    bersaglio: str = ""
-    #: quale delle due vie e' stata usata, per il rapporto
-    via: str = "answer"
+class NegatedChallenge:
+    problem: str
+    #: the text of the Lean file to compile as the Challenge
+    text: str
+    #: how many substitutions were made
+    substitutions: int
+    #: the name of the theorem to prove in the challenge. On the `answer( )` route
+    #: it is the problem's own name (the statement changes, the name does not); on
+    #: the `type_of%` route it is a derived name.
+    target: str = ""
+    #: which of the two routes was used, for the report
+    route: str = "answer"
 
 
-def puo_essere_negato(problema: Problem) -> tuple[bool, str]:
-    """Dice se ha senso generare la sfida negata, e perche' no in caso contrario."""
-    if not problema.answer_placeholder_in_source:
-        return False, ("l'enunciato non contiene `answer(sorry)`: non c'e' nessuna "
-                       "domanda di cui invertire la risposta. Un enunciato senza "
-                       "`answer( )` afferma direttamente una proposizione, e la sua "
-                       "negation non e' un problema dell'archivio")
-    if problema.statement_has_sorry:
-        return False, ("il buco `answer( )` non e' proposizionale: la risposta e' un "
-                       "oggetto (un numero, un insieme), non un si'/no. Non c'e' un "
-                       "verso da invertire, c'e' un valore da fornire")
+def can_be_negated(problem: Problem) -> tuple[bool, str]:
+    """Say whether generating the negated challenge makes sense, and if not, why."""
+    if not problem.answer_placeholder_in_source:
+        return False, ("the statement contains no `answer(sorry)`: there is no "
+                       "question whose answer could be inverted. A statement without "
+                       "`answer( )` asserts a proposition directly, and its negation "
+                       "is not a problem of the archive")
+    if problem.statement_has_sorry:
+        return False, ("the `answer( )` hole is not propositional: the answer is an "
+                       "object (a number, a set), not a yes/no. There is no direction "
+                       "to invert, there is a value to supply")
     return True, ""
 
 
-#: Suffisso del teorema generato dalla via `type_of%`.
-SUFFISSO = "_confutazione"
+#: Suffix of the theorem generated on the `type_of%` route.
+SUFFIX = "_refutation"
 
 
-def genera_per_tipo(problema: Problem) -> SfidaNegata:
-    """La sfida negata per un enunciato QUALUNQUE, via `type_of%`.
+def generate_by_kind(problem: Problem) -> NegatedChallenge:
+    """The negated challenge for ANY statement, via the `type_of%` route.
 
-    Serve per i problemi che non hanno un `answer(sorry)` da invertire, cioe'
-    la maggioranza. Invece di riscrivere l'enunciato — operazione fragile su un
-    enunciato con quantificatori e binder su piu' righe — si chiede a Lean il
-    tipo del teorema originale e si dichiara la sua negation:
+    This is for problems that have no `answer(sorry)` to invert, which is most of
+    them. Instead of rewriting the statement — a fragile operation on a statement
+    with quantifiers and binders spread over several lines — we ask Lean for the
+    type of the original theorem and declare its negation:
 
-        import <modulo del problema>
-        theorem <nome>_confutazione : ¬ (type_of% @<nome>) := sorry
+        import <the problem's module>
+        theorem <name>_refutation : ¬ (type_of% @<name>) := sorry
 
-    Il candidato deve dichiarare lo stesso teorema e dimostrarlo. Gli e'
-    permesso importare il modulo del problema — cosa vietata in modalita'
-    stretta — e la ragione per cui questo NON e' una scappatoia e' che il
-    teorema originale, in un problema aperto, e' dimostrato con `sorry`:
-    usarlo introduce `sorryAx` e il controllo degli assiomi lo rifiuta. Cioe'
-    puo' leggere l'enunciato ma non puo' appoggiarsi alla sua finta
-    dimostrazione.
+    The candidate has to declare the same theorem and prove it. It is allowed to
+    import the problem's module — which the strict mode forbids — and the reason
+    this is NOT a loophole is that in an open problem the original theorem is
+    proved with `sorry`: using it introduces `sorryAx` and the axiom check
+    rejects it. That is, the candidate may read the statement but cannot lean on
+    its fake proof.
 
-    E' la stessa costruzione usata dal benchmark OEIS Open di Epoch AI, dove il
-    43% delle soluzioni accettate sono confutazioni: senza questa via, quella
-    meta' dei risultati possibili non sarebbe nemmeno verificabile.
+    It is the same construction used by Epoch AI's OEIS Open benchmark, where 43%
+    of the accepted solutions are refutations: without this route, that half of
+    the possible results would not even be verifiable.
     """
-    if problema.statement_has_sorry:
-        raise NonNegabile(
-            f"{problema.theorem}: l'enunciato contiene un `sorry` (buco "
-            f"`answer( )` non proposizionale), quindi la sua negation non e' "
-            f"un'affermazione ben posta")
-    nome = f"{problema.theorem}{SUFFISSO}"
-    testo = (
-        "-- Sfida negata generata automaticamente da verifier/negation.py.\n"
-        "-- Non e' un file dell'archivio: e' il bersaglio di una confutazione.\n"
-        f"import {problema.module}\n"
+    if problem.statement_has_sorry:
+        raise NotNegatable(
+            f"{problem.theorem}: the statement contains a `sorry` (a "
+            f"non-propositional `answer( )` hole), so its negation is not a "
+            f"well-posed assertion")
+    name = f"{problem.theorem}{SUFFIX}"
+    text = (
+        "-- Negated challenge, generated automatically by verifier/negation.py.\n"
+        "-- This is not a file of the archive: it is the target of a refutation.\n"
+        f"import {problem.module}\n"
         "\n"
-        f"/-- La negation di `{problema.theorem}`. Chi dimostra questo teorema\n"
-        f"confuta il problema come e' formalizzato nell'archivio. -/\n"
-        f"theorem {nome} : ¬ (type_of% @{problema.theorem}) := sorry\n")
-    return SfidaNegata(problema=problema.theorem, testo=testo, sostituzioni=0,
-                       bersaglio=nome, via="type_of%")
+        f"/-- The negation of `{problem.theorem}`. Proving this theorem refutes\n"
+        f"the problem as the archive formalises it. -/\n"
+        f"theorem {name} : ¬ (type_of% @{problem.theorem}) := sorry\n")
+    return NegatedChallenge(problem=problem.theorem, text=text, substitutions=0,
+                            target=name, route="type_of%")
 
 
-def genera(problema: Problem) -> SfidaNegata:
-    """Costruisce il testo della sfida negata dal sorgente dell'archivio."""
-    ok, perche = puo_essere_negato(problema)
+def generate(problem: Problem) -> NegatedChallenge:
+    """Build the text of the negated challenge from the archive's source."""
+    ok, why_not = can_be_negated(problem)
     if not ok:
-        raise NonNegabile(f"{problema.theorem}: {perche}")
+        raise NotNegatable(f"{problem.theorem}: {why_not}")
 
-    testo = problema.source_file.read_text(encoding="utf-8")
-    r = problema.range
+    text = problem.source_file.read_text(encoding="utf-8")
+    r = problem.range
     if not r:
-        raise NonNegabile(f"{problema.theorem}: posizione nel sorgente sconosciuta")
+        raise NotNegatable(f"{problem.theorem}: position in the source is unknown")
 
-    righe = testo.split("\n")
-    inizio, fine = r["startLine"] - 1, r["endLine"] - 1
+    lines = text.split("\n")
+    start, end = r["startLine"] - 1, r["endLine"] - 1
 
-    # La sostituzione va fatta SOLO dentro la dichiarazione del teorema
-    # bersaglio: nello stesso file possono esserci altri problemi con il loro
-    # `answer(sorry)`, e invertirli tutti darebbe una sfida diversa da quella
-    # che si vuole.
-    blocco = "\n".join(righe[inizio:fine + 1])
-    nuovo, n = _SEGNAPOSTO.subn("answer(False)", blocco)
+    # The substitution must be made ONLY inside the target theorem's declaration:
+    # the same file may hold other problems with their own `answer(sorry)`, and
+    # inverting all of them would give a different challenge from the intended one.
+    block = "\n".join(lines[start:end + 1])
+    new_block, n = _PLACEHOLDER.subn("answer(False)", block)
     if n == 0:
-        raise NonNegabile(
-            f"{problema.theorem}: `answer(sorry)` non trovato nella dichiarazione. "
-            f"L'indice dice che c'e', quindi l'indice e' vecchio: rigeneralo con "
+        raise NotNegatable(
+            f"{problem.theorem}: `answer(sorry)` not found in the declaration. "
+            f"The index says it is there, so the index is stale: rebuild it with "
             f"`python verifier/index.py --build`")
-    righe[inizio:fine + 1] = nuovo.split("\n")
+    lines[start:end + 1] = new_block.split("\n")
 
-    intestazione = (
+    header = (
         "/-\n"
-        "  SFIDA NEGATA — file generato automaticamente, NON scritto a mano.\n"
+        "  NEGATED CHALLENGE — generated automatically, not written by hand.\n"
         "\n"
-        f"  Problema:  {problema.theorem}\n"
-        f"  Originale: {problema.module}\n"
+        f"  Problem:  {problem.theorem}\n"
+        f"  Original: {problem.module}\n"
         "\n"
-        "  E' il file dell'archivio con `answer(sorry)` sostituito da\n"
-        "  `answer(False)` nella sola dichiarazione del teorema bersaglio.\n"
-        "  L'enunciato passa quindi da `True ↔ P` (la risposta e' si') a\n"
-        "  `False ↔ P` (la risposta e' no, cioe' ¬P).\n"
+        "  This is the archive's file with `answer(sorry)` replaced by\n"
+        "  `answer(False)` in the target theorem's declaration only.\n"
+        "  The statement therefore goes from `True ↔ P` (the answer is yes) to\n"
+        "  `False ↔ P` (the answer is no, that is ¬P).\n"
         "\n"
-        "  Generato da verifier/negation.py a partire dal sorgente\n"
-        "  dell'archivio: e' un file FIDATO, non fornito da chi propone la\n"
-        "  dimostrazione.\n"
+        "  Generated by verifier/negation.py from the archive's source: it is a\n"
+        "  TRUSTED file, not supplied by whoever proposes the proof.\n"
         "-/\n")
-    return SfidaNegata(problema=problema.theorem,
-                       testo=intestazione + "\n".join(righe),
-                       sostituzioni=n,
-                       bersaglio=problema.theorem, via="answer")
+    return NegatedChallenge(problem=problem.theorem,
+                            text=header + "\n".join(lines),
+                            substitutions=n,
+                            target=problem.theorem, route="answer")

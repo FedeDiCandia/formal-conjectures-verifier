@@ -1,9 +1,9 @@
 """
-Esegue le ricerche di controesempi, in coda, con checkpoint e ripresa.
+Esegue le ricerche di controesempi, in queue, con checkpoint e ripresa.
 
-Non usa l'API e non costa niente: gira solo sul computer.
-Ogni ricerca lascia in runs/caccia/<nome>/ il programma, il log, il checkpoint
-e un rapporto leggibile.
+Non usa l'API e non costa niente: gira only_ sul computer.
+Ogni ricerca lascia in runs/hunt/<name>/ il program, il log, il checkpoint
+e un report leggibile.
 """
 from __future__ import annotations
 
@@ -13,141 +13,141 @@ import sys
 import time
 from pathlib import Path
 
-RADICE = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(RADICE / "verifier"))
-sys.path.insert(0, str(RADICE / "scripts"))
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "verifier"))
+sys.path.insert(0, str(ROOT / "scripts"))
 
 import search as search_module
-from hunt_programs import RICERCHE
+from hunt_programs import SEARCHES
 
 
-def _in_parole(nome: str, definizione: dict, esito) -> str:
-    """La frase che dice il risultato in matematica, non in numeri d'indice.
+def _in_words(name: str, definition: dict, result) -> str:
+    """La frase che dice il result_value in matematica, non in numbers d'index.
 
-    "posizione raggiunta 216816" non dice niente a chi legge: quello che conta
-    e' "nessun primo fino a 3 milioni". I campi disponibili sono quelli
-    dell'esito, le variabili della ricerca e l'ultimo evento del registro.
+    "position raggiunta 216816" non dice niente a chi legge: quello che count_
+    e' "nessun prime_ fino a 3 milioni". I fields disponibili sono quelli
+    dell'result, le variables della ricerca e l'last_ event del log_.
     """
-    modello = definizione.get("esito_in_parole")
-    if not modello:
+    model = definition.get("esito_in_parole")
+    if not model:
         return ""
-    campi = {"posizione": esito.posizione, "esaminati": esito.esaminati,
-             "secondi": round(esito.secondi)}
-    campi.update(definizione.get("variabili", {}))
-    registro = RADICE / "runs" / "caccia" / nome / "ricerca.log"
-    if registro.is_file():
-        for riga in registro.read_text(encoding="utf-8").splitlines():
-            riga = riga.strip()
-            if riga.startswith("{"):
+    fields = {"position": result.position, "examined": result.examined,
+             "seconds": round(result.seconds)}
+    fields.update(definition.get("variables", {}))
+    log_ = ROOT / "runs" / "hunt" / name / "search.log"
+    if log_.is_file():
+        for line in log_.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if line.startswith("{"):
                 try:
-                    campi.update(json.loads(riga))
+                    fields.update(json.loads(line))
                 except ValueError:
                     pass
     try:
-        return modello.format(**campi)
+        return model.format(**fields)
     except KeyError:
         return ""
 
 
-def rapporto(nome: str, definizione: dict, esito) -> str:
-    natura = definizione.get("natura_trovati", "da interpretare")
-    righe = [
-        f"# Ricerca: {nome}", "",
-        f"**Problema:** `{definizione['problema']}`", "",
-        f"**Cosa cerca:** {definizione['descrizione']}", "",
-        f"**Stato noto del problema:** {definizione['stato_noto']}", "",
-        f"**La ricerca è conclusiva?** {definizione['conclusivo']}", "",
-        "## Esito", "",
+def report(name: str, definition: dict, result) -> str:
+    kind = definition.get("natura_trovati", "da interpretare")
+    lines = [
+        f"# Search: {name}", "",
+        f"**Problema:** `{definition['problem']}`", "",
+        f"**Cosa search_for:** {definition['descrizione']}", "",
+        f"**State noto del problem:** {definition['stato_noto']}", "",
+        f"**La ricerca è conclusiva?** {definition['conclusivo']}", "",
+        "## Result", "",
         f"| | |", "|---|---|",
-        f"| conclusa | {'sì' if esito.conclusa else 'no, interrotta'} |",
-        f"| durata | {esito.secondi:.0f} s |",
-        f"| posizione raggiunta | {esito.posizione} |",
-        f"| casi esaminati | {esito.esaminati} |",
-        f"| voci nella lista dei risultati | {len(esito.trovati)} |",
-        f"| natura di quelle voci | {natura} |",
+        f"| completed | {'sì' if result.completed else 'no, interrupted'} |",
+        f"| duration | {result.seconds:.0f} s |",
+        f"| position raggiunta | {result.position} |",
+        f"| cases examined | {result.examined} |",
+        f"| entries nella list_ dei results | {len(result.found)} |",
+        f"| kind di quelle entries | {kind} |",
         "",
     ]
-    if esito.trovati and natura == "controesempi":
-        righe += ["## Ritrovamenti", "",
-                  "⚠️ Da sottoporre al protocollo della fase 7 prima di crederci.", ""]
-    elif esito.trovati:
-        righe += [f"## Risultati ({natura})", "",
+    if result.found and kind == "controesempi":
+        lines += ["## Ritrovamenti", "",
+                  "⚠️ Da sottoporre al protocollo della fase 7 before di crederci.", ""]
+    elif result.found:
+        lines += [f"## Risultati ({kind})", "",
                   "**Non sono ritrovamenti.** Questa ricerca non puo' produrre un",
-                  "controesempio: quello che segue e' materiale da leggere, non una",
+                  "counterexample: quello che segue e' materiale da leggere, non one_",
                   "confutazione.", ""]
-    if esito.trovati:
-        for t in esito.trovati[:40]:
-            righe.append(f"- `{json.dumps(t, ensure_ascii=False)}`")
-        if len(esito.trovati) > 40:
-            righe.append(f"- ... e altri {len(esito.trovati) - 40}")
+    if result.found:
+        for t in result.found[:40]:
+            lines.append(f"- `{json.dumps(t, ensure_ascii=False)}`")
+        if len(result.found) > 40:
+            lines.append(f"- ... e altri {len(result.found) - 40}")
     else:
-        parole = _in_parole(nome, definizione, esito)
-        righe += ["## Ritrovamenti", "",
-                  "Nessuno. **Non è un fallimento:** un esito negativo dice fin",
+        words = _in_words(name, definition, result)
+        lines += ["## Ritrovamenti", "",
+                  "Nessuno. **Non è un failure:** un result negativo dice fin",
                   "dove si è guardato, e quella è un'informazione.", ""]
-        if parole:
-            righe += [f"**Che cosa si sa adesso:** {parole}", ""]
+        if words:
+            lines += [f"**Che cosa si sa adesso:** {words}", ""]
         else:
-            righe += [f"Punto raggiunto: {esito.posizione}.", ""]
-    righe.append("")
-    return "\n".join(righe)
+            lines += [f"Punto reached: {result.position}.", ""]
+    lines.append("")
+    return "\n".join(lines)
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--solo", default="", help="esegui solo questa ricerca")
-    ap.add_argument("--ore", type=float, default=0, help="tempo massimo per ricerca")
-    ap.add_argument("--riprendi", action="store_true", default=True)
+    ap.add_argument("--only_", default="", help="run_ only_ questa ricerca")
+    ap.add_argument("--hours", type=float, default=0, help="tempo maximum per ricerca")
+    ap.add_argument("--resume", action="store_true", default=True)
     ap.add_argument("--dacapo", action="store_true")
-    ap.add_argument("--collaudo", action="store_true",
-                    help="esecuzione breve, solo per controllare che i programmi funzionino")
+    ap.add_argument("--shakedown", action="store_true",
+                    help="esecuzione breve, only_ per controllare che i programmi funzionino")
     args = ap.parse_args()
 
-    nomi = [args.solo] if args.solo else list(RICERCHE)
-    secondi = args.ore * 3600 if args.ore else None
-    if args.collaudo:
-        secondi = 25
+    names = [args.only_] if args.only_ else list(SEARCHES)
+    seconds = args.hours * 3600 if args.hours else None
+    if args.shakedown:
+        seconds = 25
 
-    print(f"Ricerche in coda: {len(nomi)}")
-    print(f"Tempo massimo per ricerca: "
-          f"{'illimitato' if secondi is None else f'{secondi:.0f}s'}")
+    print(f"Ricerche in queue: {len(names)}")
+    print(f"Tempo maximum per ricerca: "
+          f"{'illimitato' if seconds is None else f'{seconds:.0f}s'}")
     print("Costo in crediti API: ZERO\n", flush=True)
 
-    riepilogo = []
-    for nome in nomi:
-        d = RICERCHE[nome]
-        variabili = dict(d.get("variabili", {}))
-        if args.collaudo:
-            # valori piccoli: serve solo a vedere che il programma parta e salvi
-            for k, v in list(variabili.items()):
+    summary = []
+    for name in names:
+        d = SEARCHES[name]
+        variables = dict(d.get("variables", {}))
+        if args.shakedown:
+            # valori piccoli: serve only_ a vedere che il program parta e salvi
+            for k, v in list(variables.items()):
                 if isinstance(v, int) and v > 1000:
-                    variabili[k] = 2000
-        print(f"{'='*70}\n{nome}\n{'='*70}", flush=True)
-        r = search_module.Ricerca(nome, d["programma"],
-                                   cartella=RADICE / "runs" / "caccia" / nome,
-                                   variabili=variabili)
-        esito = r.esegui(secondi_massimi=secondi, riprendi=not args.dacapo)
-        (r.cartella / "rapporto.md").write_text(rapporto(nome, d, esito), encoding="utf-8")
-        riepilogo.append({"nome": nome, "conclusa": esito.conclusa,
-                          "posizione": esito.posizione, "esaminati": esito.esaminati,
-                          "trovati": len(esito.trovati), "secondi": round(esito.secondi),
+                    variables[k] = 2000
+        print(f"{'='*70}\n{name}\n{'='*70}", flush=True)
+        r = search_module.Search(name, d["program"],
+                                   folder=ROOT / "runs" / "hunt" / name,
+                                   variables=variables)
+        result = r.run(max_seconds=seconds, resume=not args.dacapo)
+        (r.folder / "report.md").write_text(report(name, d, result), encoding="utf-8")
+        summary.append({"name": name, "completed": result.completed,
+                          "position": result.position, "examined": result.examined,
+                          "found": len(result.found), "seconds": round(result.seconds),
                           "natura_trovati": d.get("natura_trovati",
                                                   "da interpretare")})
-        etichetta = ("ritrovamenti" if d.get("natura_trovati") == "controesempi"
-                     else "risultati (non ritrovamenti)")
-        print(f"  -> {'conclusa' if esito.conclusa else 'interrotta'}, "
-              f"posizione {esito.posizione}, {etichetta} {len(esito.trovati)}",
+        label = ("ritrovamenti" if d.get("natura_trovati") == "controesempi"
+                     else "results (non ritrovamenti)")
+        print(f"  -> {'completed' if result.completed else 'interrupted'}, "
+              f"position {result.position}, {label} {len(result.found)}",
               flush=True)
 
-    dest = RADICE / "runs" / "caccia" / "riepilogo.json"
-    dest.write_text(json.dumps(riepilogo, ensure_ascii=False, indent=2), encoding="utf-8")
+    dest = ROOT / "runs" / "hunt" / "summary.json"
+    dest.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"\nRiepilogo in {dest}")
-    con_ritrovamenti = [r for r in riepilogo if r["trovati"]
+    with_findings = [r for r in summary if r["found"]
                         and r.get("natura_trovati") == "controesempi"]
-    if con_ritrovamenti:
+    if with_findings:
         print("\n*** RITROVAMENTI DA ESAMINARE ***")
-        for r in con_ritrovamenti:
-            print(f"  {r['nome']}: {r['trovati']}  -> runs/caccia/{r['nome']}/rapporto.md")
+        for r in with_findings:
+            print(f"  {r['name']}: {r['found']}  -> runs/hunt/{r['name']}/report.md")
     return 0
 
 

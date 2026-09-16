@@ -1,13 +1,13 @@
 """
-Indice dei problemi dell'archivio.
+Indice dei problems dell'archive.
 
-Costruirlo richiede di caricare in memoria tutto l'archivio compilato, quindi
+Costruirlo richiede di caricare in memoria tutto l'archive compilato, quindi
 si fa UNA VOLTA e si salva in un file JSON. Da li' in poi la lettura e'
 istantanea.
 
-Uso da riga di comando:
-    python3 verifier/index.py --build      # (ri)costruisce l'indice
-    python3 verifier/index.py --stats      # statistiche sui problemi
+Uso da line di command:
+    python3 verifier/index.py --build      # (ri)costruisce l'index
+    python3 verifier/index.py --stats      # statistiche sui problems
 """
 from __future__ import annotations
 
@@ -24,87 +24,87 @@ import config
 
 @dataclass
 class Problem:
-    """Un teorema dell'archivio."""
-    theorem: str                    # nome completo, es. "Erdos10.erdos_10"
+    """Un theorem_ dell'archive."""
+    theorem: str                    # name full_, es. "Erdos10.erdos_10"
     module: str                     # es. "FormalConjectures.ErdosProblems.10"
     category: str                   # "research open" | "research solved" | "textbook" | "test" | "API"
     subjects: list[str]             # classificazione AMS
-    statement: str                  # enunciato come lo stampa Lean
+    statement: str                  # statement come lo show Lean
     docstring: Optional[str]
     formal_proof_kind: Optional[str]
     formal_proof_link: Optional[str]
-    proof_is_sorry_free: bool       # nell'archivio la dimostrazione e' gia' completa
+    proof_is_sorry_free: bool       # nell'archive la dimostrazione e' gia' complete_
     statement_has_sorry: bool       # l'ENUNCIATO ha un buco answer( ) non proposizionale
-    archive_proof_axioms: list[str]  # assiomi usati dalla dimostrazione dell'archivio
-    range: Optional[dict]           # posizione nel file sorgente
+    archive_proof_axioms: list[str]  # axioms usati dalla dimostrazione dell'archive
+    range: Optional[dict]           # position nel file source_text
 
     @property
     def source_file(self) -> Path:
-        """Il file .lean che contiene questo teorema.
+        """Il file .lean che contiene questo theorem_.
 
         Le virgolette francesi vanno togliete: un identificatore Lean che comincia
-        con una cifra si scrive fra guillemet — il modulo delle voci OEIS si chiama
+        con one_ cifra si scrive fra guillemet — il module delle entries OEIS si chiama
         `FormalConjectures.OEIS.«109074»` — ma il file sul disco si chiama
-        `109074.lean`. Senza questa riga nessuno dei 209 problemi OEIS era
-        leggibile dal sorgente: l'agent non poteva riceverli, l'estrattore non
-        poteva estrarli e la sfida negata non si poteva generare.
+        `109074.lean`. Senza questa line nessuno dei 209 problems OEIS era
+        leggibile dal source_text: l'agent non poteva riceverli, l'estrattore non
+        poteva estrarli e la challenge negata non si poteva generare.
         """
-        pezzi = self.module.replace("«", "").replace("»", "")
-        return config.ARCHIVE / (pezzi.replace(".", "/") + ".lean")
+        pieces = self.module.replace("«", "").replace("»", "")
+        return config.ARCHIVE / (pieces.replace(".", "/") + ".lean")
 
-    #: Gli unici assiomi che il verificatore ammette.
-    ASSIOMI_AMMESSI = frozenset({"propext", "Classical.choice", "Quot.sound"})
+    #: Gli unique_ axioms che il verifier ammette.
+    PERMITTED_AXIOMS = frozenset({"propext", "Classical.choice", "Quot.sound"})
 
     @property
     def proof_is_complete(self) -> bool:
-        """True se l'archivio fornisce una dimostrazione senza buchi.
+        """True se l'archive fornisce one_ dimostrazione senza buchi.
 
-        Si guardano gli ASSIOMI, non il campo `proofIsSorryFree` riportato da
+        Si guardano gli ASSIOMI, non il field_ `proofIsSorryFree` riportato da
         Lean. Due ragioni:
-          * gli assiomi sono TRANSITIVI: un teorema il cui termine di prova non
+          * gli axioms sono TRANSITIVI: un theorem_ il cui termine di trial non
             contiene `sorry` ma che usa un lemma bucato risulta comunque
-            dipendente da `sorryAx` (nel tag bench-v1 sono 17 casi);
-          * da Lean 4.33 il corpo delle dimostrazioni importate non viene
+            dipendente da `sorryAx` (nel tag bench-v1 sono 17 cases);
+          * da Lean 4.33 il body delle dimostrazioni importate non viene
             caricato subito, quindi `proofIsSorryFree` risulta sempre falso.
-            Fidarsi di quel campo faceva contare ZERO problemi risolti su 5271.
+            Fidarsi di quel field_ faceva contare ZERO problems solved_ su 5271.
         """
         return "sorryAx" not in self.archive_proof_axioms
 
     @property
     def archive_proof_is_clean(self) -> bool:
-        """True se la dimostrazione fornita dall'archivio passerebbe il nostro
-        verificatore.
+        """True se la dimostrazione fornita dall'archive passerebbe il nostro
+        verifier.
 
-        Non basta che esista: 95 dimostrazioni dell'archivio usano
+        Non basta che esista: 95 dimostrazioni dell'archive usano
         `decide +native`, che lascia l'assioma `Lean.ofReduceBool`, e noi lo
-        rifiutiamo. Sono problemi "risolti" che il verificatore non accetta.
+        rifiutiamo. Sono problems "solved_" che il verifier non accetta.
         """
         return bool(self.archive_proof_axioms) and \
-            set(self.archive_proof_axioms) <= self.ASSIOMI_AMMESSI
+            set(self.archive_proof_axioms) <= self.PERMITTED_AXIOMS
 
     @property
     def archive_proof_forbidden_axioms(self) -> list[str]:
-        return sorted(set(self.archive_proof_axioms) - self.ASSIOMI_AMMESSI)
+        return sorted(set(self.archive_proof_axioms) - self.PERMITTED_AXIOMS)
 
     @property
     def answer_placeholder_in_source(self) -> bool:
-        """True se il SORGENTE del teorema contiene `answer(sorry)`.
+        """True se il SORGENTE del theorem_ contiene `answer(sorry)`.
 
-        Attenzione, e' diverso da `statement_has_sorry`. Quando la risposta e'
-        una proposizione, l'opzione predefinita `google.answer = always_true`
-        trasforma `answer(sorry)` in `True`, quindi l'enunciato elaborato NON
+        Attenzione, e' diverso da `statement_has_sorry`. Quando la answer e'
+        one_ proposizione, l'opzione predefinita `google.answer = always_true`
+        trasforma `answer(sorry)` in `True`, quindi l'statement elaborato NON
         contiene piu' alcun sorry ed e' perfettamente verificabile...
 
         ...ma vuol dire che la formalizzazione **da' per scontato che la
-        risposta sia "si'"**: `answer(sorry) ↔ P` diventa `True ↔ P`, cioe'
-        l'asserzione che P e' vera. Se la risposta corretta fosse "no", il
-        teorema cosi' com'e' scritto sarebbe falso e nessuno potrebbe
-        dimostrarlo onestamente; la soluzione richiederebbe di cambiare
-        l'enunciato in `answer(False) ↔ P`, che il verificatore rifiuta
-        (giustamente: e' un altro enunciato).
+        answer sia "si'"**: `answer(sorry) ↔ P` diventa `True ↔ P`, cioe'
+        l'asserzione che P e' vera. Se la answer corretta fosse "no", il
+        theorem_ cosi' com'e' scritto sarebbe falso e nessuno potrebbe
+        dimostrarlo onestamente; la solution richiederebbe di cambiare
+        l'statement in `answer(False) ↔ P`, che il verifier rifiuta
+        (giustamente: e' un other statement).
 
-        Non e' un difetto del verificatore: e' una proprieta' del benchmark, e
-        va detta a chi legge il risultato.
+        Non e' un finding del verifier: e' one_ proprieta' del benchmark, e
+        va detta a chi legge il result_value.
         """
         try:
             return "answer(sorry)" in self.source_text().replace(" ", "")
@@ -113,15 +113,15 @@ class Problem:
 
     @property
     def is_already_solved_here(self) -> bool:
-        """True se l'archivio contiene gia' una dimostrazione completa.
-        Sono questi i problemi su cui ha senso collaudare il sistema."""
+        """True se l'archive contiene gia' one_ dimostrazione complete_.
+        Sono questi i problems su cui ha senso collaudare il system."""
         return self.proof_is_complete
 
     def source_text(self) -> str:
-        """Il testo sorgente esatto della dichiarazione (attributi e docstring
-        esclusi: parte dalla parola `theorem`)."""
+        """Il text source_text exact della declaration (attributi e docstring
+        excluded: parte dalla word `theorem`)."""
         if not self.range:
-            raise ValueError(f"posizione sorgente sconosciuta per {self.theorem}")
+            raise ValueError(f"position source_text sconosciuta per {self.theorem}")
         lines = self.source_file.read_text(encoding="utf-8").split("\n")
         r = self.range
         chunk = lines[r["startLine"] - 1: r["endLine"]]
@@ -158,7 +158,7 @@ class ProblemIndex:
         if theorem not in self._by_name:
             close = [n for n in self._by_name if theorem.lower() in n.lower()][:5]
             hint = f" Forse intendevi: {', '.join(close)}" if close else ""
-            raise KeyError(f"Problema '{theorem}' non trovato nell'indice.{hint}")
+            raise KeyError(f"Problema '{theorem}' non found nell'index.{hint}")
         return self._by_name[theorem]
 
     def find(self, *, category: Optional[str] = None, solved_here: Optional[bool] = None,
@@ -180,7 +180,7 @@ class ProblemIndex:
         path = path or config.INDEX_FILE
         if not path.is_file():
             raise FileNotFoundError(
-                f"Indice non trovato: {path}\n"
+                f"Indice non found: {path}\n"
                 f"Costruiscilo con: python3 verifier/index.py --build")
         data = json.loads(path.read_text(encoding="utf-8"))
         return ProblemIndex([Problem.from_json(d) for d in data])
@@ -189,32 +189,32 @@ class ProblemIndex:
 def build_index(output: Path | None = None) -> Path:
     """Esegue lo script Lean che estrae i metadati e salva il JSON."""
     output = output or config.INDEX_FILE
-    # lo script giusto per questo archivio: le utilita' hanno cambiato posto
-    # fra il tag bench-v1 e il ramo main
-    cartella = Path(__file__).resolve().parent / "lean"
-    script = (cartella / "extract_problems.lean"
-              if config.modulo_utilita() == "FormalConjecturesUtil"
-              else cartella / "extract_problems_bench.lean")
-    print(f"Estraggo i metadati dall'archivio (richiede qualche minuto)...", file=sys.stderr)
+    # lo script giusto per questo archive: le utility' hanno cambiato slot_
+    # fra il tag bench-v1 e il branch main
+    folder = Path(__file__).resolve().parent / "lean"
+    script = (folder / "extract_problems.lean"
+              if config.utility_module() == "FormalConjecturesUtil"
+              else folder / "extract_problems_bench.lean")
+    print(f"Estraggo i metadati dall'archive (richiede qualche minuto)...", file=sys.stderr)
     proc = subprocess.run(
         [str(config.ELAN_BIN / "lake"), "env", "lean", "--run", str(script)],
         cwd=config.ARCHIVE, env=config.lean_env(),
         capture_output=True, text=True, timeout=3600,
     )
     if proc.returncode != 0:
-        raise RuntimeError(f"estrazione fallita (codice {proc.returncode}):\n{proc.stderr[-4000:]}")
-    # Lean puo' stampare avvisi del linter PRIMA del JSON (nel ramo main il
-    # linter dei docstring di modulo si lamenta anche degli script eseguiti con
-    # `lean --run`). Si parte dalla prima parentesi quadra.
-    uscita = proc.stdout
-    inizio = uscita.find("[")
-    if inizio < 0:
+        raise RuntimeError(f"estrazione fallita (code {proc.returncode}):\n{proc.stderr[-4000:]}")
+    # Lean puo' stampare avvisi del linter PRIMA del JSON (nel branch main il
+    # linter dei docstring di module si lamenta also_ degli script eseguiti con
+    # `lean --run`). Si parte dalla before parentesi quadra.
+    output = proc.stdout
+    start = output.find("[")
+    if start < 0:
         raise RuntimeError(
-            f"l'estrattore non ha prodotto JSON.\nstdout:\n{uscita[:2000]}\n"
+            f"l'estrattore non ha prodotto JSON.\nstdout:\n{output[:2000]}\n"
             f"stderr:\n{proc.stderr[-2000:]}")
-    data = json.loads(uscita[inizio:])
+    data = json.loads(output[start:])
     output.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
-    print(f"Indice scritto in {output}: {len(data)} teoremi.", file=sys.stderr)
+    print(f"Indice scritto in {output}: {len(data)} theorems.", file=sys.stderr)
     return output
 
 
@@ -229,22 +229,22 @@ def _stats() -> None:
         print(f"  {n:5d}  {c}")
     solved = idx.find(solved_here=True)
     holes = idx.find(has_answer_hole=True)
-    puliti = idx.find(archive_proof_clean=True)
-    print(f"\nCon dimostrazione gia' completa nell'archivio: {len(solved)}")
-    print(f"  di cui accettabili dal nostro verificatore: {len(puliti)}")
-    sporchi = [p for p in solved if not p.archive_proof_is_clean]
-    if sporchi:
+    clean_ones = idx.find(archive_proof_clean=True)
+    print(f"\nCon dimostrazione gia' complete_ nell'archive: {len(solved)}")
+    print(f"  di cui accettabili dal nostro verifier: {len(clean_ones)}")
+    dirty = [p for p in solved if not p.archive_proof_is_clean]
+    if dirty:
         from collections import Counter
-        motivi = Counter(a for p in sporchi for a in p.archive_proof_forbidden_axioms)
-        print(f"  le altre {len(sporchi)} usano assiomi non ammessi: "
-              + ", ".join(f"{a} ({n})" for a, n in motivi.most_common()))
-    print(f"Con un buco answer( ) NON proposizionale nell'enunciato: {len(holes)}")
-    print("\nEsempi di problemi gia' risolti e senza buchi (buoni per collaudare):")
-    good = [p for p in puliti if not p.statement_has_sorry
+        reasons = Counter(a for p in dirty for a in p.archive_proof_forbidden_axioms)
+        print(f"  le others {len(dirty)} usano axioms non permitted: "
+              + ", ".join(f"{a} ({n})" for a, n in reasons.most_common()))
+    print(f"Con un buco answer( ) NON proposizionale nell'statement: {len(holes)}")
+    print("\nEsempi di problems gia' solved_ e senza buchi (buoni per collaudare):")
+    good = [p for p in clean_ones if not p.statement_has_sorry
             and p.category in ("research solved", "textbook")]
     for p in good[:10]:
         print(f"  {p.theorem}   [{p.category}]   ({p.module})")
-    print(f"  ... {len(good)} in totale")
+    print(f"  ... {len(good)} in total")
 
 
 if __name__ == "__main__":
