@@ -78,7 +78,7 @@ def obstacle(t: dict) -> str:
         base = "it compiled, the proof was not there"
     else:
         base = "the candidates did not compile"
-    if api > 2 * max(mate, 1):
+    if api > 2 * max(math, 1):
         verdict = "the Mathlib API"
     elif math > api:
         verdict = "mathematics"

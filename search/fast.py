@@ -149,7 +149,7 @@ def climb(n: int, d: int, w: int, start_from: list[int], up_to: int, *,
     all_items = _all_words(n, w)
     M = conflict_matrix(all_items, d)
     position = {int(p): k for k, p in enumerate(all_items)}
-    words = sorted(da)
+    words = sorted(start_from)
     rng = np.random.default_rng(seed)
     steps: dict[int, str] = {}
     while len(words) < up_to:
