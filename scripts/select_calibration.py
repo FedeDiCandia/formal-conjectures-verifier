@@ -1,27 +1,25 @@
 """
-Sceglie i problems su cui calibrare l'agent.
+Choose the problems to calibrate the agent on.
 
-Un problem enters nella calibrazione only se soddisfa TUTTE queste condizioni:
+A problem enters the calibration only if it satisfies ALL of these:
 
-1. l'archive ne fornisce one dimostrazione (non e' un problem aperto);
-2. quella dimostrazione usa only gli axioms permitted (niente native_decide,
-   niente sorryAx ereditato da un lemma);
-3. quella dimostrazione, estratta e compilata da sola, viene ACCETTATA da
-   verify.py. E' il controllo che count: i primes two sono necessari ma non
-   sufficienti.
+1. the archive supplies a proof of it (it is not an open problem);
+2. that proof uses only the permitted axioms (no native_decide, no sorryAx
+   inherited from a lemma);
+3. that proof, extracted and compiled on its own, is ACCEPTED by verify.py. This is
+   the check that counts: the first two are necessary but not sufficient.
 
-Per ciascuno si riportano:
-- il LIVELLO DI DIFFICOLTA', dalla length della dimostrazione esistente;
-- la DATA in cui la dimostrazione e' entrata nell'archive pubblico;
-- il RISCHIO DI MEMORIZZAZIONE, confrontando quella data con la data di cut
-  dell'addestramento del model;
-- l'ESITO della check della dimostrazione d'archive.
+For each of them the script reports:
+- the DIFFICULTY LEVEL, from the length of the existing proof;
+- the DATE on which the proof entered the public archive;
+- the MEMORISATION RISK, comparing that date with the model's training cutoff;
+- the OUTCOME of verifying the archive's proof.
 
-Sul risk di memorizzazione, one precisazione doverosa: il cut dichiarato
-per claude-opus-5 e' maggio 2026. Il tag di benchmark bench-v1-lean4.27.0 e' del
-6 maggio 2026, quindi OGNI dimostrazione contenuta in quel tag e' anteriore al
-cut. Calibrare li' misura also quanto il model ricorda. Per avere problems
-post-cut serve lo snapshot da main (vedi scripts/setup_snapshot_main.sh).
+One necessary remark about the memorisation risk: the declared cutoff for
+claude-opus-5 is May 2026. The benchmark tag bench-v1-lean4.27.0 is dated 6 May
+2026, so EVERY proof in that tag predates the cutoff. Calibrating there also
+measures how much the model remembers. For post-cutoff problems the snapshot from
+main is needed (see scripts/setup_snapshot_main.sh).
 """
 from __future__ import annotations
 
@@ -39,7 +37,7 @@ import config
 from index import ProblemIndex
 from hide import _separator_position
 
-#: Taglio dell'addestramento di claude-opus-5, come dichiarato dal model.
+#: claude-opus-5's training cutoff, as the model declares it.
 CUT = "2026-05"
 
 
@@ -64,7 +62,7 @@ def git(archive: Path, *args) -> str:
 
 
 def proof_date(p, archive: Path) -> tuple[str, str]:
-    """(data, method) in cui la dimostrazione e' entrata nell'archive."""
+    """(date, method) on which the proof entered the archive."""
     try:
         rel = str(p.source_file.relative_to(archive))
     except ValueError:
@@ -81,7 +79,7 @@ def proof_date(p, archive: Path) -> tuple[str, str]:
         line = max(lines, key=len)
         out = git(archive, "log", "--format=%ci|%h", "-S", line, "--", rel).strip().splitlines()
         if out:
-            return out[-1].split("|")[0][:10], "before comparsa della line di trial"
+            return out[-1].split("|")[0][:10], "first appearance of the proof line"
     out = git(archive, "log", "--format=%ci|%h", "--diff-filter=A", "--", rel).strip().splitlines()
     if out:
         return out[-1].split("|")[0][:10], "creazione del file"
@@ -101,8 +99,8 @@ def risk(data: str) -> str:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--checks", default=str(ROOT / "runs" / "archive_proofs.json"),
-                    help="results della check delle trials d'archive")
-    ap.add_argument("--how_many-per-level", type=int, default=3)
+                    help="results of verifying the archive's proofs")
+    ap.add_argument("--per-level", type=int, default=3, dest="per_level")
     ap.add_argument("--output", default=str(ROOT / "runs" / "calibration_selection.json"))
     args = ap.parse_args()
 
@@ -115,15 +113,15 @@ def main() -> int:
         for d in json.loads(f.read_text(encoding="utf-8")):
             verified[d["problem"]] = d
     else:
-        print(f"ATTENZIONE: {f} non esiste. Senza le checks non posso dire")
-        print("which dimostrazioni d'archive passano davvero il verifier.")
+        print(f"ATTENTION: {f} does not exist. Without the verifications there is no")
+        print("way to say which archive proofs really pass the verifier.")
 
     lines = []
     for p in idx.find(archive_proof_clean=True):
         if p.statement_has_sorry:
             continue
         v = verified.get(p.theorem)
-        result = v["result"] if v else "non verificata"
+        result = v["result"] if v else "not verified"
         if result != "ACCEPTED":
             continue
         n = proof_lines(p)
@@ -142,22 +140,22 @@ def main() -> int:
     lines.sort(key=lambda r: (r["level"] != "facile", r["level"] != "mean",
                               r["proof_lines"]))
 
-    # selection: N per level, preferendo il risk di memorizzazione piu' low
+    # selection: N per level, preferring the lowest memorisation risk
     selection = []
     for lv in ("facile", "mean", "difficile"):
         candidates = [r for r in lines if r["level"] == lv]
         candidates.sort(key=lambda r: ({"BASSO": 0, "INCERTO": 1, "ALTO": 2,
                                        "ignoto": 3}[r["rischio_memorizzazione"]],
                                       r["proof_lines"]))
-        selection += candidates[:args.quanti_per_livello]
+        selection += candidates[:args.per_level]
 
     Path(args.output).write_text(
         json.dumps({"all_items": lines, "selection": selection}, ensure_ascii=False, indent=2),
         encoding="utf-8")
 
     print(f"Archivio: {archive}")
-    print(f"Taglio dell'addestramento considerato: {CUT}\n")
-    print(f"Problemi con dimostrazione d'archive ACCETTATA dal verifier: {len(lines)}\n")
+    print(f"Training cutoff assumed: {CUT}\n")
+    print(f"Problems whose archive proof is ACCEPTED by the verifier: {len(lines)}\n")
     print(f"{'lvl':10} {'lines':>5} {'data':11} {'risk':9} {'check':10} problem")
     print("-" * 104)
     for r in lines:
@@ -165,11 +163,11 @@ def main() -> int:
               f"{r['rischio_memorizzazione']:9} {r['verifica_archivio']:10} {r['problem']}")
 
     print(f"\n{'='*104}")
-    print(f"SELEZIONE PROPOSTA ({args.quanti_per_livello} per level)")
+    print(f"PROPOSED SELECTION ({args.per_level} per level)")
     print(f"{'='*104}")
     for r in selection:
         print(f"  [{r['level']:9}] {r['problem']}")
-        print(f"      {r['proof_lines']} lines di trial | aggiunta il {r['proof_date']} "
+        print(f"      {r['proof_lines']} proof lines | added on {r['proof_date']} "
               f"| memorizzazione {r['rischio_memorizzazione']}")
         if r["description"]:
             print(f"      \"{r['description'].splitlines()[0][:90]}\"")
@@ -179,10 +177,10 @@ def main() -> int:
         count[r["rischio_memorizzazione"]] = count.get(r["rischio_memorizzazione"], 0) + 1
     print(f"\nRischio di memorizzazione su all_items i candidates: {count}")
     if count.get("ALTO", 0) == len(lines) and lines:
-        print("\n  TUTTI ad high risk. E' expected: il tag di benchmark e' del")
-        print("  2026-05-06 e il cut dell'addestramento e' maggio 2026, quindi")
-        print("  ogni dimostrazione del tag e' anteriore. Per avere problems")
-        print("  post-cut serve lo snapshot da main.")
+        print("\n  ALL at high risk. That is expected: the benchmark tag is dated")
+        print("  2026-05-06 and the training cutoff is May 2026, so every proof in")
+        print("  the tag predates it. For post-cutoff problems the snapshot from")
+        print("  main is needed.")
     print(f"\nSalvato in {args.output}")
     return 0
 

@@ -1,51 +1,43 @@
 #!/usr/bin/env python3
 """
-Seleziona i problems GIA' RISOLTI la cui dimostrazione non e' formalizzata
-nell'archive, e li ordina per difficolta' waited della formalizzazione.
+Select the problems that are ALREADY SOLVED but whose proof is not formalised in the
+archive, and order them by the expected difficulty of formalising them.
 
-A COSA SERVE
-------------
-Formalizzare one dimostrazione note non e' ricerca: e' un contributo che
-l'archive accetta come pull request (CONTRIBUTING.md: «very short proofs for
-solved items or counterexamples»), ed e' il compito su cui l'agent ha gia'
-misurato 9 successi su 11 in calibrazione.
+WHAT IT IS FOR
+--------------
+Formalising a known proof is not research: it is a contribution the archive accepts
+as a pull request (CONTRIBUTING.md: "very short proofs for solved items or
+counterexamples"), and it is the task the agent has already been measured on.
 
-CHI ENTRA
----------
-  * categoria `research solved` o `textbook`;
-  * nessun `formal_proof using formal_conjectures` (quello dichiara la trial
-    gia' nell'archive); `lean4` e `other_system` restano, ma vengono segnati;
-  * la dimostrazione d'archive e' letteralmente `sorry`. Chi ha one
-    dimostrazione scritta che dipende da `sorryAx` attraverso un lemma bucato,
-    o da `native_decide`, e' ESCLUSO: e' quello che chiede la consegna;
-  * l'statement non contiene `answer(sorry)`: elaborato diventa `True ↔ P`, e
-    per un problem solved "no" sarebbe un statement falso.
+A problem is a candidate if:
+  * it carries no `formal_proof using formal_conjectures` (that declares the proof is
+    already in the archive); `lean4` and `other_system` stay, but are flagged;
+  * the archive's proof is literally `sorry`. Anything with a written proof that
+    depends on `sorryAx` through a holed lemma, or on `native_decide`, is EXCLUDED:
+    that is what the contribution asks for;
+  * the statement contains no `answer(sorry)`: elaborated, it becomes `True ↔ P`, and
+    for a problem solved "no" that would be a false statement.
 
-COME SI ORDINA, E PERCHE' NON PER LUNGHEZZA DELL'ENUNCIATO
-----------------------------------------------------------
-La before versione ordinava per length dell'statement e metteva in cima
-Goldbach ternario (Helfgott), Ramanujan-Petersson (Deligne), la trascendenza di
-pi + e. E' la lezione di STATO.md in un'altra forma: un statement breve non
-indica one dimostrazione breve, spesso indica un theorem celebre.
+HOW THEY ARE ORDERED, AND WHY NOT BY LENGTH OF STATEMENT
+--------------------------------------------------------
+The first version ordered by length of statement and put ternary Goldbach
+(Helfgott), Ramanujan-Petersson (Deligne) and the transcendence of pi + e at the top.
+A short statement does not indicate a short proof; often it indicates a famous
+theorem.
 
-Il segnale vero sta nella FONTE, cioe' nella docstring, che per i problems
-solved riporta quasi sempre chi l'ha dimostrato e come:
-  * a favore: «easy to see», «trivial», «obvious», «Proof: ...», «Indeed»,
-    «considerations module 8», «Helper lemma», «sanity check» — la source stessa
-    dice che la dimostrazione e' corta, o la scrive;
-  * against: one citazione a un articolo come source della dimostrazione
-    («Browkin and Schinzel [BrSc95] proved»), names di theorems profondi;
-  * against, nell'statement: insiemi infiniti, densita', irrazionalita',
-    trascendenza, bounds, cardinali, somme infinite — formalizzazioni lunghe
-    also quando la matematica e' note;
-  * against: un computation oltre la portata del kernel (bounds come 10^7);
-  * minori: length dell'statement, definizioni outside da Mathlib (estimate sui
-    names), subjects AMS diversi da 5 e 11, categoria textbook (a favore),
-    `formal_proof` gia' esistente altrove (il contributo vale meno).
+The real signal is in the SOURCE, that is in the docstring, which for solved problems
+nearly always says who proved it and how:
 
-Uso:
-  env FCS_ARCHIVE=... FCS_INDEX=verifier/problem_index_main.json \\
-    .venv/bin/python scripts/select_formalisations.py [--mostra 30]
+  * in favour: "easy to see", "trivial", "Proof: ...", "considerations mod 8",
+    "Helper lemma", "sanity check" — the source itself says the proof is short, or
+    writes it out;
+  * against: a citation to a paper as the source of the proof;
+  * against: a deep theorem named in the docstring, which makes formalisation long
+    even when the mathematics is known;
+  * against: a computation beyond the kernel's reach (bounds like 10^7);
+  * minor: length of the statement, definitions outside Mathlib (an estimate of the
+    work of copying them), and a `formal_proof` that already exists elsewhere (the
+    contribution is worth less).
 """
 from __future__ import annotations
 
@@ -67,11 +59,11 @@ from hide import _separator_position      # noqa: E402
 PERMITTED = {"propext", "Classical.choice", "Quot.sound"}
 ELEMENTARY = {"5", "11"}
 
-#: la source dice che la dimostrazione e' corta, o la scrive
-#: «trivial» count only come giudizio su one dimostrazione: la before versione
-#: prendeva also «non-trivial unit» (Kaplansky), «non-trivial invariant subspace»
+#: the source says the proof is short, or writes it out
+#: "trivial" counts only as a judgement about a proof: the first version also
+#: caught "non-trivial unit" (Kaplansky), "non-trivial invariant subspace"
 #: (Read, 1985), «trivial counter examples», «trivial Picard group». «Indeed» e
-#: «it is clear» sono stati tolti: compaiono inside dimostrazioni di ricerca.
+#: and "it is clear", which were removed: they appear inside research proofs.
 _SHORT = re.compile(
     r"easy to (see|show|trials|check)|\bis easy\b|\beasily\b|"
     r"(?<!non-)(?<!non)\btrivial(ly)?\b(?!\s*(counter|units?\b|\(|Picard|way|version|cases|group))|"
@@ -80,7 +72,7 @@ _SHORT = re.compile(
     r"can be (proven|proved|shown|checked) by|follows (immediately|directly)|"
     r"considerations module|by (a )?(direct|simple|finite) (computation|calculation|check)|"
     r"check (the conjecture )?directly", re.I)
-#: la dimostrazione viene da un articolo o da un theorem profondo
+#: the proof comes from a paper or from a deep theorem
 _CITATION = re.compile(r"\[[A-Z][A-Za-z]{1,8}\d{2}[a-z]?\]")
 _PROVED = re.compile(r"\b(proved|proven|showed|shown|established|resolved|answered|"
                       r"disproved|confirmed|settled|solved)\b", re.I)
@@ -89,7 +81,7 @@ _DEEP = re.compile(
     r"Szemer[ée]di|Green[–-]Tao|Maynard|Zhang|Bourgain|Wiles|Perelman|Freedman|Smale|"
     r"Baker|Roth\b|Siegel|Faltings|Mih[ăa]ilescu|Hough|Nesetril|Ne[šs]et[řr]il|R[öo]dl|"
     r"modular|Riemann hypothesis|circle method|sieve|ergodic|conjecture\b.*\bproved", re.I)
-#: nell'statement: oggetti la cui formalizzazione e' lunga also per results noti
+#: in the statement: objects whose formalisation is long even for known results
 _HARD_STATEMENT = re.compile(
     r"\.Infinite|Infinite ↑|HasDensity|HasPosDensity|Density|Irrational|Transcendental|"
     r"Tendsto|atTop|liminf|limsup|dimH|Cardinal|riemannZeta|∑'|Real\.log|Real\.logb|"
@@ -102,7 +94,7 @@ _IDENT = re.compile(r"[A-Za-z_][\w'!?]*(?:\.[A-Za-z_][\w'!?]*)*")
 
 
 def declared_names(text: str) -> set[str]:
-    """Nomi corti (latest componente) delle definizioni dichiarate in un file."""
+    """Short names (last component) of the definitions declared in a file."""
     return {m.group(1).split(".")[-1] for m in _DECL.finditer(text)}
 
 
@@ -120,7 +112,7 @@ def proof_body(p) -> str | None:
 
 
 def valuta(p, local_names: list[str], di_fcfm: list[str]) -> tuple[float, list[str]]:
-    """Punteggio di difficolta' waited (piu' low = piu' facile) e i reasons."""
+    """Expected difficulty score (lower = easier) and the reasons for it."""
     doc = " ".join((p.docstring or "").split())
     subjects = set(p.subjects)
     points, reasons = 0.0, []
@@ -148,7 +140,7 @@ def valuta(p, local_names: list[str], di_fcfm: list[str]) -> tuple[float, list[s
     if local_names or di_fcfm:
         add(0.5 * len(local_names) + 1.0 * len(di_fcfm), "definizioni outside Mathlib")
     if p.formal_proof_kind in ("lean4", "other_system"):
-        add(+1, "trial gia' altrove")
+        add(+1, "proof already elsewhere")
     points += len(p.statement) / 80
     return round(points, 2), reasons
 
@@ -173,7 +165,7 @@ def main() -> int:
             excluded["1 formal_proof using formal_conjectures"] += 1
             continue
         if "sorryAx" not in p.archive_proof_axioms:
-            excluded["2 dimostrazione gia' complete nell'archive"] += 1
+            excluded["2 proof already complete in the archive"] += 1
             continue
         if set(p.archive_proof_axioms) - PERMITTED - {"sorryAx"}:
             excluded["3 dipende da native_decide o altri axioms"] += 1
@@ -181,13 +173,13 @@ def main() -> int:
         try:
             body = proof_body(p)
         except Exception:
-            excluded["4 source_text non leggibile dall'index"] += 1
+            excluded["4 source not readable from the index"] += 1
             continue
         if body is None or not re.fullmatch(r"(by\s+)?sorry", body):
-            excluded["5 trial scritta che dipende da un lemma con sorry"] += 1
+            excluded["5 written proof that depends on a lemma with sorry"] += 1
             continue
         if p.statement_has_sorry or p.answer_placeholder_in_source:
-            excluded["6 statement con answer(sorry)"] += 1
+            excluded["6 statement with answer(sorry)"] += 1
             continue
 
         f = p.source_file
@@ -215,11 +207,11 @@ def main() -> int:
     for k in sorted(excluded):
         print(f"  {k[2:]:52s} {excluded[k]:5d}")
     print(f"  {'CANDIDATES':52s} {len(candidates):5d}")
-    print("  per categoria:", dict(collections.Counter(c["category"] for c in candidates)))
-    print("  con formal_proof altrove:", sum(1 for c in candidates if c["formal_proof"]))
+    print("  by category:", dict(collections.Counter(c["category"] for c in candidates)))
+    print("  with formal_proof elsewhere:", sum(1 for c in candidates if c["formal_proof"]))
     count = collections.Counter(m for c in candidates for m in c["reasons"])
     print("  segnali:", dict(count))
-    print("  score < 0 (la source indica one trial corta e niente di hard):",
+    print("  score < 0 (the source indicates a short proof and nothing hard):",
           sum(1 for c in candidates if c["score"] < 0))
     print()
     for i, c in enumerate(candidates[:args.mostra], 1):

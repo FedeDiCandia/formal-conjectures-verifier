@@ -1,21 +1,18 @@
 """
-Trasforma le segnalazioni della probe in fascicoli da esaminare a mano.
+Turn the probe's flags into dossiers to be examined by hand.
 
-**Niente di quello che produce questo script è one solution, e nessuna
-segnalazione è one formalizzazione sbagliata finché non è stata confrontata con
-la source original.** La rule sta in `docs/04-protocollo-ritrovamenti.md`,
-sezione «Il caso più frequente».
+**Nothing this script produces is a solution, and no flag is a faulty formalisation
+until it has been compared with the original source.** The rule is in
+`docs/04-finding-protocol.md`, section "The commonest case".
 
-Per ogni segnalazione il fascicolo mette accanto:
-  * l'statement Lean elaborato, come lo vede il verifier;
-  * il source_text della declaration nell'archive, line per line;
-  * il docstring, che è il text della source (spesso un commento OEIS);
-  * which tactic ha chiuso cosa, e i messages grezzi di Lean;
-  * one items di controllo dei findings di traduzione già seen altrove, con il
-    punto del source_text da guardare per ciascuno.
+For each flag the dossier puts side by side:
+  * the elaborated Lean statement, as the verifier sees it;
+  * the source of the declaration in the archive, line by line;
+  * the docstring, which is the text of the source (often an OEIS comment);
+  * a checklist of translation defects already seen elsewhere, with the point in the
+    source to look at for each.
 
-Poi tocca a one persona. Il fascicolo serve a rendere quel job fast, non a
-sostituirlo.
+Then it is a person's turn. The dossier exists to make that work fast, not to do it.
 """
 from __future__ import annotations
 
@@ -31,39 +28,39 @@ sys.path.insert(0, str(ROOT / "verifier"))
 import config as verifier_config   # noqa: E402
 from index import ProblemIndex          # noqa: E402
 
-#: I modi noti in cui one traduzione in Lean dice meno di quel che sembra.
-#: Ognuno porta: come si riconosce nel source_text, e perché rende l'statement più
-#: debole o vacuo. I primes two vengono dai file di Epoch AI, gli altri sono
-#: findings classici della formalizzazione in Lean.
+#: The known ways a Lean translation says less than it appears to.
+#: Each carries: how to recognise it in the source, and why it makes the statement
+#: weaker or vacuous. The first two come from Epoch AI's files, the others are
+#: classic defects of formalisation in Lean.
 KNOWN_SUSPECTS = [
     ("testimone vacuo (`C = 0`, insieme vuoto)",
      r"∃\s*[A-Za-z]",
-     "un `∃` in head può essere soddisfatto da zero o dall'insieme vuoto: "
-     "guarda se l'statement chiede che il testimone sia non banale. "
-     "È il caso di A211420 nei results di Epoch: «esiste C tale che ... divide "
-     "C * a(n)» è vero con C = 0, perché tutto divide zero."),
+     "a leading `∃` can be satisfied by zero or by the empty set: check whether the "
+     "statement requires the witness to be non-trivial. This is A211420's case in "
+     "Epoch's results: \"there exists C such that ... divides C * a(n)\" is true with "
+     "C = 0, because everything divides zero."),
     ("caso al bordo (n = 0, n = 1)",
      r"∀\s*\(?[a-z]+\s*:\s*ℕ\)?",
-     "un `∀ n : ℕ` include n = 0 e n = 1, dove le definizioni spesso degenerano. "
-     "Guarda se la source dice «per ogni n» o «per ogni n ≥ 2». È il caso di "
+     "a `∀ n : ℕ` includes n = 0 and n = 1, where the definitions often degenerate. "
+     "Check whether the source says \"for every n\" or \"for every n ≥ 2\". This is "
      "A262403: l'iniettività cade perché two valori valgono entrambi 0."),
     ("sottrazione troncata di ℕ",
      r"-\s*\d|\w\s*-\s*\w",
-     "in ℕ la sottrazione non va below zero: `k - 1` con k = 0 fa 0, non -1. "
-     "Se la source parla di interi, la traduzione cambia significato."),
+     "in ℕ subtraction does not go below zero: `k - 1` with k = 0 gives 0, not -1. "
+     "If the source speaks of integers, the translation changes its meaning."),
     ("`sInf`/`sSup` su insieme vuoto",
      r"sInf|sSup|Finset\.sup|Finset\.inf",
-     "`sInf ∅ = 0` e `Finset.sup ∅ = 0` in ℕ: un statement che dice «il minimum "
-     "vale 0» può essere vero perché l'insieme è vuoto, non perché il minimum sia 0."),
+     "`sInf ∅ = 0` and `Finset.sup ∅ = 0` in ℕ: a statement saying \"the minimum is "
+     "0\" can be true because the set is empty, not because the minimum is 0."),
     ("divisione intera",
      r"/\s*\d|\w\s*/\s*\w",
-     "in ℕ e ℤ la divisione tronca: `7 / 2 = 3`. Se la source parla di razionali "
+     "in ℕ and ℤ division truncates: `7 / 2 = 3`. If the source speaks of rationals "
      "l'statement è diverso."),
-    ("`answer(sorry)` nel source_text",
+    ("`answer(sorry)` in the source",
      r"answer\s*\(",
-     "l'elaboratore `answer( )` con l'opzione predefinita rende `answer(sorry)` "
-     "uguale a `True`: l'statement afferma che la answer alla domanda è «sì». "
-     "Se la source pone one domanda aperta, il verso è già state chosen."),
+     "with the default option the `answer( )` elaborator makes `answer(sorry)` equal "
+     "to `True`: the statement asserts that the answer to the question is \"yes\". If "
+     "the source poses an open question, the direction has already been chosen."),
 ]
 
 
@@ -72,58 +69,58 @@ def fascicolo(p, entry: dict) -> str:
     def s(x=""): r.append(x)
     s(f"# Sospetto: `{p.theorem}`")
     s()
-    s("> **Questo non è un result.** Una tactic banale ha chiuso un statement")
-    s("> aperto, e la explanation quasi sempre è che l'statement Lean non dice")
-    s("> quello che dice la source. Va confrontato con la source before di")
+    s("> **This is not a result.** A trivial tactic closed an open statement,")
+    s("> and the explanation is nearly always that the Lean statement does not say")
+    s("> what the source says. It has to be compared with the source before")
     s("> chiamarlo in qualunque way. Vedi `docs/04-protocollo-ritrovamenti.md`.")
     s()
     s(f"**Categoria nell'archive:** {p.category}  ")
     s(f"**Modulo:** `{p.module}`  ")
-    s(f"**Che cosa ha ceduto:** {entry.get('ATTENZIONE', '—')}")
+    s(f"**What gave way:** {entry.get('ATTENTION', '—')}")
     s()
-    s("## L'statement, come lo vede il verifier")
+    s("## The statement, as the verifier sees it")
     s()
     s("```")
     s(p.statement)
     s("```")
     s()
-    s("## Il text della source (docstring dell'archive)")
+    s("## The text of the source (the archive's docstring)")
     s()
-    s((p.docstring or "(nessun docstring)").strip())
+    s((p.docstring or "(no docstring)").strip())
     s()
-    s("## Il source_text della declaration")
+    s("## The source of the declaration")
     s()
     s("```lean")
     try:
         text = p.source_text()
     except Exception as e:
-        text = f"(source_text non leggibile: {e})"
+        text = f"(source not readable: {e})"
     s(text.rstrip())
     s("```")
     s()
-    s("## Lista di controllo: i modi noti in cui one traduzione perde il senso")
+    s("## Checklist: the known ways a translation loses the meaning")
     s()
     for name, reason, explanation in KNOWN_SUSPECTS:
-        presente = bool(re.search(reason, p.statement)) or bool(re.search(reason, text))
-        s(f"- [{'x' if presente else ' '}] **{name}**"
-          f"{' — compare in questo statement' if presente else ''}  ")
+        present = bool(re.search(reason, p.statement)) or bool(re.search(reason, text))
+        s(f"- [{'x' if present else ' '}] **{name}**"
+          f"{' — appears in this statement' if present else ''}  ")
         s(f"      {explanation}")
     s()
     s("## Messaggi di Lean, grezzi")
     s()
     s("```")
-    s((entry.get("messaggi_grezzi") or "(non conservati)")[:3000])
+    s((entry.get("raw_messages") or "(not kept)")[:3000])
     s("```")
     s()
-    s("## Che cosa fare, nell'order")
+    s("## What to do, in order")
     s()
-    s("1. leggere la source original (OEIS, articolo, sito) e scrivere qui in che")
-    s("   punto preciso la traduzione se ne discosta;")
-    s("2. se se ne discosta: preparare la bozza di segnalazione per gli autori")
-    s("   dell'archive, **senza pubblicarla**;")
-    s("3. se NON se ne discosta: è un caso da capire meglio, e va trattato con più")
-    s("   sospetto ancora — un problem aperto che cade a `simp` con one")
-    s("   formalizzazione fedele sarebbe one notizia, e le notizie qui sono")
+    s("1. read the original source (OEIS, paper, website) and write down here the")
+    s("   precise point at which the translation departs from it;")
+    s("2. if it does depart: prepare a draft report for the archive's authors,")
+    s("   **without publishing it**;")
+    s("3. if it does NOT: this is a case to understand better, and to be treated with")
+    s("   even more suspicion — an open problem that falls to `simp` with a faithful")
+    s("   formalisation would be news, and news here is")
     s("   quasi sempre errors nostri.")
     s()
     return "\n".join(r) + "\n"
@@ -137,14 +134,14 @@ def main() -> int:
 
     f = Path(args.probe)
     if not f.is_file():
-        print(f"nessun result della probe in {f}")
+        print(f"no probe results in {f}")
         return 0
     data = json.loads(f.read_text(encoding="utf-8"))
     notable = [v for v in data if "ATTENZIONE" in v]
     print(f"sondati {len(data)} problems, segnalazioni {len(notable)}")
     if not notable:
-        print("\nNessuna segnalazione. E' l'result piu' probabile e va letto per quello")
-        print("che e': le formalizzazioni dell'archive reggono alle tattiche banali.")
+        print("\nNo flags. That is the likeliest outcome and should be read for what")
+        print("it is: the archive's formalisations hold against the trivial tactics.")
         return 0
 
     idx = ProblemIndex.load()
@@ -154,7 +151,7 @@ def main() -> int:
         try:
             p = idx.get(v["problem"])
         except Exception as e:
-            print(f"  {v['problem']}: non found nell'index ({e})")
+            print(f"  {v['problem']}: not found in the index ({e})")
             continue
         name = re.sub(r"[^A-Za-z0-9_.-]", "_", v["problem"])[:80]
         (dest / f"{name}.md").write_text(fascicolo(p, v), encoding="utf-8")

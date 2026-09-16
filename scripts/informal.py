@@ -1,35 +1,34 @@
 """
-Dimostrazioni in linguaggio naturale, e un revisore severo che le smonta.
+Proofs in natural language, and a severe reviewer who takes them apart.
 
-PERCHÉ
-------
-Tre rounds sui problems open_problems hanno dato zero, e la ragione misurata è che
-l'agent **non consegna candidates**: compute, capisce dov'è la difficoltà, e si
-ferma. Resta però one domanda aperta che quei rounds non separano: il collo di
-bottiglia è **Lean** o è la **matematica**?
+WHY
+---
+Three rounds on open problems gave zero, and the measured reason is that the agent
+**does not submit candidates**: it computes, sees where the difficulty lies, and
+stops. But one question those rounds do not separate: is the bottleneck **Lean** or
+the **mathematics**?
 
-Questo esperimento la separa. Si chiede one dimostrazione in linguaggio naturale,
-senza Lean e senza tools, e poi si fa a pieces da un revisore severo. Se
-qualcosa sopravvive, il collo di bottiglia era Lean e la formalizzazione diventa
-il step successivo. Se non sopravvive niente, il collo di bottiglia è la
-matematica, e nessun budget lo sposta.
+This experiment separates them. A proof in natural language is asked for, with no
+Lean and no tools, and then a severe reviewer takes it to pieces. If something
+survives, the bottleneck was Lean and formalisation is the next step. If nothing
+survives, the bottleneck is the mathematics, and no budget moves it.
 
-COME
-----
-Due calls per problem, nessuno strumento:
+HOW
+---
+Two calls per problem, no tools:
 
-  1. **autore** — dimostra o confuta, in italiano o inglese, e dichiara
-     esplicitamente la propria confidence e i points debolial del reasoning;
-  2. **revisore** — legge senza confidence, search_for l'error, e dà un verdict fra
-     `REGGE`, `LACUNA`, `SBAGLIATO`, `CIRCOLARE`, `NON PERTINENTE`.
+  1. **author** — proves, or explains why it cannot be done, declaring explicitly its
+     own confidence and the weak points of the argument;
+  2. **reviewer** — reads without confidence, looks for the error, and gives a verdict
+     among `HOLDS`, `GAP`, `WRONG`, `CIRCULAR`, `NOT RELEVANT`.
 
-Il revisore non vede il problem come «da approvare»: il suo compito è trovare il
-punto che non torna. È il ruolo in cui i modelli sono più affidabili, e la
-letteratura sul tema dice che un revisore adversariale trova errors che l'autore
-non vede.
+The reviewer does not see the problem as something "to approve": its job is to find
+the point that does not work. It is the role in which models are most reliable, and
+the literature on the subject says an adversarial reviewer finds errors the author
+does not see.
 
-Nessun uso di `lean_check`: qui non si check niente. Quello che exits da qui è
-**materiale da leggere**, non un result.
+No use of `lean_check`: nothing is verified here. What comes out is **material to
+read**, not a result.
 """
 from __future__ import annotations
 
@@ -107,13 +106,12 @@ do use it, name the step you attacked hardest."""
 
 
 def author_message(p, index) -> str:
-    """Il problem, con TUTTE le definizioni che gli servono.
+    """The problem, with ALL the definitions it needs.
 
-    Il only statement non basta: `a n` o `IsPrimitiveTerm n` non si possono
-    dimostrare se non si sa come sono definiti. Si manda lo stesso text che
-    riceve l'agent — il file dell'archive con le dimostrazioni nascoste — che
-    contiene le definizioni, i termini di trial dei primes valori, e il commento
-    della source.
+    The statement alone is not enough: `a n` or `IsPrimitiveTerm n` cannot be proved
+    without knowing how they are defined. The same text the agent receives is sent —
+    the archive's file with the proofs hidden — which contains the definitions, the
+    proof terms of the first values, and the source's comment.
     """
     from hide import file_without_proofs
     text = file_without_proofs(p, index)
@@ -144,7 +142,7 @@ def one_call(client, model, system, text, budget, cap, effort,
     if available < 2_000:
         raise SpendLimitExceeded(
             f"budget insufficiente: {count.input_tokens:,} token in ingresso, "
-            f"spazio per la answer {available:,}")
+            f"room for the answer {available:,}")
     with client.messages.stream(
             model=model, max_tokens=available,
             system=[{"type": "text", "text": system}],
@@ -156,17 +154,17 @@ def one_call(client, model, system, text, budget, cap, effort,
     output_text = "\n".join(b.text for b in answer.content
                              if b.type == "text").strip()
     if not output_text:
-        # MISURATO l'11 settembre 2026: con effort `high` su questi problems il
-        # model ha spent 32.000 token di reasoning senza scrivere one line
-        # di answer, per $0,81 di niente, e il revisore ha poi recensito one
-        # pagina bianca. Pagare e non ricevere nulla non e' un result ammissibile:
-        # qui si ferma, con il reason exact.
+        # MEASURED on 11 September 2026: at effort `high` on these problems the model
+        # spent 32,000 reasoning tokens without writing a single line of answer, for
+        # $0.81 of nothing, and the reviewer then reviewed a blank page. Paying and
+        # receiving nothing is not an acceptable outcome: it stops here, with the exact
+        # reason.
         raise SpendLimitExceeded(
             f"answer vuota: stop_reason={answer.stop_reason}, "
             f"{answer.usage.output_tokens:,} token in output di cui "
             f"{getattr(answer.usage.output_tokens_details, 'thinking_tokens', '?')} "
-            f"di reasoning. Il cap di max_tokens era {available:,}: "
-            f"serve piu' spazio oppure un effort piu' low.")
+            f"of reasoning. The max_tokens cap was {available:,}: "
+            f"either more room or a lower effort is needed.")
     return output_text, answer.usage
 
 
@@ -181,16 +179,16 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("problems", nargs="+")
     ap.add_argument("--model", default="claude-opus-5")
-    # MISURATO l'11 settembre 2026 sullo stesso problem, con lo stesso ingresso:
-    #   effort high,   cap 32k -> 32.000 token, TUTTI di reasoning, zero lines
-    #   effort medium, cap 24k -> 24.000 token, TUTTI di reasoning, zero lines
+    # MEASURED on 11 September 2026 on the same problem, with the same input:
+    #   effort high,   cap 32k -> 32,000 tokens, ALL of them reasoning, zero lines
+    #   effort medium, cap 24k -> 24,000 tokens, ALL of them reasoning, zero lines
     #   effort low,    cap 24k -> 20.402 token (16.353 di reasoning),
     #                               7.066 chars di matematica vera, end_turn
-    # A effort high il model esaurisce lo spazio pensando e non conclude. A
-    # effort low conclude, e conclude bene: sul first problem ha dimostrato che
-    # la congettura implica un caso del problem del totiente di Lehmer, che e'
-    # aperto, piu' cinque results parziali rigorosi. Il value predefinito e'
-    # quindi `low`, e non e' un risparmio: e' l'unico che funziona.
+    # At effort high the model exhausts the room thinking and never concludes. At
+    # effort low it concludes, and concludes well: on the first problem it showed that
+    # the conjecture implies a case of Lehmer's totient problem, which is open, plus
+    # five rigorous partial results. The default value is therefore `low`, and that is
+    # not a saving: it is the only one that works.
     ap.add_argument("--effort", default="low")
     ap.add_argument("--budget", type=float, required=True)
     ap.add_argument("--problem-cap", type=float, default=1.20)
@@ -211,7 +209,7 @@ def main() -> int:
     budget = Budget(dollar_limit=args.budget, model=args.model)
     print(f"Modello {args.model}, effort {args.effort}, budget ${args.budget:.2f}, "
           f"cap ${args.problem_cap:.2f} per problem")
-    print("Nessuno strumento, nessun Lean: only matematica in linguaggio naturale.\n")
+    print("No tools, no Lean: mathematics in natural language only.\n")
 
     results = []
     for i, name in enumerate(args.problems, 1):
@@ -226,20 +224,20 @@ def main() -> int:
             entry["trial"] = trial
             entry["confidence"] = extract(trial, "CONFIDENCE")
             entry["punto_debole"] = extract(trial, "WEAKEST STEP")
-            print(f"  autore:   {entry['confidence'] or '(non dichiarata)'}")
+            print(f"  author:   {entry['confidence'] or '(not declared)'}")
             print(f"            punto debole: {entry['punto_debole'][:100]}")
 
-            # Il revisore esiste per rompere one dimostrazione rivendicata. Se
-            # l'autore dichiara di non averne one, non c'e' niente da arbitrare e
-            # la seconda call e' denaro buttato: sui problems di questo
-            # insieme la maggioranza degli results e' PARTIAL o NO-PROOF, quindi
-            # questa condizione e' la differenza fra dodici problems e venti.
+            # The reviewer exists to break a claimed proof. If the author declares it
+            # has none, there is nothing to arbitrate and the second call is money
+            # thrown away: on the problems in this set most outcomes are PARTIAL or
+            # NO-PROOF, so this condition is the difference between twelve problems and
+            # twenty.
             confidence = entry["confidence"].upper()
             if confidence.startswith(("PARTIAL", "NO-PROOF", "NO PROOF")):
                 entry["review"] = None
-                entry["verdict"] = "(non arbitrato: l'autore non rivendica one trial)"
+                entry["verdict"] = "(not arbitrated: the author claims no proof)"
                 entry["finding"] = ""
-                print("  revisore: salta, l'autore non rivendica one trial")
+                print("  reviewer: skipped, the author claims no proof")
             else:
                 review, _ = one_call(
                     client, args.model, REVIEWER, reviewer_message(p, trial),
@@ -248,7 +246,7 @@ def main() -> int:
                 entry["review"] = review
                 entry["verdict"] = extract(review, "VERDICT")
                 entry["finding"] = extract(review, "THE PROBLEM")
-                print(f"  revisore: {entry['verdict'] or '(non dichiarato)'}")
+                print(f"  reviewer: {entry['verdict'] or '(not declared)'}")
                 print(f"            finding: {entry['finding'][:100]}")
         except SpendLimitExceeded as e:
             entry["error"] = str(e)
@@ -266,11 +264,11 @@ def main() -> int:
         entry["cost"] = round(budget.spent - spent_before, 4)
         print(f"  cost: ${entry['cost']:.4f}   (total ${budget.spent:.4f})")
         results.append(entry)
-        # Il report si scrive a OGNI problem, non alla end. Misurato il 12
-        # settembre 2026: un error mio (`review` non definita quando il
-        # revisore viene saltato) ha fatto morire il giro after il first problem, e
-        # il text del first -- gia' pagato -- e' andato perso perche' il file
-        # veniva scritto only in fondo. Un job che paga deve salvare mentre va.
+        # The report is written after EVERY problem, not at the end. Measured on 12
+        # September 2026: a mistake of mine (`review` undefined when the reviewer is
+        # skipped) killed the run after the first problem, and the first problem's text
+        # — already paid for — was lost because the file was only written at the end. A
+        # job that costs money has to save as it goes.
         Path(args.report).write_text(json.dumps(
             {"model": args.model, "effort": args.effort,
              "spent": budget.spent, "problem_cap": args.problem_cap,
@@ -290,9 +288,9 @@ def main() -> int:
         ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"  report in {args.report}")
     if survivors:
-        print("\n  ATTENZIONE: quello che sopravvive alla revisione NON e' un")
-        print("  result. E' materiale da leggere, e il step successivo e' il")
-        print("  protocollo di docs/04 piu' la formalizzazione in Lean.")
+        print("\n  ATTENTION: what survives the review is NOT a result. It is")
+        print("  material to read, and the next step is the protocol in")
+        print("  docs/04-finding-protocol.md plus formalisation in Lean.")
     return 0
 
 
