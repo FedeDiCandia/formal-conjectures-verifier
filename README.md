@@ -73,8 +73,8 @@ Everything else — `elan`, Lean, the archive, Mathlib's cache, comparator,
 `lean4export` — is installed by the setup script.
 
 ```bash
-git clone https://github.com/FedeDiCandia/formal-conjectures-solver.git
-cd formal-conjectures-solver
+git clone https://github.com/FedeDiCandia/formal-conjectures-verifier.git
+cd formal-conjectures-verifier
 
 bash scripts/setup.sh                        # long: ~1 hour, downloads ~8 GB
 ./.venv/bin/python verifier/index.py --build # builds the problem index

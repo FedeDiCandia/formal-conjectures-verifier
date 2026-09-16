@@ -58,7 +58,7 @@ cd /Users/fededicandia/Documents/Math
 git status --short                            # deve essere vuoto
 gh auth status                                # deve dire: account FedeDiCandia
 
-gh repo create formal-conjectures-solver \
+gh repo create formal-conjectures-verifier \
   --public \
   --source=. \
   --remote=origin \
@@ -70,19 +70,19 @@ Un solo comando: crea il repository, aggiunge il remote `origin` e spinge `main`
 Per guardarlo prima che lo veda qualcun altro, metti `--private` al posto di `--public`; poi:
 
 ```bash
-gh repo edit FedeDiCandia/formal-conjectures-solver \
+gh repo edit FedeDiCandia/formal-conjectures-verifier \
   --visibility public --accept-visibility-change-consequences
 ```
 
 ## 2. Senza gh
 
-Crea il repository su <https://github.com/new> con il nome `formal-conjectures-solver`,
+Crea il repository su <https://github.com/new> con il nome `formal-conjectures-verifier`,
 **senza** spuntare README, .gitignore o licenza (ci sono già: altrimenti il push va in conflitto).
 Poi:
 
 ```bash
 cd /Users/fededicandia/Documents/Math
-git remote add origin https://github.com/FedeDiCandia/formal-conjectures-solver.git
+git remote add origin https://github.com/FedeDiCandia/formal-conjectures-verifier.git
 git branch -M main
 git push -u origin main
 ```
@@ -90,15 +90,15 @@ git push -u origin main
 ## 3. Dopo il push, tre verifiche
 
 ```bash
-gh repo view FedeDiCandia/formal-conjectures-solver --web   # README, licenza riconosciuta
-gh api repos/FedeDiCandia/formal-conjectures-solver/contents/.env    # deve dare 404
+gh repo view FedeDiCandia/formal-conjectures-verifier --web   # README, licenza riconosciuta
+gh api repos/FedeDiCandia/formal-conjectures-verifier/contents/.env    # deve dare 404
 git ls-remote origin                                        # main è lì
 ```
 
 Se il nome del repository sarà diverso, cambia anche l'URL nel README:
 
 ```bash
-sed -i '' 's#FedeDiCandia/formal-conjectures-solver#FedeDiCandia/NUOVO-NOME#' README.md
+sed -i '' 's#FedeDiCandia/formal-conjectures-verifier#FedeDiCandia/NUOVO-NOME#' README.md
 git commit -am "README: URL del repository"
 ```
 
