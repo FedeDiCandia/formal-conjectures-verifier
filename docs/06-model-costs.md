@@ -65,7 +65,7 @@ Formula: (cost se solved x p + cost se failed x (1-p)) / p, cioe' quanto it cost
 
 All **MEASURED** on the index built by Lean.
 
-I conteggi di `main` valgono con la semantica `google.answer = always_true`, quella predefinita, in cui `answer(sorry) ↔ P` diventa `True ↔ P` e il problem e' davvero dimostrabile. Fino a questa sessione lo snapshot dichiarava also one seconda libreria che compilava gli stessi file con `postpone`, e i two insiemi di `.olean` si sovrascrivevano a vicenda: con quella semantica gli stessi 94 problems non sono attaccabili affatto. La libreria in eccesso e' stata disattivata — vedi `docs/01` — e i numbers qui above sono quelli della semantica giusta.
+The `main` counts hold under the default semantics `google.answer = always_true`, in which `answer(sorry) ↔ P` becomes `True ↔ P` and the problem really is provable. Until this session the snapshot also declared a second library that compiled the same files with `postpone`, and the two sets of `.olean` files overwrote each other: under that semantics the same 94 problems are not attackable at all. The surplus library has been disabled — see `docs/01-the-archive.md` — and the numbers above are those of the right semantics.
 
 Two observations that change the strategy. First: **none** of the 1495 problems marcati `research open` ha one has a complete proof in the archive — the archive is consistent with itself, there are no 'accidentally open' problems to harvest. Second: 1550 problems are marked `research solved` but have no Lean proof in the archive: the mathematics is known, the formalisation is missing. That is a third class of target, easier than the open ones and harder than those the calibration used.
 
@@ -76,14 +76,14 @@ The probabilities of success on an **open** problem are not measurable: they are
 ### Cost of an attempt (the basis of the arithmetic)
 
 - **A, full attempt** on an open statement: **$0.97** — **MEASURED**, the mean of the calibration's two failures ($0.6886 fermato dalle 20 iterations, $1.2486 stopped by the spending cap). On an open problem an attempt finisce quasi sempre cosi'.
-- **C, colpo only** (setaccio): **$0.0430** — **MISURATO**, mediana cost of the first iteration over the 11 calibration problems.
+- **C, single shot** (the sieve): **$0.0430** — **MEASURED**, the median cost of the first iteration over the 11 calibration problems.
 - **B, program di ricerca** scritto e lanciato: **$0.10** di API per problem — **ESTIMATED**, of the order of the measured cost of the easy facili (media $0.0674). Local computation costs no dollars: it costs machine-nights.
 
 ### Strategia A — dimostrazioni Lean dirette su enunciati open_problems
 
 One attempt per problem, chosen at random among the 1241 verifiable verificabili. Saturazione a **$1 202**.
 
-| spesa | affondi | ottimistico | realistico | pessimistico |
+| spend | attempts | optimistic | realistic | pessimistic |
 |---|---|---|---|---|
 | $50 | 52 | 1.0 | 0.155 | 0.010 |
 | $100 | 103 | 2.1 | 0.310 | 0.021 |
@@ -102,7 +102,7 @@ Here the limit is not money: it is the number of problems on which a search make
 
 API cost to saturate the strategy: 15 x $0.10 = **$1.50**. Machine time: with 8 searches in parallel, circa 2-4 notti.
 
-| spesa | ricerche | ottimistico | realistico | pessimistico |
+| spend | searches | optimistic | realistic | pessimistic |
 |---|---|---|---|---|
 | $50 | 15 *(saturo)* | 0.750 | 0.150 | 0.015 |
 | $100 | 15 *(saturo)* | 0.750 | 0.150 | 0.015 |
@@ -117,11 +117,11 @@ API cost to saturate the strategy: 15 x $0.10 = **$1.50**. Machine time: with 8 
 
 Strategy B is **saturated at under two dollars of API**. The whole spending column, from $50 to $5000, changes nothing: what is missing is not money but problems with a reachable frontier. And any finding is, by the protocol in docs/04-finding-protocol.md, more likely a faulty formalisation than a new result.
 
-### Strategia C — strategia mista: setaccio, poi affondo mirato
+### Strategy C — mixed: sieve first, then targeted attempts
 
 Give **a single shot** ($0.0430) to as many problems as possible, up to all 1241; with what is left, buy $0.97 attempts, starting from the problems where the single shot showed a sensible plan. The first 10% of the attempts get the amplification (they are the selected ones), the rest count as A.
 
-| spesa | setacciati | affondi | ottimistico | realistico | pessimistico |
+| spend | sieved | attempts | optimistic | realistic | pessimistic |
 |---|---|---|---|---|---|
 | $50 | 1 163 | 0 | 5.1 | 0.767 | 0.051 |
 | $100 | 1 241 | 48 | 8.3 | 1.1 | 0.064 |

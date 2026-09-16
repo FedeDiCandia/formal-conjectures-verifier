@@ -79,18 +79,18 @@ def load() -> dict:
         idx[name] = {
             "theorems": len(i.problems),
             "open_problems": len(open_problems),
-            "aperti_verificabili": len(ap_ver),
-            "aperti_con_buco_non_prop": len(open_problems) - len(ap_ver),
-            "aperti_confutabili": len([p for p in open_problems
+            "open_verifiable": len(ap_ver),
+            "open_with_non_prop_hole": len(open_problems) - len(ap_ver),
+            "open_refutable": len([p for p in open_problems
                                        if p.answer_placeholder_in_source
                                        and not p.statement_has_sorry]),
-            "aperti_varianti": len([p for p in ap_ver if ".variants." in p.theorem]),
+            "open_variants": len([p for p in ap_ver if ".variants." in p.theorem]),
             "solved": len(ris),
-            "risolti_con_prova_pulita": len([p for p in ris if p.archive_proof_is_clean]),
-            "risolti_senza_prova": len([p for p in ris if not p.proof_is_complete
+            "solved_with_clean_proof": len([p for p in ris if p.archive_proof_is_clean]),
+            "solved_without_proof": len([p for p in ris if not p.proof_is_complete
                                         and not p.statement_has_sorry]),
-            "prove_complete": len([p for p in i.problems if p.proof_is_complete]),
-            "prove_pulite": len([p for p in i.problems if p.archive_proof_is_clean]),
+            "complete_proofs": len([p for p in i.problems if p.proof_is_complete]),
+            "clean_proofs": len([p for p in i.problems if p.archive_proof_is_clean]),
         }
     data["index"] = idx
 
@@ -356,13 +356,13 @@ def report_part_two(data: dict, r: list[str]) -> list[str]:
     entries = [
         ("theorems indicizzati", "theorems"),
         ("`research open`", "open_problems"),
-        ("open with a complete statement (verifiable)", "aperti_verificabili"),
-        ("open with a non-propositional `answer( )` hole", "aperti_con_buco_non_prop"),
-        ("open and attackable by refutation", "aperti_confutabili"),
-        ("open ones that are auxiliary variants", "aperti_varianti"),
+        ("open with a complete statement (verifiable)", "open_verifiable"),
+        ("open with a non-propositional `answer( )` hole", "open_with_non_prop_hole"),
+        ("open and attackable by refutation", "open_refutable"),
+        ("open ones that are auxiliary variants", "open_variants"),
         ("`research solved`", "solved"),
-        ("solved with a clean proof in the archive", "risolti_con_prova_pulita"),
-        ("solved WITHOUT a proof in the archive", "risolti_senza_prova"),
+        ("solved with a clean proof in the archive", "solved_with_clean_proof"),
+        ("solved WITHOUT a proof in the archive", "solved_without_proof"),
     ]
     for label, key in entries:
         p(f"| {label} | {idx['bench-v1'][key]} | {idx['main'][key]} |")
@@ -382,7 +382,7 @@ def report_part_two(data: dict, r: list[str]) -> list[str]:
       f"{idx['main']['open_problems']} problems marcati `research open` ha one "
       f"has a complete proof in the archive — the archive is consistent with itself, "
       f"there are no 'accidentally open' problems to harvest. Second: "
-      f"{idx['main']['risolti_senza_prova']} problems are marked `research solved` but "
+      f"{idx['main']['solved_without_proof']} problems are marked `research solved` but "
       f"have no Lean proof in the archive: the mathematics is known, the formalisation "
       f"is missing. That is a third class of target, easier than the open ones and "
       f"harder than those the calibration used.")
@@ -396,7 +396,7 @@ def report_part_two(data: dict, r: list[str]) -> list[str]:
       "arithmetic accounts for the targets being **finite** in number: once a strategy "
       "has exhausted them, extra spending buys nothing this model can evaluate.")
     p()
-    n_targets = idx["main"]["aperti_verificabili"]
+    n_targets = idx["main"]["open_verifiable"]
     c_a = c_fall
     c_s = c_it1
     c_b = 0.10
@@ -551,7 +551,7 @@ def report_part_three(data: dict, r: list[str]) -> list[str]:
     c_fall = st.mean(x["cost"] for x in problems if not x["solved"])
     c_it1 = st.median(x["first_iteration_cost"] for x in problems)
     c_c = c_it1 + DIVE_SHARE * c_fall
-    n_targets = idx["main"]["aperti_verificabili"]
+    n_targets = idx["main"]["open_verifiable"]
 
     # ---------------------------------------------------------------- 5
     p("## 5. The local computation, measured")
@@ -742,7 +742,7 @@ def report_part_three(data: dict, r: list[str]) -> list[str]:
       "number here is guessing.")
     p()
     p("**A recommendation about targets, not only about spending.** The "
-      f"{idx['main']['risolti_senza_prova']} problems marcati `research solved` "
+      f"{idx['main']['solved_without_proof']} problems marcati `research solved` "
       f"but lacking a proof in the archive are an intermediate class: the mathematics "
       f"is known, the formalisation is missing. On those the success rate would be "
       f"REAL (the outcome can be checked), the result is useful to the archive, and "

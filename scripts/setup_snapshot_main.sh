@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 # ---------------------------------------------------------------------------
-# Prepara un second snapshot dell'archive, preso da un commit FISSO di `main`.
+# Prepare a second snapshot of the archive, taken from a FIXED commit of `main`.
 #
 # PERCHE'
-# Il tag di benchmark `bench-v1-lean4.27.0` e' del 2026-05-06, cioe' proprio
-# alla data di cut dell'addestramento di claude-opus-5 (maggio 2026). Ogni
-# dimostrazione contenuta in quel tag era quindi pubblica su GitHub before
-# dell'addestramento: calibrare un agente su quei problems misura also quanto
-# il model ricorda, non only quanto sa dimostrare.
+# The benchmark tag `bench-v1-lean4.27.0` is dated 2026-05-06, exactly at
+# claude-opus-5's training cutoff (May 2026). Every proof in that tag was
+# therefore public on GitHub before training: calibrating an agent on those
+# problems measures how much the model remembers as well as how much it can
+# prove.
 #
-# Su `main` ci sono 548 file di problems added after il 1 giugno 2026. Quelli
-# sono materiale post-cutoff.
+# On `main` there are 548 problem files added after 1 June 2026. Those are
+# post-cutoff material.
 #
-# Il commit e' FISSO: `main` si muove, e un benchmark che si muove non e' un
+# The commit is FIXED: `main` moves, and a benchmark that moves is not a
 # benchmark. Cambiarlo va fatto consapevolmente modificando COMMIT_MAIN qui.
 # ---------------------------------------------------------------------------
 set -euo pipefail
@@ -20,7 +20,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 EXT="$ROOT/external"
 
-#: Commit fisso del branch main. Scelto il 2026-09-10.
+#: Fixed commit of the main branch. Chosen on 2026-09-10.
 COMMIT_MAIN="0a8b856c"
 LEAN_MAIN="v4.33.1"
 
@@ -32,16 +32,16 @@ export PATH="$HOME/.elan/bin:$PATH"
 step() { echo; echo "=============================================================="; echo "  $*"; echo "=============================================================="; }
 
 step "0/6  Controlli preliminari"
-LIBERI=$(df -g "$ROOT" | tail -1 | awk '{print $4}')
-echo "  spazio libero: ${LIBERI} GB"
-if [ "$LIBERI" -lt 25 ]; then
-  echo "  ERROR: servono almeno 25 GB liberi, ce ne sono ${LIBERI}."
+FREE_GB=$(df -g "$ROOT" | tail -1 | awk '{print $4}')
+echo "  free space: ${FREE_GB} GB"
+if [ "$FREE_GB" -lt 25 ]; then
+  echo "  ERROR: at least 25 GB free are needed, there are ${FREE_GB}."
   exit 1
 fi
 
 step "1/6  Worktree del commit $COMMIT_MAIN"
-# Un worktree condivide la folder .git con il clone esistente: risparmia
-# circa un gigabyte e il tempo di un second clone.
+# A worktree shares the .git directory with the existing clone: it saves about
+# a gigabyte and the time of a second clone.
 if [ ! -d "$SNAP" ]; then
   git -C "$EXT/formal-conjectures" fetch --quiet origin main
   git -C "$EXT/formal-conjectures" worktree add --detach "$SNAP" "$COMMIT_MAIN"
@@ -59,16 +59,16 @@ elan toolchain install "leanprover/lean4:$LEAN_MAIN" 2>&1 | tail -2
 step "3/6  Cache di Mathlib (LUNGO)"
 ( cd "$SNAP" && lake exe cache get 2>&1 | tail -3 )
 
-step "3b/6  Disattivazione della libreria a doppio glob"
-# Il branch `main` dichiara DUE librerie che compilano gli stessi file nella
-# stessa folder di build: `FormalConjectures` (con `google.answer` al value
-# predefinito `alwaysTrue`) e `FormalConjecturesAnswerPostpone` (con
-# `postpone`). Gli .olean si sovrascrivono a vicenda, quindi l'statement
-# elaborato di un problem con `answer(sorry)` cambia second l'ULTIMO command
+step "3b/6  Disabling the double-glob library"
+# The `main` branch declares TWO libraries that compile the same files into the
+# same build directory: `FormalConjectures` (with `google.answer` at its default
+# `alwaysTrue`) and `FormalConjecturesAnswerPostpone` (with `postpone`). The
+# .olean files overwrite each other, so the elaborated statement of a problem
+# with `answer(sorry)` changes according to the LAST build command:
 # di build eseguito: `lake build FormalConjectures` da' `True ↔ P`,
-# `lake build <singolo module>` da' `sorryAx ↔ P`. Un giudice non puo' lavorare
-# su un target che si muove, quindi la seconda libreria viene commentata.
-# Serve alla CI di upstream per un controllo secondario, non alla check.
+# `lake build <a single module>` gives `sorryAx ↔ P`. A judge cannot work against
+# a moving target, so the second library is commented out.
+# It serves upstream's CI for a secondary check, not the verification.
 if grep -q '^name = "FormalConjecturesAnswerPostpone"' "$SNAP/lakefile.toml"; then
   python3 - "$SNAP/lakefile.toml" <<'PYEOF'
 import sys
@@ -84,16 +84,16 @@ f.write_text("\n".join(lines), encoding="utf-8")
 print("  libreria a doppio glob disattivata")
 PYEOF
 else
-  echo "  gia' disattivata (o upstream l'ha rimossa)"
+  echo "  already disabled (or upstream removed it)"
 fi
 
-step "4/6  Compilazione dell'archive (MOLTO LUNGO)"
-# Si lasciano 2 core liberi su 12, come chiesto.
-# `lake` di Lean 4.33 non accetta `-j`: si usa la variabile d'environment, che
-# funziona su entrambe le versioni. Si lasciano 2 core liberi su 12.
+step "4/6  Building the archive (VERY LONG)"
+# 2 of the 12 cores are left free, as asked.
+# Lean 4.33's `lake` does not accept `-j`: the environment variable is used, which
+# works on both versions. 2 of the 12 cores are left free.
 ( cd "$SNAP" && LEAN_NUM_THREADS=10 lake build 2>&1 | tail -25 )
 
-step "5/6  lean4export compilato con Lean $LEAN_MAIN"
+step "5/6  lean4export built with Lean $LEAN_MAIN"
 if [ ! -d "$EXPORT_MAIN" ]; then
   git -C "$EXT/lean4export" worktree add --detach "$EXPORT_MAIN" master
 fi
@@ -108,7 +108,7 @@ echo
 echo "  olean compiled: $(find "$SNAP/.lake/build/lib/lean/FormalConjectures" -name '*.olean' 2>/dev/null | wc -l)"
 echo "  spazio occupato: $(du -sh "$SNAP" | cut -f1)"
 echo
-echo "SNAPSHOT PRONTO. Per usarlo:"
+echo "SNAPSHOT READY. To use it:"
 echo "  export FCS_ARCHIVE=$SNAP"
 echo "  export FCS_LEAN4EXPORT=$EXPORT_MAIN/.lake/build/bin/lean4export"
 echo "  export FCS_INDEX=$ROOT/verifier/problem_index_main.json"
