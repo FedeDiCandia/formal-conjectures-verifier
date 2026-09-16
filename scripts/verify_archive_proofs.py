@@ -9,7 +9,7 @@ this script does.
 A problem enters an agent's calibration ONLY if its archive proof is ACCEPTED
 here. Otherwise asking an agent to solve it means asking it to do better than the
 archive, and a failure would say
-niente sull'agent.
+nothing about the agent.
 """
 import json
 import sys

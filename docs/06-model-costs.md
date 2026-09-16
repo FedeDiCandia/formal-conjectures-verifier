@@ -37,7 +37,7 @@ Each success rate comes with a 90% Clopper-Pearson interval: with four or five p
 
 **MEASURED** — cost of the FIRST iteration, median over 11 problems: $0.0430. Two of the nine successes arrived on the first iteration. This is the price of a single shot, and it is the basis of strategia mista del punto 4.
 
-**MISURATO** — tempo di calendario: 0.45 hours in tutto, di cui 0.21 hours di Lean in local (46%). The bottleneck is not the API: it is the verifier.
+**MEASURED** — wall-clock time: 0.45 hours in all, of which 0.21 hours of Lean locally (46%). The bottleneck is not the API: it is the verifier.
 
 ### Cost per problem solved
 
@@ -75,7 +75,7 @@ The probabilities of success on an **open** problem are not measurable: they are
 
 ### Cost of an attempt (the basis of the arithmetic)
 
-- **A, full attempt** on an open statement: **$0.97** — **MEASURED**, the mean of the calibration's two failures ($0.6886 fermato dalle 20 iterations, $1.2486 stopped by the spending cap). On an open problem an attempt finisce quasi sempre cosi'.
+- **A, full attempt** on an open statement: **$0.97** — **MEASURED**, the mean of the calibration's two failures ($0.6886 fermato dalle 20 iterations, $1.2486 stopped by the spending cap). On an open problem an attempt nearly always ends that way.
 - **C, single shot** (the sieve): **$0.0430** — **MEASURED**, the median cost of the first iteration over the 11 calibration problems.
 - **B, program di ricerca** scritto e lanciato: **$0.10** di API per problem — **ESTIMATED**, of the order of the measured cost of the easy facili (media $0.0674). Local computation costs no dollars: it costs machine-nights.
 
@@ -157,7 +157,7 @@ Strategy B is paid in machine time rather than dollars, so the number that count
 
 **MEASURED** — a complete Lean verification costs 32.9 s with the sandbox and the fingerprint, 25.0 s without. With 4 verifications in parallel that is about 440 verifications per hour: this, not the API, is the limit on how many proofs can be checked in a day.
 
-**MISURATO** — probe automatica su 30 enunciati open_problems discreti (`decide`, `plausible`, `norm_num`, `simp_arith`, forma diritta e negata, 240 trials in tutto): **0** hanno prodotto qualcosa di notable. Intervallo di Clopper-Pearson al 90% sulla fraction of open problems that fall on their own: 0.0% – 9.5%.
+**MISURATO** — probe automatica su 30 enunciati open_problems discreti (`decide`, `plausible`, `norm_num`, `simp_arith`, forma diritta e and negated form, 240 attempts in all): **0** produced anything. 90% Clopper-Pearson interval on the fraction of open problems that fall on their own: 0.0% – 9.5%.
   None. One apparent case — `Arxiv.«2107.12475».CollatzLike` — was `plausible` writing "Unable to find a counter-example" and leaving a `sorry`: the file compiled, but proved nothing. The verdict rule was corrected (`scripts/probe_lean.py`).
 
 ## 6. What cannot be estimated

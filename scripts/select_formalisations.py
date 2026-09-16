@@ -160,7 +160,7 @@ def main() -> int:
     for p in idx.problems:
         if p.category not in ("research solved", "textbook"):
             continue
-        excluded["0 solved+textbook in tutto"] += 1
+        excluded["0 solved+textbook in all"] += 1
         if p.formal_proof_kind == "formal_conjectures":
             excluded["1 formal_proof using formal_conjectures"] += 1
             continue

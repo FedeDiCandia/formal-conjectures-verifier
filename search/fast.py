@@ -1,7 +1,7 @@
 """
 Local search with the conflict graph precomputed.
 
-PERCHÉ, MISURATO
+WHY, MEASURED
 ----------------
 The first local engine (`tabu.py`) recomputes at every move the distances between
 the entering word and every candidate: N·m bit counts per iteration. On A(17,6,6)

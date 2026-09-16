@@ -9,7 +9,7 @@ bound in the table we could not say how much room is left. That leaves
 274 cells, and the first are small: A(27,8,5) lies between 31 and 32, A(18,6,5)
 72, A(22,6,5) fra 132 e 136.
 
-COME
+HOW
 ----
 For each cell, two questions in a row:
   1. can we **match** the published bound? (the admission threshold)
@@ -134,7 +134,7 @@ def main() -> int:
     even = sum(1 for e in results if e["matched"])
     print(f"\n{'=' * 70}\npareggiati {even}/{len(results)}   passed {len(won)}")
     for e in won:
-        print(f"  {e['cell']}: {e['published'] + 1} words invece di "
+        print(f"  {e['cell']}: {e['published'] + 1} words instead of "
               f"{e['published']}. APPLY docs/04-finding-protocol.md IN FULL.")
     if not won:
         print("No bound beaten. That is a result and should be written down: these "

@@ -2,7 +2,7 @@
 The tables of bounds, read from the source and put into a form a program can read.
 program.
 
-PERCHÉ
+WHY
 ------
 To beat a record one has to know **what it is**, **who set it** and **whether an
 explicit code exists**. Brouwer's tables contain all three, but in hand-written
@@ -18,7 +18,7 @@ WHAT IT KEEPS FOR EACH CELL
   construction            c = circolante, g = group di automorfismi, s = accorciato
   code               the relative path of the explicit code, if there is one
   lost               true if the bound is in red: claimed but **the listing
-                         del code è andato perduto** e nessuno l'ha ricostruito
+                         of the code has been lost** and nobody has reconstructed it
 """
 from __future__ import annotations
 

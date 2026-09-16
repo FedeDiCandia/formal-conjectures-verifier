@@ -1,7 +1,7 @@
 """
 The orbit engine on the cells that matter.
 
-PERCHÉ, MISURATO
+WHY, MEASURED
 ----------------
 The local search on random words (`tabu.py`) matched 78 bounds of 119 on the small
 cells, but on the 34 cells with an **open gap** it matched 1 of 34, with residuals
@@ -44,7 +44,7 @@ def one(arguments) -> dict:
     mio = r["best"]["size"]
     result = {"cell": f"A({n},{d},{w})", "published": entry["lower"],
              "upper": entry["upper"], "source": entry["source"],
-             "nostro": mio, "group": r["best"]["group"],
+             "ours": mio, "group": r["best"]["group"],
              "candidate": comb(n, w), "seconds": round(time.time() - t0, 1),
              "per_gruppo": {k: v for k, v in r["per_gruppo"].items()}}
     if mio > entry["lower"]:
@@ -67,7 +67,7 @@ def main() -> int:
     with Pool(processes=min(8, os.cpu_count() or 1)) as pool:
         for e in pool.imap_unordered(one, jobs):
             results.append(e)
-            discard = e["nostro"] - e["published"]
+            discard = e["ours"] - e["published"]
             mark = ("SUPERATO" if discard > 0 else
                      "matched" if discard == 0 else f"{discard:+d}")
             print(f"{mark:>11}  {e['cell']:<13} pubbl {e['published']:>5} "
@@ -75,14 +75,14 @@ def main() -> int:
                   f"group {str(e['group']):<14} {e['seconds']:>7.1f}s")
             sys.stdout.flush()
             (DATA_DIR / "fase3_orbite.json").write_text(json.dumps(results, indent=1))
-    won = [e for e in results if e["nostro"] > e["published"]]
-    even = sum(1 for e in results if e["nostro"] == e["published"])
+    won = [e for e in results if e["ours"] > e["published"]]
+    even = sum(1 for e in results if e["ours"] == e["published"])
     print(f"\n{'=' * 70}\npareggiati {even}/{len(results)}   passed {len(won)}")
     for e in won:
-        print(f"  {e['cell']}: {e['nostro']} invece di {e['published']}. "
+        print(f"  {e['cell']}: {e['ours']} instead of {e['published']}. "
               f"Giudice slow: {e.get('giudice_lento')}. APPLICARE docs/04.")
     if not won:
-        best_list = sorted(results, key=lambda e: e["published"] - e["nostro"])[:5]
+        best_list = sorted(results, key=lambda e: e["published"] - e["ours"])[:5]
         print("No bound beaten. The five closest cells:")
         for e in best_list:
             print(f"  {e['cell']}: {e['nostro']} against {e['published']} "

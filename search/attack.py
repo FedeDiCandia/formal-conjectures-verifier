@@ -9,7 +9,7 @@ THE THREE ENGINES, AND WHY ALL THREE ARE NEEDED (measured 11-12 September 2026)
   * **ricerca local da words casuali** — 1 cell pareggiata su 34, residui di
     69-441 violations. The space is too large to start from nothing.
   * **precomputed conflicts** — the conflict matrix is built once, and
-    one mossa costa one total_sum di N interi invece di N·m conteggi di bit. Da migliaia
+        a move costs a sum of N integers instead of N·m bit counts. From thousands
     di moves a centinaia di migliaia.
 
 This script lines them up as the literature does: **the group gives the structure,
@@ -102,7 +102,7 @@ def main() -> int:
     print(f"\n{'=' * 74}\n{len(useful)} cells tentate: "
           f"pareggiate {even}, superate {len(won)}")
     for e in won:
-        print(f"  {e['cell']}: {e['reached']} invece di {e['published']}. "
+        print(f"  {e['cell']}: {e['reached']} instead of {e['published']}. "
               f"Giudice slow: {e.get('giudice_lento')}. APPLICARE docs/04.")
     if useful and not won:
         neighbours = sorted(useful, key=lambda e: e["published"] - e["reached"])[:6]

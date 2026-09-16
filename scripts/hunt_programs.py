@@ -379,7 +379,7 @@ attesi_con = [4, 5, 6, 7, 8]
 for n in attesi_senza:
     if esiste_k(n) is not None:
         print(json.dumps({"event": "collaudo_fallito", "n": n,
-                          "detail": "found k dove l'archive dice a(n)=0"}), flush=True)
+                          "detail": "found k where the archive says a(n)=0"}), flush=True)
         sys.exit(1)
 for n in attesi_con:
     if esiste_k(n) is None:

@@ -33,7 +33,7 @@ from codes import fast_check
 #
 # 1. An orbit is usable if and only if **one of its representatives** is at distance
 #    >= d from all the other words of the orbit. There is no need to check every
-#    se a' = g(a), allora dist(g(a), b) = dist(a, g^-1(b)) e g^-1(b) sta ancora
+#    are the same as those involving a: if a' = g(a) then dist(g(a), b) =
 #    pair: the group acts transitively on the orbit, so the pairs involving a'
 #    coinvolgono a, riordinate.
 #

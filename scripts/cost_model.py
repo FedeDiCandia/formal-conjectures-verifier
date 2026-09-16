@@ -312,10 +312,10 @@ def report_text(data: dict) -> str:
       f"iteration. This is the price of a single shot, and it is the basis of "
       f"strategia mista del punto 4.")
     p()
-    ore_lean = sum(x["lean_seconds"] for x in problems) / 3600
-    ore_tot = sum(x["seconds"] for x in problems) / 3600
-    p(f"**MISURATO** — tempo di calendario: {ore_tot:.2f} hours in tutto, di cui "
-      f"{ore_lean:.2f} hours di Lean in local ({100*ore_lean/ore_tot:.0f}%). "
+    lean_hours = sum(x["lean_seconds"] for x in problems) / 3600
+    total_hours = sum(x["seconds"] for x in problems) / 3600
+    p(f"**MEASURED** — wall-clock time: {total_hours:.2f} hours in all, of which "
+      f"{lean_hours:.2f} hours of Lean locally ({100*lean_hours/total_hours:.0f}%). "
       f"The bottleneck is not the API: it is the verifier.")
     p()
     p("### Cost per problem solved")
@@ -407,7 +407,7 @@ def report_part_two(data: dict, r: list[str]) -> list[str]:
       f"**MEASURED**, the mean of the calibration's two failures "
       f"(${failed[0]['cost']:.4f} fermato dalle 20 iterations, "
       f"${failed[1]['cost']:.4f} stopped by the spending cap). On an open problem an "
-      f"attempt finisce quasi sempre cosi'.")
+      f"attempt nearly always ends that way.")
     p(f"- **C, single shot** (the sieve): **${c_s:.4f}** — **MEASURED**, the median "
       f"cost of the first iteration over the 11 calibration problems.")
     p(f"- **B, program di ricerca** scritto e lanciato: **${c_b:.2f}** di API "
@@ -619,8 +619,8 @@ def report_part_three(data: dict, r: list[str]) -> list[str]:
         low, high = clopper_pearson(len(notable), n)
         p(f"**MISURATO** — probe automatica su {n} enunciati open_problems discreti "
           f"(`decide`, `plausible`, `norm_num`, `simp_arith`, forma diritta e "
-          f"negata, {8*n} trials in tutto): **{len(notable)}** hanno prodotto "
-          f"qualcosa di notable. Intervallo di Clopper-Pearson al 90% sulla "
+          f"and negated form, {8*n} attempts in all): **{len(notable)}** produced "
+          f"anything. 90% Clopper-Pearson interval on the "
           f"fraction of open problems that fall on their own: {low:.1%} – {high:.1%}.")
         for v in notable:
             p(f"  - `{v['problem']}`: {v.get('ATTENZIONE', 'da esaminare')}")

@@ -2,7 +2,7 @@
 # ---------------------------------------------------------------------------
 # Prepare a second snapshot of the archive, taken from a FIXED commit of `main`.
 #
-# PERCHE'
+# WHY
 # The benchmark tag `bench-v1-lean4.27.0` is dated 2026-05-06, exactly at
 # claude-opus-5's training cutoff (May 2026). Every proof in that tag was
 # therefore public on GitHub before training: calibrating an agent on those

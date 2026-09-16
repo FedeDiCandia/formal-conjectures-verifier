@@ -9,8 +9,8 @@ platform.claude.com (documentazione del prompt caching). Due details che era
 facile sbagliare e che questi test difendono:
 
   * la write_op in cache a 1 ORA costa 2 volte l'input, non 1,25;
-  * il moltiplicatore della LETTURA da cache non e' uguale per all_items i modelli:
-    Fable 5.1 usa 0,025 invece di 0,1.
+  * the cache-READ multiplier is not the same for every model:
+    Fable 5.1 uses 0.025 instead of 0.1.
 """
 import sys
 from pathlib import Path
@@ -49,8 +49,8 @@ def test_opus_5_prices_are_the_official_ones():
 
 
 def test_the_cache_multipliers_are_not_the_same_for_every_model():
-    """Fable 5.1 legge dalla cache a 0,025 volte l'input invece di 0,1.
-    Se i moltiplicatori fossero computed invece di scritti, questo sbaglio
+    """Fable 5.1 reads from the cache at 0.025 times the input instead of 0.1.
+    If the multipliers were computed instead of written down, this mistake
     passerebbe inosservato."""
     fable = prices("claude-fable-5-1")
     assert fable.cache_read == 0.25
@@ -162,12 +162,12 @@ def test_usage_is_kept_per_problem_as_well():
 
 def test_it_reproduces_the_spend_measured_by_epoch_ai():
     """One attempt from the OEIS Open benchmark, with the tokens and the cost Epoch AI
-    ha pubblicato: il nostro conto deve dare lo stesso number.
+    published: our arithmetic has to give the same number.
 
     Provenienza: `external/LeanOpenProblems-results/runs/oeis-full-50usd-ant-.../
     A055487_conjecture/info.json`, model `anthropic/claude-opus-4-8`,
-    `total_cost` = 50.00493775. È la trial più forte che abbiamo sulla
-    correttezza del computation del budget: viene da outside e da one fattura vera.
+    `total_cost` = 50.00493775. It is the strongest check we have on the
+    correctness of the budget arithmetic: it comes from outside, from a real invoice.
     """
     c = Usage(input_tokens=607, output_tokens=684_987,
                 cache_write_5m=2_304_613, cache_read=36_946_793)
@@ -180,9 +180,9 @@ def test_fable_5_1_costs_1_45_times_opus_5_on_a_long_profile():
     """Not double, as the headline price would suggest.
 
     Fable 5.1 costa il doppio in ingresso e in output, ma la lettura dalla cache
-    costa la METÀ in value assoluto ($0,25 against $0,50: 0,025x invece di 0,1x).
-    In one sessione lunga la cache è la entry più grossa, quindi il report vero
-    è più low. Se questo test si rompe, il confronto fra modelli nel piano di
+    costs HALF in absolute terms ($0.25 against $0.50: 0.025x instead of 0.1x).
+    In a long session the cache is the biggest entry, so the real ratio
+    is lower. If this test breaks, the comparison between models in the
     spesa va rifatto.
     """
     c = Usage(input_tokens=607, output_tokens=684_987,

@@ -104,7 +104,7 @@ def one(key: str, entry: dict) -> dict:
             result["note"] = v.findings[0]
         elif v.size != entry["lower"]:
             result["state"] = "DISCORDE"
-            result["note"] = (f"valid ma {v.size} words invece di "
+            result["note"] = (f"valid but {v.size} words instead of "
                              f"{entry['lower']}")
         else:
             result["state"] = "CONFERMATO"

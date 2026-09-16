@@ -44,7 +44,7 @@ import explore                          # noqa: E402
 from index import ProblemIndex          # noqa: E402
 
 #: (name, tactic, also_on_the_negation). The order no longer matters: everything is
-#: tutto insieme.
+#: everything at once.
 TACTICS = [
     ("testimone_zero",   "exact ⟨0, by simp⟩",            False),
     ("testimone_zero_d", "exact ⟨0, by decide⟩",          False),
@@ -151,7 +151,7 @@ def read(output: str, mapping: dict[str, tuple[str, bool]]) -> dict:
 
 
 def check_environment(targets: Path) -> None:
-    """I targets e l'archive devono venire dallo stesso snapshot.
+    """The targets and the archive have to come from the same snapshot.
 
     Fifth false positive: the probe was running with the default index (bench-v1)
     while the targets had been chosen on `main`. The imports failed, Lean's messages

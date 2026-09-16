@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ---------------------------------------------------------------------------
-# Installa da zero tutto l'environment del progetto.
+# Installs the whole project environment from scratch.
 # Idempotent: it can be re-run without harm.
 #
 # Uso:  bash scripts/setup.sh

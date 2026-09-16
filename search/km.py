@@ -150,7 +150,7 @@ def risolvi_completo(n: int, d: int, w: int, *, seconds: float = 1800.0,
 
     `threshold`: if given, the constraint Σ z ≥ threshold is added. Asking "is there
     a code of 32?" instead of "what is the maximum?" is often far easier for the
-    solutore, perché basta trovarne one o dimostrare l'infattibilità.
+    solver, because it only has to find one or prove infeasibility.
     """
     t = w - d // 2
     if t < 0 or t >= w:

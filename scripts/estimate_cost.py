@@ -80,9 +80,9 @@ def estimate(problems: list[str], budget: float, effort: str, max_iterations: in
         ("pessimistico (arriva al cap di spesa)", mean, max_iterations),
     ]:
         total = min(per_call * iterations, cap) * n
-        minuti = iterations * MEASURE["seconds_per_iteration"] * n / 60
+        minutes = iterations * MEASURE["seconds_per_iteration"] * n / 60
         print(f"  {label}")
-        print(f"      ${total:.2f} in tutto, circa {minuti:.0f} minuti")
+        print(f"      ${total:.2f} in all, about {minutes:.0f} minutes")
     print()
     print(f"  HARD LIMIT: ${budget:.2f}. It cannot be exceeded: before every")
     print("  call the maximum possible cost is computed and, if it does not")

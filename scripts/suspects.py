@@ -43,7 +43,7 @@ KNOWN_SUSPECTS = [
      r"∀\s*\(?[a-z]+\s*:\s*ℕ\)?",
      "a `∀ n : ℕ` includes n = 0 and n = 1, where the definitions often degenerate. "
      "Check whether the source says \"for every n\" or \"for every n ≥ 2\". This is "
-     "A262403: l'iniettività cade perché two valori valgono entrambi 0."),
+     "A262403: injectivity fails because two values are both 0."),
     ("sottrazione troncata di ℕ",
      r"-\s*\d|\w\s*-\s*\w",
      "in ℕ subtraction does not go below zero: `k - 1` with k = 0 gives 0, not -1. "
@@ -121,7 +121,7 @@ def fascicolo(p, entry: dict) -> str:
     s("3. if it does NOT: this is a case to understand better, and to be treated with")
     s("   even more suspicion — an open problem that falls to `simp` with a faithful")
     s("   formalisation would be news, and news here is")
-    s("   quasi sempre errors nostri.")
+    s("   nearly always our own errors.")
     s()
     return "\n".join(r) + "\n"
 
@@ -156,7 +156,7 @@ def main() -> int:
         name = re.sub(r"[^A-Za-z0-9_.-]", "_", v["problem"])[:80]
         (dest / f"{name}.md").write_text(fascicolo(p, v), encoding="utf-8")
         print(f"  fascicolo: {dest / (name + '.md')}")
-    print(f"\n{len(notable)} fascicoli. Nessuno e' one solution: vanno read_count.")
+    print(f"\n{len(notable)} dossiers. None of them is a solution: they have to be read.")
     return 0
 
 

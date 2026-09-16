@@ -88,7 +88,7 @@ def _failed_rule(result) -> set[str]:
 
 def test_1_accetta_dimostrazione_corretta():
     """The most important requirement: if the verifier NEVER accepted
-    niente, sarebbe inutile pur essendo perfettamente sicuro."""
+    nothing, it would be useless even while being perfectly safe."""
     r = _check("1_correct.lean")
     assert r.status == ACCEPTED, f"expected ACCEPTED, ottenuto {r.status}:\n{r.render()}"
     passed = {c.name for c in r.checks if c.passed}

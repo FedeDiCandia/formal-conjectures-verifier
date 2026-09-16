@@ -82,7 +82,7 @@ BAD_CODE = {
                          "option:debug.skipKernelTC"),
     "google.answer":    ("set_option google.answer postpone in\ntheorem t : True := trivial",
                          "option:google.answer"),
-    "opzione ignota":   ("set_option qualcosa.di.strano true", "option:qualcosa.di.strano"),
+    "unknown option":   ("set_option something.odd true", "option:something.odd"),
     "#eval":            ('#eval IO.println "ciao"', "command:#eval"),
     "#exit":            ("#exit", "command:#exit"),
     "run_cmd":          ("run_cmd Lean.logInfo \"x\"", "command:run_cmd"),
@@ -161,7 +161,7 @@ EXECUTABLE_CODE = {
     "decide+native": ("theorem t : True := by decide+native", "option:+native"),
     "simp +native": ("theorem t : True := by simp +native", "option:+native"),
     "@[init]": ("@[init mioInit] def y := 1", "attribute:init"),
-    "attribute [simproc]": ("attribute [simproc] qualcosa", "attribute:simproc"),
+    "attribute [simproc]": ("attribute [simproc] something", "attribute:simproc"),
 
     # --- dichiarazioni in one monade di elaborazione o di input/output.
     # This is the STRUCTURAL check: it does not chase the commands one at a time,

@@ -4,7 +4,7 @@ Read the report of an agent run on known proofs and derive the numbers
 del punto 2 (misura) e del punto 3 (proiezione).
 
 Every number comes from the JSON report written by agent/agent.py or from the list
-candidates di scripts/select_formalisations.py: niente ricopiato a mano.
+candidates in scripts/select_formalisations.py: nothing copied by hand.
 
 A DECLARED LIMIT OF THIS RUN: it was launched with `--quiet`, so the log
 does not contain Lean's error messages. Failures are diagnosed from the kind of
@@ -55,7 +55,7 @@ def band(c: dict) -> str:
 
 DESCRIPTION = {
     "A": "the source says the proof is short, nothing hard",
-    "B": "textbook, niente di hard",
+    "B": "textbook, nothing hard",
     "C": "research solved, no signal",
     "D": "proof cited from a paper",
     "E": "segnali duri (theorem profondo, infinito/analisi, computation grande)",

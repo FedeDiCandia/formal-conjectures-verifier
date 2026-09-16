@@ -3,7 +3,7 @@ Tests of the infrastructure for long searches (verifier/search.py).
 
 The three things that have to work, because without them an eight-hour search
 hours e' inutilizzabile:
-  * l'isolamento (niente rete, niente scritture outside dalla folder);
+    * isolation (no network, no writes outside the directory);
   * the checkpoint, written so that an interruption cannot corrupt it;
   * resumption, which has to start from where it got to and not from scratch.
 """
@@ -81,7 +81,7 @@ def test_a_search_runs_to_completion(tmp_path):
 
 
 def test_the_variables_reach_the_program(tmp_path):
-    """L'environment del figlio e' minimum di proposito: niente key API, niente
+    """The child's environment is deliberately minimal: no API key, no
     PATH del progetto. I parametri vanno passati esplicitamente."""
     program = """
 import json, os

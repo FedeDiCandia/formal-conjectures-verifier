@@ -1,4 +1,4 @@
-"""run_python: librerie di computation, persistenza, e isolamento ancora intatto."""
+"""run_python: the computation libraries, persistence, and isolation still intact."""
 import sys
 from pathlib import Path
 
