@@ -307,13 +307,14 @@ probes — was free, and there was far more of it than there was API spend.
 | directory | contents |
 |---|---|
 | `verifier/` | the judge: `verify.py`, `guard.py`, the archive index, refutation challenges |
-| `agent/` | the agent, its tools, the cost accounting, the keep-awake check |
+| `agent/` | the agent, its three tools, the cost accounting, the keep-awake check |
 | `tests/` | 158 tests; the adversarial ones are the point |
 | `scripts/` | setup, target selection, searches, probes, analysis |
 | `search/` | the coding-theory search and the reproduction of published records |
 | `docs/paper/` | the A105020 note: PDF, LaTeX source, Lean files |
 | `docs/contributions/` | the proofs prepared for the archive, with patches and reports |
 | `docs/data/` | every raw report, so the numbers above can be checked |
+| `research_data/` | the searches' inputs and outputs, and the OEIS entries consulted |
 
 ## Documentation
 
