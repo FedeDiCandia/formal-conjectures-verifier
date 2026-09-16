@@ -119,35 +119,35 @@ def read(output: str, mapping: dict[str, tuple[str, bool]]) -> dict:
         if m:
             axioms[m.group(1)] = set()
     counterexample = bool(_RE_COUNTEREXAMPLE.search(output))
-    # Un file che non compila puo' comunque stampare one line di axioms pulita per
-    # one declaration la cui elaborazione e' stata salvata: e' il caso di
-    # Erdos628.erdos_628, dove `aesop` risultava "chiusa, nessun assioma" mentre il
-    # file aveva un error di notazione e il verifier ha poi risposto
-    # REJECTED: il file non compila. La probe non deve mai mostrare un result
-    # positivo senza questo avviso accanto.
+    # A file that does not compile can still print a clean axiom line for a
+    # declaration whose elaboration was salvaged: that is the case of
+    # Erdos628.erdos_628, where `aesop` came out "closed, no axioms" while the file
+    # had a notation error and the verifier then answered REJECTED: the file does not
+    # compile. The probe must never show a positive result without this warning
+    # beside it.
     errors = [r for r in output.split("\n") if " error: " in r or r.startswith("error:")]
 
     results = []
     for theorem, (name, negated) in mapping.items():
         ax = axioms.get(theorem)
         if ax is None:
-            result, detail = "aperta", "la declaration non esiste: la tactic ha failed"
+            result, detail = "open", "the declaration does not exist: the tactic failed"
         elif "sorryAx" in ax:
-            result, detail = "aperta", "dipende da sorryAx: non ha dimostrato niente"
+            result, detail = "open", "depends on sorryAx: it proved nothing"
         else:
-            result = "confutata" if negated else "chiusa"
-            detail = "axioms: " + (", ".join(sorted(ax)) or "nessuno")
+            result = "refuted" if negated else "closed"
+            detail = "axioms: " + (", ".join(sorted(ax)) or "none")
             if errors:
-                detail = (f"ATTENZIONE: il file contiene {len(errors)} errors di "
-                             f"compilazione, quindi questo result non vale niente "
-                             f"finche' il verifier non dice ACCEPTED. "
-                             f"Primo error: {errors[0].strip()[:160]}. " + detail)
+                detail = (f"ATTENTION: the file contains {len(errors)} compilation "
+                          f"errors, so this result is worth nothing until the verifier "
+                          f"says ACCEPTED. "
+                          f"First error: {errors[0].strip()[:160]}. " + detail)
         results.append({"tactic": name, "negated": negated, "result": result,
                       "detail": detail})
     if counterexample:
         results.append({"tactic": "plausible", "negated": None,
                       "result": "counterexample",
-                      "detail": "plausible ha esibito un counterexample: "
+                      "detail": "plausible exhibited a counterexample: "
                                    "vedi i messages grezzi"})
     return {"trials": results}
 
@@ -251,7 +251,7 @@ def main() -> int:
         else:
             entry.update(read(r.messages, mapping))
             candidates = [x for x in entry["trials"]
-                         if x["result"] in ("chiusa", "confutata", "counterexample")]
+                         if x["result"] in ("closed", "refuted", "counterexample")]
             if candidates:
                 entry["messaggi_grezzi"] = r.messages[:20000]
                 entry["candidates"] = []

@@ -1,15 +1,15 @@
 """
 Test del controllo sintattico preventivo (verifier/guard.py).
 
-Sono test veloci: non fanno partire Lean. Servono a garantire two cose:
-  * il guard NON da' falsi allarmi su code legittimo (altrimenti rifiuterebbe
-    dimostrazioni valide, che e' l'error worst per l'utility' del system);
-  * il guard blocca i costrutti pericolosi.
+These are fast tests: they do not start Lean. They guarantee two things:
+  * the guard does NOT raise false alarms on legitimate code (otherwise it would
+      reject valid proofs, the worst error for the system's usefulness);
+  * the guard blocks the dangerous constructs.
 """
 import guard
 
 
-# --- code legittimo: NON deve essere rifiutato ---------------------------
+# --- legitimate code: it must NOT be rejected -----------------------------
 
 GOOD_CODE = {
     "dimostrazione normale": """
@@ -22,13 +22,13 @@ theorem due_piu_due : 2 + 2 = 4 := by decide
 
 end Esempio
 """,
-    "commento che nomina i costrutti vietati": """
--- Attenzione: qui NON usiamo sorry, ne' native_decide, ne' axiom.
-/- Nemmeno in un commento a block: sorry, admit, #eval. -/
-/-- Docstring: la word sorry compare ma e' only text. -/
+    "a comment that names the forbidden constructs": """
+-- Note: no sorry here, no native_decide, no axiom.
+/- Not even in a block comment: sorry, admit, #eval. -/
+/-- Docstring: the word sorry appears but it is only text. -/
 theorem t : True := trivial
 """,
-    "identificatori che contengono le words vietate": """
+    "identifiers that contain the forbidden words": """
 theorem sorryFree_lemma : True := trivial
 def axiomatic_thing : Nat := 0
 theorem uses_admitted_style : True := trivial
@@ -47,8 +47,8 @@ theorem t : True := trivial
 set_option quotPrecheck false
 theorem t : True := trivial
 """,
-    "decide +kernel e' lecito": """
--- `+kernel` fa controllare il KERNEL, il contrario di `+native`
+    "decide +kernel is allowed": """
+-- `+kernel` makes the KERNEL check, the opposite of `+native`
 theorem t : (2:Nat) + 2 = 4 := by decide +kernel
 """,
     "other_items opzioni di tactic lecite": """
@@ -69,7 +69,7 @@ def test_legitimate_code_is_not_rejected():
         assert r.ok, f"falso allarme su «{name}»: {[str(f) for f in r.findings]}"
 
 
-# --- code pericoloso: DEVE essere rifiutato ------------------------------
+# --- dangerous code: it MUST be rejected ----------------------------------
 
 BAD_CODE = {
     "sorry":            ("theorem t : True := by sorry", "token:sorry"),
@@ -98,10 +98,10 @@ BAD_CODE = {
 def test_codice_pericoloso_viene_rifiutato():
     for name, (src, expected_rule) in BAD_CODE.items():
         r = guard.check_source(src)
-        assert not r.ok, f"NON rifiutato: «{name}»"
+        assert not r.ok, f"NOT rejected: «{name}»"
         rules = {f.rule for f in r.findings}
         assert expected_rule in rules, \
-            f"«{name}»: waited la rule {expected_rule}, found {rules}"
+            f"«{name}»: expected the rule {expected_rule}, found {rules}"
 
 
 def test_the_line_numbers_are_correct():
@@ -112,28 +112,28 @@ def test_the_line_numbers_are_correct():
 
 
 def test_comments_do_not_shift_the_line_numbers():
-    src = "/- commento\n   su piu' lines\n   ancora -/\ntheorem t : True := by sorry\n"
+    src = "/- a comment\n   over several lines\n   still going -/\ntheorem t : True := by sorry\n"
     r = guard.check_source(src)
     assert not r.ok
     assert r.findings[0].line == 4, f"line waited 4, trovata {r.findings[0].line}"
 
 
 # ---------------------------------------------------------------------------
-# Costrutti che ESEGUONO CODE durante la compilazione
+# Constructs that RUN CODE during compilation
 # ---------------------------------------------------------------------------
 # Elenco ricavato leggendo i sorgenti di Lean 4.27
-# (src/lean/Lean/Elab/BuiltinCommand.lean: gli `@[builtin_command_elab ...]`)
-# e censendo gli attributi usati in Mathlib che registrano code eseguibile.
+# (src/lean/Lean/Elab/BuiltinCommand.lean: the `@[builtin_command_elab ...]`)
+# and by censusing the Mathlib attributes that register executable code.
 #
-# Ognuno di questi PASSAVA il guard before di questo controllo: erano 19 buchi
-# real_list, non ipotetici.
+# Every one of these GOT THROUGH the guard before this check: 19 real holes,
+# not hypothetical ones.
 
 EXECUTABLE_CODE = {
     # --- commands
     "#eval!": ('#eval! IO.println "ciao"', "command:#eval!"),
     "run_meta": ("run_meta Lean.logInfo \"x\"", "command:run_meta"),
-    "simproc": ("simproc miaProc (_ + 0) := fun e => return .continue", "command:simproc"),
-    "simproc_decl": ("simproc_decl miaProc (_ + 0) := fun e => return .continue",
+    "simproc": ("simproc myProc (_ + 0) := fun e => return .continue", "command:simproc"),
+    "simproc_decl": ("simproc_decl myProc (_ + 0) := fun e => return .continue",
                      "command:simproc_decl"),
     "register_simp_attr": ("register_simp_attr mio_simp", "command:register_simp_attr"),
     "declare_syntax_cat": ("declare_syntax_cat miaCat", "command:declare_syntax_cat"),
@@ -141,7 +141,7 @@ EXECUTABLE_CODE = {
     "meta def": ("meta def cattivo : Unit := ()", "command:meta"),
     "public meta section": ("public meta section", "command:meta"),
 
-    # --- attributi che registrano code presso un elaboratore o one tactic
+    # --- attributes that register code with an elaborator or a tactic
     "@[simproc]": ("@[simproc] def p := 1", "attribute:simproc"),
     "@[tactic]": ("@[tactic myTac] def t := 1", "attribute:tactic"),
     "@[command_elab]": ("@[command_elab myCmd] def c := 1", "attribute:command_elab"),
@@ -154,9 +154,9 @@ EXECUTABLE_CODE = {
     "@[fun_prop]": ("@[fun_prop] def f := 1", "attribute:fun_prop"),
     "@[export]": ("@[export mio_simbolo] def x := 1", "attribute:export"),
 
-    # --- `decide +native` e' `native_decide` con la sintassi new: lascia lo
-    # stesso assioma `Lean.ofReduceBool`. Non e' un caso ipotetico: 87
-    # dimostrazioni dell'archive la usano.
+    # --- `decide +native` is `native_decide` in the new syntax: it leaves the
+    # same axiom, `Lean.ofReduceBool`. Not hypothetical: 87 of the archive's
+    # proofs use it.
     "decide +native": ("theorem t : True := by decide +native", "option:+native"),
     "decide+native": ("theorem t : True := by decide+native", "option:+native"),
     "simp +native": ("theorem t : True := by simp +native", "option:+native"),
@@ -164,15 +164,15 @@ EXECUTABLE_CODE = {
     "attribute [simproc]": ("attribute [simproc] qualcosa", "attribute:simproc"),
 
     # --- dichiarazioni in one monade di elaborazione o di input/output.
-    # E' il controllo STRUTTURALE: non insegue i commands one per one, ma
-    # rifiuta il file che parla il linguaggio della metaprogrammazione.
+    # This is the STRUCTURAL check: it does not chase the commands one at a time,
+    # it rejects the file that speaks the language of metaprogramming.
     "def in IO": ("def cattivo : IO Unit := pure ()", "metaprogramming:IO"),
     "def in MetaM": ("def cattivo : MetaM Unit := pure ()", "metaprogramming:MetaM"),
     "def in CoreM": ("def cattivo : CoreM Unit := pure ()", "metaprogramming:CoreM"),
     "def in TacticM": ("def cattivo : TacticM Unit := pure ()", "metaprogramming:TacticM"),
     "def in CommandElabM": ("def c : CommandElabM Unit := pure ()",
                             "metaprogramming:CommandElabM"),
-    "manipola Expr": ("def f (e : Expr) := e", "metaprogramming:Expr"),
+    "handles Expr": ("def f (e : Expr) := e", "metaprogramming:Expr"),
     "manipola Syntax": ("def f (s : Syntax) := s", "metaprogramming:Syntax"),
     "open Lean Elab": ("open Lean Elab in\ndef f := 1", "metaprogramming:Elab"),
     "evalExpr": ("def f := evalExpr Nat q(Nat) e", "metaprogramming:evalExpr"),
@@ -180,44 +180,44 @@ EXECUTABLE_CODE = {
 
 
 def test_constructs_that_run_code_are_rejected():
-    """Ogni costrutto qui elencato passava il guard before di questo controllo."""
-    non_bloccati = []
+    """Every construct listed here got through the guard before this check."""
+    not_blocked = []
     wrong_rule = []
     for name, (src, expected_rule) in EXECUTABLE_CODE.items():
         r = guard.check_source(src)
         if r.ok:
-            non_bloccati.append(name)
+            not_blocked.append(name)
             continue
         if expected_rule not in {f.rule for f in r.findings}:
             wrong_rule.append((name, expected_rule, {f.rule for f in r.findings}))
-    assert not non_bloccati, f"NON bloccati: {non_bloccati}"
-    assert not wrong_rule, f"rule inattesa: {wrong_rule}"
+    assert not not_blocked, f"NOT blocked: {not_blocked}"
+    assert not wrong_rule, f"unexpected rule: {wrong_rule}"
 
 
 def test_the_guard_does_not_disturb_the_archives_real_files():
-    """Il controllo piu' importante against i falsi allarmi: le rules sulla
-    metaprogrammazione non devono scattare su nessuno dei file di problems
-    dell'archive, che sono matematica ordinaria scritta da esseri umani."""
+    """The most important check against false alarms: the metaprogramming rules
+    must not fire on any of the archive's problem files, which are ordinary
+    mathematics written by human beings."""
     import sys
     from pathlib import Path
     root = Path(__file__).resolve().parent.parent / "external" / "formal-conjectures"
     problems = root / "FormalConjectures"
     if not problems.is_dir():
         import pytest
-        pytest.skip("archive non clonato")
-    # Util/ e' metaprogrammazione per construction: e' giusto che venga segnalata
+        pytest.skip("archive not cloned")
+    # Util/ is metaprogramming by construction: flagging it is correct
     files = [f for f in problems.rglob("*.lean") if "Util" not in f.parts]
-    assert len(files) > 100, "mi aspetto centinaia di file di problems"
+    assert len(files) > 100, "hundreds of problem files are expected"
 
     culprits = []
     for f in files:
         r = guard.check_source(f.read_text(encoding="utf-8"))
-        # `option:+native` NON va inclusa qui: e' un VERO positivo.
-        # 87 dimostrazioni dell'archive usano `decide +native`, e il
-        # verifier le rifiuta a ragione (lasciano l'assioma
-        # Lean.ofReduceBool). Non e' un falso allarme: e' il reason per cui un
-        # problem "gia' solved nell'archive" non e' detto sia risolvibile
-        # below le nostre rules.
+        # `option:+native` must NOT be included here: it is a TRUE positive.
+        # 87 of the archive's proofs use `decide +native`, and the verifier
+        # rejects them rightly (they leave the axiom Lean.ofReduceBool).
+        # It is not a false alarm: it is why a problem "already solved in the
+        # archive" is not necessarily solvable under our rules.
+
         new_items = [x for x in r.findings
                  if x.rule.startswith(("metaprogramming:", "attribute:"))
                  or x.rule in ("command:meta", "command:simproc", "command:run_meta",

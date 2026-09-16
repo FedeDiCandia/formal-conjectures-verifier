@@ -29,7 +29,7 @@ class _Detail:
 
 
 class _Usage:
-    """Imita l'oggetto `usage` dell'SDK."""
+    """Mimics the SDK's `usage` object."""
     def __init__(self, inp=0, out=0, read_count=0, scritti_5m=0, scritti_1h=0, con_dettaglio=True):
         self.input_tokens = inp
         self.output_tokens = out
@@ -38,13 +38,13 @@ class _Usage:
         self.cache_creation = _Detail(scritti_5m, scritti_1h) if con_dettaglio else None
 
 
-# --- il listino --------------------------------------------------------------
+# --- the price list ----------------------------------------------------------
 
 def test_opus_5_prices_are_the_official_ones():
     p = prices("claude-opus-5")
     assert (p.input, p.output) == (5.00, 25.00)
     assert p.cache_write_5m == 6.25      # 1,25 x input
-    assert p.cache_write_1h == 10.00     # 2 x input, NON 1,25
+    assert p.cache_write_1h == 10.00     # 2 x input, NOT 1.25
     assert p.cache_read == 0.50           # 0,1 x input
 
 
@@ -60,7 +60,7 @@ def test_the_cache_multipliers_are_not_the_same_for_every_model():
 
 
 def test_a_model_without_prices_fails_immediately():
-    """Meglio rifiutarsi di partire che far rispettare un limit sbagliato."""
+    """Better to refuse to start than to enforce the wrong limit."""
     with pytest.raises(KeyError, match="Unknown prices"):
         Budget(dollar_limit=5, model="claude-inventato").spent
 
@@ -97,7 +97,7 @@ def test_without_the_detail_the_cache_is_counted_as_five_minute():
     assert c.cache_write_1h == 0
 
 
-# --- il limit ---------------------------------------------------------------
+# --- the limit ---------------------------------------------------------------
 
 def test_the_limit_blocks_when_exhausted():
     b = Budget(dollar_limit=0.10, model="claude-opus-5")
@@ -108,16 +108,16 @@ def test_the_limit_blocks_when_exhausted():
 
 
 def test_the_max_possible_cost_is_the_worst_case():
-    """Ogni token in ingresso contato alla tariffa piu' cara (write_op in
-    cache) e l'output contata come se riempisse tutto lo spazio concesso."""
+    """Every input token counted at the dearest rate (a cache write), and the output
+    counted as though it filled all the room allowed."""
     b = Budget(dollar_limit=100, model="claude-opus-5")
     expected = (20_000 * 6.25 + 32_000 * 25.00) / 1_000_000
     assert b.max_possible_cost(20_000, 32_000) == pytest.approx(expected)
 
 
 def test_a_call_that_might_overshoot_does_not_start():
-    """E' il controllo che rende RIGIDO il limit: senza, one singola answer
-    lunga sforerebbe before che ce ne accorgiamo."""
+    """This is the check that makes the limit HARD: without it, a single long
+    response would overshoot before anyone noticed."""
     b = Budget(dollar_limit=0.50, model="claude-opus-5")
     assert b.max_possible_cost(20_000, 32_000) > 0.50
     with pytest.raises(SpendLimitExceeded, match="Not starting"):
@@ -126,14 +126,14 @@ def test_a_call_that_might_overshoot_does_not_start():
 
 def test_a_call_that_fits_does_start():
     b = Budget(dollar_limit=5.00, model="claude-opus-5")
-    b.check_before_calling(20_000, 32_000)   # non deve sollevare
+    b.check_before_calling(20_000, 32_000)   # must not raise
 
 
 def test_affordable_max_tokens_shrinks_with_the_budget():
     b = Budget(dollar_limit=0.50, model="claude-opus-5")
     affordable = b.affordable_max_tokens(20_000, 32_000)
     assert 0 < affordable < 32_000
-    # con quel value la call deve poter partire
+    # with that value the call has to be able to start
     b.check_before_calling(20_000, affordable)
 
 
@@ -158,10 +158,10 @@ def test_usage_is_kept_per_problem_as_well():
     assert b.usage.output_tokens == 4_000
 
 
-# --- controprova esterna: il conto deve riprodurre one bolletta vera ---------
+# --- external control: the arithmetic has to reproduce a real invoice --------
 
 def test_it_reproduces_the_spend_measured_by_epoch_ai():
-    """Un attempt del benchmark OEIS Open, con i token e il cost che Epoch AI
+    """One attempt from the OEIS Open benchmark, with the tokens and the cost Epoch AI
     ha pubblicato: il nostro conto deve dare lo stesso number.
 
     Provenienza: `external/LeanOpenProblems-results/runs/oeis-full-50usd-ant-.../
@@ -171,13 +171,13 @@ def test_it_reproduces_the_spend_measured_by_epoch_ai():
     """
     c = Usage(input_tokens=607, output_tokens=684_987,
                 cache_write_5m=2_304_613, cache_read=36_946_793)
-    # Opus 4.8 e Opus 5 hanno lo stesso listino
+    # Opus 4.8 and Opus 5 have the same prices
     assert abs(c.cost("claude-opus-4-8") - 50.005) < 0.01
     assert abs(c.cost("claude-opus-5") - 50.005) < 0.01
 
 
 def test_fable_5_1_costs_1_45_times_opus_5_on_a_long_profile():
-    """Non il doppio, come suggerirebbe il prezzo base.
+    """Not double, as the headline price would suggest.
 
     Fable 5.1 costa il doppio in ingresso e in output, ma la lettura dalla cache
     costa la METÀ in value assoluto ($0,25 against $0,50: 0,025x invece di 0,1x).

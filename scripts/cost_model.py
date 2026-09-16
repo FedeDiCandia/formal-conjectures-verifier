@@ -608,7 +608,7 @@ def report_part_three(data: dict, r: list[str]) -> list[str]:
         # e' one closure.
         def notable(v: dict) -> bool:
             for pr in v["trials"]:
-                if pr["result"] not in ("chiusa", "counterexample"):
+                if pr["result"] not in ("closed", "counterexample"):
                     continue
                 m = pr.get("messages") or ""
                 if ("declaration uses 'sorry'" in m

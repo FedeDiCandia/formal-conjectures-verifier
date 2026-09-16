@@ -75,7 +75,7 @@ def check(words, n: int, d: int, w: int | None = None,
                 break
             continue
         if p >= limit:
-            if report(f"word {i}: usa bit oltre la position {n - 1}"):
+            if report(f"word {i}: uses a bit beyond position {n - 1}"):
                 break
             continue
         if w is not None and weight(p) != w:

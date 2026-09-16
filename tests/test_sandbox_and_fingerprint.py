@@ -1,26 +1,23 @@
-"""
-Test dell'isolamento della check e del controllo di integrita' dell'archive.
+"""Tests of the verification's isolation and of the archive's integrity check.
 
-DUE DIFESE DISTINTE
--------------------
-1. `sandbox-exec` impedisce al code del candidato di scrivere outside dalla
-   folder del module temporaneo e di accedere alla rete.
-2. L'fingerprint dell'archive, confrontata before e after ogni check, si accorge
-   se qualcosa e' cambiato comunque.
+Two defences, and both are needed:
 
-La seconda serve also se la before funziona: `sandbox-exec` e' deprecato da
-Apple, e su Linux (dove andrebbe usato il vero `landrun`) il code prende
-un'altra strada. Un controllo che non dipende dal meccanismo di isolamento vale
-piu' di one che gli si fida.
+1. `sandbox-exec` prevents the candidate's code, while it is compiled, from writing
+   anywhere except the temporary module's own directory.
+2. The archive's fingerprint, compared before and after every verification, notices
+   if anything changed all the same.
 
-PERCHE' L'IMPRONTA CONTA DAVVERO
---------------------------------
-comparator esporta il Challenge PRIMA di compilare la Solution. Quindi un
-sabotaggio durante la compilazione del candidato non altera la check in
-corso: altera quelle SUCCESSIVE. E' esattamente l'assunto 2 del README di
-comparator ("non devi aver GIA' compilato file potenzialmente ostili"). Noi
-facciamo checks a ripetizione nella stessa folder, quindi quell'assunto va
-controllato, non dato per buono.
+The second is needed even if the first works: `sandbox-exec` is deprecated by Apple,
+and on Linux (where the real `landrun` ought to be used) the code takes another
+route. A check that does not depend on the isolation mechanism is worth more than one
+that trusts it.
+
+Why sabotage cannot corrupt the verification in progress: comparator exports the
+Challenge BEFORE compiling the Solution. So sabotage during the candidate's
+compilation does not alter the current verification but the ones after it — which is
+precisely comparator's assumption 2 ("you must not have ALREADY compiled potentially
+adversarial files"). Here verifications run one after another in the same directory,
+so that assumption has to be checked, not taken on trust.
 """
 import copy
 import shutil
@@ -40,9 +37,9 @@ import sandbox
 
 def setup_module(module):
     if not sandbox.available():
-        pytest.skip("sandbox-exec non available su questo system", allow_module_level=True)
+        pytest.skip("sandbox-exec not available on this system", allow_module_level=True)
     if not config.ARCHIVE.is_dir():
-        pytest.skip("archive non clonato", allow_module_level=True)
+        pytest.skip("archive not cloned", allow_module_level=True)
 
 
 @pytest.fixture
@@ -65,14 +62,14 @@ def _write_test(path: Path, profile: Path | None) -> bool:
     return succeeded
 
 
-# --- la sandbox --------------------------------------------------------------
+# --- the sandbox -------------------------------------------------------------
 
 def test_without_the_sandbox_writing_into_the_archive_succeeds():
-    """La controprova. Senza questo test, i two successivi non dimostrerebbero
-    che e' la sandbox a fermare le scritture: potrebbero essere bloccate da
-    qualcos'other (permissions del filesystem, per example)."""
+    """The control. Without this test the two that follow would not show that it is
+    the sandbox stopping the writes: they could be blocked by something else (file
+    system permissions, for instance)."""
     assert _write_test(config.ARCHIVE / "PROVA_CONTROPROVA.txt", None), \
-        "senza sandbox la write_op deve riuscire, altrimenti il test non trial nulla"
+        "without the sandbox the write has to succeed, or the test proves nothing"
 
 
 def test_the_sandbox_blocks_writes_into_the_archive(profile):
@@ -80,16 +77,16 @@ def test_the_sandbox_blocks_writes_into_the_archive(profile):
 
 
 def test_the_sandbox_blocks_writes_to_the_compiled_files(profile):
-    """Il target che count: i file compiled da cui comparator legge
+    """The target that matters: the compiled files comparator reads
     l'statement original."""
     compiled = config.ARCHIVE / ".lake" / "build" / "lib" / "lean" / "FormalConjectures"
     if not compiled.is_dir():
-        pytest.skip("archive non compilato")
+        pytest.skip("archive not compiled")
     assert not _write_test(compiled / "PROVA_SANDBOX.olean", profile)
 
 
 def test_the_sandbox_allows_the_writes_that_are_needed(profile):
-    """Se bloccasse also queste, nessuna check potrebbe funzionare."""
+    """If it blocked these too, no verification could work at all."""
     inside = config.ARCHIVE / config.SANDBOX_SUBDIR / "prova_permesso.txt"
     assert _write_test(inside, profile)
 
@@ -98,7 +95,7 @@ def test_the_sandbox_blocks_the_network(profile):
     command = sandbox.wrap(
         ["/usr/bin/curl", "-s", "-m", "8", "-o", "/dev/null", "https://example.com"], profile)
     result = subprocess.run(command, capture_output=True, text=True)
-    assert result.returncode != 0, "curl non deve riuscire a raggiungere la rete"
+    assert result.returncode != 0, "curl must not be able to reach the network"
 
 
 # --- l'fingerprint --------------------------------------------------------------
@@ -106,9 +103,9 @@ def test_the_sandbox_blocks_the_network(profile):
 def test_the_fingerprint_is_stable():
     a = fingerprint_module.compute(config.ARCHIVE)
     b = fingerprint_module.compute(config.ARCHIVE)
-    assert a.n_content_files > 100, "mi aspetto centinaia di file dell'archive"
+    assert a.n_content_files > 100, "hundreds of archive files are expected"
     assert not fingerprint_module.compare(a, b), \
-        "two impronte consecutive senza modifiche devono coincidere"
+        "two consecutive fingerprints with no changes have to agree"
 
 
 def test_the_fingerprint_detects_a_modified_file():
@@ -117,7 +114,7 @@ def test_the_fingerprint_detects_a_modified_file():
     which = next(iter(b.content))
     b.content[which] = "0" * 64
     differences = fingerprint_module.compare(a, b)
-    assert differences and "MODIFICATI" in differences[0]
+    assert differences and "MODIFIED" in differences[0]
     assert which in differences[0]
 
 
@@ -125,7 +122,7 @@ def test_the_fingerprint_detects_a_deleted_file():
     a = fingerprint_module.compute(config.ARCHIVE)
     b = copy.deepcopy(a)
     b.content.pop(next(iter(b.content)))
-    assert any("CANCELLATI" in d for d in fingerprint_module.compare(a, b))
+    assert any("DELETED" in d for d in fingerprint_module.compare(a, b))
 
 
 def test_the_fingerprint_detects_a_change_in_the_dependencies():
@@ -136,8 +133,8 @@ def test_the_fingerprint_detects_a_change_in_the_dependencies():
 
 
 def test_the_fingerprint_ignores_the_temporary_modules_directory():
-    """La folder del candidato cambia a ogni check: se la contassimo,
-    ogni check segnalerebbe un falso allarme."""
+    """The candidate's directory changes at every verification: if we counted it,
+    every verification would raise a false alarm."""
     folder = config.ARCHIVE / config.SANDBOX_SUBDIR
     folder.mkdir(parents=True, exist_ok=True)
     a = fingerprint_module.compute(config.ARCHIVE, exclude=folder.name)

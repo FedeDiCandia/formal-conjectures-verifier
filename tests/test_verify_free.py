@@ -1,14 +1,14 @@
-"""verify_free: la check di theorems che NON stanno nell'archive.
+"""verify_free: verifying theorems that are NOT in the archive.
 
-Il caso d'uso che l'ha fatto nascere e' A105020 ⟺ Goldbach (ricerca/lean/). Qui si
-controlla che il new_item ingresso del verifier abbia gli stessi denti di `verify`:
+The use case that gave rise to it is A105020 ⟺ Goldbach (search/lean/). Here we
+check that the verifier's new entry point has the same teeth as `verify`:
 
-  * accetta one dimostrazione giusta di un statement della challenge;
-  * rifiuta un statement DIVERSO dichiarato con lo stesso name;
-  * rifiuta chi si appoggia alla dimostrazione `sorry` di un problem aperto
-    dell'archive importato — e' la ragione per cui importare modules dell'archive
-    non e' one scappatoia;
-  * rifiuta `sorry` nel candidato, axioms nella challenge, theorems missing nella challenge.
+  * it accepts a correct proof of a statement in the challenge;
+  * it rejects a DIFFERENT statement declared under the same name;
+  * it rejects anyone leaning on the `sorry` proof of an imported open problem
+    of the archive — this is why importing the archive's modules
+    is not a loophole;
+  * it rejects `sorry` in the candidate, axioms in the challenge, and theorems missing from it.
 """
 import sys
 from pathlib import Path
@@ -47,7 +47,7 @@ end ProvaLibera
 
 def setup_module(module):
     if config.check_installation():
-        pytest.skip("environment non installato", allow_module_level=True)
+        pytest.skip("environment not installed", allow_module_level=True)
 
 
 def _file(tmp_path, name, text):
@@ -56,7 +56,7 @@ def _file(tmp_path, name, text):
     return f
 
 
-# --- senza Lean ---------------------------------------------------------------
+# --- without Lean -------------------------------------------------------------
 
 def test_the_guard_allows_the_listed_modules_and_no_others():
     one = "import FormalConjectures.Wikipedia.PerfectNumbers\ntheorem t : True := trivial\n"
@@ -67,7 +67,7 @@ def test_the_guard_allows_the_listed_modules_and_no_others():
     assert guard.check_source(one, allowed_module=permissions).ok
     assert guard.check_source(two, allowed_module=permissions).ok
     assert not guard.check_source(three, allowed_module=permissions).ok
-    # la forma a stringa singola resta valida
+    # the single-string form stays valid
     assert guard.check_source(one, allowed_module=permissions[0]).ok
     assert not guard.check_source(two, allowed_module=permissions[0]).ok
 
@@ -93,7 +93,7 @@ def test_a_candidate_with_sorry_is_rejected(tmp_path):
     assert r.status == REJECTED
 
 
-# --- con Lean e comparator ------------------------------------------------------
+# --- with Lean and comparator -------------------------------------------------
 
 def test_a_correct_proof_is_accepted(tmp_path):
     cand = _file(tmp_path, "c.lean",
@@ -126,7 +126,7 @@ def test_leaning_on_an_open_problems_sorry_is_rejected(tmp_path):
 
 
 def test_an_incompatible_olean_is_a_tool_error_not_a_rejection():
-    """Il fault del 12 settembre 2026: REJECTED invece di ERROR."""
+    """The fault of 12 September 2026: REJECTED instead of ERROR."""
     from verify import _tool_error
     output = ("uncaught exception: failed to read file '/x/Sfida0.olean', "
               "incompatible header")
