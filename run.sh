@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 # ---------------------------------------------------------------------------
-# run.sh — command unico per i jobs lunghi del progetto.
+# run.sh — the single command for the project's long jobs.
 #
-#   ./run.sh estimate     <job> [opzioni]   quanto costerebbe, senza spendere
-#   ./run.sh lancia    <job> [opzioni]   start_job (chiede conferma)
-#   ./run.sh state                          cosa sta girando
-#   ./run.sh segui     [name]               guarda il log che scorre
-#   ./run.sh guarda [--segui]               che cosa sta facendo l'agente adesso
-#   ./run.sh ferma     [name]               interrompe
-#   ./run.sh resume  <name>               riparte dall'last checkpoint
+#   ./run.sh estimate <job> [options]   what it would cost, without spending
+#   ./run.sh launch   <job> [options]   start it (asks for confirmation)
+#   ./run.sh status                     what is running
+#   ./run.sh follow   [name]            watch the log as it scrolls
+#   ./run.sh watch    [--follow]        what the agent is doing right now
+#   ./run.sh stop     [name]            interrupt it
+#   ./run.sh resume   <name>            restart from the last checkpoint
 #
-# I jobs disponibili sono elencati da `./run.sh` senza arguments.
+# The available jobs are listed by `./run.sh` with no arguments.
 # ---------------------------------------------------------------------------
 set -uo pipefail
 
@@ -19,338 +19,338 @@ JOBS="$ROOT/runs/jobs"
 PY="$ROOT/.venv/bin/python"
 mkdir -p "$JOBS"
 
-rosso()  { printf '\033[31m%s\033[0m\n' "$*"; }
-verde()  { printf '\033[32m%s\033[0m\n' "$*"; }
-giallo() { printf '\033[33m%s\033[0m\n' "$*"; }
+red()    { printf '\033[31m%s\033[0m\n' "$*"; }
+green()  { printf '\033[32m%s\033[0m\n' "$*"; }
+yellow() { printf '\033[33m%s\033[0m\n' "$*"; }
 
-uso() {
-  cat <<'AIUTO'
-run.sh — jobs lunghi del progetto
+usage() {
+  cat <<'HELP'
+run.sh — the project's long jobs
 
-COMANDI
-  estimate    <job> [opzioni]   dice quanto costerebbe e quanto durerebbe.
-                                Non spende e non lancia niente.
-  lancia   <job> [opzioni]   start_job il job in background. Chiede conferma
-                                before di spendere, e tiene sveglio il computer.
-  state                         listing dei jobs, con quelli attivi in cima.
-  segui    [name]               mostra il log mentre scorre (Ctrl-C per uscire:
-                                il job continua).
-  ferma    [name]               interrompe un job. Senza name, li list_them.
-  resume <name>               riparte dall'last checkpoint.
+COMMANDS
+  estimate <job> [options]   says what it would cost and how long it would take.
+                             It spends nothing and launches nothing.
+  launch   <job> [options]   starts the job in the background. It asks before
+                             spending, and keeps the machine awake.
+  status                     lists the jobs, active ones first.
+  follow   [name]            shows the log as it scrolls (Ctrl-C to leave:
+                             the job carries on).
+  watch    [--follow]        what the agent is doing right now.
+  stop     [name]            interrupts a job. With no name, lists them.
+  resume   <name>            restarts from the last checkpoint.
 
 JOBS
-  agente       Fa tentare a un agente one o piu' problems.
-               opzioni:  --problems "A B C"   --budget N   --effort LIVELLO
-               Esempio:  ./run.sh lancia agente --problems "Erdos366.erdos_366" --budget 2
+  agent        Has an agent attempt one or more problems.
+               options:  --problems "A B C"   --budget N   --effort LEVEL
+               Example:  ./run.sh launch agent --problems "Erdos366.erdos_366" --budget 2
 
-  caccia       Esegue le ricerche di controesempi gia' preparate in
-               runs/hunt/. Non usa l'API e non costa niente.
-               opzioni:  --only NOME   --hours N
+  hunt         Runs the counterexample searches already prepared in
+               runs/hunt/. It does not use the API and costs nothing.
+               options:  --only NAME   --hours N
 
-  snapshot     Prepara lo snapshot dell'archive da un commit fisso di main.
-               Non usa l'API. Dura circa un'now e occupa one decina di GB.
+  snapshot     Prepares the archive snapshot from a fixed commit of main.
+               It does not use the API. It takes about an hour and some tens of GB.
 
-  test         Esegue la suite di test del progetto.
+  test         Runs the project's test suite.
 
-ESEMPI
-  ./run.sh estimate agente --problems "A B C" --budget 5
-  ./run.sh lancia caccia --hours 8
-  ./run.sh segui
-  ./run.sh ferma caccia
-AIUTO
+EXAMPLES
+  ./run.sh estimate agent --problems "A B C" --budget 5
+  ./run.sh launch hunt --hours 8
+  ./run.sh follow
+  ./run.sh stop hunt
+HELP
 }
 
 # --------------------------------------------------------------------------
-nome_lavoro() { echo "$1"; }
-file_pid()    { echo "$JOBS/$1.pid"; }
-log_file()    { echo "$JOBS/$1.log"; }
-file_meta()   { echo "$JOBS/$1.meta"; }
+pid_file()  { echo "$JOBS/$1.pid"; }
+log_file()  { echo "$JOBS/$1.log"; }
+meta_file() { echo "$JOBS/$1.meta"; }
 
-attivo() {
-  local pid_file; pid_file="$(file_pid "$1")"
-  [ -f "$pid_file" ] || return 1
-  local pid; pid="$(cat "$pid_file")"
+active() {
+  local f; f="$(pid_file "$1")"
+  [ -f "$f" ] || return 1
+  local pid; pid="$(cat "$f")"
   kill -0 "$pid" 2>/dev/null
 }
 
 # --------------------------------------------------------------------------
-cmd_stima() {
+cmd_estimate() {
   local job="${1:-}"; shift || true
   case "$job" in
-    agente)
+    agent)
       "$PY" "$ROOT/scripts/estimate_cost.py" "$@"
       ;;
-    caccia)
-      echo "Lavoro: caccia ai controesempi"
-      echo "  Costo in crediti API: ZERO. Gira only sul tuo computer."
+    hunt)
+      echo "Job: the counterexample hunt"
+      echo "  Cost in API credit: ZERO. It runs entirely on your machine."
       local n; n=$(ls "$ROOT/runs/hunt"/*.json 2>/dev/null | wc -l | tr -d ' ')
-      echo "  Ricerche preparate: $n"
-      echo "  Durata: quella che decidi con --hours (predefinito: finche' non la fermi)."
-      echo "  Uso del computer: al maximum $(( $(sysctl -n hw.ncpu) - 2 )) core su $(sysctl -n hw.ncpu)."
+      echo "  Searches prepared: $n"
+      echo "  Duration: whatever you set with --hours (default: until you stop it)."
+      echo "  Machine use: at most $(( $(sysctl -n hw.ncpu) - 2 )) cores of $(sysctl -n hw.ncpu)."
       ;;
     snapshot)
-      echo "Lavoro: preparazione dello snapshot da main"
-      echo "  Costo in crediti API: ZERO."
-      echo "  Durata: circa un'now (scaricamento della cache di Mathlib e compilazione)."
-      echo "  Spazio su disco: circa 11 GB."
-      echo "  Spazio libero adesso: $(df -g "$ROOT" | tail -1 | awk '{print $4}') GB."
+      echo "Job: preparing the snapshot from main"
+      echo "  Cost in API credit: ZERO."
+      echo "  Duration: about an hour (downloading Mathlib's cache and building)."
+      echo "  Disk space: about 11 GB."
+      echo "  Free space now: $(df -g "$ROOT" | tail -1 | awk '{print $4}') GB."
       ;;
     test)
-      echo "Lavoro: suite di test"
-      echo "  Costo in crediti API: ZERO."
-      echo "  Durata: circa 5 minuti."
+      echo "Job: the test suite"
+      echo "  Cost in API credit: ZERO."
+      echo "  Duration: about 6 minutes."
       ;;
     *)
-      rosso "Lavoro sconosciuto: '${job:-}'"; echo; uso; exit 2 ;;
+      red "Unknown job: '${job:-}'"; echo; usage; exit 2 ;;
   esac
 }
 
 # --------------------------------------------------------------------------
-conferma() {
+confirm() {
   local message="$1"
   echo
-  giallo "$message"
-  printf "Confermi? [scrivi si per procedere] "
+  yellow "$message"
+  printf "Confirm? [type yes to proceed] "
   local answer; read -r answer
   case "$answer" in
-    si|SI|Si|sì|SÌ|s|S|y|yes) return 0 ;;
-    *) echo "Annullato."; return 1 ;;
+    y|Y|yes|YES|Yes) return 0 ;;
+    *) echo "Cancelled."; return 1 ;;
   esac
 }
 
-cmd_lancia() {
+cmd_launch() {
   local job="${1:-}"; shift || true
-  [ -n "$job" ] || { uso; exit 2; }
+  [ -n "$job" ] || { usage; exit 2; }
 
-  if attivo "$job"; then
-    rosso "Il job '$job' sta gia' girando (PID $(cat "$(file_pid "$job")"))."
-    echo "Guardalo con:  ./run.sh segui $job"
+  if active "$job"; then
+    red "The job '$job' is already running (PID $(cat "$(pid_file "$job")"))."
+    echo "Watch it with:  ./run.sh follow $job"
     exit 1
   fi
 
   local command=()
   case "$job" in
-    agente)
-      cmd_stima agente "$@"
-      conferma "Questo job SPENDE crediti API." || exit 0
+    agent)
+      cmd_estimate agent "$@"
+      confirm "This job SPENDS API credit." || exit 0
       command=("$PY" "$ROOT/agent/agent.py" "$@")
       ;;
-    caccia)
-      cmd_stima caccia
-      conferma "Questo job non spende crediti, ma tiene occupato il computer." || exit 0
+    hunt)
+      cmd_estimate hunt
+      confirm "This job spends no credit, but it keeps the machine busy." || exit 0
       command=("$PY" "$ROOT/scripts/hunt.py" "$@")
       ;;
     snapshot)
-      cmd_stima snapshot
-      conferma "Scarichera' diversi GB e compilera' per circa un'now." || exit 0
+      cmd_estimate snapshot
+      confirm "It will download several GB and build for about an hour." || exit 0
       command=(bash "$ROOT/scripts/setup_snapshot_main.sh")
       ;;
     test)
       command=("$PY" -m pytest "$ROOT/tests/" -v)
       ;;
-    *) rosso "Lavoro sconosciuto: '$job'"; uso; exit 2 ;;
+    *) red "Unknown job: '$job'"; usage; exit 2 ;;
   esac
 
   local log; log="$(log_file "$job")"
   : > "$log"
   {
     echo "job: $job"
-    echo "avviato: $(date '+%Y-%m-%d %H:%M:%S')"
+    echo "started: $(date '+%Y-%m-%d %H:%M:%S')"
     echo "command: ${command[*]}"
-  } > "$(file_meta "$job")"
+  } > "$(meta_file "$job")"
 
-  # `caffeinate -i` impedisce al computer di addormentarsi mentre work.
-  # Senza, un job di otto hours si interrompe al first coperchio chiuso.
-  # Il distacco passa da scripts/distacca.py: `nohup ... &` da one shell che poi
-  # exits non basta su macOS, il group di processi viene terminato comunque.
-  "$PY" "$ROOT/scripts/distacca.py" "$job" -- caffeinate -i "${command[@]}"
+  # `caffeinate -i` stops the machine falling asleep while it works. Without it an
+  # eight-hour job dies the first time the lid is closed. Detaching goes through
+  # scripts/detach.py: `nohup ... &` from a shell that then exits is not enough on
+  # macOS, the process group is killed anyway.
+  "$PY" "$ROOT/scripts/detach.py" "$job" -- caffeinate -i "${command[@]}"
 
-  verde "Avviato '$job'."
-  echo "  log:     $log"
-  echo "  guarda:  ./run.sh segui $job"
-  echo "  ferma:   ./run.sh ferma $job"
+  green "Started '$job'."
+  echo "  log:    $log"
+  echo "  watch:  ./run.sh follow $job"
+  echo "  stop:   ./run.sh stop $job"
 }
 
 # --------------------------------------------------------------------------
-# --- guarda: che cosa sta facendo l'agente, adesso -------------------------
-# Serve quando un job e' state lanciato senza log da seguire: invece
-# dell'output, guarda le TRACCE che l'agente lascia sul disco mentre work.
-cmd_guarda() {
-  # con --segui diventa un stream: la stessa fotografia ogni cinque seconds.
-  # `watch` non c'e' su macOS, quindi si fa a mano.
-  if [ "${1:-}" = "--segui" ]; then
-    echo "Aggiorno ogni 5 seconds. Ctrl-C per smettere (il job continua)."
+# --- watch: what the agent is doing, right now ----------------------------
+# This is for when a job was launched with no log to follow: instead of the
+# output, it looks at the TRACES the agent leaves on disk while it works.
+cmd_watch() {
+  # with --follow it becomes a stream: the same snapshot every five seconds.
+  # `watch` does not exist on macOS, so it is done by hand.
+  if [ "${1:-}" = "--follow" ]; then
+    echo "Refreshing every 5 seconds. Ctrl-C to stop (the job carries on)."
     sleep 1
     while true; do
       clear
-      cmd_guarda
-      echo "  ── aggiornamento fra 5 seconds, Ctrl-C per smettere ──"
+      cmd_watch
+      echo "  ── refresh in 5 seconds, Ctrl-C to stop ──"
       sleep 5
     done
   fi
   echo "════════════════════════════════════════════════════════════════"
-  echo " CHE COSA STA FACENDO L'AGENTE"
+  echo " WHAT THE AGENT IS DOING"
   echo "════════════════════════════════════════════════════════════════"
 
   local lines
-  lines=$(ps -eo etime,args | grep "[a]gent/agente.py" | head -1)
+  lines=$(ps -eo etime,args | grep "[a]gent/agent.py" | head -1)
   if [ -z "$lines" ]; then
     echo
-    echo "  Nessun agente in esecuzione."
+    echo "  No agent running."
   else
     echo
-    echo "  In esecuzione da: $(echo "$lines" | awk '{print $1}')"
-    echo "  Modello:          $(echo "$lines" | grep -o '\-\-model [^ ]*' | cut -d' ' -f2)"
-    echo "  Budget:           $(echo "$lines" | grep -o '\-\-budget [^ ]*' | cut -d' ' -f2) dollari"
+    echo "  Running for:  $(echo "$lines" | awk '{print $1}')"
+    echo "  Model:        $(echo "$lines" | grep -o '\-\-model [^ ]*' | cut -d' ' -f2)"
+    echo "  Budget:       $(echo "$lines" | grep -o '\-\-budget [^ ]*' | cut -d' ' -f2) dollars"
   fi
 
   echo
-  echo "  ── I PROBLEMI, in order di lavorazione ──────────────────────"
+  echo "  ── THE PROBLEMS, in the order they are worked on ─────────────"
   if [ -d "$ROOT/runs/job" ]; then
-    # `tac` e' GNU e su macOS non esiste: `tail -r` fa la stessa cosa
+    # `tac` is GNU and does not exist on macOS: `tail -r` does the same
     ls -t "$ROOT/runs/job" 2>/dev/null | tail -r | nl -w3 -s'. ' | sed 's/^/   /'
     echo
-    echo "  L'last della items e' quello su cui sta lavorando adesso."
+    echo "  The last in the list is the one it is working on now."
   else
-    echo "   (nessuna folder di job ancora)"
+    echo "   (no working directory yet)"
   fi
 
   echo
-  echo "  ── LEAN sta verificando in questo istante? ───────────────────"
+  echo "  ── is LEAN verifying at this instant? ────────────────────────"
   if pgrep -f "lean --" >/dev/null 2>&1 || pgrep -f "lake env" >/dev/null 2>&1; then
-    echo "   sì: one check e' in corso (dura dai 30 seconds ai 2 minuti)"
+    echo "   yes: a verification is in progress (30 seconds to 2 minutes)"
   else
-    echo "   no: in questo istante l'agente sta pensando o scrivendo code"
+    echo "   no: right now the agent is thinking or writing code"
   fi
 
   echo
-  echo "  ── L'ULTIMO PROGRAMMA che il model ha scritto da sé ────────"
+  echo "  ── THE LAST PROGRAM the model wrote by itself ────────────────"
   local last
   last=$(ls -t "$ROOT"/runs/job/*/program.py 2>/dev/null | head -1)
   if [ -n "$last" ]; then
-    echo "   da $(dirname "$last" | xargs basename):"
+    echo "   from $(dirname "$last" | xargs basename):"
     sed 's/^/     /' "$last" | head -20
   else
-    echo "   (nessuno: non ha ancora usato run_python)"
+    echo "   (none: it has not used run_python yet)"
   fi
 
   echo
-  echo "  ── SPESA ─────────────────────────────────────────────────────"
+  echo "  ── SPEND ─────────────────────────────────────────────────────"
   local report
   report=$(ls -t "$ROOT"/runs/*.json 2>/dev/null | head -1)
   if [ -n "$report" ]; then
-    "$PY" - "$report" <<'FINE'
+    "$PY" - "$report" <<'END'
 import json, sys
 from pathlib import Path
 d = json.loads(Path(sys.argv[1]).read_text())
 if "spent" in d:
     print(f"   last report: {Path(sys.argv[1]).name}")
-    print(f"   spent ${d['spent']:.4f} su ${d['budget']:.2f}")
-    ris = sum(1 for t in d.get('attempts', []) if t['solved'])
-    print(f"   solved {ris} su {len(d.get('attempts', []))}")
-FINE
+    print(f"   spent ${d['spent']:.4f} of ${d['budget']:.2f}")
+    solved = sum(1 for t in d.get('attempts', []) if t['solved'])
+    print(f"   solved {solved} of {len(d.get('attempts', []))}")
+END
   fi
-  echo "   (mentre un giro e' in corso la spesa si vede only alla end:"
-  echo "    il report viene scritto quando l'last problem e' finito)"
+  echo "   (while a run is in progress the spend only shows at the end:"
+  echo "    the report is written when the last problem has finished)"
   echo
 }
 
-cmd_stato() {
+cmd_status() {
   local found=0
-  echo "JOBS ATTIVI"
-  for pid_file in "$JOBS"/*.pid; do
-    [ -e "$pid_file" ] || continue
-    local n; n="$(basename "$pid_file" .pid)"
-    if attivo "$n"; then
+  echo "ACTIVE JOBS"
+  for f in "$JOBS"/*.pid; do
+    [ -e "$f" ] || continue
+    local n; n="$(basename "$f" .pid)"
+    if active "$n"; then
       found=1
-      local pid; pid="$(cat "$pid_file")"
-      local da; da="$(ps -o etime= -p "$pid" 2>/dev/null | tr -d ' ')"
-      verde "  $n  (PID $pid, da $da)"
+      local pid; pid="$(cat "$f")"
+      local since; since="$(ps -o etime= -p "$pid" 2>/dev/null | tr -d ' ')"
+      green "  $n  (PID $pid, running $since)"
       tail -2 "$(log_file "$n")" 2>/dev/null | sed 's/^/      /'
     fi
   done
-  [ "$found" = 1 ] || echo "  (nessuno)"
+  [ "$found" = 1 ] || echo "  (none)"
 
   echo
-  echo "JOBS CONCLUSI"
+  echo "FINISHED JOBS"
   found=0
-  for pid_file in "$JOBS"/*.pid; do
-    [ -e "$pid_file" ] || continue
-    local n; n="$(basename "$pid_file" .pid)"
-    if ! attivo "$n"; then
+  for f in "$JOBS"/*.pid; do
+    [ -e "$f" ] || continue
+    local n; n="$(basename "$f" .pid)"
+    if ! active "$n"; then
       found=1
-      local quando; quando="$(grep '^avviato' "$(file_meta "$n")" 2>/dev/null | cut -d' ' -f2-)"
-      echo "  $n  (avviato $quando)"
+      local when; when="$(grep '^started' "$(meta_file "$n")" 2>/dev/null | cut -d' ' -f2-)"
+      echo "  $n  (started $when)"
       tail -1 "$(log_file "$n")" 2>/dev/null | sed 's/^/      /'
     fi
   done
-  [ "$found" = 1 ] || echo "  (nessuno)"
+  [ "$found" = 1 ] || echo "  (none)"
 }
 
 # --------------------------------------------------------------------------
-cmd_segui() {
+cmd_follow() {
   local n="${1:-}"
   if [ -z "$n" ]; then
-    for pid_file in "$JOBS"/*.pid; do
-      [ -e "$pid_file" ] || continue
-      local c; c="$(basename "$pid_file" .pid)"
-      if attivo "$c"; then n="$c"; break; fi
+    for f in "$JOBS"/*.pid; do
+      [ -e "$f" ] || continue
+      local c; c="$(basename "$f" .pid)"
+      if active "$c"; then n="$c"; break; fi
     done
   fi
-  [ -n "$n" ] || { rosso "Nessun job attivo."; exit 1; }
-  echo "Seguo '$n'. Ctrl-C per smettere di guardare (il job continua)."
+  [ -n "$n" ] || { red "No active job."; exit 1; }
+  echo "Following '$n'. Ctrl-C to stop watching (the job carries on)."
   echo
   tail -f "$(log_file "$n")"
 }
 
 # --------------------------------------------------------------------------
-cmd_ferma() {
+cmd_stop() {
   local n="${1:-}"
   if [ -z "$n" ]; then
-    echo "Quale job? Quelli attivi sono:"
-    cmd_stato
+    echo "Which job? The active ones are:"
+    cmd_status
     exit 2
   fi
-  attivo "$n" || { giallo "Il job '$n' non sta girando."; exit 0; }
-  local pid; pid="$(cat "$(file_pid "$n")")"
-  # SIGTERM al group: i jobs salvano il checkpoint e chiudono
+  active "$n" || { yellow "The job '$n' is not running."; exit 0; }
+  local pid; pid="$(cat "$(pid_file "$n")")"
+  # SIGTERM to the group: the jobs save their checkpoint and close
   kill -TERM "-$(ps -o pgid= -p "$pid" | tr -d ' ')" 2>/dev/null || kill -TERM "$pid"
   sleep 3
-  if attivo "$n"; then
-    giallo "Non si e' fermato con garbo, lo termino."
+  if active "$n"; then
+    yellow "It did not stop gracefully; killing it."
     kill -KILL "-$(ps -o pgid= -p "$pid" | tr -d ' ')" 2>/dev/null || kill -KILL "$pid"
   fi
-  verde "Fermato '$n'. Riprendi con:  ./run.sh resume $n"
+  green "Stopped '$n'. Resume with:  ./run.sh resume $n"
 }
 
 # --------------------------------------------------------------------------
-cmd_riprendi() {
+cmd_resume() {
   local n="${1:-}"; shift || true
-  [ -n "$n" ] || { rosso "Quale job riprendo?"; exit 2; }
+  [ -n "$n" ] || { red "Resume which job?"; exit 2; }
   case "$n" in
-    caccia)
-      "$0" lancia caccia --resume "$@"
+    hunt)
+      "$0" launch hunt --resume "$@"
       ;;
     snapshot)
-      # lo script e' idempotente: ripartire e' sicuro
-      "$0" lancia snapshot
+      # the script is idempotent: restarting is safe
+      "$0" launch snapshot
       ;;
     *)
-      rosso "Il job '$n' non ha un checkpoint da cui ripartire."
-      echo "Rilancialo da capo con:  ./run.sh lancia $n"
+      red "The job '$n' has no checkpoint to restart from."
+      echo "Launch it again from the beginning with:  ./run.sh launch $n"
       exit 1 ;;
   esac
 }
 
 # --------------------------------------------------------------------------
 case "${1:-}" in
-  estimate)    shift; cmd_stima "$@" ;;
-  lancia)   shift; cmd_lancia "$@" ;;
-  state)    shift; cmd_stato ;;
-  guarda)   shift; cmd_guarda "$@" ;;
-  segui)    shift; cmd_segui "$@" ;;
-  ferma)    shift; cmd_ferma "$@" ;;
-  resume) shift; cmd_riprendi "$@" ;;
-  ""|-h|--help|aiuto) uso ;;
-  *) rosso "Comando sconosciuto: $1"; echo; uso; exit 2 ;;
+  estimate) shift; cmd_estimate "$@" ;;
+  launch)   shift; cmd_launch "$@" ;;
+  status)   shift; cmd_status ;;
+  watch)    shift; cmd_watch "$@" ;;
+  follow)   shift; cmd_follow "$@" ;;
+  stop)     shift; cmd_stop "$@" ;;
+  resume)   shift; cmd_resume "$@" ;;
+  ""|-h|--help|help) usage ;;
+  *) red "Unknown command: $1"; echo; usage; exit 2 ;;
 esac
