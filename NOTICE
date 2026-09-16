@@ -79,7 +79,8 @@ The list below says which files, and under which terms.
    dati_ricerca/Andw.html, dati_ricerca/binary-1.html and the 362 explicit codes
    under dati_ricerca/codici/ are excluded by .gitignore. ricerca/tabelle.py and
    ricerca/riproduci.py download them from the original site when they are
-   missing, so the reproduction can still be run and checked.
+   missing, so the reproduction can still be run and checked. (Commits made
+   before 15 September 2026 do still contain those files.)
 
    The numbers derived from those tables — which record is claimed, by whom, and
    whether an explicit code exists — are in dati_ricerca/limiti_cwc.json and in
