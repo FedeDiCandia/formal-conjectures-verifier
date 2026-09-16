@@ -1,2132 +1,2132 @@
 [
-  {
-    "problema": "EllipticCurveRank.RatEllipticCurve.unbounded_rank_conjecture",
-    "modulo": "FormalConjectures.Wikipedia.EllipticCurveRank",
-    "enunciato": "∀ (n : ℕ), ∃ E, n ≤ E.rank",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 34.7,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 28.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 15.7,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 6.2,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.9,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.9,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 6.0,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.9,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "PerfectNumbers.odd_perfect_number_conjecture",
-    "modulo": "FormalConjectures.Wikipedia.PerfectNumbers",
-    "enunciato": "∀ (n : ℕ), n.Perfect → Even n",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.8,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.8,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.8,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.8,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.9,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 6.0,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.9,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.9,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "Gilbreath.gilbreath_conjecture",
-    "modulo": "FormalConjectures.Wikipedia.Gilbreath",
-    "enunciato": "∀ (k : ℕ+), Gilbreath.d (↑k) 0 = 1",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.9,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.8,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 6.2,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 6.3,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 6.4,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.9,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 6.0,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 6.0,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "FibonacciPrimes.fib_primes_infinite.variant",
-    "modulo": "FormalConjectures.Wikipedia.FibonacciPrimes",
-    "enunciato": "{n | Nat.Prime (Nat.fib n)}.Infinite",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.8,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.9,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 6.3,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 6.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 6.9,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 6.8,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.8,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 6.1,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "Hadamard.HadamardConjecture",
-    "modulo": "FormalConjectures.Wikipedia.Hadamard",
-    "enunciato": "∀ (k : ℕ), ∃ M, Hadamard.IsHadamard M",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 6.1,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 6.2,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 6.4,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 6.2,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 6.1,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 6.1,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 6.2,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.9,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "OeisA63880.mod_216_of_a",
-    "modulo": "FormalConjectures.OEIS.«63880»",
-    "enunciato": "∀ {n : ℕ}, OeisA63880.a n → n % 216 = 108",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 6.3,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 6.0,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 6.0,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.9,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 6.0,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 6.2,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.5,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "Erdos196.erdos_196",
-    "modulo": "FormalConjectures.ErdosProblems.«196»",
-    "enunciato": "True ↔ ∀ (f : ℕ ≃ ℕ), HasMonotoneAP (⇑f) 4",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "OeisA280831.conjecture",
-    "modulo": "FormalConjectures.OEIS.«280831»",
-    "enunciato": "∀ (n : ℕ), OeisA280831.HasSquareCondition n",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "Green72.green_72",
-    "modulo": "FormalConjectures.GreensOpenProblems.«72»",
-    "enunciato": "∀ {N : ℕ}, 3 ≤ N → Green72.NoKInLineFor 3 N",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "Fermat.all_fermat_squarefree",
-    "modulo": "FormalConjectures.Wikipedia.Fermat",
-    "enunciato": "True ↔ ∀ (n : ℕ), Squarefree n.fermatNumber",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.5,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "Arxiv.«2107.12475».CollatzLike",
-    "modulo": "FormalConjectures.Arxiv.«2107.12475».CollatzLike",
-    "enunciato": "∀ (n : ℕ), 8 < n → 2 ∈ Nat.digits 3 (2 ^ n)",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.7,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.7,
-        "controesempio": null,
-        "messaggi": "Unable to find a counter-example\nFormalConjectures/_Judge/E0.lean:5:0: warning: declaration uses 'sorry'"
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.7,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.7,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "LatinTableau.SimpleGraph.LatinTableauConjecture",
-    "modulo": "FormalConjectures.Paper.LatinTableau",
-    "enunciato": "∀ (μ : YoungDiagram), SimpleGraph.CDSColorable",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "OeisA231201.conjecture",
-    "modulo": "FormalConjectures.OEIS.«231201»",
-    "enunciato": "∀ (n : ℕ), 1 < n → OeisA231201.PrimeCondition n",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "OeisA41.noPowerPartitionNumber",
-    "modulo": "FormalConjectures.OEIS.«41»",
-    "enunciato": "True ↔ ∀ (k : ℕ), ¬(OeisA41.p k).IsPerfectPower",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "Selfridge.selfridge_conjecture",
-    "modulo": "FormalConjectures.Wikipedia.Selfridge",
-    "enunciato": "∀ (p : ℕ), Selfridge.IsSelfridge p → Nat.Prime p",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "WoodallPrimes.infinitely_many_woodall_primes",
-    "modulo": "FormalConjectures.Wikipedia.WoodalPrimes",
-    "enunciato": "{k | 1 < k ∧ Nat.Prime (k * 2 ^ k - 1)}.Infinite",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 8.4,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 8.3,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "OeisA34693.exists_k",
-    "modulo": "FormalConjectures.OEIS.«34693»",
-    "enunciato": "∀ {n : ℕ}, 1 < n → ∃ k < n, Nat.Prime (n * k + 1)",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.7,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "OeisA306477.conjecture",
-    "modulo": "FormalConjectures.OEIS.«306477»",
-    "enunciato": "∀ (n : ℕ), 0 < n → OeisA306477.IsSumOfBinomials n",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "OeisA63880.unique_primitive_108",
-    "modulo": "FormalConjectures.OEIS.«63880»",
-    "enunciato": "∀ {n : ℕ}, OeisA63880.isPrimitiveTerm n → n = 108",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "FibonacciPrimes.fib_primes_infinite",
-    "modulo": "FormalConjectures.Wikipedia.FibonacciPrimes",
-    "enunciato": "{n | (∃ m, Nat.fib m = n) ∧ Nat.Prime n}.Infinite",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 6.5,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 6.5,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "Erdos366.erdos_366.variants.weaker",
-    "modulo": "FormalConjectures.ErdosProblems.«366»",
-    "enunciato": "True ↔ ∃ n > 0, Nat.Full 3 n ∧ Nat.Full 3 (n + 1)",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "Erdos366.erdos_366",
-    "modulo": "FormalConjectures.ErdosProblems.«366»",
-    "enunciato": "True ↔ ∃ n > 0, Nat.Full 2 n ∧ Nat.Full 3 (n + 1)",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 6.2,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 8.8,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 39.4,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 35.3,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 17.1,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 30.5,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 42.9,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 46.8,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "Erdos1055.erdos_1055.variants.selfridge_limit",
-    "modulo": "FormalConjectures.ErdosProblems.«1055»",
-    "enunciato": "∃ M, ∀ (r : ℕ+), ↑(Erdos1055.p r) ^ (1 / ↑↑r) ≤ M",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 34.0,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 35.0,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 27.3,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 23.7,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 10.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 33.1,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 31.7,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 27.4,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "Erdos283.erdos_283",
-    "modulo": "FormalConjectures.ErdosProblems.«283»",
-    "enunciato": "True ↔ ∀ (p : Polynomial ℤ), Erdos283.Condition p",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.5,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.5,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.5,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.5,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "Kurepa.kurepa_conjecture",
-    "modulo": "FormalConjectures.Paper.Kurepa",
-    "enunciato": "∀ (n : ℕ), 2 < n → Kurepa.left_factorial n % n ≠ 0",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.7,
-        "controesempio": null,
-        "messaggi": "Unable to find a counter-example\nFormalConjectures/_Judge/E0.lean:5:0: warning: declaration uses 'sorry'"
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.5,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "Erdos422.erdos_422",
-    "modulo": "FormalConjectures.ErdosProblems.«422»",
-    "enunciato": "True ↔ {n | ∀ (x : ℕ+), Erdos422.f x ≠ n}.Infinite",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.5,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.5,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.5,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 6.2,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 6.2,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.5,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "Erdos249.erdos_249",
-    "modulo": "FormalConjectures.ErdosProblems.«249»",
-    "enunciato": "True ↔ Irrational (∑' (n : ℕ), ↑n.totient / 2 ^ n)",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.5,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.5,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.5,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.5,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 6.2,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 7.9,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "Erdos944.erdos_944.variants.dirac_conjecture.k_eq_four",
-    "modulo": "FormalConjectures.ErdosProblems.«944»",
-    "enunciato": "True ↔ ∃ V G, Erdos944.SimpleGraph.IsErdos944 G 4 1",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 10.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.7,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 6.2,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 7.4,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 6.1,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 6.8,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 16.2,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "Erdos828.erdos_828",
-    "modulo": "FormalConjectures.ErdosProblems.«828»",
-    "enunciato": "True ↔ ∀ (a : ℤ), {n | ↑n.totient ∣ ↑n + a}.Infinite",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 7.8,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 7.7,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  },
-  {
-    "problema": "OeisA67720.prime_add_one_of_a",
-    "modulo": "FormalConjectures.OEIS.«67720»",
-    "enunciato": "∀ {k : ℕ}, OeisA67720.a k → k ≠ 8 → Nat.Prime (k + 1)",
-    "prove": [
-      {
-        "tattica": "decide",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "decide",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.5,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "plausible",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.6,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.5,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "norm_num",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.4,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": false,
-        "esito": "aperta",
-        "secondi": 5.4,
-        "controesempio": null,
-        "messaggi": ""
-      },
-      {
-        "tattica": "simp_arith",
-        "negato": true,
-        "esito": "aperta",
-        "secondi": 5.4,
-        "controesempio": null,
-        "messaggi": ""
-      }
-    ]
-  }
+ {
+  "problem": "EllipticCurveRank.RatEllipticCurve.unbounded_rank_conjecture",
+  "module": "FormalConjectures.Wikipedia.EllipticCurveRank",
+  "statement": "∀ (n : ℕ), ∃ E, n ≤ E.rank",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 34.7,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 28.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 15.7,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 6.2,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.9,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.9,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 6.0,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.9,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "PerfectNumbers.odd_perfect_number_conjecture",
+  "module": "FormalConjectures.Wikipedia.PerfectNumbers",
+  "statement": "∀ (n : ℕ), n.Perfect → Even n",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.8,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.8,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.8,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.8,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.9,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 6.0,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.9,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.9,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "Gilbreath.gilbreath_conjecture",
+  "module": "FormalConjectures.Wikipedia.Gilbreath",
+  "statement": "∀ (k : ℕ+), Gilbreath.d (↑k) 0 = 1",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.9,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.8,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 6.2,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 6.3,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 6.4,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.9,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 6.0,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 6.0,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "FibonacciPrimes.fib_primes_infinite.variant",
+  "module": "FormalConjectures.Wikipedia.FibonacciPrimes",
+  "statement": "{n | Nat.Prime (Nat.fib n)}.Infinite",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.8,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.9,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 6.3,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 6.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 6.9,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 6.8,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.8,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 6.1,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "Hadamard.HadamardConjecture",
+  "module": "FormalConjectures.Wikipedia.Hadamard",
+  "statement": "∀ (k : ℕ), ∃ M, Hadamard.IsHadamard M",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 6.1,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 6.2,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 6.4,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 6.2,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 6.1,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 6.1,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 6.2,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.9,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "OeisA63880.mod_216_of_a",
+  "module": "FormalConjectures.OEIS.«63880»",
+  "statement": "∀ {n : ℕ}, OeisA63880.a n → n % 216 = 108",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 6.3,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 6.0,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 6.0,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.9,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 6.0,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 6.2,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.5,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "Erdos196.erdos_196",
+  "module": "FormalConjectures.ErdosProblems.«196»",
+  "statement": "True ↔ ∀ (f : ℕ ≃ ℕ), HasMonotoneAP (⇑f) 4",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "OeisA280831.conjecture",
+  "module": "FormalConjectures.OEIS.«280831»",
+  "statement": "∀ (n : ℕ), OeisA280831.HasSquareCondition n",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "Green72.green_72",
+  "module": "FormalConjectures.GreensOpenProblems.«72»",
+  "statement": "∀ {N : ℕ}, 3 ≤ N → Green72.NoKInLineFor 3 N",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "Fermat.all_fermat_squarefree",
+  "module": "FormalConjectures.Wikipedia.Fermat",
+  "statement": "True ↔ ∀ (n : ℕ), Squarefree n.fermatNumber",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.5,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "Arxiv.«2107.12475».CollatzLike",
+  "module": "FormalConjectures.Arxiv.«2107.12475».CollatzLike",
+  "statement": "∀ (n : ℕ), 8 < n → 2 ∈ Nat.digits 3 (2 ^ n)",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.7,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.7,
+    "counterexample": null,
+    "messages": "Unable to find a counter-example\nFormalConjectures/_Judge/E0.lean:5:0: warning: declaration uses 'sorry'"
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.7,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.7,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "LatinTableau.SimpleGraph.LatinTableauConjecture",
+  "module": "FormalConjectures.Paper.LatinTableau",
+  "statement": "∀ (μ : YoungDiagram), SimpleGraph.CDSColorable",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "OeisA231201.conjecture",
+  "module": "FormalConjectures.OEIS.«231201»",
+  "statement": "∀ (n : ℕ), 1 < n → OeisA231201.PrimeCondition n",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "OeisA41.noPowerPartitionNumber",
+  "module": "FormalConjectures.OEIS.«41»",
+  "statement": "True ↔ ∀ (k : ℕ), ¬(OeisA41.p k).IsPerfectPower",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "Selfridge.selfridge_conjecture",
+  "module": "FormalConjectures.Wikipedia.Selfridge",
+  "statement": "∀ (p : ℕ), Selfridge.IsSelfridge p → Nat.Prime p",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "WoodallPrimes.infinitely_many_woodall_primes",
+  "module": "FormalConjectures.Wikipedia.WoodalPrimes",
+  "statement": "{k | 1 < k ∧ Nat.Prime (k * 2 ^ k - 1)}.Infinite",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 8.4,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 8.3,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "OeisA34693.exists_k",
+  "module": "FormalConjectures.OEIS.«34693»",
+  "statement": "∀ {n : ℕ}, 1 < n → ∃ k < n, Nat.Prime (n * k + 1)",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.7,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "OeisA306477.conjecture",
+  "module": "FormalConjectures.OEIS.«306477»",
+  "statement": "∀ (n : ℕ), 0 < n → OeisA306477.IsSumOfBinomials n",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "OeisA63880.unique_primitive_108",
+  "module": "FormalConjectures.OEIS.«63880»",
+  "statement": "∀ {n : ℕ}, OeisA63880.isPrimitiveTerm n → n = 108",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "FibonacciPrimes.fib_primes_infinite",
+  "module": "FormalConjectures.Wikipedia.FibonacciPrimes",
+  "statement": "{n | (∃ m, Nat.fib m = n) ∧ Nat.Prime n}.Infinite",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 6.5,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 6.5,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "Erdos366.erdos_366.variants.weaker",
+  "module": "FormalConjectures.ErdosProblems.«366»",
+  "statement": "True ↔ ∃ n > 0, Nat.Full 3 n ∧ Nat.Full 3 (n + 1)",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "Erdos366.erdos_366",
+  "module": "FormalConjectures.ErdosProblems.«366»",
+  "statement": "True ↔ ∃ n > 0, Nat.Full 2 n ∧ Nat.Full 3 (n + 1)",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 6.2,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 8.8,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 39.4,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 35.3,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 17.1,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 30.5,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 42.9,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 46.8,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "Erdos1055.erdos_1055.variants.selfridge_limit",
+  "module": "FormalConjectures.ErdosProblems.«1055»",
+  "statement": "∃ M, ∀ (r : ℕ+), ↑(Erdos1055.p r) ^ (1 / ↑↑r) ≤ M",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 34.0,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 35.0,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 27.3,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 23.7,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 10.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 33.1,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 31.7,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 27.4,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "Erdos283.erdos_283",
+  "module": "FormalConjectures.ErdosProblems.«283»",
+  "statement": "True ↔ ∀ (p : Polynomial ℤ), Erdos283.Condition p",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.5,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.5,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.5,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.5,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "Kurepa.kurepa_conjecture",
+  "module": "FormalConjectures.Paper.Kurepa",
+  "statement": "∀ (n : ℕ), 2 < n → Kurepa.left_factorial n % n ≠ 0",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.7,
+    "counterexample": null,
+    "messages": "Unable to find a counter-example\nFormalConjectures/_Judge/E0.lean:5:0: warning: declaration uses 'sorry'"
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.5,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "Erdos422.erdos_422",
+  "module": "FormalConjectures.ErdosProblems.«422»",
+  "statement": "True ↔ {n | ∀ (x : ℕ+), Erdos422.f x ≠ n}.Infinite",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.5,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.5,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.5,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 6.2,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 6.2,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.5,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "Erdos249.erdos_249",
+  "module": "FormalConjectures.ErdosProblems.«249»",
+  "statement": "True ↔ Irrational (∑' (n : ℕ), ↑n.totient / 2 ^ n)",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.5,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.5,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.5,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.5,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 6.2,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 7.9,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "Erdos944.erdos_944.variants.dirac_conjecture.k_eq_four",
+  "module": "FormalConjectures.ErdosProblems.«944»",
+  "statement": "True ↔ ∃ V G, Erdos944.SimpleGraph.IsErdos944 G 4 1",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 10.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.7,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 6.2,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 7.4,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 6.1,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 6.8,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 16.2,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "Erdos828.erdos_828",
+  "module": "FormalConjectures.ErdosProblems.«828»",
+  "statement": "True ↔ ∀ (a : ℤ), {n | ↑n.totient ∣ ↑n + a}.Infinite",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 7.8,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 7.7,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ },
+ {
+  "problem": "OeisA67720.prime_add_one_of_a",
+  "module": "FormalConjectures.OEIS.«67720»",
+  "statement": "∀ {k : ℕ}, OeisA67720.a k → k ≠ 8 → Nat.Prime (k + 1)",
+  "trials": [
+   {
+    "tactic": "decide",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "decide",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.5,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "plausible",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.6,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.5,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "norm_num",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.4,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": false,
+    "result": "open",
+    "seconds": 5.4,
+    "counterexample": null,
+    "messages": ""
+   },
+   {
+    "tactic": "simp_arith",
+    "negated": true,
+    "result": "open",
+    "seconds": 5.4,
+    "counterexample": null,
+    "messages": ""
+   }
+  ]
+ }
 ]

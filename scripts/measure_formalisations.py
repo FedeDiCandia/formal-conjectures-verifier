@@ -44,7 +44,7 @@ def band(c: dict) -> str:
                 "statement: infinito/analisi", "computation grande"}
     if "source: trial corta" in m and not hard:
         return "A"
-    if c["categoria"] == "textbook" and not hard:
+    if c["category"] == "textbook" and not hard:
         return "B"
     if not hard:
         return "C"

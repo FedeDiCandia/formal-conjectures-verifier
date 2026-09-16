@@ -1,7 +1,7 @@
 {
  "3320": {
   "titolo": "solve(ErdosProblems): formally solved `erdos_1084.variants.upper_d1`, `erdos_1084.variants.ea in 1084",
-  "stato": "closed",
+  "state": "closed",
   "unita": false,
   "autore": "theaustinhatfield",
   "creata": "2026-03-03",
@@ -12,7 +12,7 @@
  },
  "2804": {
   "titolo": "solve(ErdosProblems): formally solved `erdos_1084.variants.upper_d1`, `erdos_1084.variants.ea in 1084",
-  "stato": "closed",
+  "state": "closed",
   "unita": false,
   "autore": "theaustinhatfield",
   "creata": "2026-03-03",
@@ -23,7 +23,7 @@
  },
  "3195": {
   "titolo": "solve(ErdosProblems): formally solved erdos_503 R2, R3, upper_bound variants in 503",
-  "stato": "closed",
+  "state": "closed",
   "unita": false,
   "autore": "theaustinhatfield",
   "creata": "2026-03-03",
@@ -32,7 +32,7 @@
  },
  "2673": {
   "titolo": "solve(ErdosProblems): formally solved erdos_503 R2, R3, upper_bound variants in 503",
-  "stato": "closed",
+  "state": "closed",
   "unita": false,
   "autore": "theaustinhatfield",
   "creata": "2026-03-03",
@@ -41,7 +41,7 @@
  },
  "3341": {
   "titolo": "solve(ErdosProblems): formally solved `erdos_1148.variants.weaker` in 1148",
-  "stato": "closed",
+  "state": "closed",
   "unita": false,
   "autore": "theaustinhatfield",
   "creata": "2026-03-03",
@@ -52,7 +52,7 @@
  },
  "2952": {
   "titolo": "solve(ErdosProblems): formally solved `erdos_707`, `erdos_707.variants.prime_power`, `erdos_7 in 707",
-  "stato": "closed",
+  "state": "closed",
   "unita": false,
   "autore": "theaustinhatfield",
   "creata": "2026-03-03",
@@ -61,7 +61,7 @@
  },
  "2447": {
   "titolo": "prove(ErdosProblems/707): example_sidon_set",
-  "stato": "closed",
+  "state": "closed",
   "unita": false,
   "autore": "theaustinhatfield",
   "creata": "2026-03-02",
@@ -70,7 +70,7 @@
  },
  "5425": {
   "titolo": "feat(ErdosProblems/399): prove erdos_399.variants.cambie",
-  "stato": "open",
+  "state": "open",
   "unita": false,
   "autore": "herakles-dev",
   "creata": "2026-09-10",
@@ -81,7 +81,7 @@
  },
  "5837": {
   "titolo": "fix(ErdosProblems/1000): exclude denominators dividing an earlier term",
-  "stato": "open",
+  "state": "open",
   "unita": false,
   "autore": "smmercuri",
   "creata": "2026-09-11",
@@ -94,7 +94,7 @@
  },
  "4407": {
   "titolo": "Add formal-proof links and sharpen Erdős #647 candidate reductions",
-  "stato": "open",
+  "state": "open",
   "unita": false,
   "autore": "Mnehmos",
   "creata": "2026-07-07",

@@ -1,297 +1,297 @@
 {
-  "nome": "erdos396_binomiale",
-  "conclusa": true,
-  "interrotta": false,
-  "secondi": 6329.461094856262,
-  "posizione": 61,
-  "esaminati": 61,
-  "trovati": [
-    {
-      "k": 4,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 5,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 6,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 7,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 8,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 9,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 10,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 11,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 12,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 13,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 14,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 15,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 16,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 17,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 18,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 19,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 20,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 21,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 22,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 23,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 24,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 25,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 26,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 27,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 28,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 29,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 30,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 31,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 32,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 33,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 34,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 35,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 36,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 37,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 38,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 39,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 40,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 41,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 42,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 43,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 44,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 45,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 46,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 47,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 48,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 49,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 50,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 51,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 52,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 53,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 54,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 55,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 56,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 57,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 58,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 59,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    },
-    {
-      "k": 60,
-      "nessun_n_fino_a": 20000,
-      "avvertenza": "indizio, non controesempio"
-    }
-  ],
-  "codice_uscita": 0,
-  "errore": ""
+ "name": "erdos396_binomiale",
+ "completed": true,
+ "interrotta": false,
+ "seconds": 6329.461094856262,
+ "position": 61,
+ "examined": 61,
+ "found": [
+  {
+   "k": 4,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 5,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 6,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 7,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 8,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 9,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 10,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 11,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 12,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 13,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 14,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 15,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 16,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 17,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 18,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 19,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 20,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 21,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 22,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 23,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 24,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 25,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 26,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 27,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 28,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 29,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 30,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 31,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 32,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 33,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 34,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 35,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 36,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 37,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 38,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 39,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 40,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 41,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 42,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 43,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 44,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 45,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 46,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 47,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 48,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 49,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 50,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 51,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 52,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 53,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 54,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 55,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 56,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 57,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 58,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 59,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  },
+  {
+   "k": 60,
+   "nessun_n_fino_a": 20000,
+   "avvertenza": "indizio, non controesempio"
+  }
+ ],
+ "codice_uscita": 0,
+ "errore": ""
 }

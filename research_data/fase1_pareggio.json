@@ -1,1136 +1,1136 @@
 [
  {
   "cella": "A(6,4,3)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 4,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(7,4,3)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 7,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(8,4,3)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 8,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(9,4,3)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 12,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(10,4,3)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 13,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(8,4,4)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 14,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(11,4,3)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 17,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(9,4,4)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 18,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(12,4,3)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 20,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(13,4,3)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 26,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(14,4,3)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 28,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(10,4,4)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 30,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(11,4,4)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 35,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(15,4,3)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 35,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(10,4,5)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 36,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(16,4,3)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 37,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(17,4,3)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 44,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(18,4,3)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 48,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(12,4,4)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 51,
   "raggiunto": false,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(19,4,3)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 57,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(20,4,3)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 60,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(13,4,4)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 65,
   "raggiunto": false,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(11,4,5)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 66,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(21,4,3)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 70,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(22,4,3)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 73,
   "raggiunto": true,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(12,4,5)",
-  "tipo": "esatto",
+  "kind": "esatto",
   "valore": 80,
   "raggiunto": false,
-  "superato": false
+  "passed": false
  },
  {
   "cella": "A(10,8,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 2,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(11,8,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 2,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(12,10,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 2,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(13,10,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 2,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(14,10,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 2,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(14,10,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 2,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(14,12,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 2,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(15,12,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 2,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(16,12,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 2,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(16,12,8)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 2,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(16,14,8)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 2,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(17,12,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 2,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(17,12,8)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 2,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(17,14,8)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 2,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(18,14,8)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 2,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(18,14,9)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 2,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(18,16,9)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 2,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(19,14,8)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 2,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(8,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 2,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(12,8,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 3,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(13,8,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 3,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(15,10,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 3,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(15,10,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 3,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(16,10,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 3,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(17,10,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 3,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(18,12,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 3,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(18,12,8)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 3,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "d"
  },
  {
   "cella": "A(19,12,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 3,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(19,12,8)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 3,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(20,12,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 3,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(9,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 3,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(12,8,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 4,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "d"
  },
  {
   "cella": "A(13,8,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 4,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(14,8,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 4,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(16,10,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 4,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(16,10,8)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 4,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(18,10,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 4,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(18,12,9)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 4,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "j"
  },
  {
   "cella": "A(19,10,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 4,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(10,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 5,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(17,10,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 5,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(20,10,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 5,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(10,6,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 6,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(11,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 6,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(15,8,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 6,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(16,8,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 6,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(17,10,8)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 6,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(18,10,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 6,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(14,8,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 7,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(17,8,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 7,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(21,10,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 7,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(22,10,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 7,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(14,8,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 8,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(19,10,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 8,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(12,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 9,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(18,10,8)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 9,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(18,8,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 9,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(15,8,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 10,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(18,10,9)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 10,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(20,10,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 10,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(11,6,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 11,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(12,6,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 12,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(19,10,8)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 12,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(19,8,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 12,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(13,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 13,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(14,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 14,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(15,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 15,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(15,8,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 15,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(16,8,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 16,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(16,8,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 16,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(20,8,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 16,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(17,8,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 17,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(13,6,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 18,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(16,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 20,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(17,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 20,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(18,8,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 21,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(21,8,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 21,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(22,8,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 21,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(12,6,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 22,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "H"
  },
  {
   "cella": "A(18,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 22,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(23,8,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 23,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(17,8,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 24,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(24,8,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 24,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(19,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 25,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(13,6,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 26,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(14,6,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 28,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(19,8,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 28,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(16,8,8)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 30,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "H"
  },
  {
   "cella": "A(20,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 30,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(25,8,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 30,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(26,8,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 30,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(21,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 31,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(18,8,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 33,
   "superiore": null,
-  "stato": "SOTTO",
-  "fonte": "\u00d6"
+  "state": "SOTTO",
+  "fonte": "Ö"
  },
  {
   "cella": "A(17,8,8)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 34,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(22,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 37,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(20,8,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 40,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(23,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 40,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(14,6,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 42,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(14,6,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 42,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(15,6,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 42,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(24,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 42,
   "superiore": null,
-  "stato": "PAREGGIATO",
+  "state": "PAREGGIATO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(18,8,8)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 46,
   "superiore": 49,
-  "stato": "SOTTO",
-  "fonte": "\u00d6"
+  "state": "SOTTO",
+  "fonte": "Ö"
  },
  {
   "cella": "A(16,6,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 48,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(18,8,9)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 48,
   "superiore": 58,
-  "stato": "SOTTO",
-  "fonte": "sb\u00d6"
+  "state": "SOTTO",
+  "fonte": "sbÖ"
  },
  {
   "cella": "A(25,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 50,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(19,8,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 52,
   "superiore": null,
-  "stato": "SOTTO",
-  "fonte": "\u00d6"
+  "state": "SOTTO",
+  "fonte": "Ö"
  },
  {
   "cella": "A(26,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 52,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(27,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 54,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(21,8,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 56,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(28,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 63,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(29,6,4)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 65,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(17,6,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 68,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(15,6,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 69,
   "superiore": null,
-  "stato": "SOTTO",
-  "fonte": "G \u00d6"
+  "state": "SOTTO",
+  "fonte": "G Ö"
  },
  {
   "cella": "A(18,6,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 69,
   "superiore": 72,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "ACL"
  },
  {
   "cella": "A(15,6,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 70,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(19,6,5)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 76,
   "superiore": 83,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(22,8,6)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 77,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  },
  {
   "cella": "A(19,8,8)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 78,
   "superiore": null,
-  "stato": "SOTTO",
-  "fonte": "\u00d6"
+  "state": "SOTTO",
+  "fonte": "Ö"
  },
  {
   "cella": "A(20,8,7)",
-  "tipo": "aperto",
+  "kind": "aperto",
   "pubblicato": 80,
   "superiore": null,
-  "stato": "SOTTO",
+  "state": "SOTTO",
   "fonte": "BSSS"
  }
 ]

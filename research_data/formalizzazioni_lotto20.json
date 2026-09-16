@@ -1,82 +1,82 @@
 [
  {
   "rango": 1,
-  "problema": "Erdos770.Nat.Prime.h_eq_add_one"
+  "problem": "Erdos770.Nat.Prime.h_eq_add_one"
  },
  {
   "rango": 2,
-  "problema": "Erdos770.erdos_770.variants.odd_h_unbounded"
+  "problem": "Erdos770.erdos_770.variants.odd_h_unbounded"
  },
  {
   "rango": 3,
-  "problema": "Erdos295.exists_k"
+  "problem": "Erdos295.exists_k"
  },
  {
   "rango": 4,
-  "problema": "DiophantineTuple.noIntegralDiophantineFiveTuple_of_hasUniqueExtensionOfForall"
+  "problem": "DiophantineTuple.noIntegralDiophantineFiveTuple_of_hasUniqueExtensionOfForall"
  },
  {
   "rango": 5,
-  "problema": "Erdos1148.erdos_1148.variants.weaker"
+  "problem": "Erdos1148.erdos_1148.variants.weaker"
  },
  {
   "rango": 6,
-  "problema": "Erdos1000.erdos_1000.variants.totient_le"
+  "problem": "Erdos1000.erdos_1000.variants.totient_le"
  },
  {
   "rango": 7,
-  "problema": "Erdos707.erdos_707.variants.small_sidon_sets"
+  "problem": "Erdos707.erdos_707.variants.small_sidon_sets"
  },
  {
   "rango": 8,
-  "problema": "Erdos399.erdos_399.variants.cambie"
+  "problem": "Erdos399.erdos_399.variants.cambie"
  },
  {
   "rango": 9,
-  "problema": "ComplexityTheory.coP_eq_P"
+  "problem": "ComplexityTheory.coP_eq_P"
  },
  {
   "rango": 10,
-  "problema": "Erdos1008.erdos_1008.variants.lower_bound"
+  "problem": "Erdos1008.erdos_1008.variants.lower_bound"
  },
  {
   "rango": 11,
-  "problema": "Erdos291.erdos_291.variants.steinerberger_generalization"
+  "problem": "Erdos291.erdos_291.variants.steinerberger_generalization"
  },
  {
   "rango": 12,
-  "problema": "Erdos649.erdos_649"
+  "problem": "Erdos649.erdos_649"
  },
  {
   "rango": 13,
-  "problema": "Erdos180.erdos_180"
+  "problem": "Erdos180.erdos_180"
  },
  {
   "rango": 14,
-  "problema": "ComplexityTheory.P_subset_NP"
+  "problem": "ComplexityTheory.P_subset_NP"
  },
  {
   "rango": 15,
-  "problema": "Erdos1084.erdos_1084.variants.easy_upper_d2"
+  "problem": "Erdos1084.erdos_1084.variants.easy_upper_d2"
  },
  {
   "rango": 16,
-  "problema": "OeisA38771.a_n_exists"
+  "problem": "OeisA38771.a_n_exists"
  },
  {
   "rango": 17,
-  "problema": "RegularPrimes.not_isRegularPrime_37"
+  "problem": "RegularPrimes.not_isRegularPrime_37"
  },
  {
   "rango": 18,
-  "problema": "CongruentNumber.not_congruentNumber_1"
+  "problem": "CongruentNumber.not_congruentNumber_1"
  },
  {
   "rango": 19,
-  "problema": "OeisA3162.a_is_integer"
+  "problem": "OeisA3162.a_is_integer"
  },
  {
   "rango": 20,
-  "problema": "Erdos503.erdos_503.variants.lower_bound"
+  "problem": "Erdos503.erdos_503.variants.lower_bound"
  }
 ]

@@ -1,7 +1,7 @@
 {
  "plby/lean-proofs/src/latest/ErdosProblems/Erdos180.lean": {
   "http": 200,
-  "righe": 26,
+  "lines": 26,
   "occorrenze": {
    "erdos_180": [
     ":=   not_erdos_180_source  #print axioms not_erdos_180 -- 'E",
@@ -13,7 +13,7 @@
  },
  "plby/lean-proofs/src/latest/ErdosProblems/Erdos707.lean": {
   "http": 200,
-  "righe": 6210,
+  "lines": 6210,
   "occorrenze": {
    "small_sidon_sets": []
   },
@@ -21,7 +21,7 @@
  },
  "plby/lean-proofs/src/latest/ErdosProblems/Erdos1008.lean": {
   "http": 200,
-  "righe": 678,
+  "lines": 678,
   "occorrenze": {
    "lower_bound": []
   },
@@ -29,7 +29,7 @@
  },
  "plby/lean-proofs/src/latest/ErdosProblems/Erdos291b.lean": {
   "http": 200,
-  "righe": 2608,
+  "lines": 2608,
   "occorrenze": {
    "steinerberger": [],
    "erdos_291": [
@@ -42,7 +42,7 @@
  },
  "plby/lean-proofs/src/latest/ErdosProblems/Erdos1000.lean": {
   "http": 200,
-  "righe": 1109,
+  "lines": 1109,
   "occorrenze": {
    "totient_le": [
     ":= (Finset.range t).prod (fun i => Nat.nth Nat.Prime i)  lem",
@@ -58,7 +58,7 @@
  },
  "plby/lean-proofs/src/latest/ErdosProblems/Erdos1148.lean": {
   "http": 200,
-  "righe": 248,
+  "lines": 248,
   "occorrenze": {
    "weaker": [],
    "erdos_1148": [
@@ -71,7 +71,7 @@
  },
  "Jayyhk/erdos-lean/problems/707/Erdos707.lean": {
   "http": 200,
-  "righe": 6361,
+  "lines": 6361,
   "occorrenze": {
    "small_sidon_sets": []
   },
@@ -79,7 +79,7 @@
  },
  "Jayyhk/erdos-lean/problems/399/Erdos399.lean": {
   "http": 200,
-  "righe": 17,
+  "lines": 17,
   "occorrenze": {
    "cambie": []
   },
@@ -87,7 +87,7 @@
  },
  "Jayyhk/erdos-lean/problems/1000/Erdos1000.lean": {
   "http": 200,
-  "righe": 1140,
+  "lines": 1140,
   "occorrenze": {
    "totient_le": [
     ":= (Finset.range t).prod (fun i => Nat.nth Nat.Prime i)  lem",
@@ -98,7 +98,7 @@
  },
  "williamjblair/lean-proofs/ErdosProblems/Erdos399.lean": {
   "http": 200,
-  "righe": 88,
+  "lines": 88,
   "occorrenze": {
    "cambie": [
     "?",
@@ -109,7 +109,7 @@
  },
  "google-deepmind/formal-conjectures/FormalConjectures/Millennium/PvsNP.lean": {
   "http": 200,
-  "righe": 84,
+  "lines": 84,
   "occorrenze": {
    "P_subset_NP": [
     ":= by   sorry  /-- The theorem that P is a subset of coNP. -",
@@ -124,7 +124,7 @@
  },
  "mo271/formal-conjectures/FormalConjectures/Wikipedia/DiophantineTuple.lean": {
   "http": 200,
-  "righe": 196,
+  "lines": 196,
   "occorrenze": {
    "noIntegralDiophantineFiveTuple_of": [
     ":= by sorry  /-- If every integral Diophantine triple has a ",
@@ -138,7 +138,7 @@
  },
  "mzhorvath1/formal-conjectures/FormalConjectures/Wikipedia/DiophantineTuple.lean": {
   "http": 200,
-  "righe": 196,
+  "lines": 196,
   "occorrenze": {
    "noIntegralDiophantineFiveTuple_of": [
     ":= by sorry  /-- If every integral Diophantine triple has a ",
@@ -152,7 +152,7 @@
  },
  "mo271/formal-conjectures/FormalConjectures/Wikipedia/RegularPrimes.lean": {
   "http": 200,
-  "righe": 83,
+  "lines": 83,
   "occorrenze": {
    "not_isRegularPrime_37": [
     ":= by   sorry  /-- The set of regular primes. -/ def regular",
@@ -163,7 +163,7 @@
  },
  "mo271/formal-conjectures/FormalConjectures/Wikipedia/CongruentNumber.lean": {
   "http": 200,
-  "righe": 125,
+  "lines": 125,
   "occorrenze": {
    "not_congruentNumber_1": [
     ":= by   sorry  /-- The rational right triangle with side len"
@@ -173,7 +173,7 @@
  },
  "mzhorvath1/formal-conjectures/FormalConjectures/ErdosProblems/1084.lean": {
   "http": 200,
-  "righe": 78,
+  "lines": 78,
   "occorrenze": {
    "easy_upper_d2": [
     ":= by   sorry  /-- Erdős showed that there is some constant "
@@ -183,7 +183,7 @@
  },
  "mzhorvath1/formal-conjectures/FormalConjectures/ErdosProblems/503.lean": {
   "http": 200,
-  "righe": 84,
+  "lines": 84,
   "occorrenze": {
    "lower_bound": [
     ":= by   sorry  end Erdos503 "
@@ -193,7 +193,7 @@
  },
  "Marti2203/formal-conjectures/FormalConjectures/ErdosProblems/1084.lean": {
   "http": 200,
-  "righe": 78,
+  "lines": 78,
   "occorrenze": {
    "easy_upper_d2": [
     ":= by   sorry  /-- Erdős showed that there is some constant "
@@ -203,7 +203,7 @@
  },
  "XC0R/formal-conjectures/FormalConjectures/ErdosProblems/503.lean": {
   "http": 200,
-  "righe": 84,
+  "lines": 84,
   "occorrenze": {
    "lower_bound": [
     ":= by   sorry  end Erdos503 "

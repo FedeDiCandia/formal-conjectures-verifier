@@ -26,20 +26,20 @@
   "raggiunto": 76,
   "valido": true,
   "gradini_riusciti": 0,
-  "secondi": 87.5
+  "seconds": 87.5
  },
  {
   "cella": "A(17,6,6)",
   "pubblicato": 113,
   "superiore": 124,
-  "fonte": "Ch\u00d6",
+  "fonte": "ChÖ",
   "candidate": 12376,
   "invariante": 85,
   "gruppo": "Z17",
   "raggiunto": 112,
   "valido": true,
   "gradini_riusciti": 27,
-  "secondi": 97.7
+  "seconds": 97.7
  },
  {
   "cella": "A(22,6,5)",
@@ -52,7 +52,7 @@
   "raggiunto": 132,
   "valido": true,
   "gradini_riusciti": 0,
-  "secondi": 211.4
+  "seconds": 211.4
  },
  {
   "cella": "A(19,8,9)",
@@ -73,7 +73,7 @@
   "raggiunto": 68,
   "valido": true,
   "gradini_riusciti": 5,
-  "secondi": 468.2
+  "seconds": 468.2
  },
  {
   "cella": "A(16,6,7)",
@@ -86,7 +86,7 @@
   "raggiunto": 109,
   "valido": true,
   "gradini_riusciti": 0,
-  "secondi": 541.0
+  "seconds": 541.0
  },
  {
   "cella": "A(27,6,5)",
@@ -115,7 +115,7 @@
   "raggiunto": 138,
   "valido": true,
   "gradini_riusciti": 0,
-  "secondi": 198.1
+  "seconds": 198.1
  },
  {
   "cella": "A(16,6,8)",
@@ -128,7 +128,7 @@
   "raggiunto": 100,
   "valido": true,
   "gradini_riusciti": 0,
-  "secondi": 572.8
+  "seconds": 572.8
  },
  {
   "cella": "A(17,6,7)",
@@ -141,7 +141,7 @@
   "raggiunto": 166,
   "valido": true,
   "gradini_riusciti": 47,
-  "secondi": 281.3
+  "seconds": 281.3
  },
  {
   "cella": "A(20,6,5)",
@@ -154,7 +154,7 @@
   "raggiunto": 84,
   "valido": true,
   "gradini_riusciti": 0,
-  "secondi": 1817.2
+  "seconds": 1817.2
  },
  {
   "cella": "A(29,6,5)",
@@ -175,7 +175,7 @@
   "raggiunto": 133,
   "valido": true,
   "gradini_riusciti": 4,
-  "secondi": 15875.2
+  "seconds": 15875.2
  },
  {
   "cella": "A(19,6,6)",
@@ -188,7 +188,7 @@
   "raggiunto": 171,
   "valido": true,
   "gradini_riusciti": 0,
-  "secondi": 321.4
+  "seconds": 321.4
  },
  {
   "cella": "A(21,6,5)",
@@ -201,6 +201,6 @@
   "raggiunto": 105,
   "valido": true,
   "gradini_riusciti": 0,
-  "secondi": 43113.3
+  "seconds": 43113.3
  }
 ]

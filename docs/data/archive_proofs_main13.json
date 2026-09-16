@@ -1,197 +1,197 @@
 [
-  {
-    "problema": "SidorenkoConjecture.sidorenko_K2",
-    "categoria": "research solved",
-    "righe_prova": 5,
-    "esito": "ACCETTATO",
-    "controlli_falliti": [],
-    "errori": "",
-    "teoremi_rimossi": 9,
-    "secondi": 95.72224807739258,
-    "assiomi_archivio": [
-      "propext",
-      "Classical.choice",
-      "Quot.sound"
-    ]
-  },
-  {
-    "problema": "JacobianConjecture.jacobian_conjecture",
-    "categoria": "research solved",
-    "righe_prova": 10,
-    "esito": "ACCETTATO",
-    "controlli_falliti": [],
-    "errori": "",
-    "teoremi_rimossi": 0,
-    "secondi": 97.43868207931519,
-    "assiomi_archivio": [
-      "propext",
-      "Classical.choice",
-      "Quot.sound"
-    ]
-  },
-  {
-    "problema": "SidorenkoConjecture.sidorenko_tree_subsingleton",
-    "categoria": "research solved",
-    "righe_prova": 10,
-    "esito": "ACCETTATO",
-    "controlli_falliti": [],
-    "errori": "",
-    "teoremi_rimossi": 9,
-    "secondi": 96.61339807510376,
-    "assiomi_archivio": [
-      "propext",
-      "Classical.choice",
-      "Quot.sound"
-    ]
-  },
-  {
-    "problema": "VizingConjecture.vizing_conjecture.variants.dominationNumber_eq_one",
-    "categoria": "research solved",
-    "righe_prova": 10,
-    "esito": "ACCETTATO",
-    "controlli_falliti": [],
-    "errori": "",
-    "teoremi_rimossi": 3,
-    "secondi": 89.45859670639038,
-    "assiomi_archivio": [
-      "propext",
-      "Classical.choice",
-      "Quot.sound"
-    ]
-  },
-  {
-    "problema": "AgohGiuga.squarefree_of_isCarmichael",
-    "categoria": "textbook",
-    "righe_prova": 10,
-    "esito": "ACCETTATO",
-    "controlli_falliti": [],
-    "errori": "",
-    "teoremi_rimossi": 5,
-    "secondi": 74.47987508773804,
-    "assiomi_archivio": [
-      "propext",
-      "Classical.choice",
-      "Quot.sound"
-    ]
-  },
-  {
-    "problema": "Bloch.univalentBlochConstant_upper_bound",
-    "categoria": "research solved",
-    "righe_prova": 12,
-    "esito": "ACCETTATO",
-    "controlli_falliti": [],
-    "errori": "",
-    "teoremi_rimossi": 4,
-    "secondi": 75.0592429637909,
-    "assiomi_archivio": [
-      "propext",
-      "Classical.choice",
-      "Quot.sound"
-    ]
-  },
-  {
-    "problema": "DeGiorgi.DeGiorgi_one",
-    "categoria": "research solved",
-    "righe_prova": 15,
-    "esito": "ACCETTATO",
-    "controlli_falliti": [],
-    "errori": "",
-    "teoremi_rimossi": 2,
-    "secondi": 100.69440603256226,
-    "assiomi_archivio": [
-      "propext",
-      "Classical.choice",
-      "Quot.sound"
-    ]
-  },
-  {
-    "problema": "WrittenOnTheWallII.GraphConjecture65.conjecture65",
-    "categoria": "research solved",
-    "righe_prova": 13,
-    "esito": "ACCETTATO",
-    "controlli_falliti": [],
-    "errori": "",
-    "teoremi_rimossi": 0,
-    "secondi": 113.97598910331726,
-    "assiomi_archivio": [
-      "propext",
-      "Classical.choice",
-      "Quot.sound"
-    ]
-  },
-  {
-    "problema": "UnionClosed.union_closed.variants.singleton_mem",
-    "categoria": "research solved",
-    "righe_prova": 20,
-    "esito": "ACCETTATO",
-    "controlli_falliti": [],
-    "errori": "",
-    "teoremi_rimossi": 4,
-    "secondi": 50.123764991760254,
-    "assiomi_archivio": [
-      "propext",
-      "Classical.choice",
-      "Quot.sound"
-    ]
-  },
-  {
-    "problema": "SidorenkoConjecture.sidorenko_conjecture.variants.non_bipartite_necessary",
-    "categoria": "research solved",
-    "righe_prova": 34,
-    "esito": "ACCETTATO",
-    "controlli_falliti": [],
-    "errori": "",
-    "teoremi_rimossi": 13,
-    "secondi": 46.512316942214966,
-    "assiomi_archivio": [
-      "propext",
-      "Classical.choice",
-      "Quot.sound"
-    ]
-  },
-  {
-    "problema": "Mersenne.new_mersenne_conjecture_of_prime",
-    "categoria": "textbook",
-    "righe_prova": 35,
-    "esito": "ACCETTATO",
-    "controlli_falliti": [],
-    "errori": "",
-    "teoremi_rimossi": 1,
-    "secondi": 37.57882809638977,
-    "assiomi_archivio": [
-      "propext",
-      "Classical.choice",
-      "Quot.sound"
-    ]
-  },
-  {
-    "problema": "SidorenkoConjecture.sidorenko_conjecture.variants.star",
-    "categoria": "research solved",
-    "righe_prova": 37,
-    "esito": "ACCETTATO",
-    "controlli_falliti": [],
-    "errori": "",
-    "teoremi_rimossi": 13,
-    "secondi": 58.55303716659546,
-    "assiomi_archivio": [
-      "propext",
-      "Classical.choice",
-      "Quot.sound"
-    ]
-  },
-  {
-    "problema": "WrittenOnTheWallII.GraphConjecture322.conjecture322",
-    "categoria": "research solved",
-    "righe_prova": 59,
-    "esito": "ACCETTATO",
-    "controlli_falliti": [],
-    "errori": "",
-    "teoremi_rimossi": 0,
-    "secondi": 48.09982180595398,
-    "assiomi_archivio": [
-      "propext",
-      "Classical.choice",
-      "Quot.sound"
-    ]
-  }
+ {
+  "problem": "SidorenkoConjecture.sidorenko_K2",
+  "category": "research solved",
+  "proof_lines": 5,
+  "result": "ACCEPTED",
+  "controlli_falliti": [],
+  "errori": "",
+  "teoremi_rimossi": 9,
+  "seconds": 95.72224807739258,
+  "assiomi_archivio": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ]
+ },
+ {
+  "problem": "JacobianConjecture.jacobian_conjecture",
+  "category": "research solved",
+  "proof_lines": 10,
+  "result": "ACCEPTED",
+  "controlli_falliti": [],
+  "errori": "",
+  "teoremi_rimossi": 0,
+  "seconds": 97.43868207931519,
+  "assiomi_archivio": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ]
+ },
+ {
+  "problem": "SidorenkoConjecture.sidorenko_tree_subsingleton",
+  "category": "research solved",
+  "proof_lines": 10,
+  "result": "ACCEPTED",
+  "controlli_falliti": [],
+  "errori": "",
+  "teoremi_rimossi": 9,
+  "seconds": 96.61339807510376,
+  "assiomi_archivio": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ]
+ },
+ {
+  "problem": "VizingConjecture.vizing_conjecture.variants.dominationNumber_eq_one",
+  "category": "research solved",
+  "proof_lines": 10,
+  "result": "ACCEPTED",
+  "controlli_falliti": [],
+  "errori": "",
+  "teoremi_rimossi": 3,
+  "seconds": 89.45859670639038,
+  "assiomi_archivio": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ]
+ },
+ {
+  "problem": "AgohGiuga.squarefree_of_isCarmichael",
+  "category": "textbook",
+  "proof_lines": 10,
+  "result": "ACCEPTED",
+  "controlli_falliti": [],
+  "errori": "",
+  "teoremi_rimossi": 5,
+  "seconds": 74.47987508773804,
+  "assiomi_archivio": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ]
+ },
+ {
+  "problem": "Bloch.univalentBlochConstant_upper_bound",
+  "category": "research solved",
+  "proof_lines": 12,
+  "result": "ACCEPTED",
+  "controlli_falliti": [],
+  "errori": "",
+  "teoremi_rimossi": 4,
+  "seconds": 75.0592429637909,
+  "assiomi_archivio": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ]
+ },
+ {
+  "problem": "DeGiorgi.DeGiorgi_one",
+  "category": "research solved",
+  "proof_lines": 15,
+  "result": "ACCEPTED",
+  "controlli_falliti": [],
+  "errori": "",
+  "teoremi_rimossi": 2,
+  "seconds": 100.69440603256226,
+  "assiomi_archivio": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ]
+ },
+ {
+  "problem": "WrittenOnTheWallII.GraphConjecture65.conjecture65",
+  "category": "research solved",
+  "proof_lines": 13,
+  "result": "ACCEPTED",
+  "controlli_falliti": [],
+  "errori": "",
+  "teoremi_rimossi": 0,
+  "seconds": 113.97598910331726,
+  "assiomi_archivio": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ]
+ },
+ {
+  "problem": "UnionClosed.union_closed.variants.singleton_mem",
+  "category": "research solved",
+  "proof_lines": 20,
+  "result": "ACCEPTED",
+  "controlli_falliti": [],
+  "errori": "",
+  "teoremi_rimossi": 4,
+  "seconds": 50.123764991760254,
+  "assiomi_archivio": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ]
+ },
+ {
+  "problem": "SidorenkoConjecture.sidorenko_conjecture.variants.non_bipartite_necessary",
+  "category": "research solved",
+  "proof_lines": 34,
+  "result": "ACCEPTED",
+  "controlli_falliti": [],
+  "errori": "",
+  "teoremi_rimossi": 13,
+  "seconds": 46.512316942214966,
+  "assiomi_archivio": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ]
+ },
+ {
+  "problem": "Mersenne.new_mersenne_conjecture_of_prime",
+  "category": "textbook",
+  "proof_lines": 35,
+  "result": "ACCEPTED",
+  "controlli_falliti": [],
+  "errori": "",
+  "teoremi_rimossi": 1,
+  "seconds": 37.57882809638977,
+  "assiomi_archivio": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ]
+ },
+ {
+  "problem": "SidorenkoConjecture.sidorenko_conjecture.variants.star",
+  "category": "research solved",
+  "proof_lines": 37,
+  "result": "ACCEPTED",
+  "controlli_falliti": [],
+  "errori": "",
+  "teoremi_rimossi": 13,
+  "seconds": 58.55303716659546,
+  "assiomi_archivio": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ]
+ },
+ {
+  "problem": "WrittenOnTheWallII.GraphConjecture322.conjecture322",
+  "category": "research solved",
+  "proof_lines": 59,
+  "result": "ACCEPTED",
+  "controlli_falliti": [],
+  "errori": "",
+  "teoremi_rimossi": 0,
+  "seconds": 48.09982180595398,
+  "assiomi_archivio": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ]
+ }
 ]

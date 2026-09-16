@@ -7,7 +7,7 @@
   "nostro": 76,
   "gruppo": "Z19",
   "candidate": 11628,
-  "secondi": 0.8,
+  "seconds": 0.8,
   "per_gruppo": {
    "Z19": {
     "orbite": 396,
@@ -46,7 +46,7 @@
   "nostro": 23,
   "gruppo": "Z23",
   "candidate": 100947,
-  "secondi": 2.4,
+  "seconds": 2.4,
   "per_gruppo": {
    "Z23": {
     "orbite": 1078,
@@ -72,11 +72,11 @@
   "cella": "A(17,6,6)",
   "pubblicato": 113,
   "superiore": 124,
-  "fonte": "Ch\u00d6",
+  "fonte": "ChÖ",
   "nostro": 85,
   "gruppo": "Z17",
   "candidate": 12376,
-  "secondi": 3.5,
+  "seconds": 3.5,
   "per_gruppo": {
    "Z17": {
     "orbite": 544,
@@ -112,7 +112,7 @@
   "nostro": 132,
   "gruppo": "Z22",
   "candidate": 26334,
-  "secondi": 48.3,
+  "seconds": 48.3,
   "per_gruppo": {
    "Z22": {
     "orbite": 872,
@@ -148,7 +148,7 @@
   "nostro": 57,
   "gruppo": "Z19",
   "candidate": 92378,
-  "secondi": 94.0,
+  "seconds": 94.0,
   "per_gruppo": {
    "Z19": {
     "orbite": 2252,
@@ -190,7 +190,7 @@
   "nostro": 63,
   "gruppo": "blocchi2x9",
   "candidate": 8568,
-  "secondi": 150.7,
+  "seconds": 150.7,
   "per_gruppo": {
    "Z18": {
     "orbite": 273,
@@ -235,7 +235,7 @@
   "nostro": 108,
   "gruppo": "blocchi4x4",
   "candidate": 11440,
-  "secondi": 183.4,
+  "seconds": 183.4,
   "per_gruppo": {
    "Z16": {
     "orbite": 528,
@@ -272,7 +272,7 @@
   "nostro": 100,
   "gruppo": "Z16:2",
   "candidate": 12870,
-  "secondi": 206.4,
+  "seconds": 206.4,
   "per_gruppo": {
    "Z16": {
     "orbite": 544,
@@ -309,7 +309,7 @@
   "nostro": 138,
   "gruppo": "Z23",
   "candidate": 33649,
-  "secondi": 8.7,
+  "seconds": 8.7,
   "per_gruppo": {
    "Z23": {
     "orbite": 1111,
@@ -339,7 +339,7 @@
   "nostro": 27,
   "gruppo": "Z27",
   "candidate": 80730,
-  "secondi": 714.5,
+  "seconds": 714.5,
   "per_gruppo": {
    "Z27": {
     "orbite": 180,
@@ -381,7 +381,7 @@
   "nostro": 119,
   "gruppo": "Z17",
   "candidate": 19448,
-  "secondi": 7.5,
+  "seconds": 7.5,
   "per_gruppo": {
    "Z17": {
     "orbite": 944,
@@ -417,7 +417,7 @@
   "nostro": 84,
   "gruppo": "Z20",
   "candidate": 15504,
-  "secondi": 850.6,
+  "seconds": 850.6,
   "per_gruppo": {
    "Z20": {
     "orbite": 539,
@@ -459,7 +459,7 @@
   "nostro": 290,
   "gruppo": "Z29",
   "candidate": 118755,
-  "secondi": 956.2,
+  "seconds": 956.2,
   "per_gruppo": {
    "Z29": {
     "orbite": 3479,
@@ -499,7 +499,7 @@
   "nostro": 129,
   "gruppo": "blocchi6x3",
   "candidate": 18564,
-  "secondi": 24793.5,
+  "seconds": 24793.5,
   "per_gruppo": {
    "Z18": {
     "orbite": 681,
@@ -546,7 +546,7 @@
   "nostro": 171,
   "gruppo": "Z19:18",
   "candidate": 27132,
-  "secondi": 36.1,
+  "seconds": 36.1,
   "per_gruppo": {
    "Z19": {
     "orbite": 1176,
@@ -588,7 +588,7 @@
   "nostro": 105,
   "gruppo": "Z21",
   "candidate": 20349,
-  "secondi": 32437.2,
+  "seconds": 32437.2,
   "per_gruppo": {
    "Z21": {
     "orbite": 663,
@@ -630,7 +630,7 @@
   "nostro": 136,
   "gruppo": "Z17",
   "candidate": 24310,
-  "secondi": 47.7,
+  "seconds": 47.7,
   "per_gruppo": {
    "Z17": {
     "orbite": 1222,

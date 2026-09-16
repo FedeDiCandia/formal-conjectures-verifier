@@ -1,652 +1,652 @@
 {
-  "modello": "claude-fable-5-1",
-  "effort": "medium",
-  "istruzioni": "attuali",
-  "tetto_problema": 0.5,
-  "budget": 4.0,
-  "speso": 1.2935645,
-  "consumo_totale": {
-    "input_tokens": 68,
-    "output_tokens": 16445,
-    "scrittura_cache_5m": 36065,
+ "model": "claude-fable-5-1",
+ "effort": "medium",
+ "istruzioni": "attuali",
+ "tetto_problema": 0.5,
+ "budget": 4.0,
+ "speso": 1.2935645,
+ "consumo_totale": {
+  "input_tokens": 68,
+  "output_tokens": 16445,
+  "scrittura_cache_5m": 36065,
+  "scrittura_cache_1h": 0,
+  "lettura_cache": 79288,
+  "chiamate": 17
+ },
+ "attempts": [
+  {
+   "problem": "WieferichMirimanoffPrime.isMirimanoffPrime_and_not_isWieferichPrime_1006003",
+   "solved": false,
+   "reason": "budget insufficiente per continuare: 7,972 token in ingresso, la prossima chiamata costerebbe fino a $0.3997 ma restano $0.3524 ($3.8524 sul totale, $0.3524 su questo problema)",
+   "causa": "sistema: nessun tentativo vero, tutto speso in esplorazione",
+   "iterations": 4,
+   "verifications": 0,
+   "explorations": 3,
+   "python_runs": 0,
+   "secondi_totali": 42.01235795021057,
+   "api_seconds": 20.701727867126465,
+   "lean_seconds": 20.541192054748535,
+   "python_seconds": 0.0,
+   "cost": 0.147637,
+   "consumo": {
+    "input_tokens": 12,
+    "output_tokens": 1109,
+    "scrittura_cache_5m": 7128,
     "scrittura_cache_1h": 0,
-    "lettura_cache": 79288,
-    "chiamate": 17
-  },
-  "tentativi": [
+    "lettura_cache": 11868,
+    "chiamate": 3
+   },
+   "verifiche_per_natura": {},
+   "iterazioni_dettaglio": [
     {
-      "problema": "WieferichMirimanoffPrime.isMirimanoffPrime_and_not_isWieferichPrime_1006003",
-      "risolto": false,
-      "motivo": "budget insufficiente per continuare: 7,972 token in ingresso, la prossima chiamata costerebbe fino a $0.3997 ma restano $0.3524 ($3.8524 sul totale, $0.3524 su questo problema)",
-      "causa": "sistema: nessun tentativo vero, tutto speso in esplorazione",
-      "iterazioni": 4,
-      "verifiche": 0,
-      "esplorazioni": 3,
-      "esecuzioni_python": 0,
-      "secondi_totali": 42.01235795021057,
-      "secondi_api": 20.701727867126465,
-      "secondi_lean": 20.541192054748535,
-      "secondi_python": 0.0,
-      "costo": 0.147637,
-      "consumo": {
-        "input_tokens": 12,
-        "output_tokens": 1109,
-        "scrittura_cache_5m": 7128,
-        "scrittura_cache_1h": 0,
-        "lettura_cache": 11868,
-        "chiamate": 3
-      },
-      "verifiche_per_natura": {},
-      "iterazioni_dettaglio": [
-        {
-          "numero": 1,
-          "costo": 0.0796275,
-          "token_input": 4,
-          "token_output": 168,
-          "cache_scritta": 5695,
-          "cache_letta": 0,
-          "secondi_api": 5.345091819763184,
-          "secondi_lean": 0.0,
-          "secondi_python": 0.0,
-          "esecuzioni_python": 0,
-          "esplorazioni": 1,
-          "secondi_esplorazione": 6.861586093902588,
-          "verifiche": [],
-          "ragionamento": "I should look at how IsWieferichPrime and IsMirimanoffPrime are defined, likely somewhere in FormalConjecturesUtil.\n\n"
-        },
-        {
-          "numero": 2,
-          "costo": 0.020038749999999994,
-          "token_input": 4,
-          "token_output": 252,
-          "cache_scritta": 478,
-          "cache_letta": 5695,
-          "secondi_api": 4.257102012634277,
-          "secondi_lean": 0.0,
-          "secondi_python": 0.0,
-          "esecuzioni_python": 0,
-          "esplorazioni": 1,
-          "secondi_esplorazione": 6.865772008895874,
-          "verifiche": [],
-          "ragionamento": ""
-        },
-        {
-          "numero": 3,
-          "costo": 0.04797074999999999,
-          "token_input": 4,
-          "token_output": 689,
-          "cache_scritta": 955,
-          "cache_letta": 6173,
-          "secondi_api": 11.099534034729004,
-          "secondi_lean": 0.0,
-          "secondi_python": 0.0,
-          "esecuzioni_python": 0,
-          "esplorazioni": 1,
-          "secondi_esplorazione": 6.813833951950073,
-          "verifiche": [],
-          "ragionamento": "I need to prove p² divides 3^(p-1) - 1, so I'm considering whether decide can handle this directly since Nat.pow is GMP-accelerated in the kernel, or whether I need a modular exponentiation lemma chain instead.\n\n"
-        }
-      ],
-      "soluzione": ""
+     "numero": 1,
+     "cost": 0.0796275,
+     "token_input": 4,
+     "token_output": 168,
+     "cache_scritta": 5695,
+     "cache_letta": 0,
+     "api_seconds": 5.345091819763184,
+     "lean_seconds": 0.0,
+     "python_seconds": 0.0,
+     "python_runs": 0,
+     "explorations": 1,
+     "secondi_esplorazione": 6.861586093902588,
+     "verifications": [],
+     "ragionamento": "I should look at how IsWieferichPrime and IsMirimanoffPrime are defined, likely somewhere in FormalConjecturesUtil.\n\n"
     },
     {
-      "problema": "WilsonPrime.not_isWilsonPrime_seven",
-      "risolto": true,
-      "motivo": "dimostrazione accettata dal verificatore",
-      "causa": "risolto",
-      "iterazioni": 2,
-      "verifiche": 2,
-      "esplorazioni": 0,
-      "esecuzioni_python": 0,
-      "secondi_totali": 53.40308403968811,
-      "secondi_api": 12.654618978500366,
-      "secondi_lean": 40.310195207595825,
-      "secondi_python": 0.0,
-      "costo": 0.06358825,
-      "consumo": {
-        "input_tokens": 8,
-        "output_tokens": 728,
-        "scrittura_cache_5m": 2002,
-        "scrittura_cache_1h": 0,
-        "lettura_cache": 8333,
-        "chiamate": 2
-      },
-      "verifiche_per_natura": {
-        "errore_tecnico": 1,
-        "accettato": 1
-      },
-      "iterazioni_dettaglio": [
-        {
-          "numero": 1,
-          "costo": 0.034236000000000016,
-          "token_input": 4,
-          "token_output": 350,
-          "cache_scritta": 1265,
-          "cache_letta": 3534,
-          "secondi_api": 6.458095073699951,
-          "secondi_lean": 20.028900146484375,
-          "secondi_python": 0.0,
-          "esecuzioni_python": 0,
-          "esplorazioni": 0,
-          "secondi_esplorazione": 0.0,
-          "verifiche": [
-            {
-              "caratteri": 435,
-              "esito": "RIFIUTATO",
-              "controllo_fallito": "compila senza errori",
-              "secondi": 20.028900146484375,
-              "natura": "errore_tecnico"
-            }
-          ],
-          "ragionamento": ""
-        },
-        {
-          "numero": 2,
-          "costo": 0.029352249999999996,
-          "token_input": 4,
-          "token_output": 378,
-          "cache_scritta": 737,
-          "cache_letta": 4799,
-          "secondi_api": 6.196523904800415,
-          "secondi_lean": 20.28129506111145,
-          "secondi_python": 0.0,
-          "esecuzioni_python": 0,
-          "esplorazioni": 0,
-          "secondi_esplorazione": 0.0,
-          "verifiche": [
-            {
-              "caratteri": 480,
-              "esito": "ACCETTATO",
-              "controllo_fallito": "",
-              "secondi": 20.28129506111145,
-              "natura": "accettato"
-            }
-          ],
-          "ragionamento": ""
-        }
-      ],
-      "soluzione": "import FormalConjecturesUtil\n\nnamespace WilsonPrime\n\n/-- A Wilson prime is a prime $p$ such that $p^2 \\mid (p-1)!+1$. -/\ndef IsWilsonPrime (p : ℕ) : Prop :=\n  p.Prime ∧ p ^ 2 ∣ (p - 1).factorial + 1\n\n/-- The prime $7$ is not a Wilson prime. -/\n@[category test, AMS 11]\ntheorem not_isWilsonPrime_seven : ¬ IsWilsonPrime 7 := by\n  intro h\n  have h2 : 7 ^ 2 ∣ (7 - 1).factorial + 1 := h.2\n  have h3 : (7 - 1).factorial + 1 = 721 := by decide\n  rw [h3] at h2\n  omega\n\nend WilsonPrime\n"
+     "numero": 2,
+     "cost": 0.020038749999999994,
+     "token_input": 4,
+     "token_output": 252,
+     "cache_scritta": 478,
+     "cache_letta": 5695,
+     "api_seconds": 4.257102012634277,
+     "lean_seconds": 0.0,
+     "python_seconds": 0.0,
+     "python_runs": 0,
+     "explorations": 1,
+     "secondi_esplorazione": 6.865772008895874,
+     "verifications": [],
+     "ragionamento": ""
     },
     {
-      "problema": "DiophantineTuple.fermat_4_tuple",
-      "risolto": false,
-      "motivo": "budget insufficiente per continuare: 9,127 token in ingresso, la prossima chiamata costerebbe fino a $0.4141 ma restano $0.3735 ($3.6623 sul totale, $0.3735 su questo problema)",
-      "causa": "tecnico: sapeva cosa dimostrare ma non e' riuscito a scriverlo in Lean",
-      "iterazioni": 3,
-      "verifiche": 2,
-      "esplorazioni": 0,
-      "esecuzioni_python": 0,
-      "secondi_totali": 52.415079832077026,
-      "secondi_api": 17.434525728225708,
-      "secondi_lean": 34.44436526298523,
-      "secondi_python": 0.0,
-      "costo": 0.1265095,
-      "consumo": {
-        "input_tokens": 8,
-        "output_tokens": 1295,
-        "scrittura_cache_5m": 4718,
-        "scrittura_cache_1h": 0,
-        "lettura_cache": 10818,
-        "chiamate": 2
-      },
-      "verifiche_per_natura": {
-        "errore_tecnico": 2
-      },
-      "iterazioni_dettaglio": [
-        {
-          "numero": 1,
-          "costo": 0.08259849999999999,
-          "token_input": 4,
-          "token_output": 696,
-          "cache_scritta": 3750,
-          "cache_letta": 3534,
-          "secondi_api": 8.837281942367554,
-          "secondi_lean": 18.58669424057007,
-          "secondi_python": 0.0,
-          "esecuzioni_python": 0,
-          "esplorazioni": 0,
-          "secondi_esplorazione": 0.0,
-          "verifiche": [
-            {
-              "caratteri": 826,
-              "esito": "RIFIUTATO",
-              "controllo_fallito": "compila senza errori",
-              "secondi": 18.58669424057007,
-              "natura": "errore_tecnico"
-            }
-          ],
-          "ragionamento": "I need to verify {1, 3, 8, 120} is an integral Diophantine tuple: checking each pairwise product plus one gives a perfect square — 4, 9, 121, 25, 361, 961 — all squares confirmed. Now I'll try proving this directly, perhaps with decide or norm_num using explicit square witnesses.\n\n"
-        },
-        {
-          "numero": 2,
-          "costo": 0.04391099999999998,
-          "token_input": 4,
-          "token_output": 599,
-          "cache_scritta": 968,
-          "cache_letta": 7284,
-          "secondi_api": 8.597243785858154,
-          "secondi_lean": 15.857671022415161,
-          "secondi_python": 0.0,
-          "esecuzioni_python": 0,
-          "esplorazioni": 0,
-          "secondi_esplorazione": 0.0,
-          "verifiche": [
-            {
-              "caratteri": 835,
-              "esito": "RIFIUTATO",
-              "controllo_fallito": "compila senza errori",
-              "secondi": 15.857671022415161,
-              "natura": "errore_tecnico"
-            }
-          ],
-          "ragionamento": ""
-        }
-      ],
-      "soluzione": ""
-    },
-    {
-      "problema": "ClaudesCycles.not_hasHamiltonianArcDecomposition_one",
-      "risolto": true,
-      "motivo": "dimostrazione accettata dal verificatore",
-      "causa": "risolto",
-      "iterazioni": 1,
-      "verifiche": 1,
-      "esplorazioni": 0,
-      "esecuzioni_python": 0,
-      "secondi_totali": 34.44285988807678,
-      "secondi_api": 11.426512956619263,
-      "secondi_lean": 22.863598108291626,
-      "secondi_python": 0.0,
-      "costo": 0.0956235,
-      "consumo": {
-        "input_tokens": 4,
-        "output_tokens": 995,
-        "scrittura_cache_5m": 3596,
-        "scrittura_cache_1h": 0,
-        "lettura_cache": 3534,
-        "chiamate": 1
-      },
-      "verifiche_per_natura": {
-        "accettato": 1
-      },
-      "iterazioni_dettaglio": [
-        {
-          "numero": 1,
-          "costo": 0.09562350000000003,
-          "token_input": 4,
-          "token_output": 995,
-          "cache_scritta": 3596,
-          "cache_letta": 3534,
-          "secondi_api": 11.426512956619263,
-          "secondi_lean": 22.863598108291626,
-          "secondi_python": 0.0,
-          "esecuzioni_python": 0,
-          "esplorazioni": 0,
-          "secondi_esplorazione": 0.0,
-          "verifiche": [
-            {
-              "caratteri": 953,
-              "esito": "ACCETTATO",
-              "controllo_fallito": "",
-              "secondi": 22.863598108291626,
-              "natura": "accettato"
-            }
-          ],
-          "ragionamento": "Since the vertex type here collapses to a subsingleton, no permutation can satisfy the cycle condition requiring some element to move, so a Hamiltonian arc decomposition for n=1 is impossible. I'm writing the Lean proof for this non-existence theorem.\n\n"
-        }
-      ],
-      "soluzione": "import FormalConjecturesUtil\n\nnamespace ClaudesCycles\n\nabbrev Vertex (m : ℕ) := Fin 3 → ZMod m\n\ndef bumpAt {m : ℕ} [NeZero m] (b : Fin 3) (v : Vertex m) : Vertex m :=\n  Function.update v b (v b + 1)\n\ndef cubeAdj {m : ℕ} [NeZero m] (u v : Vertex m) : Prop :=\n  ∃ b : Fin 3, bumpAt b u = v\n\ndef IsDirectedHamiltonianCycle {V : Type*} [Fintype V] [DecidableEq V]\n    (adj : V → V → Prop) (σ : Equiv.Perm V) : Prop :=\n  (∀ v, adj v (σ v)) ∧ σ.IsCycle ∧ σ.support = Finset.univ\n\ndef HasHamiltonianArcDecomposition (m : ℕ) [NeZero m] : Prop :=\n  ∃ σ : Fin 3 → Equiv.Perm (Vertex m),\n    (∀ c, IsDirectedHamiltonianCycle (cubeAdj (m := m)) (σ c)) ∧\n    (∀ v : Vertex m, ∀ b : Fin 3, ∃! c : Fin 3, σ c v = bumpAt b v)\n\n@[category test, AMS 5]\ntheorem not_hasHamiltonianArcDecomposition_one : ¬ HasHamiltonianArcDecomposition 1 := by\n  rintro ⟨σ, hσ, -⟩\n  obtain ⟨-, hc, -⟩ := hσ 0\n  obtain ⟨x, hx, -⟩ := hc\n  exact hx (Subsingleton.elim _ _)\n\nend ClaudesCycles\n"
-    },
-    {
-      "problema": "JacobianConjecture.jacobian_conjecture",
-      "risolto": false,
-      "motivo": "budget insufficiente per continuare: 11,333 token in ingresso, la prossima chiamata costerebbe fino a $0.4417 ma restano $0.3587 ($3.4253 sul totale, $0.3587 su questo problema)",
-      "causa": "sistema: nessun tentativo vero, tutto speso in esplorazione",
-      "iterazioni": 3,
-      "verifiche": 0,
-      "esplorazioni": 2,
-      "esecuzioni_python": 0,
-      "secondi_totali": 45.13329195976257,
-      "secondi_api": 20.909252405166626,
-      "secondi_lean": 23.6245858669281,
-      "secondi_python": 0.0,
-      "costo": 0.14131075,
-      "consumo": {
-        "input_tokens": 8,
-        "output_tokens": 1555,
-        "scrittura_cache_5m": 4885,
-        "scrittura_cache_1h": 0,
-        "lettura_cache": 9673,
-        "chiamate": 2
-      },
-      "verifiche_per_natura": {},
-      "iterazioni_dettaglio": [
-        {
-          "numero": 1,
-          "costo": 0.056086000000000025,
-          "token_input": 4,
-          "token_output": 452,
-          "cache_scritta": 2605,
-          "cache_letta": 3534,
-          "secondi_api": 7.25628924369812,
-          "secondi_lean": 0.0,
-          "secondi_python": 0.0,
-          "esecuzioni_python": 0,
-          "esplorazioni": 1,
-          "secondi_esplorazione": 11.37238097190857,
-          "verifiche": [],
-          "ragionamento": "I need to prove the biconditional with False on one side, so I want to show that assuming JacobianConjectureProp k (Fin 3) leads to a contradiction — using a map G whose Jacobian determinant is a unit but which has no polynomial inverse.\n\nSince G would have an inverse H, evaluating at specific points where G agrees but the coordinates differ forces 1 = 0 in k, contradicting Nontrivial. Now I want to check the RegularFunction API in FormalConjecturesUtil to see how to construct these evaluations properly.\n\n"
-        },
-        {
-          "numero": 2,
-          "costo": 0.08522474999999996,
-          "token_input": 4,
-          "token_output": 1103,
-          "cache_scritta": 2280,
-          "cache_letta": 6139,
-          "secondi_api": 13.652963161468506,
-          "secondi_lean": 0.0,
-          "secondi_python": 0.0,
-          "esecuzioni_python": 0,
-          "esplorazioni": 1,
-          "secondi_esplorazione": 12.252204895019531,
-          "verifiche": [],
-          "ragionamento": "I need to figure out the composition order carefully: since aeval(F.comp G) a = G.aeval(F.aeval a), I want F.comp G = id, which means substituting F into a then applying G recovers a — that's the direction matching the Jacobian conjecture setup.\n\nNow I still need to prove the determinant of the Jacobian equals 1 and verify the aeval computation for G, both of which involve heavy symbolic computation in Lean with partial derivatives of multivariate polynomials. I'm trying with the polynomial map G, since its Jacobian determinant should be a unit (unlike a candidate with determinant -2), and I'll attempt to unfold the aeval definitions and simplify using aeval_X across the Fin 3 indices.\n\n"
-        }
-      ],
-      "soluzione": ""
-    },
-    {
-      "problema": "VizingConjecture.vizing_conjecture.variants.dominationNumber_eq_one",
-      "risolto": true,
-      "motivo": "dimostrazione accettata dal verificatore",
-      "causa": "risolto",
-      "iterazioni": 2,
-      "verifiche": 1,
-      "esplorazioni": 1,
-      "esecuzioni_python": 0,
-      "secondi_totali": 83.80276799201965,
-      "secondi_api": 14.286919116973877,
-      "secondi_lean": 69.14881634712219,
-      "secondi_python": 0.0,
-      "costo": 0.0849775,
-      "consumo": {
-        "input_tokens": 8,
-        "output_tokens": 894,
-        "scrittura_cache_5m": 3029,
-        "scrittura_cache_1h": 0,
-        "lettura_cache": 9340,
-        "chiamate": 2
-      },
-      "verifiche_per_natura": {
-        "accettato": 1
-      },
-      "iterazioni_dettaglio": [
-        {
-          "numero": 1,
-          "costo": 0.04472350000000003,
-          "token_input": 4,
-          "token_output": 308,
-          "cache_scritta": 2272,
-          "cache_letta": 3534,
-          "secondi_api": 5.8023810386657715,
-          "secondi_lean": 0.0,
-          "secondi_python": 0.0,
-          "esecuzioni_python": 0,
-          "esplorazioni": 1,
-          "secondi_esplorazione": 41.2085440158844,
-          "verifiche": [],
-          "ragionamento": "I should start by looking into the SimpleGraph.dominationNumber definition and checking whether a lemma like dominationNumber_le_dominationNumber_boxProd already exists.\n\n"
-        },
-        {
-          "numero": 2,
-          "costo": 0.04025400000000001,
-          "token_input": 4,
-          "token_output": 586,
-          "cache_scritta": 757,
-          "cache_letta": 5806,
-          "secondi_api": 8.484538078308105,
-          "secondi_lean": 27.940272331237793,
-          "secondi_python": 0.0,
-          "esecuzioni_python": 0,
-          "esplorazioni": 0,
-          "secondi_esplorazione": 0.0,
-          "verifiche": [
-            {
-              "caratteri": 742,
-              "esito": "ACCETTATO",
-              "controllo_fallito": "",
-              "secondi": 27.940272331237793,
-              "natura": "accettato"
-            }
-          ],
-          "ragionamento": "I need to establish Nonempty β from hH, since if β were empty, dominationNumber would be 0, contradicting the hypothesis that it equals 1—so I should look for a lemma characterizing when the domination number is zero.\n\n"
-        }
-      ],
-      "soluzione": "import FormalConjecturesUtil\n\nopen SimpleGraph\n\nnamespace VizingConjecture\n\ntheorem vizing_conjecture.variants.dominationNumber_eq_one\n    {α β : Type} [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β]\n    (G : SimpleGraph α) (H : SimpleGraph β) (hH : H.dominationNumber = 1) :\n    G.dominationNumber * H.dominationNumber ≤ (G □ H).dominationNumber := by\n  have hne : Nonempty β := by\n    by_contra h\n    rw [not_nonempty_iff] at h\n    have : H.dominationNumber = 0 := by\n      apply Nat.eq_zero_of_le_zero\n      apply Nat.sInf_le\n      refine ⟨∅, ?_⟩\n      constructor\n      · intro v; exact (IsEmpty.false v).elim\n      · simp\n    omega\n  rw [hH, mul_one]\n  exact dominationNumber_le_dominationNumber_boxProd G H\n\nend VizingConjecture"
-    },
-    {
-      "problema": "SidorenkoConjecture.sidorenko_tree_subsingleton",
-      "risolto": false,
-      "motivo": "budget insufficiente per continuare: 16,033 token in ingresso, la prossima chiamata costerebbe fino a $0.5004 ma restano $0.5000 ($3.3404 sul totale, $0.5000 su questo problema)",
-      "causa": "sistema: nessun tentativo vero, tutto speso in esplorazione",
-      "iterazioni": 1,
-      "verifiche": 0,
-      "esplorazioni": 0,
-      "esecuzioni_python": 0,
-      "secondi_totali": 0.20176196098327637,
-      "secondi_api": 0.0,
-      "secondi_lean": 0.0,
-      "secondi_python": 0.0,
-      "costo": 0.0,
-      "consumo": {
-        "input_tokens": 0,
-        "output_tokens": 0,
-        "scrittura_cache_5m": 0,
-        "scrittura_cache_1h": 0,
-        "lettura_cache": 0,
-        "chiamate": 0
-      },
-      "verifiche_per_natura": {},
-      "iterazioni_dettaglio": [],
-      "soluzione": ""
-    },
-    {
-      "problema": "DeGiorgi.DeGiorgi_one",
-      "risolto": false,
-      "motivo": "budget insufficiente per continuare: 9,476 token in ingresso, la prossima chiamata costerebbe fino a $0.4184 ma restano $0.3410 ($3.1814 sul totale, $0.3410 su questo problema)",
-      "causa": "sistema: nessun tentativo vero, tutto speso in esplorazione",
-      "iterazioni": 2,
-      "verifiche": 0,
-      "esplorazioni": 1,
-      "esecuzioni_python": 0,
-      "secondi_totali": 35.50357723236084,
-      "secondi_api": 27.893773794174194,
-      "secondi_lean": 7.248999834060669,
-      "secondi_python": 0.0,
-      "costo": 0.1589985,
-      "consumo": {
-        "input_tokens": 4,
-        "output_tokens": 2420,
-        "scrittura_cache_5m": 2966,
-        "scrittura_cache_1h": 0,
-        "lettura_cache": 3534,
-        "chiamate": 1
-      },
-      "verifiche_per_natura": {},
-      "iterazioni_dettaglio": [
-        {
-          "numero": 1,
-          "costo": 0.15899849999999993,
-          "token_input": 4,
-          "token_output": 2420,
-          "cache_scritta": 2966,
-          "cache_letta": 3534,
-          "secondi_api": 27.893773794174194,
-          "secondi_lean": 0.0,
-          "secondi_python": 0.0,
-          "esecuzioni_python": 0,
-          "esplorazioni": 1,
-          "secondi_esplorazione": 7.248999834060669,
-          "verifiche": [],
-          "ragionamento": "In the one-dimensional case, since u is C² with strictly positive derivative everywhere, it's strictly monotonic, so its level sets must reduce to single points — meaning the level set condition forces injectivity of u on ℝ.\n\nI'm working through whether I even need the full PDE structure here, or if regularity plus positive derivative alone suffices, considering how lineDeriv relates to the ordinary derivative of the restriction to a line through the origin.\n\nSketching out the Lean proof: defining the direction vector e, showing every point in ℝ^1 is a scalar multiple of e, then establishing strict monotonicity of the restricted function via strictMono_of_deriv_pos, using differentiability of u at each scaled point.\n\nI want to chain composition of derivatives to show the directional derivative equals the fderiv applied to e, using the standard lemmas for composing a linear map's derivative with a scalar-line parametrization. Once that's established, I can move on to analyzing level sets for values y in the range of u.\n\nFor a fixed y = u x₀, injectivity forces the preimage u⁻¹'{y} to be exactly {x₀}, so I want to represent this singleton as an affine subspace using `AffineSubspace.mk'` with trivial direction ⊥, since its direction lemma gives the right carrier and rank zero matches what I need.\n\n"
-        }
-      ],
-      "soluzione": ""
-    },
-    {
-      "problema": "WrittenOnTheWallII.GraphConjecture65.conjecture65",
-      "risolto": false,
-      "motivo": "budget insufficiente per continuare: 14,735 token in ingresso, la prossima chiamata costerebbe fino a $0.4842 ma restano $0.1642 ($2.8455 sul totale, $0.1642 su questo problema)",
-      "causa": "sistema: nessun tentativo vero, tutto speso in esplorazione",
-      "iterazioni": 4,
-      "verifiche": 0,
-      "esplorazioni": 3,
-      "esecuzioni_python": 0,
-      "secondi_totali": 109.26500010490417,
-      "secondi_api": 87.65078711509705,
-      "secondi_lean": 20.895520210266113,
-      "secondi_python": 0.0,
-      "costo": 0.335846,
-      "consumo": {
-        "input_tokens": 12,
-        "output_tokens": 5411,
-        "scrittura_cache_5m": 4841,
-        "scrittura_cache_1h": 0,
-        "lettura_cache": 18654,
-        "chiamate": 3
-      },
-      "verifiche_per_natura": {},
-      "iterazioni_dettaglio": [
-        {
-          "numero": 1,
-          "costo": 0.057223500000000094,
-          "token_input": 4,
-          "token_output": 200,
-          "cache_scritta": 3704,
-          "cache_letta": 3534,
-          "secondi_api": 5.995844841003418,
-          "secondi_lean": 0.0,
-          "secondi_python": 0.0,
-          "esecuzioni_python": 0,
-          "esplorazioni": 1,
-          "secondi_esplorazione": 7.001715183258057,
-          "verifiche": [],
-          "ragionamento": "I'm starting by looking into the definitions of `distMin`, `largestInducedForestSize`, and `answer`, checking how they're defined in FormalConjecturesUtil.\n\n"
-        },
-        {
-          "numero": 2,
-          "costo": 0.014999499999999943,
-          "token_input": 4,
-          "token_output": 102,
-          "cache_scritta": 644,
-          "cache_letta": 7238,
-          "secondi_api": 16.875718116760254,
-          "secondi_lean": 0.0,
-          "secondi_python": 0.0,
-          "esecuzioni_python": 0,
-          "esplorazioni": 1,
-          "secondi_esplorazione": 6.9863200187683105,
-          "verifiche": [],
-          "ragionamento": ""
-        },
-        {
-          "numero": 3,
-          "costo": 0.26362299999999994,
-          "token_input": 4,
-          "token_output": 5109,
-          "cache_scritta": 493,
-          "cache_letta": 7882,
-          "secondi_api": 64.77922415733337,
-          "secondi_lean": 0.0,
-          "secondi_python": 0.0,
-          "esecuzioni_python": 0,
-          "esplorazioni": 1,
-          "secondi_esplorazione": 6.907485008239746,
-          "verifiche": [],
-          "ragionamento": "I need to disprove the universal statement by finding a counterexample, which requires establishing connectivity and computing that the minimum-degree vertex set has size 12 — but I'm running into decidability issues with the set of vertices matching minDegree, since Set.toFinset needs a decidable predicate instance for that membership condition.\n\nDistance itself is defined through an infimum over a set of natural numbers, so `decide` won't work to compute it directly — I'd have to manually verify upper bounds via explicit walks and lower bounds by ruling out shorter paths, which is much harder. Actually I realize I don't need exact distance values, just enough of a bound to make the target inequality fail: I need lower bounds on the minimum distances and an upper bound on the largest induced forest size, and it's the lower bounds on distance that are the tricky part.\n\nFor that, instead of walk-by-walk induction, I could use a potential function argument — assign each vertex a value where adjacent vertices differ by at most 1, then any walk's length must be at least the difference in potential between endpoints. I'd need to establish a small lemma by induction on the walk structure showing the endpoint's potential is bounded by the start's potential plus the walk length, then apply it with a suitable labeling function to get the distance lower bound I need.\n\nSince decidability instances exist for graphs of this size, I could just decide the whole adjacency condition directly. I'm also thinking about identifying the minimum-degree vertex set A as {0,12} by deciding the degree equation over all vertices, since minDegree is computed via image and getD over the finite vertex type.\n\nFor the distance bound, I want to show distMin G A ≥ 12 by working with the finset of pairs within A: if this pairs finset is nonempty, the minimum is at least 12 exactly when every pair has distance at least 12, which reduces to just checking dist 0 12 and dist 12 0 since A only contains those two vertices — but I need to handle the case where pairs turns out empty, since then distMin defaults to 0.\n\nI'm also considering an alternative approach: first establish A = {0,12} as a set equality using decide, then rewrite distMin in terms of that explicit set, converting it to a finset via toFinset lemmas so the filter over pairs becomes computable directly.\n\nSince dist itself isn't computable, I need to prove the lower bound differently — using Finset.le_min' to reduce to showing every pair maps to a value ≥12, then handling the two resulting pairs by cases and connecting dist to walk length via the connectivity lemma that gives an actual walk realizing the distance, then applying my earlier bound lemma to that walk's length.\n\nFor proving connectedness itself, I'm considering whether Mathlib has a decidability instance for reachability or connectedness I can just invoke, versus manually establishing preconnectedness by chaining adjacency-based reachability facts across all sixteen vertices.\n\nFor bounding the largest induced forest at 15, I want to use `csSup_le` with nonemptiness from the empty set being acyclic, then show every acyclic subset has size at most 15 — the key obstruction being that any set containing vertices 1, 13, and 14 forces a triangle, so I need to actually exhibit that 3-cycle as an explicit walk in the induced subgraph to contradict acyclicity.\n\nI'm considering whether `IsCycle` has a decidable instance so I could just use `decide` on the concrete triangle walk, but as a fallback there's also the general fact that an acyclic graph's edge count is bounded by vertex count minus one, which might avoid constructing cycles explicitly.\n\nActually a cleaner route might be through bridges: an acyclic graph has every edge as a bridge, so if I can show the edge between 1 and 13 isn't a bridge (since 1-14-13 gives an alternate path), that directly contradicts acyclicity without needing to build the full triangle cycle.\n\nActually `decide` likely fa"
-        }
-      ],
-      "soluzione": ""
-    },
-    {
-      "problema": "UnionClosed.union_closed.variants.singleton_mem",
-      "risolto": false,
-      "motivo": "budget insufficiente per continuare: 9,481 token in ingresso, la prossima chiamata costerebbe fino a $0.4185 ma restano $0.3609 ($2.7064 sul totale, $0.3609 su questo problema)",
-      "causa": "tecnico: sapeva cosa dimostrare ma non e' riuscito a scriverlo in Lean",
-      "iterazioni": 2,
-      "verifiche": 1,
-      "esplorazioni": 0,
-      "esecuzioni_python": 0,
-      "secondi_totali": 42.836886167526245,
-      "secondi_api": 21.660556077957153,
-      "secondi_lean": 20.839503049850464,
-      "secondi_python": 0.0,
-      "costo": 0.1390735,
-      "consumo": {
-        "input_tokens": 4,
-        "output_tokens": 2038,
-        "scrittura_cache_5m": 2900,
-        "scrittura_cache_1h": 0,
-        "lettura_cache": 3534,
-        "chiamate": 1
-      },
-      "verifiche_per_natura": {
-        "errore_tecnico": 1
-      },
-      "iterazioni_dettaglio": [
-        {
-          "numero": 1,
-          "costo": 0.13907350000000007,
-          "token_input": 4,
-          "token_output": 2038,
-          "cache_scritta": 2900,
-          "cache_letta": 3534,
-          "secondi_api": 21.660556077957153,
-          "secondi_lean": 20.839503049850464,
-          "secondi_python": 0.0,
-          "esecuzioni_python": 0,
-          "esplorazioni": 0,
-          "secondi_esplorazione": 0.0,
-          "verifiche": [
-            {
-              "caratteri": 1293,
-              "esito": "RIFIUTATO",
-              "controllo_fallito": "compila senza errori",
-              "secondi": 20.839503049850464,
-              "natura": "errore_tecnico"
-            }
-          ],
-          "ragionamento": "I want to show that since {i} is in A, adding element i to any set not containing it gives an injection into the sets containing i, which means at least half the sets must contain i.\n\nWriting Lean proof...\n\nI'm splitting the cardinality of A into elements containing i and those not, then using the injection bound to show the \"contains i\" part is at least half, giving the desired inequality via linear arithmetic. I also want to double-check the exact signature of `card_le_card_of_injOn` in current Mathlib to make sure my usage matches.\n\n"
-        }
-      ],
-      "soluzione": ""
-    },
-    {
-      "problema": "SidorenkoConjecture.sidorenko_conjecture.variants.non_bipartite_necessary",
-      "risolto": false,
-      "motivo": "budget insufficiente per continuare: 16,287 token in ingresso, la prossima chiamata costerebbe fino a $0.5036 ma restano $0.5000 ($2.7064 sul totale, $0.5000 su questo problema)",
-      "causa": "sistema: nessun tentativo vero, tutto speso in esplorazione",
-      "iterazioni": 1,
-      "verifiche": 0,
-      "esplorazioni": 0,
-      "esecuzioni_python": 0,
-      "secondi_totali": 0.19009613990783691,
-      "secondi_api": 0.0,
-      "secondi_lean": 0.0,
-      "secondi_python": 0.0,
-      "costo": 0.0,
-      "consumo": {
-        "input_tokens": 0,
-        "output_tokens": 0,
-        "scrittura_cache_5m": 0,
-        "scrittura_cache_1h": 0,
-        "lettura_cache": 0,
-        "chiamate": 0
-      },
-      "verifiche_per_natura": {},
-      "iterazioni_dettaglio": [],
-      "soluzione": ""
+     "numero": 3,
+     "cost": 0.04797074999999999,
+     "token_input": 4,
+     "token_output": 689,
+     "cache_scritta": 955,
+     "cache_letta": 6173,
+     "api_seconds": 11.099534034729004,
+     "lean_seconds": 0.0,
+     "python_seconds": 0.0,
+     "python_runs": 0,
+     "explorations": 1,
+     "secondi_esplorazione": 6.813833951950073,
+     "verifications": [],
+     "ragionamento": "I need to prove p² divides 3^(p-1) - 1, so I'm considering whether decide can handle this directly since Nat.pow is GMP-accelerated in the kernel, or whether I need a modular exponentiation lemma chain instead.\n\n"
     }
-  ]
+   ],
+   "soluzione": ""
+  },
+  {
+   "problem": "WilsonPrime.not_isWilsonPrime_seven",
+   "solved": true,
+   "reason": "dimostrazione accettata dal verificatore",
+   "causa": "risolto",
+   "iterations": 2,
+   "verifications": 2,
+   "explorations": 0,
+   "python_runs": 0,
+   "secondi_totali": 53.40308403968811,
+   "api_seconds": 12.654618978500366,
+   "lean_seconds": 40.310195207595825,
+   "python_seconds": 0.0,
+   "cost": 0.06358825,
+   "consumo": {
+    "input_tokens": 8,
+    "output_tokens": 728,
+    "scrittura_cache_5m": 2002,
+    "scrittura_cache_1h": 0,
+    "lettura_cache": 8333,
+    "chiamate": 2
+   },
+   "verifiche_per_natura": {
+    "errore_tecnico": 1,
+    "accettato": 1
+   },
+   "iterazioni_dettaglio": [
+    {
+     "numero": 1,
+     "cost": 0.034236000000000016,
+     "token_input": 4,
+     "token_output": 350,
+     "cache_scritta": 1265,
+     "cache_letta": 3534,
+     "api_seconds": 6.458095073699951,
+     "lean_seconds": 20.028900146484375,
+     "python_seconds": 0.0,
+     "python_runs": 0,
+     "explorations": 0,
+     "secondi_esplorazione": 0.0,
+     "verifications": [
+      {
+       "caratteri": 435,
+       "result": "REJECTED",
+       "controllo_fallito": "compila senza errori",
+       "seconds": 20.028900146484375,
+       "nature": "errore_tecnico"
+      }
+     ],
+     "ragionamento": ""
+    },
+    {
+     "numero": 2,
+     "cost": 0.029352249999999996,
+     "token_input": 4,
+     "token_output": 378,
+     "cache_scritta": 737,
+     "cache_letta": 4799,
+     "api_seconds": 6.196523904800415,
+     "lean_seconds": 20.28129506111145,
+     "python_seconds": 0.0,
+     "python_runs": 0,
+     "explorations": 0,
+     "secondi_esplorazione": 0.0,
+     "verifications": [
+      {
+       "caratteri": 480,
+       "result": "ACCEPTED",
+       "controllo_fallito": "",
+       "seconds": 20.28129506111145,
+       "nature": "accettato"
+      }
+     ],
+     "ragionamento": ""
+    }
+   ],
+   "soluzione": "import FormalConjecturesUtil\n\nnamespace WilsonPrime\n\n/-- A Wilson prime is a prime $p$ such that $p^2 \\mid (p-1)!+1$. -/\ndef IsWilsonPrime (p : ℕ) : Prop :=\n  p.Prime ∧ p ^ 2 ∣ (p - 1).factorial + 1\n\n/-- The prime $7$ is not a Wilson prime. -/\n@[category test, AMS 11]\ntheorem not_isWilsonPrime_seven : ¬ IsWilsonPrime 7 := by\n  intro h\n  have h2 : 7 ^ 2 ∣ (7 - 1).factorial + 1 := h.2\n  have h3 : (7 - 1).factorial + 1 = 721 := by decide\n  rw [h3] at h2\n  omega\n\nend WilsonPrime\n"
+  },
+  {
+   "problem": "DiophantineTuple.fermat_4_tuple",
+   "solved": false,
+   "reason": "budget insufficiente per continuare: 9,127 token in ingresso, la prossima chiamata costerebbe fino a $0.4141 ma restano $0.3735 ($3.6623 sul totale, $0.3735 su questo problema)",
+   "causa": "tecnico: sapeva cosa dimostrare ma non e' riuscito a scriverlo in Lean",
+   "iterations": 3,
+   "verifications": 2,
+   "explorations": 0,
+   "python_runs": 0,
+   "secondi_totali": 52.415079832077026,
+   "api_seconds": 17.434525728225708,
+   "lean_seconds": 34.44436526298523,
+   "python_seconds": 0.0,
+   "cost": 0.1265095,
+   "consumo": {
+    "input_tokens": 8,
+    "output_tokens": 1295,
+    "scrittura_cache_5m": 4718,
+    "scrittura_cache_1h": 0,
+    "lettura_cache": 10818,
+    "chiamate": 2
+   },
+   "verifiche_per_natura": {
+    "errore_tecnico": 2
+   },
+   "iterazioni_dettaglio": [
+    {
+     "numero": 1,
+     "cost": 0.08259849999999999,
+     "token_input": 4,
+     "token_output": 696,
+     "cache_scritta": 3750,
+     "cache_letta": 3534,
+     "api_seconds": 8.837281942367554,
+     "lean_seconds": 18.58669424057007,
+     "python_seconds": 0.0,
+     "python_runs": 0,
+     "explorations": 0,
+     "secondi_esplorazione": 0.0,
+     "verifications": [
+      {
+       "caratteri": 826,
+       "result": "REJECTED",
+       "controllo_fallito": "compila senza errori",
+       "seconds": 18.58669424057007,
+       "nature": "errore_tecnico"
+      }
+     ],
+     "ragionamento": "I need to verify {1, 3, 8, 120} is an integral Diophantine tuple: checking each pairwise product plus one gives a perfect square — 4, 9, 121, 25, 361, 961 — all squares confirmed. Now I'll try proving this directly, perhaps with decide or norm_num using explicit square witnesses.\n\n"
+    },
+    {
+     "numero": 2,
+     "cost": 0.04391099999999998,
+     "token_input": 4,
+     "token_output": 599,
+     "cache_scritta": 968,
+     "cache_letta": 7284,
+     "api_seconds": 8.597243785858154,
+     "lean_seconds": 15.857671022415161,
+     "python_seconds": 0.0,
+     "python_runs": 0,
+     "explorations": 0,
+     "secondi_esplorazione": 0.0,
+     "verifications": [
+      {
+       "caratteri": 835,
+       "result": "REJECTED",
+       "controllo_fallito": "compila senza errori",
+       "seconds": 15.857671022415161,
+       "nature": "errore_tecnico"
+      }
+     ],
+     "ragionamento": ""
+    }
+   ],
+   "soluzione": ""
+  },
+  {
+   "problem": "ClaudesCycles.not_hasHamiltonianArcDecomposition_one",
+   "solved": true,
+   "reason": "dimostrazione accettata dal verificatore",
+   "causa": "risolto",
+   "iterations": 1,
+   "verifications": 1,
+   "explorations": 0,
+   "python_runs": 0,
+   "secondi_totali": 34.44285988807678,
+   "api_seconds": 11.426512956619263,
+   "lean_seconds": 22.863598108291626,
+   "python_seconds": 0.0,
+   "cost": 0.0956235,
+   "consumo": {
+    "input_tokens": 4,
+    "output_tokens": 995,
+    "scrittura_cache_5m": 3596,
+    "scrittura_cache_1h": 0,
+    "lettura_cache": 3534,
+    "chiamate": 1
+   },
+   "verifiche_per_natura": {
+    "accettato": 1
+   },
+   "iterazioni_dettaglio": [
+    {
+     "numero": 1,
+     "cost": 0.09562350000000003,
+     "token_input": 4,
+     "token_output": 995,
+     "cache_scritta": 3596,
+     "cache_letta": 3534,
+     "api_seconds": 11.426512956619263,
+     "lean_seconds": 22.863598108291626,
+     "python_seconds": 0.0,
+     "python_runs": 0,
+     "explorations": 0,
+     "secondi_esplorazione": 0.0,
+     "verifications": [
+      {
+       "caratteri": 953,
+       "result": "ACCEPTED",
+       "controllo_fallito": "",
+       "seconds": 22.863598108291626,
+       "nature": "accettato"
+      }
+     ],
+     "ragionamento": "Since the vertex type here collapses to a subsingleton, no permutation can satisfy the cycle condition requiring some element to move, so a Hamiltonian arc decomposition for n=1 is impossible. I'm writing the Lean proof for this non-existence theorem.\n\n"
+    }
+   ],
+   "soluzione": "import FormalConjecturesUtil\n\nnamespace ClaudesCycles\n\nabbrev Vertex (m : ℕ) := Fin 3 → ZMod m\n\ndef bumpAt {m : ℕ} [NeZero m] (b : Fin 3) (v : Vertex m) : Vertex m :=\n  Function.update v b (v b + 1)\n\ndef cubeAdj {m : ℕ} [NeZero m] (u v : Vertex m) : Prop :=\n  ∃ b : Fin 3, bumpAt b u = v\n\ndef IsDirectedHamiltonianCycle {V : Type*} [Fintype V] [DecidableEq V]\n    (adj : V → V → Prop) (σ : Equiv.Perm V) : Prop :=\n  (∀ v, adj v (σ v)) ∧ σ.IsCycle ∧ σ.support = Finset.univ\n\ndef HasHamiltonianArcDecomposition (m : ℕ) [NeZero m] : Prop :=\n  ∃ σ : Fin 3 → Equiv.Perm (Vertex m),\n    (∀ c, IsDirectedHamiltonianCycle (cubeAdj (m := m)) (σ c)) ∧\n    (∀ v : Vertex m, ∀ b : Fin 3, ∃! c : Fin 3, σ c v = bumpAt b v)\n\n@[category test, AMS 5]\ntheorem not_hasHamiltonianArcDecomposition_one : ¬ HasHamiltonianArcDecomposition 1 := by\n  rintro ⟨σ, hσ, -⟩\n  obtain ⟨-, hc, -⟩ := hσ 0\n  obtain ⟨x, hx, -⟩ := hc\n  exact hx (Subsingleton.elim _ _)\n\nend ClaudesCycles\n"
+  },
+  {
+   "problem": "JacobianConjecture.jacobian_conjecture",
+   "solved": false,
+   "reason": "budget insufficiente per continuare: 11,333 token in ingresso, la prossima chiamata costerebbe fino a $0.4417 ma restano $0.3587 ($3.4253 sul totale, $0.3587 su questo problema)",
+   "causa": "sistema: nessun tentativo vero, tutto speso in esplorazione",
+   "iterations": 3,
+   "verifications": 0,
+   "explorations": 2,
+   "python_runs": 0,
+   "secondi_totali": 45.13329195976257,
+   "api_seconds": 20.909252405166626,
+   "lean_seconds": 23.6245858669281,
+   "python_seconds": 0.0,
+   "cost": 0.14131075,
+   "consumo": {
+    "input_tokens": 8,
+    "output_tokens": 1555,
+    "scrittura_cache_5m": 4885,
+    "scrittura_cache_1h": 0,
+    "lettura_cache": 9673,
+    "chiamate": 2
+   },
+   "verifiche_per_natura": {},
+   "iterazioni_dettaglio": [
+    {
+     "numero": 1,
+     "cost": 0.056086000000000025,
+     "token_input": 4,
+     "token_output": 452,
+     "cache_scritta": 2605,
+     "cache_letta": 3534,
+     "api_seconds": 7.25628924369812,
+     "lean_seconds": 0.0,
+     "python_seconds": 0.0,
+     "python_runs": 0,
+     "explorations": 1,
+     "secondi_esplorazione": 11.37238097190857,
+     "verifications": [],
+     "ragionamento": "I need to prove the biconditional with False on one side, so I want to show that assuming JacobianConjectureProp k (Fin 3) leads to a contradiction — using a map G whose Jacobian determinant is a unit but which has no polynomial inverse.\n\nSince G would have an inverse H, evaluating at specific points where G agrees but the coordinates differ forces 1 = 0 in k, contradicting Nontrivial. Now I want to check the RegularFunction API in FormalConjecturesUtil to see how to construct these evaluations properly.\n\n"
+    },
+    {
+     "numero": 2,
+     "cost": 0.08522474999999996,
+     "token_input": 4,
+     "token_output": 1103,
+     "cache_scritta": 2280,
+     "cache_letta": 6139,
+     "api_seconds": 13.652963161468506,
+     "lean_seconds": 0.0,
+     "python_seconds": 0.0,
+     "python_runs": 0,
+     "explorations": 1,
+     "secondi_esplorazione": 12.252204895019531,
+     "verifications": [],
+     "ragionamento": "I need to figure out the composition order carefully: since aeval(F.comp G) a = G.aeval(F.aeval a), I want F.comp G = id, which means substituting F into a then applying G recovers a — that's the direction matching the Jacobian conjecture setup.\n\nNow I still need to prove the determinant of the Jacobian equals 1 and verify the aeval computation for G, both of which involve heavy symbolic computation in Lean with partial derivatives of multivariate polynomials. I'm trying with the polynomial map G, since its Jacobian determinant should be a unit (unlike a candidate with determinant -2), and I'll attempt to unfold the aeval definitions and simplify using aeval_X across the Fin 3 indices.\n\n"
+    }
+   ],
+   "soluzione": ""
+  },
+  {
+   "problem": "VizingConjecture.vizing_conjecture.variants.dominationNumber_eq_one",
+   "solved": true,
+   "reason": "dimostrazione accettata dal verificatore",
+   "causa": "risolto",
+   "iterations": 2,
+   "verifications": 1,
+   "explorations": 1,
+   "python_runs": 0,
+   "secondi_totali": 83.80276799201965,
+   "api_seconds": 14.286919116973877,
+   "lean_seconds": 69.14881634712219,
+   "python_seconds": 0.0,
+   "cost": 0.0849775,
+   "consumo": {
+    "input_tokens": 8,
+    "output_tokens": 894,
+    "scrittura_cache_5m": 3029,
+    "scrittura_cache_1h": 0,
+    "lettura_cache": 9340,
+    "chiamate": 2
+   },
+   "verifiche_per_natura": {
+    "accettato": 1
+   },
+   "iterazioni_dettaglio": [
+    {
+     "numero": 1,
+     "cost": 0.04472350000000003,
+     "token_input": 4,
+     "token_output": 308,
+     "cache_scritta": 2272,
+     "cache_letta": 3534,
+     "api_seconds": 5.8023810386657715,
+     "lean_seconds": 0.0,
+     "python_seconds": 0.0,
+     "python_runs": 0,
+     "explorations": 1,
+     "secondi_esplorazione": 41.2085440158844,
+     "verifications": [],
+     "ragionamento": "I should start by looking into the SimpleGraph.dominationNumber definition and checking whether a lemma like dominationNumber_le_dominationNumber_boxProd already exists.\n\n"
+    },
+    {
+     "numero": 2,
+     "cost": 0.04025400000000001,
+     "token_input": 4,
+     "token_output": 586,
+     "cache_scritta": 757,
+     "cache_letta": 5806,
+     "api_seconds": 8.484538078308105,
+     "lean_seconds": 27.940272331237793,
+     "python_seconds": 0.0,
+     "python_runs": 0,
+     "explorations": 0,
+     "secondi_esplorazione": 0.0,
+     "verifications": [
+      {
+       "caratteri": 742,
+       "result": "ACCEPTED",
+       "controllo_fallito": "",
+       "seconds": 27.940272331237793,
+       "nature": "accettato"
+      }
+     ],
+     "ragionamento": "I need to establish Nonempty β from hH, since if β were empty, dominationNumber would be 0, contradicting the hypothesis that it equals 1—so I should look for a lemma characterizing when the domination number is zero.\n\n"
+    }
+   ],
+   "soluzione": "import FormalConjecturesUtil\n\nopen SimpleGraph\n\nnamespace VizingConjecture\n\ntheorem vizing_conjecture.variants.dominationNumber_eq_one\n    {α β : Type} [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β]\n    (G : SimpleGraph α) (H : SimpleGraph β) (hH : H.dominationNumber = 1) :\n    G.dominationNumber * H.dominationNumber ≤ (G □ H).dominationNumber := by\n  have hne : Nonempty β := by\n    by_contra h\n    rw [not_nonempty_iff] at h\n    have : H.dominationNumber = 0 := by\n      apply Nat.eq_zero_of_le_zero\n      apply Nat.sInf_le\n      refine ⟨∅, ?_⟩\n      constructor\n      · intro v; exact (IsEmpty.false v).elim\n      · simp\n    omega\n  rw [hH, mul_one]\n  exact dominationNumber_le_dominationNumber_boxProd G H\n\nend VizingConjecture"
+  },
+  {
+   "problem": "SidorenkoConjecture.sidorenko_tree_subsingleton",
+   "solved": false,
+   "reason": "budget insufficiente per continuare: 16,033 token in ingresso, la prossima chiamata costerebbe fino a $0.5004 ma restano $0.5000 ($3.3404 sul totale, $0.5000 su questo problema)",
+   "causa": "sistema: nessun tentativo vero, tutto speso in esplorazione",
+   "iterations": 1,
+   "verifications": 0,
+   "explorations": 0,
+   "python_runs": 0,
+   "secondi_totali": 0.20176196098327637,
+   "api_seconds": 0.0,
+   "lean_seconds": 0.0,
+   "python_seconds": 0.0,
+   "cost": 0.0,
+   "consumo": {
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "scrittura_cache_5m": 0,
+    "scrittura_cache_1h": 0,
+    "lettura_cache": 0,
+    "chiamate": 0
+   },
+   "verifiche_per_natura": {},
+   "iterazioni_dettaglio": [],
+   "soluzione": ""
+  },
+  {
+   "problem": "DeGiorgi.DeGiorgi_one",
+   "solved": false,
+   "reason": "budget insufficiente per continuare: 9,476 token in ingresso, la prossima chiamata costerebbe fino a $0.4184 ma restano $0.3410 ($3.1814 sul totale, $0.3410 su questo problema)",
+   "causa": "sistema: nessun tentativo vero, tutto speso in esplorazione",
+   "iterations": 2,
+   "verifications": 0,
+   "explorations": 1,
+   "python_runs": 0,
+   "secondi_totali": 35.50357723236084,
+   "api_seconds": 27.893773794174194,
+   "lean_seconds": 7.248999834060669,
+   "python_seconds": 0.0,
+   "cost": 0.1589985,
+   "consumo": {
+    "input_tokens": 4,
+    "output_tokens": 2420,
+    "scrittura_cache_5m": 2966,
+    "scrittura_cache_1h": 0,
+    "lettura_cache": 3534,
+    "chiamate": 1
+   },
+   "verifiche_per_natura": {},
+   "iterazioni_dettaglio": [
+    {
+     "numero": 1,
+     "cost": 0.15899849999999993,
+     "token_input": 4,
+     "token_output": 2420,
+     "cache_scritta": 2966,
+     "cache_letta": 3534,
+     "api_seconds": 27.893773794174194,
+     "lean_seconds": 0.0,
+     "python_seconds": 0.0,
+     "python_runs": 0,
+     "explorations": 1,
+     "secondi_esplorazione": 7.248999834060669,
+     "verifications": [],
+     "ragionamento": "In the one-dimensional case, since u is C² with strictly positive derivative everywhere, it's strictly monotonic, so its level sets must reduce to single points — meaning the level set condition forces injectivity of u on ℝ.\n\nI'm working through whether I even need the full PDE structure here, or if regularity plus positive derivative alone suffices, considering how lineDeriv relates to the ordinary derivative of the restriction to a line through the origin.\n\nSketching out the Lean proof: defining the direction vector e, showing every point in ℝ^1 is a scalar multiple of e, then establishing strict monotonicity of the restricted function via strictMono_of_deriv_pos, using differentiability of u at each scaled point.\n\nI want to chain composition of derivatives to show the directional derivative equals the fderiv applied to e, using the standard lemmas for composing a linear map's derivative with a scalar-line parametrization. Once that's established, I can move on to analyzing level sets for values y in the range of u.\n\nFor a fixed y = u x₀, injectivity forces the preimage u⁻¹'{y} to be exactly {x₀}, so I want to represent this singleton as an affine subspace using `AffineSubspace.mk'` with trivial direction ⊥, since its direction lemma gives the right carrier and rank zero matches what I need.\n\n"
+    }
+   ],
+   "soluzione": ""
+  },
+  {
+   "problem": "WrittenOnTheWallII.GraphConjecture65.conjecture65",
+   "solved": false,
+   "reason": "budget insufficiente per continuare: 14,735 token in ingresso, la prossima chiamata costerebbe fino a $0.4842 ma restano $0.1642 ($2.8455 sul totale, $0.1642 su questo problema)",
+   "causa": "sistema: nessun tentativo vero, tutto speso in esplorazione",
+   "iterations": 4,
+   "verifications": 0,
+   "explorations": 3,
+   "python_runs": 0,
+   "secondi_totali": 109.26500010490417,
+   "api_seconds": 87.65078711509705,
+   "lean_seconds": 20.895520210266113,
+   "python_seconds": 0.0,
+   "cost": 0.335846,
+   "consumo": {
+    "input_tokens": 12,
+    "output_tokens": 5411,
+    "scrittura_cache_5m": 4841,
+    "scrittura_cache_1h": 0,
+    "lettura_cache": 18654,
+    "chiamate": 3
+   },
+   "verifiche_per_natura": {},
+   "iterazioni_dettaglio": [
+    {
+     "numero": 1,
+     "cost": 0.057223500000000094,
+     "token_input": 4,
+     "token_output": 200,
+     "cache_scritta": 3704,
+     "cache_letta": 3534,
+     "api_seconds": 5.995844841003418,
+     "lean_seconds": 0.0,
+     "python_seconds": 0.0,
+     "python_runs": 0,
+     "explorations": 1,
+     "secondi_esplorazione": 7.001715183258057,
+     "verifications": [],
+     "ragionamento": "I'm starting by looking into the definitions of `distMin`, `largestInducedForestSize`, and `answer`, checking how they're defined in FormalConjecturesUtil.\n\n"
+    },
+    {
+     "numero": 2,
+     "cost": 0.014999499999999943,
+     "token_input": 4,
+     "token_output": 102,
+     "cache_scritta": 644,
+     "cache_letta": 7238,
+     "api_seconds": 16.875718116760254,
+     "lean_seconds": 0.0,
+     "python_seconds": 0.0,
+     "python_runs": 0,
+     "explorations": 1,
+     "secondi_esplorazione": 6.9863200187683105,
+     "verifications": [],
+     "ragionamento": ""
+    },
+    {
+     "numero": 3,
+     "cost": 0.26362299999999994,
+     "token_input": 4,
+     "token_output": 5109,
+     "cache_scritta": 493,
+     "cache_letta": 7882,
+     "api_seconds": 64.77922415733337,
+     "lean_seconds": 0.0,
+     "python_seconds": 0.0,
+     "python_runs": 0,
+     "explorations": 1,
+     "secondi_esplorazione": 6.907485008239746,
+     "verifications": [],
+     "ragionamento": "I need to disprove the universal statement by finding a counterexample, which requires establishing connectivity and computing that the minimum-degree vertex set has size 12 — but I'm running into decidability issues with the set of vertices matching minDegree, since Set.toFinset needs a decidable predicate instance for that membership condition.\n\nDistance itself is defined through an infimum over a set of natural numbers, so `decide` won't work to compute it directly — I'd have to manually verify upper bounds via explicit walks and lower bounds by ruling out shorter paths, which is much harder. Actually I realize I don't need exact distance values, just enough of a bound to make the target inequality fail: I need lower bounds on the minimum distances and an upper bound on the largest induced forest size, and it's the lower bounds on distance that are the tricky part.\n\nFor that, instead of walk-by-walk induction, I could use a potential function argument — assign each vertex a value where adjacent vertices differ by at most 1, then any walk's length must be at least the difference in potential between endpoints. I'd need to establish a small lemma by induction on the walk structure showing the endpoint's potential is bounded by the start's potential plus the walk length, then apply it with a suitable labeling function to get the distance lower bound I need.\n\nSince decidability instances exist for graphs of this size, I could just decide the whole adjacency condition directly. I'm also thinking about identifying the minimum-degree vertex set A as {0,12} by deciding the degree equation over all vertices, since minDegree is computed via image and getD over the finite vertex type.\n\nFor the distance bound, I want to show distMin G A ≥ 12 by working with the finset of pairs within A: if this pairs finset is nonempty, the minimum is at least 12 exactly when every pair has distance at least 12, which reduces to just checking dist 0 12 and dist 12 0 since A only contains those two vertices — but I need to handle the case where pairs turns out empty, since then distMin defaults to 0.\n\nI'm also considering an alternative approach: first establish A = {0,12} as a set equality using decide, then rewrite distMin in terms of that explicit set, converting it to a finset via toFinset lemmas so the filter over pairs becomes computable directly.\n\nSince dist itself isn't computable, I need to prove the lower bound differently — using Finset.le_min' to reduce to showing every pair maps to a value ≥12, then handling the two resulting pairs by cases and connecting dist to walk length via the connectivity lemma that gives an actual walk realizing the distance, then applying my earlier bound lemma to that walk's length.\n\nFor proving connectedness itself, I'm considering whether Mathlib has a decidability instance for reachability or connectedness I can just invoke, versus manually establishing preconnectedness by chaining adjacency-based reachability facts across all sixteen vertices.\n\nFor bounding the largest induced forest at 15, I want to use `csSup_le` with nonemptiness from the empty set being acyclic, then show every acyclic subset has size at most 15 — the key obstruction being that any set containing vertices 1, 13, and 14 forces a triangle, so I need to actually exhibit that 3-cycle as an explicit walk in the induced subgraph to contradict acyclicity.\n\nI'm considering whether `IsCycle` has a decidable instance so I could just use `decide` on the concrete triangle walk, but as a fallback there's also the general fact that an acyclic graph's edge count is bounded by vertex count minus one, which might avoid constructing cycles explicitly.\n\nActually a cleaner route might be through bridges: an acyclic graph has every edge as a bridge, so if I can show the edge between 1 and 13 isn't a bridge (since 1-14-13 gives an alternate path), that directly contradicts acyclicity without needing to build the full triangle cycle.\n\nActually `decide` likely fa"
+    }
+   ],
+   "soluzione": ""
+  },
+  {
+   "problem": "UnionClosed.union_closed.variants.singleton_mem",
+   "solved": false,
+   "reason": "budget insufficiente per continuare: 9,481 token in ingresso, la prossima chiamata costerebbe fino a $0.4185 ma restano $0.3609 ($2.7064 sul totale, $0.3609 su questo problema)",
+   "causa": "tecnico: sapeva cosa dimostrare ma non e' riuscito a scriverlo in Lean",
+   "iterations": 2,
+   "verifications": 1,
+   "explorations": 0,
+   "python_runs": 0,
+   "secondi_totali": 42.836886167526245,
+   "api_seconds": 21.660556077957153,
+   "lean_seconds": 20.839503049850464,
+   "python_seconds": 0.0,
+   "cost": 0.1390735,
+   "consumo": {
+    "input_tokens": 4,
+    "output_tokens": 2038,
+    "scrittura_cache_5m": 2900,
+    "scrittura_cache_1h": 0,
+    "lettura_cache": 3534,
+    "chiamate": 1
+   },
+   "verifiche_per_natura": {
+    "errore_tecnico": 1
+   },
+   "iterazioni_dettaglio": [
+    {
+     "numero": 1,
+     "cost": 0.13907350000000007,
+     "token_input": 4,
+     "token_output": 2038,
+     "cache_scritta": 2900,
+     "cache_letta": 3534,
+     "api_seconds": 21.660556077957153,
+     "lean_seconds": 20.839503049850464,
+     "python_seconds": 0.0,
+     "python_runs": 0,
+     "explorations": 0,
+     "secondi_esplorazione": 0.0,
+     "verifications": [
+      {
+       "caratteri": 1293,
+       "result": "REJECTED",
+       "controllo_fallito": "compila senza errori",
+       "seconds": 20.839503049850464,
+       "nature": "errore_tecnico"
+      }
+     ],
+     "ragionamento": "I want to show that since {i} is in A, adding element i to any set not containing it gives an injection into the sets containing i, which means at least half the sets must contain i.\n\nWriting Lean proof...\n\nI'm splitting the cardinality of A into elements containing i and those not, then using the injection bound to show the \"contains i\" part is at least half, giving the desired inequality via linear arithmetic. I also want to double-check the exact signature of `card_le_card_of_injOn` in current Mathlib to make sure my usage matches.\n\n"
+    }
+   ],
+   "soluzione": ""
+  },
+  {
+   "problem": "SidorenkoConjecture.sidorenko_conjecture.variants.non_bipartite_necessary",
+   "solved": false,
+   "reason": "budget insufficiente per continuare: 16,287 token in ingresso, la prossima chiamata costerebbe fino a $0.5036 ma restano $0.5000 ($2.7064 sul totale, $0.5000 su questo problema)",
+   "causa": "sistema: nessun tentativo vero, tutto speso in esplorazione",
+   "iterations": 1,
+   "verifications": 0,
+   "explorations": 0,
+   "python_runs": 0,
+   "secondi_totali": 0.19009613990783691,
+   "api_seconds": 0.0,
+   "lean_seconds": 0.0,
+   "python_seconds": 0.0,
+   "cost": 0.0,
+   "consumo": {
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "scrittura_cache_5m": 0,
+    "scrittura_cache_1h": 0,
+    "lettura_cache": 0,
+    "chiamate": 0
+   },
+   "verifiche_per_natura": {},
+   "iterazioni_dettaglio": [],
+   "soluzione": ""
+  }
+ ]
 }

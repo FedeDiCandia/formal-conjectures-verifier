@@ -1,94 +1,94 @@
 [
-  {
-    "problema": "WilsonPrime.not_isWilsonPrime_seven",
-    "categoria": "test",
-    "righe_prova": 2,
-    "esito": "ACCETTATO",
-    "controlli_falliti": [],
-    "errori": "",
-    "teoremi_rimossi": 1,
-    "secondi": 53.02614784240723,
-    "assiomi_archivio": [
-      "propext",
-      "Classical.choice",
-      "Quot.sound"
-    ]
-  },
-  {
-    "problema": "DiophantineTuple.fermat_4_tuple",
-    "categoria": "test",
-    "righe_prova": 2,
-    "esito": "ACCETTATO",
-    "controlli_falliti": [],
-    "errori": "",
-    "teoremi_rimossi": 1,
-    "secondi": 53.025959968566895,
-    "assiomi_archivio": [
-      "propext",
-      "Classical.choice",
-      "Quot.sound"
-    ]
-  },
-  {
-    "problema": "DiophantineTuple.gibbs_6_tuple",
-    "categoria": "test",
-    "righe_prova": 2,
-    "esito": "RIFIUTATO",
-    "controlli_falliti": [
-      "controllo sintattico preventivo"
-    ],
-    "errori": "riga 100: [token:sorry] `sorry` lascia un buco nella dimostrazione (introduce l'assioma sorryAx)\n    | example : integralDiophantine4Tuple.encard = ⊤ := by sorry",
-    "teoremi_rimossi": 5,
-    "secondi": 0.04282093048095703,
-    "assiomi_archivio": [
-      "propext",
-      "Classical.choice",
-      "Quot.sound"
-    ]
-  },
-  {
-    "problema": "ClaudesCycles.not_hasHamiltonianArcDecomposition_one",
-    "categoria": "test",
-    "righe_prova": 3,
-    "esito": "ACCETTATO",
-    "controlli_falliti": [],
-    "errori": "",
-    "teoremi_rimossi": 0,
-    "secondi": 53.025949001312256,
-    "assiomi_archivio": [
-      "propext",
-      "Classical.choice",
-      "Quot.sound"
-    ]
-  },
-  {
-    "problema": "WieferichMirimanoffPrime.isMirimanoffPrime_and_not_isWieferichPrime_11",
-    "categoria": "test",
-    "righe_prova": 2,
-    "esito": "ACCETTATO",
-    "controlli_falliti": [],
-    "errori": "",
-    "teoremi_rimossi": 2,
-    "secondi": 51.20006823539734,
-    "assiomi_archivio": [
-      "propext",
-      "Classical.choice",
-      "Quot.sound"
-    ]
-  },
-  {
-    "problema": "WieferichMirimanoffPrime.isMirimanoffPrime_and_not_isWieferichPrime_1006003",
-    "categoria": "test",
-    "righe_prova": 1,
-    "esito": "ACCETTATO",
-    "controlli_falliti": [],
-    "errori": "",
-    "teoremi_rimossi": 2,
-    "secondi": 20.186504125595093,
-    "assiomi_archivio": [
-      "propext",
-      "Classical.choice",
-      "Quot.sound"
-    ]
-  }
+ {
+  "problem": "WilsonPrime.not_isWilsonPrime_seven",
+  "category": "test",
+  "proof_lines": 2,
+  "result": "ACCEPTED",
+  "controlli_falliti": [],
+  "errori": "",
+  "teoremi_rimossi": 1,
+  "seconds": 53.02614784240723,
+  "assiomi_archivio": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ]
+ },
+ {
+  "problem": "DiophantineTuple.fermat_4_tuple",
+  "category": "test",
+  "proof_lines": 2,
+  "result": "ACCEPTED",
+  "controlli_falliti": [],
+  "errori": "",
+  "teoremi_rimossi": 1,
+  "seconds": 53.025959968566895,
+  "assiomi_archivio": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ]
+ },
+ {
+  "problem": "DiophantineTuple.gibbs_6_tuple",
+  "category": "test",
+  "proof_lines": 2,
+  "result": "REJECTED",
+  "controlli_falliti": [
+   "controllo sintattico preventivo"
+  ],
+  "errori": "riga 100: [token:sorry] `sorry` lascia un buco nella dimostrazione (introduce l'assioma sorryAx)\n    | example : integralDiophantine4Tuple.encard = ⊤ := by sorry",
+  "teoremi_rimossi": 5,
+  "seconds": 0.04282093048095703,
+  "assiomi_archivio": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ]
+ },
+ {
+  "problem": "ClaudesCycles.not_hasHamiltonianArcDecomposition_one",
+  "category": "test",
+  "proof_lines": 3,
+  "result": "ACCEPTED",
+  "controlli_falliti": [],
+  "errori": "",
+  "teoremi_rimossi": 0,
+  "seconds": 53.025949001312256,
+  "assiomi_archivio": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ]
+ },
+ {
+  "problem": "WieferichMirimanoffPrime.isMirimanoffPrime_and_not_isWieferichPrime_11",
+  "category": "test",
+  "proof_lines": 2,
+  "result": "ACCEPTED",
+  "controlli_falliti": [],
+  "errori": "",
+  "teoremi_rimossi": 2,
+  "seconds": 51.20006823539734,
+  "assiomi_archivio": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ]
+ },
+ {
+  "problem": "WieferichMirimanoffPrime.isMirimanoffPrime_and_not_isWieferichPrime_1006003",
+  "category": "test",
+  "proof_lines": 1,
+  "result": "ACCEPTED",
+  "controlli_falliti": [],
+  "errori": "",
+  "teoremi_rimossi": 2,
+  "seconds": 20.186504125595093,
+  "assiomi_archivio": [
+   "propext",
+   "Classical.choice",
+   "Quot.sound"
+  ]
+ }
 ]

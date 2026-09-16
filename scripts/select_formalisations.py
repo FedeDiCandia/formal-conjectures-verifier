@@ -198,7 +198,7 @@ def main() -> int:
         di_fcfm = sorted((token & fcfm) - set(local_names))
         score, reasons = valuta(p, local_names, di_fcfm)
         candidates.append({
-            "problem": p.theorem, "module": p.module, "categoria": p.category,
+            "problem": p.theorem, "module": p.module, "category": p.category,
             "ams": sorted(p.subjects, key=lambda s: int(s) if s.isdigit() else 999),
             "lunghezza_enunciato": len(p.statement),
             "definizioni_locali": local_names, "definizioni_fcfm": di_fcfm,
@@ -215,7 +215,7 @@ def main() -> int:
     for k in sorted(excluded):
         print(f"  {k[2:]:52s} {excluded[k]:5d}")
     print(f"  {'CANDIDATES':52s} {len(candidates):5d}")
-    print("  per categoria:", dict(collections.Counter(c["categoria"] for c in candidates)))
+    print("  per categoria:", dict(collections.Counter(c["category"] for c in candidates)))
     print("  con formal_proof altrove:", sum(1 for c in candidates if c["formal_proof"]))
     count = collections.Counter(m for c in candidates for m in c["reasons"])
     print("  segnali:", dict(count))
@@ -224,7 +224,7 @@ def main() -> int:
     print()
     for i, c in enumerate(candidates[:args.mostra], 1):
         s = " ".join(c["statement"].split())
-        print(f"{i:3d} {c['score']:6.1f} {'tb' if c['categoria'] == 'textbook' else 'rs'} "
+        print(f"{i:3d} {c['score']:6.1f} {'tb' if c['category'] == 'textbook' else 'rs'} "
               f"AMS {' '.join(c['ams'])}  {c['problem']}")
         print(f"        {'; '.join(c['reasons']) or '-'}")
         print(f"        S: {s[:120]}")

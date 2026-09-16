@@ -173,7 +173,7 @@ def test_in_strict_mode_a_candidate_with_True_matches(tmp_path):
     r = verify(PROBLEM, _candidate(tmp_path, "sorry"), mode=STRICT,
                run_guard=False, timeout=900)
     assert r.status == REJECTED
-    assert "axioms permitted" in _reason(r), \
+    assert "permitted axioms" in _reason(r), \
         f"expected rejection on the axioms (matching statements), got {_reason(r)}"
     assert "sorryAx" in r.errors
 
@@ -184,7 +184,7 @@ def test_in_strict_mode_a_candidate_with_False_does_not_match(tmp_path):
     r = verify(PROBLEM, _candidate(tmp_path, "False"), mode=STRICT,
                run_guard=False, timeout=900)
     assert r.status == REJECTED
-    assert "kind identico all'original" in _reason(r)
+    assert "type identical to the original" in _reason(r)
 
 
 def test_in_refutation_mode_a_candidate_with_False_matches(tmp_path):
@@ -194,7 +194,7 @@ def test_in_refutation_mode_a_candidate_with_False_matches(tmp_path):
     r = verify(PROBLEM, _candidate(tmp_path, "False"), mode=REFUTATION,
                run_guard=False, timeout=900)
     assert r.status == REJECTED
-    assert "axioms permitted" in _reason(r), \
+    assert "permitted axioms" in _reason(r), \
         f"expected rejection on the axioms (matching statements), got {_reason(r)}"
     assert "sorryAx" in r.errors
     # the negated challenge has to have been generated, and to have compiled
@@ -216,7 +216,7 @@ def test_in_refutation_mode_a_candidate_with_True_does_not_match(tmp_path):
     r = verify(PROBLEM, _candidate(tmp_path, "sorry"), mode=REFUTATION,
                run_guard=False, timeout=900)
     assert r.status == REJECTED
-    assert "kind identico all'original" in _reason(r)
+    assert "type identical to the original" in _reason(r)
 
 
 # --- the general route: `type_of%`, for statements without `answer( )` --------

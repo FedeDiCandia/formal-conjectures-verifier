@@ -1,56 +1,56 @@
 {
- "esito": "ACCETTATO",
- "secondi": 123.4,
- "controlli": [
+ "result": "ACCEPTED",
+ "seconds": 123.4,
+ "checks": [
   {
-   "nome": "sfida ben formata",
-   "superato": true,
-   "dettaglio": "9 enunciati, nessun assioma dichiarato"
+   "name": "sfida ben formata",
+   "passed": true,
+   "detail": "9 enunciati, nessun assioma dichiarato"
   },
   {
-   "nome": "controllo sintattico preventivo",
-   "superato": true,
-   "dettaglio": "niente sorry/admit/axiom/native_decide; moduli dell'archivio importabili: FormalConjectures.OEIS.«105020», FormalConjectures.Wikipedia.GoldbachConjecture"
+   "name": "controllo sintattico preventivo",
+   "passed": true,
+   "detail": "niente sorry/admit/axiom/native_decide; moduli dell'archivio importabili: FormalConjectures.OEIS.«105020», FormalConjectures.Wikipedia.GoldbachConjecture"
   },
   {
-   "nome": "compilazione isolata",
-   "superato": true,
-   "dettaglio": "sandbox-exec: niente rete, scrittura solo nella cartella del modulo temporaneo"
+   "name": "compilazione isolata",
+   "passed": true,
+   "detail": "sandbox-exec: niente rete, scrittura solo nella cartella del modulo temporaneo"
   },
   {
-   "nome": "modulo della sfida pronto",
-   "superato": true,
-   "dettaglio": "FormalConjectures._Judge.Sfida0"
+   "name": "modulo della sfida pronto",
+   "passed": true,
+   "detail": "FormalConjectures._Judge.Sfida0"
   },
   {
-   "nome": "archivio intatto dopo la verifica",
-   "superato": true,
-   "dettaglio": "10370 file dell'archivio e 140235 delle dipendenze invariati"
+   "name": "archivio intatto dopo la verifica",
+   "passed": true,
+   "detail": "10370 file dell'archivio e 140235 delle dipendenze invariati"
   },
   {
-   "nome": "compila senza errori",
-   "superato": true,
-   "dettaglio": "il modulo candidato e' stato compilato da lake"
+   "name": "compila senza errori",
+   "passed": true,
+   "detail": "il modulo candidato e' stato compilato da lake"
   },
   {
-   "nome": "enunciati identici alla sfida",
-   "superato": true,
-   "dettaglio": "confronto sull'albero sintattico esportato da lean4export, non sul testo"
+   "name": "enunciati identici alla sfida",
+   "passed": true,
+   "detail": "confronto sull'albero sintattico esportato da lean4export, non sul testo"
   },
   {
-   "nome": "definizioni usate intatte",
-   "superato": true,
-   "dettaglio": "le costanti usate negli enunciati coincidono con quelle della sfida e dell'archivio"
+   "name": "definizioni usate intatte",
+   "passed": true,
+   "detail": "le costanti usate negli enunciati coincidono con quelle della sfida e dell'archivio"
   },
   {
-   "nome": "assiomi ammessi",
-   "superato": true,
-   "dettaglio": "propext, Classical.choice, Quot.sound"
+   "name": "assiomi ammessi",
+   "passed": true,
+   "detail": "propext, Classical.choice, Quot.sound"
   },
   {
-   "nome": "accettato dal kernel",
-   "superato": true,
-   "dettaglio": "termini di prova rieseguiti nel kernel di Lean"
+   "name": "accettato dal kernel",
+   "passed": true,
+   "detail": "termini di prova rieseguiti nel kernel di Lean"
   }
  ],
  "messaggio": "Tutti gli enunciati della sfida sono dimostrati.\n\nQuello che la verifica NON dice: che la sfida enunci la cosa giusta. Va letta.",
