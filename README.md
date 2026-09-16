@@ -18,7 +18,7 @@ get right.
    pages in English, with a Lean formalisation attached. It shows that one of the
    archive's open entries is equivalent to binary Goldbach, so it is not an
    independent problem at all. This is the piece to read if you only read one.
-2. [**The adversarial tests**](tests/test_verificatore.py) — six ways of faking a
+2. [**The adversarial tests**](tests/test_verifier.py) — six ways of faking a
    proof (`tests/fixtures/`), and the assertion that the judge rejects each of
    them, with and without the syntactic pre-scan. They define what "verified"
    means here.
