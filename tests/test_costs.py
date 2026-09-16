@@ -9,7 +9,7 @@ platform.claude.com (documentazione del prompt caching). Due details che era
 facile sbagliare e che questi test difendono:
 
   * la write_op in cache a 1 ORA costa 2 volte l'input, non 1,25;
-  * il moltiplicatore della LETTURA da cache non e' uguale per all_of i modelli:
+  * il moltiplicatore della LETTURA da cache non e' uguale per all_items i modelli:
     Fable 5.1 usa 0,025 invece di 0,1.
 """
 import sys
@@ -76,23 +76,23 @@ def test_tutti_i_modelli_del_listino_sono_coerenti():
 
 def test_il_costo_somma_le_cinque_voci():
     c = Usage()
-    c.add_(_Usage(inp=10_000, out=2_000, read_count=200_000,
+    c.add(_Usage(inp=10_000, out=2_000, read_count=200_000,
                       scritti_5m=50_000, scritti_1h=10_000))
-    expected_one = (10_000 * 5.00 + 2_000 * 25.00 + 50_000 * 6.25
+    expected = (10_000 * 5.00 + 2_000 * 25.00 + 50_000 * 6.25
               + 10_000 * 10.00 + 200_000 * 0.50) / 1_000_000
-    assert c.cost("claude-opus-5") == pytest.approx(expected_one)
+    assert c.cost("claude-opus-5") == pytest.approx(expected)
 
 
 def test_la_cache_a_un_ora_costa_il_doppio_di_quella_a_cinque_minuti():
-    a = Usage(); a.add_(_Usage(scritti_5m=100_000))
-    b = Usage(); b.add_(_Usage(scritti_1h=100_000))
+    a = Usage(); a.add(_Usage(scritti_5m=100_000))
+    b = Usage(); b.add(_Usage(scritti_1h=100_000))
     assert b.cost("claude-opus-5") == pytest.approx(a.cost("claude-opus-5") * 1.6)
     # 10.00 / 6.25 = 1.6
 
 
 def test_senza_il_dettaglio_la_cache_viene_contata_come_a_cinque_minuti():
     c = Usage()
-    c.add_(_Usage(scritti_5m=40_000, con_dettaglio=False))
+    c.add(_Usage(scritti_5m=40_000, con_dettaglio=False))
     assert c.cache_write_5m == 40_000
     assert c.cache_write_1h == 0
 
@@ -111,12 +111,12 @@ def test_il_costo_massimo_possibile_e_il_caso_peggiore():
     """Ogni token in ingresso contato alla tariffa piu' cara (write_op in
     cache) e l'output contata come se riempisse tutto lo spazio concesso."""
     b = Budget(dollar_limit=100, model="claude-opus-5")
-    expected_one = (20_000 * 6.25 + 32_000 * 25.00) / 1_000_000
-    assert b.max_possible_cost(20_000, 32_000) == pytest.approx(expected_one)
+    expected = (20_000 * 6.25 + 32_000 * 25.00) / 1_000_000
+    assert b.max_possible_cost(20_000, 32_000) == pytest.approx(expected)
 
 
 def test_una_chiamata_che_potrebbe_sforare_non_parte():
-    """E' il controllo che rende RIGIDO il limit: senza, one_ singola answer
+    """E' il controllo che rende RIGIDO il limit: senza, one singola answer
     lunga sforerebbe before che ce ne accorgiamo."""
     b = Budget(dollar_limit=0.50, model="claude-opus-5")
     assert b.max_possible_cost(20_000, 32_000) > 0.50
@@ -133,7 +133,7 @@ def test_max_tokens_sostenibile_si_restringe_col_budget():
     b = Budget(dollar_limit=0.50, model="claude-opus-5")
     affordable = b.affordable_max_tokens(20_000, 32_000)
     assert 0 < affordable < 32_000
-    # con quel value_ la call deve poter partire
+    # con quel value la call deve poter partire
     b.check_before_calling(20_000, affordable)
 
 
@@ -158,7 +158,7 @@ def test_il_consumo_viene_tenuto_anche_per_problema():
     assert b.usage.output_tokens == 4_000
 
 
-# --- controprova esterna: il conto deve riprodurre one_ bolletta vera ---------
+# --- controprova esterna: il conto deve riprodurre one bolletta vera ---------
 
 def test_riproduce_la_spesa_misurata_da_epoch_ai():
     """Un attempt del benchmark OEIS Open, con i token e il cost che Epoch AI
@@ -167,7 +167,7 @@ def test_riproduce_la_spesa_misurata_da_epoch_ai():
     Provenienza: `external/LeanOpenProblems-results/runs/oeis-full-50usd-ant-.../
     A055487_conjecture/info.json`, model `anthropic/claude-opus-4-8`,
     `total_cost` = 50.00493775. È la trial più forte che abbiamo sulla
-    correttezza del computation del budget: viene da out_of e da one_ fattura vera.
+    correttezza del computation del budget: viene da outside e da one fattura vera.
     """
     c = Usage(input_tokens=607, output_tokens=684_987,
                 cache_write_5m=2_304_613, cache_read=36_946_793)
@@ -180,8 +180,8 @@ def test_fable_5_1_costa_1_45_volte_opus_5_su_un_profilo_lungo():
     """Non il doppio, come suggerirebbe il prezzo base.
 
     Fable 5.1 costa il doppio in ingresso e in output, ma la lettura dalla cache
-    costa la METÀ in value_ assoluto ($0,25 against $0,50: 0,025x invece di 0,1x).
-    In one_ sessione lunga la cache è la entry più grossa, quindi il report vero
+    costa la METÀ in value assoluto ($0,25 against $0,50: 0,025x invece di 0,1x).
+    In one sessione lunga la cache è la entry più grossa, quindi il report vero
     è più low. Se questo test si rompe, il confronto fra modelli nel piano di
     spesa va rifatto.
     """

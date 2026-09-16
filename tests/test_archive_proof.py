@@ -1,6 +1,6 @@
 """L'estrattore delle dimostrazioni d'archive: i confini dei blocks.
 
-Sono test di only_ text: non fanno partire Lean, durano millisecondi.
+Sono test di only text: non fanno partire Lean, durano millisecondi.
 Servono a fissare i findings found provando davvero, one per one.
 """
 import sys
@@ -49,7 +49,7 @@ theorem aperta : True := by
 /-- Every finite group is surjunctive. This is a classical result: an injective
 endomorphism of a finite set is surjective. -/
 @[category textbook, AMS 20 37]
-theorem target_ : True := by
+theorem target : True := by
   trivial
 
 end Prova
@@ -59,16 +59,16 @@ end Prova
 def test_il_docstring_su_due_righe_resta_attaccato_al_suo_teorema():
     lines = _FILE.split("\n")
     blocks = pa._blocks(lines)
-    # il block che contiene il target_ deve contenere TUTTO il suo docstring
+    # il block che contiene il target deve contenere TUTTO il suo docstring
     for a, b in blocks:
         text = "\n".join(lines[a:b + 1])
-        if pa._declared_name(text) == "target_":
+        if pa._declared_name(text) == "target":
             assert "Every finite group is surjunctive" in text, (
-                f"il docstring e' rimasto out_of dal block:\n{text}")
+                f"il docstring e' rimasto outside dal block:\n{text}")
             assert "endomorphism of a finite set" in text
             break
     else:
-        raise AssertionError("block del target_ non found")
+        raise AssertionError("block del target non found")
 
 
 def test_nessun_blocco_e_solo_la_coda_di_un_docstring():

@@ -8,9 +8,9 @@ E' un ciclo semplice:
 
   1. si manda al model l'statement da dimostrare e le rules;
   2. il model risponde, eventualmente chiedendo di usare one strumento;
-  3. si esegue lo strumento e gli si restituisce il result_value;
+  3. si esegue lo strumento e gli si restituisce il result;
   4. si ripete finche' il model smette di chiedere tools, oppure finche'
-     `lean_check` accetta one_ dimostrazione, oppure finche' finiscono i soldi
+     `lean_check` accetta one dimostrazione, oppure finche' finiscono i soldi
      o i attempts.
 
 Gli tools disponibili sono two (vedi agent/tools.py):
@@ -20,7 +20,7 @@ Gli tools disponibili sono two (vedi agent/tools.py):
 IL LIMIT DI SPESA
 ------------------
 E' un limit RIGIDO, calcolato dai fields `usage` che l'API restituisce a ogni
-answer — quindi dai token davvero fatturati, non da one_ estimate. Prima di ogni
+answer — quindi dai token davvero fatturati, non da one estimate. Prima di ogni
 call si controlla il saldo: se e' exhausted, l'agent si ferma e lo dice.
 """
 from __future__ import annotations
@@ -45,12 +45,12 @@ import config as verifier_config          # noqa: E402
 from index import ProblemIndex, Problem       # noqa: E402
 from costs import Budget, SpendLimitExceeded, Usage   # noqa: E402
 
-#: Spazio maximum concesso a one_ answer. Serve high perche' il reasoning
+#: Spazio maximum concesso a one answer. Serve high perche' il reasoning
 #: esteso ci rientra inside; il controllo del budget lo riduce se serve.
 MAX_TOKENS = 32_000
 
-#: Sotto questa threshold one_ answer non puo' essere utile nemmeno per dire
-#: qualcosa di breve: allora, e only_ allora, il attempt si ferma.
+#: Sotto questa threshold one answer non puo' essere utile nemmeno per dire
+#: qualcosa di breve: allora, e only allora, il attempt si ferma.
 #:
 #: PERCHE' 2000 E NON 6000. Il controllo del budget riduce `max_tokens` a quanto
 #: sta nel residue, e si arrende quando quel number scende below questa threshold.
@@ -61,12 +61,12 @@ MAX_TOKENS = 32_000
 #: threshold costa $0,10 e un cap low resta utilizzabile.
 #:
 #: Il limit resta RIGIDO: nessuna call parte se il suo cost maximum
-#: possibile supera il residue. Cambia only_ dove sta il confine fra «riduci la
+#: possibile supera il residue. Cambia only dove sta il confine fra «riduci la
 #: answer» e «stopped».
 MIN_USEFUL_TOKENS = 2_000
 
 #: Sotto questa threshold la answer e' cosi' stretta che vale segnalarlo nel
-#: log_: serve a capire, leggendo un attempt, se il model ha smesso
+#: log: serve a capire, leggendo un attempt, se il model ha smesso
 #: perche' non aveva piu' idee o perche' non aveva piu' spazio.
 TIGHT_TOKENS = 8_000
 
@@ -77,7 +77,7 @@ TIGHT_TOKENS = 8_000
 #: prendeva.
 MAX_CONSECUTIVE_NETWORK_ERRORS = 3
 
-#: Le eccezioni che indicano one_ connessione caduta, non one_ answer dell'API.
+#: Le eccezioni che indicano one connessione caduta, non one answer dell'API.
 NETWORK_ERRORS = (anthropic.APIConnectionError, anthropic.APITimeoutError,
                   httpx2.TransportError)
 
@@ -85,7 +85,7 @@ NETWORK_ERRORS = (anthropic.APIConnectionError, anthropic.APITimeoutError,
 class _WorstCaseUsage:
     """Un `usage` finto che costa esattamente `Budget.max_possible_cost`.
 
-    Serve quando one_ answer non arriva: il suo cost vero non si conosce, ma
+    Serve quando one answer non arriva: il suo cost vero non si conosce, ma
     l'API puo' averla fatturata in parte. Addebitare il caso worst tiene
     rigido il limit: la spesa registrata puo' risultare piu' alta di quella
     vera, mai piu' bassa.
@@ -107,8 +107,8 @@ DEFAULT_MODEL = "claude-opus-5"
 def load_env() -> None:
     """Legge il file `.env` del progetto e ne mette le variables nell'environment.
 
-    Serve per la key_ API. Il file e' escluso da git (vedi .gitignore), cosi'
-    la key_ non finisce per sbaglio in un commit. Le variables gia' presenti
+    Serve per la key API. Il file e' escluso da git (vedi .gitignore), cosi'
+    la key non finisce per sbaglio in un commit. Le variables gia' presenti
     nell'environment hanno la precedenza e non vengono sovrascritte.
     """
     path = ROOT / ".env"
@@ -118,15 +118,15 @@ def load_env() -> None:
         line = line.strip()
         if not line or line.startswith("#") or "=" not in line:
             continue
-        key_, _, value_ = line.partition("=")
-        key_ = key_.strip()
-        value_ = value_.strip().strip('"').strip("'")
-        if key_ and key_ not in os.environ:
-            os.environ[key_] = value_
+        key, _, value = line.partition("=")
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if key and key not in os.environ:
+            os.environ[key] = value
 
 
 # ---------------------------------------------------------------------------
-# Il text di system (istruzioni fisse). Va tenuto STABILE fra one_ call e
+# Il text di system (istruzioni fisse). Va tenuto STABILE fra one call e
 # l'altra: e' la parte che viene messa in cache, e qualunque byte diverso
 # invaliderebbe la cache facendo pagare tutto a prezzo pieno.
 # ---------------------------------------------------------------------------
@@ -237,13 +237,13 @@ now get them in full.
 patching it.
 - You have no internet access. Rely on what you know about Mathlib, and use \
 `lean_explore` to correct yourself.
-- Stop when `lean_check` reports ACCETTATO. If you become convinced the problem \
+- Stop when `lean_check` reports ACCEPTED. If you become convinced the problem \
 is beyond you, say so plainly instead of submitting a proof you know is broken."""
 
 
 #: La variant «insistente» delle istruzioni.
 #:
-#: PERCHE' ESISTE. Nel prime_ giro sui problems open_ l'agent ha failed dieci
+#: PERCHE' ESISTE. Nel first giro sui problems open_problems l'agent ha failed dieci
 #: volte su dieci nello stesso way: esplorava, calcolava, concludeva di non
 #: farcela e si fermava — spendendo in media $0,23 di un cap da $2 e senza
 #: consegnare NEMMENO UNA volta un candidato a `lean_check`. Le istruzioni
@@ -252,12 +252,12 @@ is beyond you, say so plainly instead of submitting a proof you know is broken."
 #: Open aveva invece agenti che arrivavano al cap nel 70% dei cases.
 #:
 #: Questa variant toglie l'invito ad arrendersi e dice che il budget e' li' per
-#: essere consumato. Serve a rispondere a one_ domanda precisa: lo zero su dieci
+#: essere consumato. Serve a rispondere a one domanda precisa: lo zero su dieci
 #: viene dalla difficolta' dei problems o dal way in cui l'agent si arrende?
 INSISTENT_INSTRUCTIONS = INSTRUCTIONS.replace(
-    """- Stop when `lean_check` reports ACCETTATO. If you become convinced the problem \
+    """- Stop when `lean_check` reports ACCEPTED. If you become convinced the problem \
 is beyond you, say so plainly instead of submitting a proof you know is broken.""",
-    """- **Stop only when `lean_check` reports ACCETTATO, or when your budget is \
+    """- **Stop only when `lean_check` reports ACCEPTED, or when your budget is \
 gone.** The per-problem budget exists to be spent: every tool result tells you \
 how much is left.
 - **When a route fails, change route — do not stop.** Prove a weaker statement \
@@ -275,7 +275,7 @@ route.""")
 
 
 def chosen_instructions(variant: str) -> str:
-    """Il text di system, second_ la variant chiesta."""
+    """Il text di system, second la variant chiesta."""
     if variant == "insistenti":
         base = INSISTENT_INSTRUCTIONS
     elif variant == "attuali":
@@ -286,10 +286,10 @@ def chosen_instructions(variant: str) -> str:
     return base.replace("{UTILITY_MODULE}", verifier_config.utility_module())
 
 
-def _verification_kind(report: str, accepted_one: bool) -> tuple[str, str]:
+def _verification_kind(report: str, accepted: bool) -> tuple[str, str]:
     """Ritorna (controllo failed, kind), leggendo il report di verify.py."""
-    if accepted_one:
-        return "", "accepted_one"
+    if accepted:
+        return "", "accepted"
     failed = ""
     for line in report.split("\n"):
         if line.strip().startswith("[FALLITO]"):
@@ -302,7 +302,7 @@ def _verification_kind(report: str, accepted_one: bool) -> tuple[str, str]:
         return failed, "errore_tecnico"
     if "assiom" in failed:
         return failed, "buco_o_assioma"
-    if "kind_ identico" in failed or "definizioni dell" in failed:
+    if "kind identico" in failed or "definizioni dell" in failed:
         return failed, "enunciato_sbagliato"
     return failed, "errore_tecnico"
 
@@ -312,7 +312,7 @@ def istruzioni() -> str:
 
     Cambia fra le versioni dell'archive: `FormalConjectures.Util.ProblemImports`
     nel tag bench-v1, `FormalConjecturesUtil` nel branch main. Scriverlo fisso
-    faceva fallire ogni attempt sul second_ snapshot.
+    faceva fallire ogni attempt sul second snapshot.
     """
     return INSTRUCTIONS.replace("{UTILITY_MODULE}", verifier_config.utility_module())
 
@@ -348,22 +348,22 @@ Produce a complete Lean file proving `{problem.theorem}`, and check it with
 class LeanCheck:
     """Una singola call a lean_check, con il suo result misurato."""
     chars: int
-    result: str                  # ACCETTATO / RIFIUTATO / ERRORE / TIMEOUT
+    result: str                  # ACCEPTED / REJECTED / ERROR / TIMEOUT
     failed_check: str      # which controllo non e' passato
     seconds: float              # tempo di computation LOCALE (Lean), non dell'API
     #: come classifichiamo il attempt. Regola dichiarata:
-    #:   exploration        -> il file non dichiarava il theorem_ richiesto
+    #:   exploration        -> il file non dichiarava il theorem richiesto
     #:                          (il model stava ispezionando, non tentando)
     #:   errore_tecnico      -> il file non compila
     #:   buco_o_assioma      -> compila ma la dimostrazione ha un buco
     #:   enunciato_sbagliato -> compila ma dimostra un'altra cosa
-    #:   accepted_one           -> passed_one
+    #:   accepted           -> exceeded
     kind: str
 
 
 @dataclass
 class Iteration:
-    """Una passata del ciclo: one_ call all'API piu' gli tools usati."""
+    """Una passata del ciclo: one call all'API piu' gli tools usati."""
     number: int
     input_tokens: int = 0
     output_tokens: int = 0
@@ -383,7 +383,7 @@ class Iteration:
 @dataclass
 class Attempt:
     problem: str
-    solved_one: bool = False
+    solved: bool = False
     reason: str = ""
     iterations: int = 0
     checks: int = 0
@@ -398,42 +398,42 @@ class Attempt:
     api_seconds: float = 0.0
     lean_seconds: float = 0.0
     python_seconds: float = 0.0
-    #: how_many_ volte la conversazione e' stata accorciata per far spazio
+    #: how_many volte la conversazione e' stata accorciata per far spazio
     compactions: int = 0
     #: calls interrotte dalla rete, addebitate al cost maximum possibile
     network_interruptions: int = 0
     #: la total_sum di quegli addebiti: sta nel budget total, non in `usage`
     network_charge: float = 0.0
-    #: classificazione del failure, second_ la rule_ dichiarata below
+    #: classificazione del failure, second la rule dichiarata below
     cause: str = ""
 
     @property
     def verifications_by_kind(self) -> dict:
-        count_: dict = {}
+        count: dict = {}
         for it in self.detail:
             for v in it.checks:
-                count_[v.kind] = count_.get(v.kind, 0) + 1
-        return count_
+                count[v.kind] = count.get(v.kind, 0) + 1
+        return count
 
     def classify_failure(self) -> str:
         """Distingue un failure MATEMATICO da one di SISTEMA.
 
         Regola dichiarata, non a sensazione:
-          * se non c'e' state nessun attempt vero (all_of le checks erano
+          * se non c'e' state nessun attempt vero (all_items le checks erano
             explorations), il failure e' di SISTEMA: l'agent non e' arrivato
             a provarci, ha spent tutto a capire gli tools e l'API di Mathlib;
-          * se i attempts real_ones sono finiti only_ con errors di compilazione, e'
+          * se i attempts real_list sono finiti only con errors di compilazione, e'
             TECNICO: sapeva cosa fare ma non come scriverlo in Lean;
           * se almeno un attempt e' arrivato a compilare e ha failed per un
             buco o per l'statement sbagliato, e' MATEMATICO: la dimostrazione
             non c'era.
         """
-        if self.solved_one:
-            return "solved_one"
+        if self.solved:
+            return "solved"
         n = self.verifications_by_kind
-        real_ones = n.get("errore_tecnico", 0) + n.get("buco_o_assioma", 0) + \
+        real_list = n.get("errore_tecnico", 0) + n.get("buco_o_assioma", 0) + \
             n.get("enunciato_sbagliato", 0)
-        if real_ones == 0:
+        if real_list == 0:
             return "system: nessun attempt vero, tutto spent in exploration"
         if n.get("buco_o_assioma", 0) or n.get("enunciato_sbagliato", 0):
             return "matematico: ha compilato ma la dimostrazione non c'era"
@@ -448,29 +448,29 @@ class Attempt:
 COMPACTION_THRESHOLD = 120_000
 
 #: Quanti messages in queue restano intact quando si compatta. Il model deve
-#: vedere per intero il suo job recente; quello old_ gli serve come traccia.
+#: vedere per intero il suo job recente; quello old gli serve come traccia.
 MESSAGES_UNTOUCHED = 8
 
 #: A how_many chars si riducono i results degli tools piu' vecchi.
 OLD_RESULTS_QUEUE = 600
 
-_CUT_MARK = "\n… [result_value accorciato per far spazio nel context; "\
-                "se ti serve di new_one, richiedilo]"
+_CUT_MARK = "\n… [result accorciato per far spazio nel context; "\
+                "se ti serve di new_item, richiedilo]"
 
 
 def compact_conversation(messages: list, *, intact: int = MESSAGES_UNTOUCHED,
                            queue: int = OLD_RESULTS_QUEUE) -> int:
     """Accorcia i results degli tools piu' vecchi. Ritorna how_many ne accorcia.
 
-    Il prime_ message (l'statement del problem) e gli last_ones `intact` non si
-    toccano mai. Si accorciano only_ i `tool_result`, perche' sono il grosso: un
+    Il first message (l'statement del problem) e gli latest_items `intact` non si
+    toccano mai. Si accorciano only i `tool_result`, perche' sono il grosso: un
     error di Lean arriva a 40 000 chars, e in duecento iterations sono
     milioni. Il code che il model ha scritto (i `tool_use`) resta intero: e'
     il suo job, e ricostruirlo costerebbe piu' di quanto occupa.
     """
     if len(messages) <= intact + 1:
         return 0
-    cut_ = 0
+    cut = 0
     for msg in messages[1:len(messages) - intact]:
         content = msg.get("content")
         if not isinstance(content, list):
@@ -484,8 +484,8 @@ def compact_conversation(messages: list, *, intact: int = MESSAGES_UNTOUCHED,
             if text.endswith(_CUT_MARK):
                 continue
             block["content"] = text[:queue] + _CUT_MARK
-            cut_ += 1
-    return cut_
+            cut += 1
+    return cut
 
 
 # ---------------------------------------------------------------------------
@@ -496,11 +496,11 @@ class _Doppio:
     """Scrive su two posti insieme: lo schermo e un file.
 
     Serve perche' un giro lanciato in sottofondo non mostra niente finche' non
-    finisce, e chi guarda non ha way di sapere se sta andando. Con il log_
+    finisce, e chi guarda non ha way di sapere se sta andando. Con il log
     su file si puo' fare `tail -f` e vedere le lines arrivare.
 
     Non usa `print` reindirizzato con `>` perche' quello lo decide chi lancia:
-    il log_ deve esserci sempre, also_ quando l'output va in one_ pipe.
+    il log deve esserci sempre, also quando l'output va in one pipe.
     """
 
     def __init__(self, stream, path: Path):
@@ -522,31 +522,31 @@ class _Doppio:
 
 
 
-def solve_(problem: Problem, index: ProblemIndex, *, client, model: str,
+def solve(problem: Problem, index: ProblemIndex, *, client, model: str,
             budget: Budget, problem_cap: float, max_iterations: int = 30,
             effort: str = "high", lean_timeout: int | None = None,
             verbose: bool = True, instruction_variant: str = "attuali") -> Attempt:
 
-    start_ = time.time()
+    start = time.time()
     t = Attempt(problem=problem.theorem)
 
     file_text = file_without_proofs(problem, index)
     try:
         # Il shakedown dev'essere onesto: se la dimostrazione non e' stata
         # nascosta, il problem si SALTA. Prima interrompeva tutta l'esecuzione,
-        # e one_ calibrazione da undici problems si fermava al terzo.
+        # e one calibrazione da undici problems si fermava al terzo.
         check_it_is_hidden(problem, file_text)
     except AssertionError as e:
         t.reason = f"saltato: {e}"
         t.cause = "system: la dimostrazione dell'archive non si riesce a nascondere"
-        t.seconds = time.time() - start_
+        t.seconds = time.time() - start
         return t
 
     api_tools = [tools.SCHEMA_LEAN_EXPLORE, tools.SCHEMA_LEAN_CHECK,
                      tools.SCHEMA_RUN_PYTHON]
 
     # Una folder di job per problem, che sopravvive alle calls: serve
-    # perche' one_ ricerca in piu' steps possa salvare un checkpoint. Il name e'
+    # perche' one ricerca in piu' steps possa salvare un checkpoint. Il name e'
     # ripulito perche' i names dei theorems contengono points e chars strani.
     clean_name = re.sub(r"[^A-Za-z0-9_.-]", "_", problem.theorem)[:80]
     work_dir = verifier_config.ROOT / "runs" / "job" / clean_name
@@ -578,12 +578,12 @@ def solve_(problem: Problem, index: ProblemIndex, *, client, model: str,
 
         # --- se il context e' troppo grande, si accorcia il passato
         if input_tokens > COMPACTION_THRESHOLD:
-            cut_ = compact_conversation(messages)
-            if cut_:
+            cut = compact_conversation(messages)
+            if cut:
                 count = client.messages.count_tokens(
                     model=model, system=system, tools=api_tools,
                     messages=messages)
-                show(f"     [context compattato: {cut_} results accorciati, "
+                show(f"     [context compattato: {cut} results accorciati, "
                        f"{input_tokens:,} -> {count.input_tokens:,} token]")
                 input_tokens = count.input_tokens
                 t.compactions += 1
@@ -605,19 +605,19 @@ def solve_(problem: Problem, index: ProblemIndex, *, client, model: str,
                 # su QUESTO problem sparisce dal report — cost, iterations e
                 # checks comprese. E' successo davvero: nel giro 0 bis il
                 # settimo problem risultava con $0,00 e zero checks mentre nel
-                # log_ aveva one_ check consegnata e mezzo dollaro spent.
+                # log aveva one check consegnata e mezzo dollaro spent.
                 # Un report che sottostima la spesa e' un problem di sicurezza,
                 # non di cosmetica.
                 t.reason = reason
                 t.cause = t.classify_failure()
-                t.seconds = time.time() - start_
+                t.seconds = time.time() - start
                 e = SpendLimitExceeded(reason)
                 e.attempt = t
                 raise e
-            t.reason = reason                        # only_ questo problem si ferma
+            t.reason = reason                        # only questo problem si ferma
             break
 
-        # doppia sicurezza: se also_ cosi' non ci sta, non parte
+        # doppia sicurezza: se also cosi' non ci sta, non parte
         budget.check_before_calling(input_tokens, max_tokens)
 
         tight = ("  ← SPAZIO STRETTO: la answer e' limitata dal budget, non "
@@ -638,7 +638,7 @@ def solve_(problem: Problem, index: ProblemIndex, *, client, model: str,
                 output_config={"effort": effort},
                 tools=api_tools,
                 messages=messages,
-                cache_control={"type": "ephemeral"},   # mette in cache also_ la conversazione
+                cache_control={"type": "ephemeral"},   # mette in cache also la conversazione
             ) as stream:
                 answer = stream.get_final_message()
         except NETWORK_ERRORS as e:
@@ -649,7 +649,7 @@ def solve_(problem: Problem, index: ProblemIndex, *, client, model: str,
             before = budget.spent
             # Il caso worst va sul budget TOTALE, che cosi' resta rigido, ma non
             # sul cap del problem ne' sul suo cost. La before versione lo
-            # addebitava also_ li': un'interruzione da $0,84 consumava da sola un
+            # addebitava also li': un'interruzione da $0,84 consumava da sola un
             # cap da $1, e nella notte del 13 settembre sei attempts su dodici
             # sono finiti cosi', senza dire niente sull'agent.
             budget.record(worst)
@@ -673,7 +673,7 @@ def solve_(problem: Problem, index: ProblemIndex, *, client, model: str,
 
         before = budget.spent
         budget.record(answer.usage, problem.theorem)
-        t.usage.add_(answer.usage)
+        t.usage.add(answer.usage)
         u = answer.usage
         it.input_tokens = getattr(u, "input_tokens", 0) or 0
         it.output_tokens = getattr(u, "output_tokens", 0) or 0
@@ -699,15 +699,15 @@ def solve_(problem: Problem, index: ProblemIndex, *, client, model: str,
         messages.append({"role": "assistant", "content": answer.content})
 
         if not calls:
-            t.reason = "il model ha smesso di usare gli tools senza one_ trial accepted_"
+            t.reason = "il model ha smesso di usare gli tools senza one trial accepted"
             text = " ".join(b.text for b in answer.content if b.type == "text")
-            t.transcript.append({"kind_": "end", "text": text})
+            t.transcript.append({"kind": "end", "text": text})
             t.detail.append(it)
             t.api_seconds += it.api_seconds
             break
 
         results = []
-        accepted_ = False
+        accepted = False
         for call in calls:
             if call.name == "lean_explore":
                 t.explorations += 1
@@ -739,7 +739,7 @@ def solve_(problem: Problem, index: ProblemIndex, *, client, model: str,
                 prima_riga = report.split("\n")[0]
                 show(f"        {prima_riga}  [{kind}, {duration:.0f}s]")
                 if ok:
-                    accepted_ = True
+                    accepted = True
                     t.solution = code
                 results.append({"type": "tool_result", "tool_use_id": call.id,
                                   "content": report})
@@ -760,7 +760,7 @@ def solve_(problem: Problem, index: ProblemIndex, *, client, model: str,
                                   "content": f"Strumento sconosciuto: {call.name}",
                                   "is_error": True})
 
-        # Il model si rule_ meglio se sa quanto gli resta: chi ha misurato
+        # Il model si rule meglio se sa quanto gli resta: chi ha misurato
         # OEIS Open dava al model one strumento apposta per questo.
         spent_here = budget.spent - spent_at_start - network_charges_here
         results.append({
@@ -774,14 +774,14 @@ def solve_(problem: Problem, index: ProblemIndex, *, client, model: str,
         t.lean_seconds += it.lean_seconds + it.exploration_seconds
         t.python_seconds += it.python_seconds
 
-        if accepted_:
-            t.solved_one = True
-            t.reason = "dimostrazione accepted_ dal verifier"
+        if accepted:
+            t.solved = True
+            t.reason = "dimostrazione accepted dal verifier"
             break
     else:
         t.reason = f"esaurite le {max_iterations} iterations disponibili"
 
-    t.seconds = time.time() - start_
+    t.seconds = time.time() - start
     t.cause = t.classify_failure()
     return t
 
@@ -791,17 +791,17 @@ def solve_(problem: Problem, index: ProblemIndex, *, client, model: str,
 # ---------------------------------------------------------------------------
 
 def write_report(path: Path, *, args, cap: float, budget: Budget,
-                    attempts: list, full_: bool) -> None:
-    """Scrive il resoconto JSON. `full_` e' falso finche' il giro non e' finito."""
+                    attempts: list, full: bool) -> None:
+    """Scrive il resoconto JSON. `full` e' falso finche' il giro non e' finito."""
     path.write_text(json.dumps({
         "model": args.model, "effort": args.effort,
         "istruzioni": args.istruzioni,
         "problem_cap": cap,
         "budget": args.budget, "spent": budget.spent,
-        "full_": full_,
+        "full": full,
         "consumo_totale": budget.usage.__dict__,
         "attempts": [{
-            "problem": t.problem, "solved_one": t.solved_one, "reason": t.reason,
+            "problem": t.problem, "solved": t.solved, "reason": t.reason,
             "cause": t.cause,
             "iterations": t.iterations, "checks": t.checks,
             "explorations": t.explorations,
@@ -854,8 +854,8 @@ def main() -> int:
                     help="which variant del prompt di system usare. "
                          "'insistenti' toglie l'invito ad arrendersi e dice che "
                          "il budget e' da consumare (vedi INSISTENT_INSTRUCTIONS)")
-    ap.add_argument("--log_", default=None,
-                    help="dove scrivere il log_ line per line (predefinito: "
+    ap.add_argument("--log", default=None,
+                    help="dove scrivere il log line per line (predefinito: "
                          "runs/jobs/agent-<data>.log). Serve per seguire il "
                          "job con `tail -f` mentre gira.")
     ap.add_argument("--silenzioso", action="store_true")
@@ -864,8 +864,8 @@ def main() -> int:
                          "(sconsigliato: vedi agent/awake.py)")
     args = ap.parse_args()
 
-    # --- il log_, before di qualunque show
-    log_path = Path(args.log_) if args.log_ else (
+    # --- il log, before di qualunque show
+    log_path = Path(args.log) if args.log else (
         verifier_config.ROOT / "runs" / "jobs" /
         f"agent-{time.strftime('%Y%m%d-%H%M%S')}.log")
     sys.stdout = _Doppio(sys.stdout, log_path)
@@ -875,17 +875,17 @@ def main() -> int:
     load_env()
 
     if not args.problems:
-        ap.error("indica almeno un theorem_ da tentare")
+        ap.error("indica almeno un theorem da tentare")
 
     environment_problems = verifier_config.check_installation()
     if environment_problems:
         print("Ambiente non ready:\n  - " + "\n  - ".join(environment_problems), file=sys.stderr)
         return 2
     if not os.environ.get("ANTHROPIC_API_KEY") and not os.environ.get("ANTHROPIC_AUTH_TOKEN"):
-        print("Manca la key_ API.\n"
-              f"Crea il file {ROOT / '.env'} con inside one_ line:\n"
+        print("Manca la key API.\n"
+              f"Crea il file {ROOT / '.env'} con inside one line:\n"
               "  ANTHROPIC_API_KEY=sk-ant-...\n"
-              "(il file e' gia' escluso da git, quindi la key_ non verra' mai committata)",
+              "(il file e' gia' escluso da git, quindi la key non verra' mai committata)",
               file=sys.stderr)
         return 2
 
@@ -905,7 +905,7 @@ def main() -> int:
             awake_process.terminate()
             print("NON PARTO: il Mac deve restare sveglio e alimentato per tutto il giro.\n  - "
                   + "\n  - ".join(reasons)
-                  + "\nTieni also_ il coperchio aperto: a coperchio chiuso il Mac si sospende "
+                  + "\nTieni also il coperchio aperto: a coperchio chiuso il Mac si sospende "
                     "comunque. Per saltare il controllo: --senza-awake (sconsigliato).",
                   file=sys.stderr)
             return 2
@@ -922,13 +922,13 @@ def main() -> int:
 
     attempts: list[Attempt] = []
 
-    def salva(full_: bool) -> None:
+    def salva(full: bool) -> None:
         # Il report si riscrive after OGNI problem. Il 12 settembre un error di
         # rete ha fermato un giro al terzo problem e, siccome il report si
-        # scriveva only_ alla end, i two attempts gia' conclusi sono vanished.
+        # scriveva only alla end, i two attempts gia' conclusi sono vanished.
         if args.report:
             write_report(Path(args.report), args=args, cap=cap, budget=budget,
-                            attempts=attempts, full_=full_)
+                            attempts=attempts, full=full)
 
     for i, p in enumerate(listing, 1):
         if awake_process is not None and not awake.on_mains_power():
@@ -937,7 +937,7 @@ def main() -> int:
             break
         print(f"\n{'='*78}\n[{i}/{len(listing)}] {p.theorem}   ({p.category})\n{'='*78}")
         try:
-            t = solve_(p, index, client=client, model=args.model, budget=budget,
+            t = solve(p, index, client=client, model=args.model, budget=budget,
                         problem_cap=cap, max_iterations=args.max_iterations,
                         effort=args.effort, lean_timeout=args.lean_timeout,
                         verbose=not args.silenzioso,
@@ -955,34 +955,34 @@ def main() -> int:
         except anthropic.APIError as e:
             print(f"\n!! Errore dall'API: {e}")
             attempts.append(Attempt(problem=p.theorem, reason=f"error API: {e}"))
-            salva(full_=False)
+            salva(full=False)
             continue
         attempts.append(t)
-        salva(full_=False)
-        result = "RISOLTO" if t.solved_one else "non solved_one"
+        salva(full=False)
+        result = "RISOLTO" if t.solved else "non solved"
         print(f"\n  => {result}: {t.reason}")
         print(f"     {t.iterations} iterations, {t.explorations} explorations, "
               f"{t.checks} checks Lean, "
               f"{t.python_runs} esecuzioni Python, {t.seconds:.0f}s, "
               f"${t.usage.cost(args.model):.4f}")
-        print(f"     tempo: {t.api_seconds:.0f}s in expected_value dell'API, "
-              f"{t.lean_seconds:.0f}s di Lean in local_, "
-              f"{t.python_seconds:.0f}s di Python in local_")
+        print(f"     tempo: {t.api_seconds:.0f}s in waited dell'API, "
+              f"{t.lean_seconds:.0f}s di Lean in local, "
+              f"{t.python_seconds:.0f}s di Python in local")
         print(f"     kind delle checks: {t.verifications_by_kind or 'nessuna'}")
         print(f"     cause: {t.cause}")
 
     # --- resoconto
     print(f"\n{'='*78}\nRESOCONTO\n{'='*78}")
-    solved_ = sum(1 for t in attempts if t.solved_one)
+    solved = sum(1 for t in attempts if t.solved)
     for t in attempts:
-        print(f"  [{'RISOLTO    ' if t.solved_one else 'non solved_one'}] {t.problem}"
+        print(f"  [{'RISOLTO    ' if t.solved else 'non solved'}] {t.problem}"
               f"   ${t.usage.cost(args.model):.4f}   {t.reason}")
-    print(f"\n  Risolti: {solved_}/{len(attempts)}")
+    print(f"\n  Risolti: {solved}/{len(attempts)}")
     print(f"  Spesa total: ${budget.spent:.4f} su ${args.budget:.2f} disponibili")
     print(f"  {budget.usage.riassunto(args.model)}")
 
     if args.report:
-        salva(full_=True)
+        salva(full=True)
         print(f"\n  Resoconto salvato in {args.report}")
 
     return 0

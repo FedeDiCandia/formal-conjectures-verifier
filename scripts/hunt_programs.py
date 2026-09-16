@@ -16,12 +16,12 @@ un ritrovamento falso, che e' peggio di nessun ritrovamento.
 #   True ↔ ∀ n, Squarefree (Euclid n)      con Euclid n = p_n# + 1
 #
 # STATO NOTO (cercato sul web il 2026-09-10): e' aperto se ogni number di
-# Euclide sia privo di fattori quadrati. Non risulta pubblicata one_ ricerca
+# Euclide sia privo di fattori quadrati. Non risulta pubblicata one ricerca
 # sistematica di controesempi.
 #
 # COME SI CERCA: se p² divide p_n# + 1, allora p non divide p_n#, quindi p e'
-# maggiore di p_n. Per ogni prime_ p si compute il primoriale module p²,
-# moltiplicando un prime_ q < p alla volta, e si guarda se in qualche momento
+# maggiore di p_n. Per ogni first p si compute il primoriale module p²,
+# moltiplicando un first q < p alla volta, e si guarda se in qualche momento
 # vale −1 module p². Costo: circa π(p) operazioni per ogni p, cioe' P²/(2 ln²P)
 # in total. Per P = 10^6 sono un paio di miliardi di moltiplicazioni: hours, non
 # giorni.
@@ -49,13 +49,13 @@ for q in pr[:7]:
     computed.append(acc + 1)
 if computed != expected:
     print(json.dumps({"event": "collaudo_fallito",
-                      "expected_one": expected, "calcolato": computed}), flush=True)
+                      "expected": expected, "calcolato": computed}), flush=True)
     sys.exit(1)
-# 30031 = 59 * 509: il sesto number di Euclide NON e' prime_ (ma e' senza quadrati)
+# 30031 = 59 * 509: il sesto number di Euclide NON e' first (ma e' senza quadrati)
 if 30031 % 59 != 0:
     print(json.dumps({"event": "collaudo_fallito", "detail": "30031 = 59*509"}), flush=True)
     sys.exit(1)
-print(json.dumps({"event": "shakedown", "result": "passed_one",
+print(json.dumps({"event": "shakedown", "result": "exceeded",
                   "controllati": "primes 7 numbers di Euclide e la fattorizzazione di 30031"}),
       flush=True)
 
@@ -74,15 +74,15 @@ if os.path.exists(checkpoint):
     examined = d.get("examined", 0)
 
 primes = cribro(LIMIT)
-print(json.dumps({"event": "start_", "primi_disponibili": len(primes),
+print(json.dumps({"event": "start", "primi_disponibili": len(primes),
                   "limit": LIMIT, "riparto_da_indice": index_start}), flush=True)
 
 stopped = False
-def stop_(s, f):
+def stop(s, f):
     global stopped
     stopped = True
-signal.signal(signal.SIGTERM, stop_)
-signal.signal(signal.SIGINT, stop_)
+signal.signal(signal.SIGTERM, stop)
+signal.signal(signal.SIGINT, stop)
 
 def salva(i):
     tmp = state + ".tmp"
@@ -99,8 +99,8 @@ for i in range(index_start, len(primes)):
     p = primes[i]
     p2 = p * p
     acc = 1
-    # il primoriale module p^2, un prime_ q < p alla volta
-    for j in range(i):          # all_of i primes q < p
+    # il primoriale module p^2, un first q < p alla volta
+    for j in range(i):          # all_items i primes q < p
         acc = (acc * primes[j]) % p2
         if acc == p2 - 1:       # acc ≡ -1 (mod p^2), cioe' p^2 | p_n# + 1
             found.append({"p": p, "indice_primoriale": j + 1,
@@ -108,13 +108,13 @@ for i in range(index_start, len(primes)):
             print(json.dumps({"event": "found",
                               "detail": found[-1]}), flush=True)
     examined += 1
-    now_ = time.time()
-    if now_ - last_warning > 30:
+    now = time.time()
+    if now - last_warning > 30:
         salva(i + 1)
         print(json.dumps({"event": "progress", "position": i + 1,
                           "examined": examined, "primo_corrente": p,
-                          "seconds": round(now_ - t0)}), flush=True)
-        last_warning = now_
+                          "seconds": round(now - t0)}), flush=True)
+        last_warning = now
 
 salva(min(i + 1, len(primes)))
 print(json.dumps({"event": "end", "position": min(i + 1, len(primes)),
@@ -124,14 +124,14 @@ print(json.dumps({"event": "end", "position": min(i + 1, len(primes)),
 
 
 # ---------------------------------------------------------------------------
-# 2. Erdos 409: l'iteration di sigma meno one raggiunge sempre un prime_?
+# 2. Erdos 409: l'iteration di sigma meno one raggiunge sempre un first?
 # ---------------------------------------------------------------------------
 # PROBLEM: Erdos409.erdos_409.variants.sigma_prime_termination
 #   True ↔ ∀ n > 1, ∃ i, Prime ((fun x => σ₁(x) - 1)^[i] n)
 #
 # COME SI CERCA: per ogni n si itera m ↦ σ(m) − 1 finche' non si incontra un
-# prime_. Un counterexample e' un n la cui orbit non incontra mai un prime_:
-# o enters in un ciclo, o cresce senza limit. Si fix_ un cap di steps e di
+# first. Un counterexample e' un n la cui orbit non incontra mai un first:
+# o enters in un ciclo, o cresce senza limit. Si fix un cap di steps e di
 # grandezza; chi lo supera viene segnalato come SOSPETTO, non come
 # counterexample — distinzione importante, perche' "non l'ho found in mille
 # steps" non e' "non esiste".
@@ -174,7 +174,7 @@ def is_prime(n):
 expected = [1, 3, 4, 7, 6, 12, 8, 15, 13, 18]
 computed = [sigma(n) for n in range(1, 11)]
 if computed != expected:
-    print(json.dumps({"event": "collaudo_fallito", "expected_one": expected,
+    print(json.dumps({"event": "collaudo_fallito", "expected": expected,
                       "calcolato": computed}), flush=True)
     sys.exit(1)
 # sigma(28) = 56 perche' 28 e' perfetto
@@ -184,7 +184,7 @@ if sigma(28) != 56:
 if [n for n in range(2, 30) if is_prime(n)] != [2,3,5,7,11,13,17,19,23,29]:
     print(json.dumps({"event": "collaudo_fallito", "detail": "primalita'"}), flush=True)
     sys.exit(1)
-print(json.dumps({"event": "shakedown", "result": "passed_one",
+print(json.dumps({"event": "shakedown", "result": "exceeded",
                   "controllati": "sigma(1..10), sigma(28)=56, primes below 30"}), flush=True)
 
 # --- ricerca -----------------------------------------------------------------
@@ -204,11 +204,11 @@ if os.path.exists(checkpoint):
     examined = d.get("examined", 0)
 
 stopped = False
-def stop_(s, f):
+def stop(s, f):
     global stopped
     stopped = True
-signal.signal(signal.SIGTERM, stop_)
-signal.signal(signal.SIGINT, stop_)
+signal.signal(signal.SIGTERM, stop)
+signal.signal(signal.SIGINT, stop)
 
 def salva(n):
     tmp = state + ".tmp"
@@ -216,7 +216,7 @@ def salva(n):
         json.dump({"position": n, "examined": examined, "found": found}, f)
     os.replace(tmp, state)
 
-t0 = time.time(); last_ = t0
+t0 = time.time(); last = t0
 n = n0
 while n <= FINO_A and not stopped:
     m = n
@@ -224,7 +224,7 @@ while n <= FINO_A and not stopped:
     result = None
     for step in range(MAX_STEPS):
         if is_prime(m):
-            result = ("prime_", step, m)
+            result = ("first", step, m)
             break
         if m in seen:
             result = ("ciclo", step, m)
@@ -239,18 +239,18 @@ while n <= FINO_A and not stopped:
             break
     if result is None:
         result = ("nessun_primo_entro_i_passi", MAX_STEPS, m)
-    if result[0] != "prime_":
+    if result[0] != "first":
         found.append({"n": n, "result": result[0], "steps": result[1],
-                        "value_": result[2]})
+                        "value": result[2]})
         print(json.dumps({"event": "found", "detail": found[-1]}), flush=True)
     examined += 1
     n += 1
-    now_ = time.time()
-    if now_ - last_ > 30:
+    now = time.time()
+    if now - last > 30:
         salva(n)
         print(json.dumps({"event": "progress", "position": n,
-                          "examined": examined, "seconds": round(now_ - t0)}), flush=True)
-        last_ = now_
+                          "examined": examined, "seconds": round(now - t0)}), flush=True)
+        last = now
 
 salva(n)
 print(json.dumps({"event": "end", "position": n, "examined": examined,
@@ -270,7 +270,7 @@ print(json.dumps({"event": "end", "position": n, "examined": examined,
 # e questo un computation non lo puo' stabilire. Quello che il computation puo' fare e'
 # utile lo stesso: per ogni k, trovare il piu' piccolo n che funziona. Se per
 # qualche k il piu' piccolo n esplode, e' un indizio; se si trova sempre presto,
-# e' one_ conferma sperimentale.
+# e' one conferma sperimentale.
 BINOMIAL = r'''
 import json, os, signal, sys, time
 from math import comb
@@ -295,7 +295,7 @@ if desc_factorial(7, 3) != 7 * 6 * 5:
 if desc_factorial(5, 0) != 1:
     print(json.dumps({"event": "collaudo_fallito", "detail": "descFactorial(n,0)"}), flush=True)
     sys.exit(1)
-print(json.dumps({"event": "shakedown", "result": "passed_one",
+print(json.dumps({"event": "shakedown", "result": "exceeded",
                   "controllati": "centralBinom(0..5) = 1,2,6,20,70,252 e descFactorial"}),
       flush=True)
 
@@ -316,11 +316,11 @@ if os.path.exists(checkpoint):
     examined = d.get("examined", 0)
 
 stopped = False
-def stop_(s, f):
+def stop(s, f):
     global stopped
     stopped = True
-signal.signal(signal.SIGTERM, stop_)
-signal.signal(signal.SIGINT, stop_)
+signal.signal(signal.SIGTERM, stop)
+signal.signal(signal.SIGINT, stop)
 
 def salva(k):
     tmp = state + ".tmp"
@@ -329,7 +329,7 @@ def salva(k):
                    "minima": minima}, f)
     os.replace(tmp, state)
 
-t0 = time.time(); last_ = t0
+t0 = time.time(); last = t0
 for k in range(k0, K_MAX + 1):
     if stopped:
         break
@@ -348,9 +348,9 @@ for k in range(k0, K_MAX + 1):
                         "avvertenza": "indizio, non counterexample"})
     print(json.dumps({"event": "progress", "detail": entry,
                       "position": k + 1, "examined": examined}), flush=True)
-    now_ = time.time()
-    if now_ - last_ > 30:
-        salva(k + 1); last_ = now_
+    now = time.time()
+    if now - last > 30:
+        salva(k + 1); last = now
 
 salva(k + 1 if not stopped else k)
 print(json.dumps({"event": "end", "position": k, "examined": examined,
@@ -365,7 +365,7 @@ import json, os, signal, sys, time
 from sympy import isprime
 
 def esiste_k(n):
-    """Il piu' piccolo k con k(n-k)-1 prime_, o None se non esiste."""
+    """Il piu' piccolo k con k(n-k)-1 first, o None se non esiste."""
     for k in range(1, n // 2 + 1):
         if isprime(k * (n - k) - 1):
             return k
@@ -388,7 +388,7 @@ for n in attesi_con:
         print(json.dumps({"event": "collaudo_fallito", "n": n,
                           "detail": "nessun k dove l'archive dice a(n)>0"}), flush=True)
         sys.exit(1)
-print(json.dumps({"event": "shakedown", "result": "passed_one",
+print(json.dumps({"event": "shakedown", "result": "exceeded",
                   "controllati": "n=1,2,3 senza k; n=4..8 con k, come i theorems "
                                  "di trial dell'archive"}), flush=True)
 
@@ -408,11 +408,11 @@ if os.path.exists(checkpoint):
     examined = d.get("examined", 0)
 
 stopped = False
-def stop_(s, f):
+def stop(s, f):
     global stopped
     stopped = True
-signal.signal(signal.SIGTERM, stop_)
-signal.signal(signal.SIGINT, stop_)
+signal.signal(signal.SIGTERM, stop)
+signal.signal(signal.SIGINT, stop)
 
 def salva(n):
     tmp = state + ".tmp"
@@ -421,23 +421,23 @@ def salva(n):
                    "ultimo_n": n - 1}, fh)
     os.replace(tmp, state)
 
-print(json.dumps({"event": "start_", "da": start, "fino_a": FINO_A}), flush=True)
+print(json.dumps({"event": "start", "da": start, "fino_a": FINO_A}), flush=True)
 t0 = time.time()
 last_warning = t0
 n = start
 while n < FINO_A and not stopped:
     if esiste_k(n) is None:
-        found.append({"n": n, "note": "nessun k con k(n-k)-1 prime_: CONTROESEMPIO"})
+        found.append({"n": n, "note": "nessun k con k(n-k)-1 first: CONTROESEMPIO"})
         print(json.dumps({"event": "found", "detail": found[-1]}), flush=True)
     examined += 1
     n += 1
-    now_ = time.time()
-    if now_ - last_warning > 30:
+    now = time.time()
+    if now - last_warning > 30:
         salva(n)
         print(json.dumps({"event": "progress", "position": n,
                           "examined": examined, "n_corrente": n,
-                          "seconds": round(now_ - t0)}), flush=True)
-        last_warning = now_
+                          "seconds": round(now - t0)}), flush=True)
+        last_warning = now
 
 salva(n)
 print(json.dumps({"event": "end", "position": n, "examined": examined,
@@ -449,33 +449,33 @@ SEARCHES = {
     "euclide_squarefree": {
         "problem": "EuclidNumbers.euclid_numbers_are_square_free",
         "program": EUCLID,
-        # MISURATO: 17984 primes (all_of below 200000) examined in 17 seconds,
+        # MISURATO: 17984 primes (all_items below 200000) examined in 17 seconds,
         # nessun ritrovamento. Il cost cresce come il quadrato del limit,
-        # quindi 2 milioni sono circa cento volte tanto: one_ mezz'now_.
+        # quindi 2 milioni sono circa cento volte tanto: one mezz'now.
         "variables": {"LIMITE_P": 3000000},
-        "descrizione": "search_for un prime_ p con p² che divide un number di Euclide",
-        "stato_noto": "aperto; non risulta one_ ricerca sistematica pubblicata",
-        "conclusivo": "si: un only_ p found confuta la congettura",
-        # Che cosa finisce nella list_ `found` del program: real_ones
+        "descrizione": "search_for un first p con p² che divide un number di Euclide",
+        "stato_noto": "aperto; non risulta one ricerca sistematica pubblicata",
+        "conclusivo": "si: un only p found confuta la congettura",
+        # Che cosa finisce nella items `found` del program: real_list
         # controesempi, oppure valori computed che vanno interpretati?
         "natura_trovati": "controesempi",
         # Come si legge un result senza ritrovamenti, in termini matematici.
         # Si formatta con i fields dell'result, le variables della ricerca e
-        # l'last_ event del log_.
+        # l'last event del log.
         "esito_in_parole":
-            "nessun prime_ p fino a {primo_corrente} ha p^2 che divide un number "
+            "nessun first p fino a {primo_corrente} ha p^2 che divide un number "
             "di Euclide. Sono stati examined {examined} primes, e per ognuno "
             "TUTTI i primoriali con fattori minori di p: per quei p il "
-            "controllo e' full_, non partial.",
+            "controllo e' full, non partial.",
     },
     "erdos409_sigma": {
         "problem": "Erdos409.erdos_409.variants.sigma_prime_termination",
         "program": SIGMA,
         "variables": {"FINO_A": 200000, "MAX_STEPS": 200},
-        "descrizione": "itera n -> sigma(n)-1 e search_for orbits che non toccano mai un prime_",
+        "descrizione": "itera n -> sigma(n)-1 e search_for orbits che non toccano mai un first",
         "stato_noto": "aperto",
         "conclusivo": "no: trova SOSPETTI, non controesempi. Un'orbit che non "
-                      "raggiunge un prime_ in 200 steps va esaminata a mano",
+                      "raggiunge un first in 200 steps va esaminata a mano",
         "natura_trovati": "sospetti",
         "esito_in_parole":
             "nessun n fino a {FINO_A} generate un'orbit di n -> sigma(n)-1 che "
@@ -485,19 +485,19 @@ SEARCHES = {
         "problem": "OeisA109909.conjecture",
         "program": MURTHY,
         # MISURATO: 157 000 n/s a n circa 10^6 su un core (sympy.isprime, e il
-        # prime_ k funziona quasi sempre). Un miliardo sono ~1,8 hours.
+        # first k funziona quasi sempre). Un miliardo sono ~1,8 hours.
         "variables": {"DA": 4, "FINO_A": 1000000000},
-        "descrizione": "per ogni n > 3 search_for k con k(n-k)-1 prime_; un n senza "
+        "descrizione": "per ogni n > 3 search_for k con k(n-k)-1 first; un n senza "
                        "k confuta la congettura di A. Murthy (2005)",
         "stato_noto": "aperta; citata nella raccolta di Zhi-Wei Sun "
                       "(arXiv:1211.1588) e in Niu-Zhang 2024. La frontier "
                       "pubblicata non e' note con precisione: questa ricerca "
                       "stabilisce almeno la nostra",
-        "conclusivo": "si: un only_ n senza k confuta la congettura, e per un n "
-                      "moderato la confutazione si check also_ in Lean",
+        "conclusivo": "si: un only n senza k confuta la congettura, e per un n "
+                      "moderato la confutazione si check also in Lean",
         "natura_trovati": "controesempi",
         "esito_in_parole":
-            "ogni n da 4 a {n_corrente} ha almeno un k con k(n-k)-1 prime_: "
+            "ogni n da 4 a {n_corrente} ha almeno un k con k(n-k)-1 first: "
             "la congettura di Murthy regge fino a la'. Esaminati {examined} "
             "valori di n.",
     },

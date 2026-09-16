@@ -12,7 +12,7 @@ sys.path.insert(0, str(ROOT / "search"))
 
 import pytest   # noqa: E402
 from codes import check, distance, weight   # noqa: E402
-from orbits import expand, read_permutation, closure, apply_   # noqa: E402
+from orbits import expand, read_permutation, closure, apply   # noqa: E402
 
 # piano di Fano: le sette traslate del block {0,1,3} module 7. E' il code
 # ottimo A(7,4,3) = 7, ed e' il caso piu' piccolo su cui un error si vede.
@@ -42,7 +42,7 @@ def test_permutazione_e_gruppo():
     p = read_permutation("(0,1,2)(3,4)", 5)
     assert p == (1, 2, 0, 4, 3)
     assert len(closure([p], 5)) == 6           # Z3 x Z2
-    assert apply_(p, 0b00001) == 0b00010       # il bit 0 va in position 1
+    assert apply(p, 0b00001) == 0b00010       # il bit 0 va in position 1
 
 
 CODE = ROOT / "research_data" / "codici" / "i24.12a"
@@ -58,7 +58,7 @@ def test_riproduce_il_record_pubblicato_A_24_6_12():
 
 
 def test_rapido_e_lento_concordano():
-    """Il criterio fast_ non e' un'euristica: deve dare lo stesso verdict."""
+    """Il criterio fast non e' un'euristica: deve dare lo stesso verdict."""
     import random
     from codes import fast_check
     rng = random.Random(20260911)
@@ -69,9 +69,9 @@ def test_rapido_e_lento_concordano():
         d = 2 * rng.randint(1, w)
         m = rng.randint(1, 14)
         words = [sum(1 << i for i in rng.sample(range(n), w)) for _ in range(m)]
-        slow_ = check(words, n, d, w)
-        fast_ = fast_check(words, n, d, w)
-        assert slow_.ok == fast_.ok, (n, d, w, words, slow_.findings, fast_.findings)
+        slow = check(words, n, d, w)
+        fast = fast_check(words, n, d, w)
+        assert slow.ok == fast.ok, (n, d, w, words, slow.findings, fast.findings)
         cases += 1
     assert cases == 400
 
@@ -86,7 +86,7 @@ def test_rapido_su_un_codice_grande_pubblicato():
 
 def test_le_due_semplificazioni_esatte_non_cambiano_il_risultato():
     """Le scorciatoie del rappresentante devono dare le stesse orbits del computation
-    ingenuo su all_of le pairs. Se sbagliassero, la ricerca produrrebbe codici
+    ingenuo su all_items le pairs. Se sbagliassero, la ricerca produrrebbe codici
     non validi senza accorgersene."""
     from itertools import combinations
     from search_core import orbits_and_compatibility
@@ -94,7 +94,7 @@ def test_le_due_semplificazioni_esatte_non_cambiano_il_risultato():
     for n, d, w in ((9, 4, 3), (10, 4, 4), (11, 6, 4), (12, 6, 5)):
         G = cyclic(n)
         orbits, weights, neighbours = orbits_and_compatibility(n, d, w, G)
-        for o in orbits:      # ogni orbit tenuta e' valida a all_of le pairs
+        for o in orbits:      # ogni orbit tenuta e' valida a all_items le pairs
             assert all((a ^ b).bit_count() >= d for a, b in combinations(o, 2))
         for i, o in enumerate(orbits):
             for j in neighbours[i]:

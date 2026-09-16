@@ -11,14 +11,14 @@ e l'opzione predefinita dell'archive trasforma `answer(sorry)` in `True`.
 L'statement che Lean vede e' quindi `True ↔ P`: l'affermazione che la answer
 alla domanda e' SI'.
 
-Se per one di quei problems la answer giusta fosse NO, il theorem_ com'e'
+Se per one di quei problems la answer giusta fosse NO, il theorem com'e'
 scritto sarebbe FALSO e indimostrabile, e chi trovasse la confutazione non
 avrebbe way di farla verificare. La challenge negata gli da' quel way:
 `answer(False) ↔ P`, cioe' `¬P`.
 
 COME SI COLLAUDA SENZA RISOLVERE UN PROBLEM APERTO
 ---------------------------------------------------
-Nessuno di quei 107 problems e' dimostrabile in alcuna direzione: sono open_.
+Nessuno di quei 107 problems e' dimostrabile in alcuna direzione: sono open_problems.
 Ma comparator compare gli ENUNCIATI before di controllare gli axioms, e questo
 basta.
 
@@ -46,10 +46,10 @@ import negation
 from index import ProblemIndex
 from verify import verify, REFUTATION, STRICT, REJECTED, ERROR
 
-#: Scelto perche' l'statement usa only_ `Nat.Perfect` di Mathlib (nessuna
-#: definition local_ da ricopiare) e perche' il suo file contiene TRE problems
-#: con `answer(sorry)`: serve a verificare che la sostituzione tocchi only_
-#: quello target_.
+#: Scelto perche' l'statement usa only `Nat.Perfect` di Mathlib (nessuna
+#: definition local da ricopiare) e perche' il suo file contiene TRE problems
+#: con `answer(sorry)`: serve a verificare che la sostituzione tocchi only
+#: quello target.
 PROBLEM = "PerfectNumbers.infinitely_many_perfect"
 
 _CANDIDATE = """import FormalConjectures.Util.ProblemImports
@@ -80,7 +80,7 @@ def index():
 
 
 def _candidate(tmp_path, answer: str) -> Path:
-    f = tmp_path / f"candidato_{answer}.lean"
+    f = tmp_path / f"candidate{answer}.lean"
     f.write_text(common.adapt(_CANDIDATE.format(answer=answer)),
                  encoding="utf-8")
     return f
@@ -90,7 +90,7 @@ def _candidate(tmp_path, answer: str) -> Path:
 
 def test_la_sostituzione_avviene_solo_nel_teorema_bersaglio(index):
     """Il file di PerfectNumbers contiene three problems con `answer(sorry)`.
-    Invertirli all_of darebbe one_ challenge diversa da quella richiesta."""
+    Invertirli all_items darebbe one challenge diversa da quella richiesta."""
     challenge = negation.generate(index.get(PROBLEM))
     body = challenge.text.split("-/\n", 1)[1]     # away l'header generata
     assert challenge.substitutions == 1
@@ -108,7 +108,7 @@ def test_la_sfida_dichiara_di_essere_generata(index):
 
 
 def test_un_problema_senza_answer_non_si_puo_negare(index):
-    """Un statement senza `answer( )` afferma direttamente one_ proposizione:
+    """Un statement senza `answer( )` afferma direttamente one proposizione:
     la sua negation non e' un problem dell'archive, e' un'altra cosa."""
     with pytest.raises(negation.NotNegatable, match="non contiene"):
         negation.generate(index.get("JugglerConjecture.jugglerStep_36"))
@@ -116,7 +116,7 @@ def test_un_problema_senza_answer_non_si_puo_negare(index):
 
 def test_un_buco_answer_non_proposizionale_non_si_puo_negare(index):
     """Se la answer e' un number o un insieme non c'e' un verso da invertire:
-    c'e' un value_ da fornire."""
+    c'e' un value da fornire."""
     with_hole = index.find(has_answer_hole=True)
     assert with_hole, "l'index dovrebbe contenerne"
     for p in with_hole:
@@ -128,25 +128,25 @@ def test_un_buco_answer_non_proposizionale_non_si_puo_negare(index):
 
 
 def test_la_confutazione_di_un_enunciato_senza_answer_e_possibile(tmp_path):
-    """Prima questa combinazione dava ERRORE, e sbagliava.
+    """Prima questa combinazione dava ERROR, e sbagliava.
 
-    La mode' confutazione serviva only_ ai problems con `answer(sorry)`, cioe'
-    one_ minoranza. Ora esiste the route `type_of%`, che vale per qualunque
-    statement full_: qui la challenge si generate, e il candidato viene RIFIUTATO
+    La mode' confutazione serviva only ai problems con `answer(sorry)`, cioe'
+    one minoranza. Ora esiste the route `type_of%`, che vale per qualunque
+    statement full: qui la challenge si generate, e il candidato viene REJECTED
     perche' non dimostra la negation — non perche' la mode' non si applichi.
     """
     r = verify("JugglerConjecture.jugglerStep_36", _candidate(tmp_path, "False"),
                mode=REFUTATION, run_guard=False, timeout=900)
     assert r.status == REJECTED, r.render()
-    passed_ = {c.name for c in r.checks if c.passed}
-    assert "il problem ammette one_ confutazione" in passed_
+    passed = {c.name for c in r.checks if c.passed}
+    assert "il problem ammette one confutazione" in passed
     details = " ".join(c.detail or "" for c in r.checks)
     assert "type_of%" in details
 
 
 def test_un_enunciato_con_un_buco_non_si_puo_confutare(tmp_path):
     """Se l'statement stesso contiene un `sorry`, la sua negation non e'
-    un'affermazione ben posta: nessuna delle two vie si apply_."""
+    un'affermazione ben posta: nessuna delle two vie si apply."""
     idx = ProblemIndex.load()
     with_hole = [q for q in idx.find(category="research open") if q.statement_has_sorry]
     if not with_hole:
@@ -166,8 +166,8 @@ def test_modalita_sconosciuta_viene_rifiutata(tmp_path):
 # --- integrazione: le two sfide sono enunciati DIVERSI ----------------------
 # Questi quattro test fanno partire Lean: sono lenti (circa 30 seconds ciascuno).
 
-def _reason(result_value) -> set[str]:
-    return {c.name for c in result_value.checks
+def _reason(result) -> set[str]:
+    return {c.name for c in result.checks
             if not c.passed and c.name != "controllo sintattico preventivo"}
 
 
@@ -178,7 +178,7 @@ def test_in_modalita_stretta_il_candidato_con_True_combacia(tmp_path):
                run_guard=False, timeout=900)
     assert r.status == REJECTED
     assert "axioms permitted" in _reason(r), \
-        f"expected_one rifiuto per gli axioms (enunciati combacianti), ottenuto {_reason(r)}"
+        f"expected rifiuto per gli axioms (enunciati combacianti), ottenuto {_reason(r)}"
     assert "sorryAx" in r.errors
 
 
@@ -188,29 +188,29 @@ def test_in_modalita_stretta_il_candidato_con_False_non_combacia(tmp_path):
     r = verify(PROBLEM, _candidate(tmp_path, "False"), mode=STRICT,
                run_guard=False, timeout=900)
     assert r.status == REJECTED
-    assert "kind_ identico all'original" in _reason(r)
+    assert "kind identico all'original" in _reason(r)
 
 
 def test_in_modalita_confutazione_il_candidato_con_False_combacia(tmp_path):
-    """E' il verso che count_: la challenge negata accetta l'statement `False ↔ P`.
-    Con one_ dimostrazione vera (non `sorry`) questo sarebbe one_ confutazione
+    """E' il verso che count: la challenge negata accetta l'statement `False ↔ P`.
+    Con one dimostrazione vera (non `sorry`) questo sarebbe one confutazione
     verificata del problem aperto."""
     r = verify(PROBLEM, _candidate(tmp_path, "False"), mode=REFUTATION,
                run_guard=False, timeout=900)
     assert r.status == REJECTED
     assert "axioms permitted" in _reason(r), \
-        f"expected_one rifiuto per gli axioms (enunciati combacianti), ottenuto {_reason(r)}"
+        f"expected rifiuto per gli axioms (enunciati combacianti), ottenuto {_reason(r)}"
     assert "sorryAx" in r.errors
     # la challenge negata deve essere stata generata, e deve aver compilato
-    passed_ = {c.name for c in r.checks if c.passed}
-    failed_ = {c.name for c in r.checks if not c.passed}
-    assert "il problem ammette one_ confutazione" in passed_
-    assert "la challenge negata e' stata generata" in passed_
+    passed = {c.name for c in r.checks if c.passed}
+    failed = {c.name for c in r.checks if not c.passed}
+    assert "il problem ammette one confutazione" in passed
+    assert "la challenge negata e' stata generata" in passed
     # La compilazione della challenge non e' un controllo a se': la fa
     # `prepare_challenge`, che lascia un controllo FALLITO se non ce la fa. E se la
     # challenge non avesse compilato, comparator non avrebbe potuto confrontare i
     # tipi, quindi il rifiuto sarebbe su un other controllo, non sugli axioms.
-    assert "module della challenge ready" not in failed_
+    assert "module della challenge ready" not in failed
 
 
 def test_in_modalita_confutazione_il_candidato_con_True_non_combacia(tmp_path):
@@ -220,13 +220,13 @@ def test_in_modalita_confutazione_il_candidato_con_True_non_combacia(tmp_path):
     r = verify(PROBLEM, _candidate(tmp_path, "sorry"), mode=REFUTATION,
                run_guard=False, timeout=900)
     assert r.status == REJECTED
-    assert "kind_ identico all'original" in _reason(r)
+    assert "kind identico all'original" in _reason(r)
 
 
 # --- the route generale: `type_of%`, per gli enunciati senza `answer( )` --------
 #
 # È the route che serve davvero: nel benchmark OEIS Open di Epoch AI il 43% delle
-# soluzioni accettate sono confutazioni, e la maggioranza dei problems open_
+# soluzioni accettate sono confutazioni, e la maggioranza dei problems open_problems
 # non ha un `answer(sorry)` da invertire. Senza questa away metà dei results
 # possibili non sarebbe nemmeno verificabile.
 
@@ -238,10 +238,10 @@ def test_la_via_per_tipo_genera_un_bersaglio_derivato():
     p = idx.get(PROBLEM)          # questo ha `answer( )`
     s = negation.generate_by_kind(p)
     assert s.route == "type_of%"
-    assert s.target_ == PROBLEM + negation.SUFFIX
+    assert s.target == PROBLEM + negation.SUFFIX
     assert f"import {p.module}" in s.text
     assert f"¬ (type_of% @{PROBLEM})" in s.text
-    assert "sorry" in s.text      # la challenge è un target_, non one_ trial
+    assert "sorry" in s.text      # la challenge è un target, non one trial
 
 
 def test_la_via_per_tipo_rifiuta_un_enunciato_con_un_buco():

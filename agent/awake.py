@@ -4,15 +4,15 @@ Il Mac deve restare sveglio e alimentato per tutto un giro dell'agent.
 PERCHE'
 -------
 Nella notte fra il 12 e il 13 settembre il giro sulle trials note ha subito otto
-interruzioni di rete in dodici problems. Non era la rete: il log_ di system
+interruzioni di rete in dodici problems. Non era la rete: il log di system
 (`pmset -g log`) mostra il Mac in «Maintenance Sleep» a cicli di 8-13 minuti e,
 alle 03:17, in «Clamshell Sleep». Ogni sospensione chiudeva la connessione in
 streaming con l'API; le calls finite normalmente duravano da 2 a 64 seconds,
-quelle interrotte da 11 minuti a oltre un'now_.
+quelle interrotte da 11 minuti a oltre un'now.
 
 `caffeinate -i -s -m -w PID` impedisce la sospensione finche' il processo vive.
-L'opzione `-s` vale only_ con l'alimentatore collegato, per questo si controlla
-also_ la source_ di alimentazione. Nessuna opzione impedisce la sospensione a
+L'opzione `-s` vale only con l'alimentatore collegato, per questo si controlla
+also la source di alimentazione. Nessuna opzione impedisce la sospensione a
 coperchio chiuso senza un monitor esterno: quella va detta a chi lancia.
 """
 from __future__ import annotations
@@ -43,13 +43,13 @@ def caffeinate_running(assertions_text: str, caffeinate_pid: int | None) -> bool
 def problems(power_text: str, assertions_text: str, caffeinate_pid: int | None) -> list[str]:
     """Le ragioni per NON partire, in words chiare. Lista vuota: si puo' partire."""
     reasons = []
-    source_ = power_source(power_text)
-    if source_ != "alimentatore":
-        reasons.append(f"il Mac non e' collegato all'alimentatore (source_ current_one: {source_}). "
+    source = power_source(power_text)
+    if source != "alimentatore":
+        reasons.append(f"il Mac non e' collegato all'alimentatore (source current_one: {source}). "
                       f"Collega il caricatore: a batteria caffeinate non impedisce la sospensione.")
     if not caffeinate_running(assertions_text, caffeinate_pid):
         reasons.append("caffeinate non risulta attivo: il Mac potrebbe sospendersi a meta' "
-                      "di one_ call, come nella notte del 13 settembre.")
+                      "di one call, come nella notte del 13 settembre.")
     return reasons
 
 
@@ -69,7 +69,7 @@ def controlla(caffeinate_process: subprocess.Popen | None) -> list[str]:
         return []
     pid = caffeinate_process.pid if caffeinate_process is not None else None
     assertions = ""
-    for _ in range(15):       # l'asserzione compare after qualche decimo di second_
+    for _ in range(15):       # l'asserzione compare after qualche decimo di second
         assertions = _pmset("-g", "assertions")
         if caffeinate_running(assertions, pid):
             break

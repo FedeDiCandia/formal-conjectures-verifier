@@ -1,11 +1,11 @@
 """
-Le tables dei bounds, lette dalla source_ e messe in forma leggibile da un
+Le tables dei bounds, lette dalla source e messe in forma leggibile da un
 program.
 
 PERCHÉ
 ------
 Per battere un record bisogna sapere **qual è**, **chi l'ha fatto** e **se esiste
-un code esplicito**. Le tables di Brouwer contengono all_of e three le cose, ma in
+un code esplicito**. Le tables di Brouwer contengono all_items e three le cose, ma in
 HTML fatto a mano. Questo file le trasforma in JSON, e conserva le attribuzioni:
 senza l'attribuzione non sappiamo se stiamo sfidando un job del 1990 su
 hardware del 1990 o un job del 2026 con un solutore moderno.
@@ -13,8 +13,8 @@ hardware del 1990 o un job del 2026 con un solutore moderno.
 COSA CONSERVA PER OGNI CELLA
 ----------------------------
   inferiore, superiore   i bounds noti (superiore assente nella tabella d=4)
-  exact                 vero se la tabella segna un punto (value_ ottimo noto)
-  source_                  la tag_ in esponente: vuota = [BSSS] 1990
+  exact                 vero se la tabella segna un punto (value ottimo noto)
+  source                  la tag in esponente: vuota = [BSSS] 1990
   construction            c = circolante, g = group di automorfismi, s = accorciato
   code                 il path relative del code esplicito, se c'è
   perduto                vero se il limit è in rosso: rivendicato ma **il listato
@@ -87,7 +87,7 @@ _NUM = re.compile(r"\d+")
 
 
 def _limiti(text: str) -> tuple[int | None, int | None, bool]:
-    """Legge one_ cell come `232-276`, `80.`, `5616`, `≥ 40`."""
+    """Legge one cell come `232-276`, `80.`, `5616`, `≥ 40`."""
     text = text.replace("–", "-").replace("−", "-").strip()
     exact = text.endswith(".")
     numbers = [int(x) for x in _NUM.findall(text)]
@@ -102,16 +102,16 @@ def _entry(cell: dict) -> dict | None:
     inf, sup, exact = _limiti(cell["text"])
     if inf is None:
         return None
-    tag_ = cell["sup"] or ""
-    # nella tabella generale un esponente numerico e' one_ potenza: `2` con sup `19`
+    tag = cell["sup"] or ""
+    # nella tabella generale un esponente numerico e' one potenza: `2` con sup `19`
     # vuol dire 2^19. Senza questo si legge 2 e si crede che la cell sia vuota.
-    if tag_.isdigit() and inf is not None and inf <= 9:
-        inf = inf ** int(tag_)
-        tag_ = ""
-    construction = "".join(ch for ch in tag_ if ch in CONSTRUCTIONS and len(tag_) <= 2)
-    source_ = tag_ if not construction else tag_.replace(construction, "")
+    if tag.isdigit() and inf is not None and inf <= 9:
+        inf = inf ** int(tag)
+        tag = ""
+    construction = "".join(ch for ch in tag if ch in CONSTRUCTIONS and len(tag) <= 2)
+    source = tag if not construction else tag.replace(construction, "")
     return {"inferiore": inf, "superiore": sup, "exact": exact,
-            "source_": source_ or "BSSS", "construction": construction,
+            "source": source or "BSSS", "construction": construction,
             "code": cell["link"], "perduto": cell["perduto"]}
 
 
@@ -121,28 +121,28 @@ BASE = "https://aeb.win.tue.nl/codes/"
 def _pagina(name: str) -> Path:
     """La pagina di Brouwer, scaricandola se non c'e'.
 
-    Le pagine non sono versionate (non dichiarano one_ licenza): un clone clean_one
+    Le pagine non sono versionate (non dichiarano one licenza): un clone clean
     non le ha, e questa funzione le rimette dov'erano. `curl` e non urllib
     perche' il Python di questo Mac non ha i certificati di system.
     """
-    local_ = DATA_DIR / name
-    if local_.is_file() and local_.stat().st_size > 0:
-        return local_
+    local = DATA_DIR / name
+    if local.is_file() and local.stat().st_size > 0:
+        return local
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     result = subprocess.run(
         ["curl", "-sS", "-L", "--max-time", "45", "-A",
          "ricerca-codici/1.0 (check indipendente di bounds pubblicati)",
-         "-o", str(local_), BASE + name],
+         "-o", str(local), BASE + name],
         capture_output=True, text=True)
-    if result.returncode != 0 or not local_.is_file() or local_.stat().st_size == 0:
-        local_.unlink(missing_ok=True)
+    if result.returncode != 0 or not local.is_file() or local.stat().st_size == 0:
+        local.unlink(missing_ok=True)
         raise OSError(f"non riesco a scaricare {BASE + name}: "
                       f"{result.stderr.strip()[:120]}")
-    return local_
+    return local
 
 
 def constant_weight(path: Path | None = None) -> dict:
-    """A(n,d,w): one_ tabella per ogni d, lines n, columns w."""
+    """A(n,d,w): one tabella per ogni d, lines n, columns w."""
     path = path or _pagina("Andw.html")
     text = path.read_text(errors="replace")
     # i titoli <h1><a name="dK"> dicono a which d appartiene la tabella che segue
@@ -154,7 +154,7 @@ def constant_weight(path: Path | None = None) -> dict:
     positions = [m.start() for m in re.finditer(r"<table", text)]
     assert len(positions) == len(p.tables), (len(positions), len(p.tables))
 
-    out_of: dict[str, dict] = {}
+    outside: dict[str, dict] = {}
     for pos, tab in zip(positions, p.tables):
         d = None
         for mp, md in marcatori:
@@ -173,55 +173,55 @@ def constant_weight(path: Path | None = None) -> dict:
             for w, cell in zip(weights, line[1:]):
                 v = _entry(cell)
                 if v:
-                    out_of[f"{n},{d},{w}"] = v
-    return out_of
+                    outside[f"{n},{d},{w}"] = v
+    return outside
 
 
-def general_(path: Path | None = None) -> dict:
+def general(path: Path | None = None) -> dict:
     """A(n,d): lines n, columns d."""
     path = path or _pagina("binary-1.html")
     text = path.read_text(errors="replace")
     p = _Tabella()
     p.feed(text)
-    out_of: dict[str, dict] = {}
+    outside: dict[str, dict] = {}
     for tab in p.tables:
         if not tab:
             continue
-        # l'header e' `["", "", "d=4", "d=6", ...]`: one_ colonna vuota di
-        # spaziatura fra l'label della line e i data_, presente also_ nei data_.
+        # l'header e' `["", "", "d=4", "d=6", ...]`: one colonna vuota di
+        # spaziatura fra l'label della line e i data, presente also nei data.
         head = [c["text"].strip() for c in tab[0]]
-        prime_ = next((i for i, t in enumerate(head) if t.startswith("d=")), None)
-        if prime_ is None:
+        first = next((i for i, t in enumerate(head) if t.startswith("d=")), None)
+        if first is None:
             continue
-        dd = [int(_NUM.search(t).group()) for t in head[prime_:] if _NUM.search(t)]
+        dd = [int(_NUM.search(t).group()) for t in head[first:] if _NUM.search(t)]
         for line in tab[1:]:
             if not line or not _NUM.search(line[0]["text"]):
                 continue
             n = int(_NUM.search(line[0]["text"]).group())
-            for d, cell in zip(dd, line[prime_:]):
+            for d, cell in zip(dd, line[first:]):
                 v = _entry(cell)
                 if v:
-                    out_of[f"{n},{d}"] = v
-    return out_of
+                    outside[f"{n},{d}"] = v
+    return outside
 
 
 def main() -> None:
     cwc = constant_weight()
-    gen = general_()
+    gen = general()
     DATA_DIR.mkdir(exist_ok=True)
     (DATA_DIR / "limiti_cwc.json").write_text(json.dumps(cwc, indent=1, sort_keys=True))
     (DATA_DIR / "limiti_generali.json").write_text(json.dumps(gen, indent=1, sort_keys=True))
 
-    open_ones = [k for k, v in cwc.items()
+    open_list = [k for k, v in cwc.items()
               if v["superiore"] and v["superiore"] > v["inferiore"]]
-    print(f"A(n,d,w): {len(cwc)} cells, {len(open_ones)} con divario aperto")
+    print(f"A(n,d,w): {len(cwc)} cells, {len(open_list)} con divario aperto")
     print(f"  con code esplicito scaricabile: "
           f"{sum(1 for v in cwc.values() if v['code'])}")
     print(f"  bounds perduti (nessun code ricostruito): "
           f"{[k for k, v in cwc.items() if v['perduto']]}")
     from collections import Counter
     print("  fonti dei bounds inferiori:",
-          dict(Counter(v["source_"] for v in cwc.values()).most_common(12)))
+          dict(Counter(v["source"] for v in cwc.values()).most_common(12)))
     apg = [k for k, v in gen.items()
            if v["superiore"] and v["superiore"] > v["inferiore"]]
     print(f"A(n,d): {len(gen)} cells, {len(apg)} con divario aperto")

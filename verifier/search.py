@@ -154,7 +154,7 @@ class Search:
         environment.update({k: str(v) for k, v in self.variables.items()})
 
         import tempfile
-        with tempfile.TemporaryDirectory(prefix=f"search_{self.name}_") as tmp:
+        with tempfile.TemporaryDirectory(prefix=f"search{self.name}_") as tmp:
             tmp_dir = Path(tmp)
             profile = self._profile(tmp_dir)
             command = [str(self.interpreter), "-u", str(self.program_file)]

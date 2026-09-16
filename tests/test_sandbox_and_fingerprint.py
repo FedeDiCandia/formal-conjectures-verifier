@@ -3,12 +3,12 @@ Test dell'isolamento della check e del controllo di integrita' dell'archive.
 
 DUE DIFESE DISTINTE
 -------------------
-1. `sandbox-exec` impedisce al code del candidato di scrivere out_of dalla
+1. `sandbox-exec` impedisce al code del candidato di scrivere outside dalla
    folder del module temporaneo e di accedere alla rete.
 2. L'fingerprint dell'archive, confrontata before e after ogni check, si accorge
    se qualcosa e' cambiato comunque.
 
-La seconda serve also_ se la before funziona: `sandbox-exec` e' deprecato da
+La seconda serve also se la before funziona: `sandbox-exec` e' deprecato da
 Apple, e su Linux (dove andrebbe usato il vero `landrun`) il code prende
 un'altra strada. Un controllo che non dipende dal meccanismo di isolamento vale
 piu' di one che gli si fida.
@@ -80,7 +80,7 @@ def test_la_sandbox_blocca_le_scritture_nell_archivio(profile):
 
 
 def test_la_sandbox_blocca_le_scritture_sui_file_compilati(profile):
-    """Il target_ che count_: i file compiled da cui comparator legge
+    """Il target che count: i file compiled da cui comparator legge
     l'statement original."""
     compiled = config.ARCHIVE / ".lake" / "build" / "lib" / "lean" / "FormalConjectures"
     if not compiled.is_dir():
@@ -89,7 +89,7 @@ def test_la_sandbox_blocca_le_scritture_sui_file_compilati(profile):
 
 
 def test_la_sandbox_consente_le_scritture_dove_servono(profile):
-    """Se bloccasse also_ queste, nessuna check potrebbe funzionare."""
+    """Se bloccasse also queste, nessuna check potrebbe funzionare."""
     inside = config.ARCHIVE / config.SANDBOX_SUBDIR / "prova_permesso.txt"
     assert _write_test(inside, profile)
 

@@ -1,9 +1,9 @@
 """I cinque falsi positivi della probe, one test per ciascuno.
 
-Cinque «ritrovamenti» annunciati e all_of falsi, per cinque meccanismi diversi.
-La cause common è one_ sola, e vale la pena scriverla: **la probe giudicava il
+Cinque «ritrovamenti» annunciati e all_items falsi, per cinque meccanismi diversi.
+La cause common è one sola, e vale la pena scriverla: **la probe giudicava il
 proprio output.** Ogni strato di giudizio che le avevo aggiunto — «il file
-compila», «which_ones lines portano errors», «which_ones axioms risultano» — era one_
+compila», «which lines portano errors», «which axioms risultano» — era one
 imitazione più povera di quello che `verify.py` fa per davvero, e ognuna aveva un
 buco diverso.
 
@@ -33,13 +33,13 @@ class FakeProblem:
 def test_1_plausible_senza_controesempio_non_ha_dimostrato_niente():
     """Primo falso positivo. `plausible`, quando non trova controesempi, scrive
     «Unable to find a counter-example» e lascia un `sorry`: il file compila con un
-    avviso. Il verdict guardava only_ se compilava."""
+    avviso. Il verdict guardava only se compilava."""
     result, _ = probe_lean.classify(
         "Unable to find a counter-example\n"
         "E0.lean:5:0: warning: declaration uses 'sorry'", ok=True)
     assert result == "aperta"
     # e con il criterio degli axioms, la stessa cosa
-    r = probe.read_("'sonda_plausible' depends on axioms: [sorryAx]",
+    r = probe.read("'sonda_plausible' depends on axioms: [sorryAx]",
                     {"sonda_plausible": ("plausible", False)})
     assert r["trials"][0]["result"] == "aperta"
 
@@ -49,16 +49,16 @@ def test_1_plausible_senza_controesempio_non_ha_dimostrato_niente():
 def test_2_gli_slot_di_esplorazione_sono_esclusivi():
     """Secondo falso positivo. Il file di inspection aveva un name fisso
     (`E0.lean`), quindi two explorations concorrenti si sovrascrivevano il file e
-    ognuna leggeva i messages dell'altra: one_ tactic banale sembrava aver chiuso
+    ognuna leggeva i messages dell'altra: one tactic banale sembrava aver chiuso
     un problem di topologia, e i messages erano di un problem di grafi."""
     import explore
     assert hasattr(explore, "_exclusive_slot"), (
-        "il meccanismo del lock_ è state rimosso: two explorations "
+        "il meccanismo del lock è state rimosso: two explorations "
         "concorrenti tornerebbero a mescolarsi")
     assert explore.AVAILABLE_SLOTS >= 2
     import inspect
     assert "flock" in inspect.getsource(explore._exclusive_slot), (
-        "il lock_ deve valere FRA PROCESSI, non only_ fra thread")
+        "il lock deve valere FRA PROCESSI, non only fra thread")
 
 
 # --- 3. il verdict letto dalle lines di error -----------------------------
@@ -70,9 +70,9 @@ def test_3_il_verdetto_si_legge_per_nome_non_per_riga():
     output = ("E0.lean:9:2: error: qualcosa non va qui\n"
               "'sonda_decide' depends on axioms: [sorryAx]\n"
               "'sonda_decide_neg' does not depend on any axioms")
-    map_ = {"sonda_decide": ("decide", False), "sonda_decide_neg": ("decide", True)}
+    mapping = {"sonda_decide": ("decide", False), "sonda_decide_neg": ("decide", True)}
     results = {(p["tactic"], p["negated"]): p["result"]
-             for p in probe.read_(output, map_)["trials"]}
+             for p in probe.read(output, mapping)["trials"]}
     # la line di error non deve spostare nessun verdict: contano i names
     assert results[("decide", False)] == "aperta"
     assert results[("decide", True)] == "confutata"
@@ -85,7 +85,7 @@ def test_4_type_of_va_scritto_con_la_chiocciola():
     arguments impliciti come metavariabili: la probe provava un statement DIVERSO
     da quello dell'archive, e `aesop` «confutava» la congettura di Agrawal
     mentre il verifier vero rifiutava la stessa dimostrazione."""
-    code, _ = probe.build_(FakeProblem(), 200000)
+    code, _ = probe.build(FakeProblem(), 200000)
     assert "type_of% @Foo.bar" in code
     assert "type_of% Foo.bar" not in code.replace("type_of% @Foo.bar", "")
 
@@ -112,16 +112,16 @@ def test_5_rifiuta_di_girare_sull_archivio_sbagliato(tmp_path):
 
 def test_la_sonda_non_segnala_senza_il_verificatore():
     """Il vincolo che rende impossibile un sesto falso positivo della stessa
-    famiglia: il flag di segnalazione si accende SOLO after un ACCETTATO che
+    famiglia: il flag di segnalazione si accende SOLO after un ACCEPTED che
     arriva da `verify.py`."""
     import inspect
     src = inspect.getsource(probe.main)
     assert "confirm_with_verifier" in src, (
         "la probe deve passare i candidates al verifier")
-    # ogni assegnazione del flag deve stare in un branch che controlla ACCETTATO
+    # ogni assegnazione del flag deve stare in un branch che controlla ACCEPTED
     pieces = src.split('entry["ATTENZIONE"]')
     for before in pieces[:-1]:
-        assert "ACCETTATO" in before[-400:], (
+        assert "ACCEPTED" in before[-400:], (
             "un ATTENZIONE viene acceso senza passare dal verifier")
 
 

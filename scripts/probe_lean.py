@@ -1,5 +1,5 @@
 """
-Sonda gli enunciati open_ con tattiche automatiche, sia diritti sia negati.
+Sonda gli enunciati open_problems con tattiche automatiche, sia diritti sia negati.
 
 IDEA
 ----
@@ -8,7 +8,7 @@ per caso la answer e' a portata di tactic. Due tattiche in particolare:
 
   * `plausible` (di Mathlib) generate cases a caso e search_for un CONTROESEMPIO. Se ne
     trova one, la congettura come e' formalizzata e' falsa — il che di solito
-    non significa aver solved_one un problem aperto, ma aver found one_
+    non significa aver solved un problem aperto, ma aver found one
     formalizzazione imprecisa. E' un'informazione preziosa lo stesso.
   * `decide` closes gli enunciati decidibili su domini finiti. Su un problem
     aperto non chiudera' quasi mai, ma se lo fa c'e' qualcosa da capire.
@@ -18,7 +18,7 @@ formalizzato come `True ↔ P` afferma che la answer e' si'; se `plausible`
 trova un counterexample a `P`, la answer potrebbe essere no.
 
 Il timeout e' volutamente BREVE: qui non si search_for di risolvere niente, si
-cercano i cases in cui la answer salta out_of da sola. Quelli che richiedono
+cercano i cases in cui la answer salta outside da sola. Quelli che richiedono
 davvero computation passano alla fase successiva, con un program su misura.
 """
 from __future__ import annotations
@@ -54,7 +54,7 @@ example : {statement} := by
 
 
 #: `plausible` non dimostra niente: se non trova un counterexample lascia il
-#: theorem_ con un `sorry` e il file compila comunque. Senza questo controllo
+#: theorem con un `sorry` e il file compila comunque. Senza questo controllo
 #: un "Unable to find a counter-example" verrebbe letto come statement CHIUSO,
 #: che e' l'error opposto a quello da evitare in un progetto come questo.
 SIGNS_OF_NOT_CLOSED = (
@@ -81,19 +81,19 @@ def classify(messages: str, ok: bool) -> tuple[str, str | None]:
 def reclassify(path: Path) -> int:
     """Riapplica `classify` a un file di results gia' raccolto.
 
-    Serve quando la rule_ di classificazione cambia: i messages di Lean sono
-    conservati per gli results notable, quindi un verdict si puo' only_
+    Serve quando la rule di classificazione cambia: i messages di Lean sono
+    conservati per gli results notable, quindi un verdict si puo' only
     declassare, mai inventare.
     """
-    data_ = json.loads(path.read_text(encoding="utf-8"))
+    data = json.loads(path.read_text(encoding="utf-8"))
     changed = 0
-    for entry in data_:
+    for entry in data:
         for pr in entry["trials"]:
             if pr["result"] not in ("chiusa", "counterexample"):
                 continue
-            new_one, against = classify(pr.get("messages") or "", True)
-            if new_one != pr["result"]:
-                pr["result"], pr["counterexample"] = new_one, against
+            new_item, against = classify(pr.get("messages") or "", True)
+            if new_item != pr["result"]:
+                pr["result"], pr["counterexample"] = new_item, against
                 changed += 1
         notable = [pr for pr in entry["trials"]
                     if pr["result"] in ("chiusa", "counterexample")]
@@ -103,21 +103,21 @@ def reclassify(path: Path) -> int:
                                  f"forma {'negata' if pr['negated'] else 'diritta'}")
         else:
             entry.pop("ATTENZIONE", None)
-    path.write_text(json.dumps(data_, ensure_ascii=False, indent=2),
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2),
                         encoding="utf-8")
     return changed
 
 
 def trial(problem, tactic_name, tactic, negated: bool, heartbeats: int,
           timeout: int) -> dict:
-    """Prova one_ tactic sull'statement (o sulla sua negation)."""
+    """Prova one tactic sull'statement (o sulla sua negation)."""
     # Il `@` e' obbligatorio: senza, Lean istanzia gli arguments
     # impliciti come metavariabili e la probe trial un statement DIVERSO
     # da quello dell'archive. Senza di esso `aesop` "confutava" la
     # congettura di Agrawal, e il verifier vero rifiutava la stessa
     # dimostrazione: era il quarto falso positivo di questa specie.
-    kind_ = f"type_of% @{problem.theorem}"
-    statement = f"¬ ({kind_})" if negated else kind_
+    kind = f"type_of% @{problem.theorem}"
+    statement = f"¬ ({kind})" if negated else kind
     code = TEMPLATE.format(utility=verifier_config.utility_module(),
                             module=problem.module, statement=statement,
                             tactic=tactic, heartbeats=heartbeats)
@@ -154,17 +154,17 @@ def main() -> int:
     if args.problems:
         chosen = [idx.get(n) for n in args.problems.split()]
     else:
-        # open_, verificabili, su oggetti discreti, statement short
+        # open_problems, verificabili, su oggetti discreti, statement short
         CONTINUOUS_SIGNALS = ["ℝ", "ℂ", "Real.", "Complex.", "Filter", "Tendsto",
                             "Measure", "Topological", "Continuous", "Cardinal",
                             "deriv", "∫", "Metric", "Manifold", "NNReal", "ENNReal"]
         DISCRETE_SIGNALS = ["ℕ", "ℤ", "Finset", "Fin ", "Nat.", "Int.", "SimpleGraph"]
-        open_ = [p for p in idx.find(category="research open")
+        open_problems = [p for p in idx.find(category="research open")
                   if not p.statement_has_sorry
                   and not any(s in p.statement for s in CONTINUOUS_SIGNALS)
                   and any(s in p.statement for s in DISCRETE_SIGNALS)]
-        open_.sort(key=lambda p: len(p.statement))
-        chosen = open_[:args.how_many]
+        open_problems.sort(key=lambda p: len(p.statement))
+        chosen = open_problems[:args.how_many]
 
     print(f"Sondo {len(chosen)} problems con {len(TACTICS)} tattiche x 2 forme.")
     print(f"Timeout per trial: {args.timeout}s. Nessuna spesa API.\n", flush=True)

@@ -1,33 +1,32 @@
 """
-Strumento di ESPLORAZIONE: compila un file Lean e restituisce all_of i messages.
+The EXPLORATION tool: compile a Lean file and return everything Lean says.
 
-PERCHE' E' SEPARATO DA verify.py
---------------------------------
-`verify.py` risponde a one_ sola domanda: "questa e' one_ dimostrazione valida del
-problem?". Per farlo compila, esporta, compare gli enunciati, controlla gli
-axioms e riesegue tutto nel kernel. Costa one_ trentina di seconds ed e' la cosa
-giusta da fare quando si consegna one_ dimostrazione.
+WHY IT IS SEPARATE FROM verify.py
+---------------------------------
+`verify.py` answers one question: "is this a valid proof of the problem?" To do
+that it compiles, exports, compares the statements, checks the axioms and replays
+everything through the kernel. It costs about thirty seconds and it is the right
+thing to do when a proof is submitted.
 
-Ma il prime_ shakedown con l'agent ha mostrato che **la maggior parte delle
-calls non erano consegne**: erano attempts di capire come Mathlib definisce
-qualcosa. Nove checks su nove, in quel caso. Usare il giudice per ispezionare
-one_ definition e' come chiedere one_ sentenza per sapere che hours sono: slow_,
-costoso, e il verdict ("rifiutato: il theorem_ non c'e'") non e' l'informazione
-cercata.
+But the first shakedown with the agent showed that **most calls were not
+submissions**: they were attempts to find out how Mathlib defines something. Nine
+verifications out of nine, in that case. Using the judge to inspect a definition
+is like asking for a court ruling to find out the time: slow, expensive, and the
+verdict ("rejected: the theorem is not there") is not the information wanted.
 
-Questo module fa only_ la parte utile a esplorare:
+This module does only the part that is useful for exploring:
 
-  * esegue `lake env lean` sul file, senza comparator, senza esportazione,
-    senza confronto e senza riesecuzione nel kernel;
-  * restituisce **all_of** i messages, non troncati: l'output di `#print`,
-    `#check`, `#eval`-free_ones come `exact?`, e gli errors completi con lo state
-    degli obiettivi;
-  * NON e' one_ check e non va contata come tale. Un file che "passa" qui non
-    ha dimostrato niente.
+  * it runs `lake env lean` on the file, with no comparator, no export, no
+    comparison and no replay through the kernel;
+  * it returns **all** the messages, untruncated: the output of `#print`,
+    `#check`, search tactics like `exact?`, and the full errors with the goal
+    state;
+  * it is NOT a verification and must not be counted as one. A file that "passes"
+    here has proved nothing.
 
-Misurato: 8,0 seconds against i 32,9 di one_ check complete_, e l'output e' piu'
-clean_one perche' `lean` invocato direttamente non apply_ i linter di stile che
-`lake build` apply_ alla libreria dell'archive.
+Measured: 8.0 seconds against 32.9 for a full verification, and the output is
+cleaner, because `lean` invoked directly does not apply the style linters that
+`lake build` applies to the archive's library.
 """
 from __future__ import annotations
 
@@ -51,95 +50,95 @@ import sandbox
 
 @dataclass
 class Exploration:
-    """Il result_value di one_ compilazione di trial."""
-    ok: bool                 # il file compila senza errors
-    messages: str            # all_of i messages di Lean, non troncati
+    """The result of a trial compilation."""
+    ok: bool                 # the file compiles without errors
+    messages: str            # all of Lean's messages, untruncated
     seconds: float
-    isolated: bool            # se e' girata inside la sandbox
+    isolated: bool           # whether it ran inside the sandbox
     truncated: bool = False
-    #: violations del controllo sintattico: se ce ne sono, non si compila niente
+    #: violations found by the syntactic pre-scan: if there are any, nothing is compiled
     rejected_by_guard: list = None
 
     def render(self) -> str:
-        head = (f"{'compila senza errors' if self.ok else 'con errors'}  "
+        head = (f"{'compiles, no errors' if self.ok else 'has errors'}  "
                  f"({self.seconds:.1f}s"
-                 f"{'' if self.isolated else ', SENZA isolamento'})")
+                 f"{'' if self.isolated else ', NOT isolated'})")
         return f"{head}\n\n{self.messages}" if self.messages else head
 
 
-#: Limite generoso. Serve only_ a non far esplodere il context se qualcuno
-#: show mezzo Mathlib; gli errors di Lean stanno ampiamente below.
+#: A generous limit. It exists only to keep the context from exploding if
+#: someone prints half of Mathlib; Lean's errors stay well below it.
 MAX_CHARS = 40_000
 
 
-#: Quanti file di inspection possono coesistere. Ogni call ne prende one in
-#: esclusiva: sono names di MODULE Lean, quindi devono essere fissi e pochi.
+#: How many inspection files can coexist. Each call takes one exclusively: they
+#: are Lean MODULE names, so they have to be fixed and few.
 AVAILABLE_SLOTS = 8
 
 
 @contextlib.contextmanager
 def _exclusive_slot(slot: int | None):
-    """Prende one slot di inspection in esclusiva, con un lock_ sul file.
+    """Take an inspection slot exclusively, with a lock on the file.
 
-    Serve perche' il file di inspection vive nell'albero dell'archive e il suo
-    name e' il name del module Lean: two explorations che usano lo stesso slot
-    si sovrascrivono il file a vicenda e ognuna legge i messages dell'altra.
-    E' un error silenzioso e della specie worst — ha fatto sembrare che one_
-    tactic avesse chiuso un problem aperto, quando i messages che leggevo
-    erano di un other problem compilato da un other processo.
+    This is needed because the inspection file lives inside the archive's tree
+    and its name is the Lean module's name: two explorations using the same slot
+    overwrite each other's file, and each reads the other's messages. It is a
+    silent error of the worst kind — it once made it look as though a tactic had
+    closed an open problem, when the messages being read belonged to a different
+    problem compiled by a different process.
 
-    Il lock_ e' un file con `flock`, quindi vale also_ fra processi diversi
-    e viene rilasciato dal system operativo se il processo muore.
+    The lock is a file held with `flock`, so it works across processes too and is
+    released by the operating system if the process dies.
     """
     folder = config.ARCHIVE / config.SANDBOX_SUBDIR
     folder.mkdir(parents=True, exist_ok=True)
     candidates = [slot] if slot is not None else list(range(AVAILABLE_SLOTS))
-    expected_value = 0.0
+    waited = 0.0
     while True:
         for n in candidates:
-            lock_ = open(folder / f"E{n}.lock", "a+")
+            lock = open(folder / f"E{n}.lock", "a+")
             try:
-                fcntl.flock(lock_, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
             except OSError:
-                lock_.close()
+                lock.close()
                 continue
             try:
                 yield n
             finally:
-                fcntl.flock(lock_, fcntl.LOCK_UN)
-                lock_.close()
+                fcntl.flock(lock, fcntl.LOCK_UN)
+                lock.close()
             return
-        if slot is not None and expected_value > 600:
-            raise TimeoutError(f"slot di inspection {slot} occupato da oltre 10 minuti")
+        if slot is not None and waited > 600:
+            raise TimeoutError(f"inspection slot {slot} busy for over 10 minutes")
         time.sleep(0.5)
-        expected_value += 0.5
+        waited += 0.5
 
 
 def explore(code: str, *, timeout: int = 240, slot: int | None = None) -> Exploration:
-    """Compila `code` e riporta tutto quello che Lean ha da dire.
+    """Compile `code` and report everything Lean has to say.
 
-    `slot=None` (predefinito) prende il prime_ slot libero: e' quello che serve
-    quando piu' explorations girano insieme. Uno slot esplicito si aspetta se e'
-    occupato.
+    `slot=None` (the default) takes the first free slot, which is what is wanted
+    when several explorations run together. An explicit slot is waited for if it
+    is busy.
     """
     problems = config.check_installation()
     if problems:
-        return Exploration(False, "Ambiente non ready:\n  - " + "\n  - ".join(problems),
+        return Exploration(False, "Environment not ready:\n  - " + "\n  - ".join(problems),
                             0.0, False)
 
-    # Il controllo sintattico vale also_ qui: un file di inspection viene
-    # compilato come qualunque other, quindi puo' eseguire code allo stesso
-    # way. L'unica rule_ allentata sono gli import (vedi guard.check_source).
+    # The syntactic pre-scan applies here too: an inspection file is compiled
+    # like any other, so it can execute code in just the same way. The only rule
+    # relaxed is the one on imports (see guard.check_source).
     report = guard.check_source(code, exploration=True)
     if not report.ok:
         return Exploration(
             False,
-            "Il file contiene costrutti vietati e non e' state compilato:\n\n"
+            "The file contains forbidden constructs and was not compiled:\n\n"
             + "\n".join(str(f) for f in report.findings),
             0.0, False, rejected_by_guard=[f.rule for f in report.findings])
 
-    with _exclusive_slot(slot) as slot_preso:
-        return _explore_in_slot(code, timeout=timeout, slot=slot_preso)
+    with _exclusive_slot(slot) as taken_slot:
+        return _explore_in_slot(code, timeout=timeout, slot=taken_slot)
 
 
 def _explore_in_slot(code: str, *, timeout: int, slot: int) -> Exploration:
@@ -149,7 +148,7 @@ def _explore_in_slot(code: str, *, timeout: int, slot: int) -> Exploration:
     path.write_text(code, encoding="utf-8")
     relative = str(path.relative_to(config.ARCHIVE))
 
-    start_ = time.time()
+    start = time.time()
     try:
         with tempfile.TemporaryDirectory() as tmp:
             tmp_dir = Path(tmp)
@@ -186,9 +185,9 @@ def _explore_in_slot(code: str, *, timeout: int, slot: int) -> Exploration:
                     os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
                 except ProcessLookupError:
                     pass
-                output = (f"TEMPO SCADUTO: la compilazione ha passed_one {timeout} seconds. "
-                          f"Probabilmente one_ tactic non terminate, o un `#reduce` su un "
-                          f"termine enorme.")
+                output = (f"TIMED OUT: the compilation exceeded {timeout} seconds. "
+                          f"Probably a tactic that does not terminate, or a `#reduce` on a "
+                          f"huge term.")
                 exit_code = -1
 
             if fingerprint_before is not None:
@@ -197,18 +196,18 @@ def _explore_in_slot(code: str, *, timeout: int, slot: int) -> Exploration:
                     fingerprint_module.compute(config.ARCHIVE,
                                             exclude=Path(config.SANDBOX_SUBDIR).name))
                 if differences:
-                    output = ("ATTENZIONE: compilare questo file ha MODIFICATO l'archive.\n"
+                    output = ("WARNING: compiling this file MODIFIED the archive.\n"
                               + "\n".join("  - " + d for d in differences)
                               + "\n\n" + output)
                     exit_code = -2
     finally:
         path.unlink(missing_ok=True)
 
-    duration = time.time() - start_
+    duration = time.time() - start
     truncated = len(output) > MAX_CHARS
     if truncated:
         output = output[:MAX_CHARS] + (
-            f"\n\n... [output truncated a {MAX_CHARS} chars]")
+            f"\n\n... [output truncated at {MAX_CHARS} characters]")
     return Exploration(ok=(exit_code == 0), messages=output.strip(),
                         seconds=duration, isolated=(profile is not None), truncated=truncated)
 

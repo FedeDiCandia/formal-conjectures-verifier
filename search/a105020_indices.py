@@ -6,9 +6,9 @@ esaustive, scritte in way diverso, con la funzione `a` copiata dalla definition
 dell'archive (antidiagonalIndex con la root intera, poi k, i, m e m^2 - i^2).
 
   indices   scorre TUTTI gli indices N < limit: per ogni a(N) dispari >= 3 guarda
-           j = N + n + 1 e count_ le pairs, canoniche (N = T_n) e no.
+           j = N + n + 1 e count le pairs, canoniche (N = T_n) e no.
   valori   scorre le fattorizzazioni u = d(2s-d) con d dispari >= 3, cioe' TUTTI gli
-           indices non canonici con value_ <= limit, e controlla also_ che a(i) = u
+           indices non canonici con value <= limit, e controlla also che a(i) = u
            (la parametrizzazione usata nella dimostrazione).
 """
 import json
@@ -99,15 +99,15 @@ def main():
     t0 = time.time()
     if way == "indices":
         pairs, noncan, example = by_indices(limit, 50_000_000)
-        expected_ = sum(1 for n in range(1, 10**7) if n * (n + 1) // 2 < limit)
+        expected = sum(1 for n in range(1, 10**7) if n * (n + 1) // 2 < limit)
         es = {"way": way, "indici_fino_a": limit, "pairs": int(pairs.sum()),
-              "coppie_canoniche_attese": expected_, "non_canoniche": int(noncan.sum()),
+              "coppie_canoniche_attese": expected, "non_canoniche": int(noncan.sum()),
               "esempi": [int(x) for x in example if x >= 0][:10]}
     else:
-        # shakedown con d = 1 su un intervallo piccolo: one_ coppia canonica per ogni n
+        # shakedown con d = 1 su un intervallo piccolo: one coppia canonica per ogni n
         ds1, c1, e1, g1, _ = by_values(2_000_001, 1)
         shakedown = {"canoniche_trovate_con_d1": int(c1[0]),
-                    "expected_": (2_000_001 - 1) // 2, "errori_parametrizzazione": int(e1.sum())}
+                    "expected": (2_000_001 - 1) // 2, "errori_parametrizzazione": int(e1.sum())}
         ds, shots, errors, rounds, example = by_values(limit, 3)
         es = {"way": way, "valori_fino_a": limit, "collaudo_d1": shakedown,
               "fattorizzazioni_esaminate": int(rounds.sum()),
@@ -116,7 +116,7 @@ def main():
               "esempi": [int(x) for x in example if x >= 0][:10]}
     es["seconds"] = round(time.time() - t0, 1)
     print(json.dumps(es, indent=1), flush=True)
-    (ROOT / "research_data" / f"a105020_{way}.json").write_text(json.dumps(es, indent=1))
+    (ROOT / "research_data" / f"a105020{way}.json").write_text(json.dumps(es, indent=1))
 
 
 if __name__ == "__main__":

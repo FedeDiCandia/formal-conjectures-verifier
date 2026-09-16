@@ -3,12 +3,12 @@ Dimostrazioni in linguaggio naturale, e un revisore severo che le smonta.
 
 PERCHÉ
 ------
-Tre rounds sui problems open_ hanno dato zero, e la ragione misurata è che
+Tre rounds sui problems open_problems hanno dato zero, e la ragione misurata è che
 l'agent **non consegna candidates**: compute, capisce dov'è la difficoltà, e si
-ferma. Resta però one_ domanda aperta che quei rounds non separano: il collo di
+ferma. Resta però one domanda aperta che quei rounds non separano: il collo di
 bottiglia è **Lean** o è la **matematica**?
 
-Questo esperimento la separa. Si chiede one_ dimostrazione in linguaggio naturale,
+Questo esperimento la separa. Si chiede one dimostrazione in linguaggio naturale,
 senza Lean e senza tools, e poi si fa a pieces da un revisore severo. Se
 qualcosa sopravvive, il collo di bottiglia era Lean e la formalizzazione diventa
 il step successivo. Se non sopravvive niente, il collo di bottiglia è la
@@ -29,7 +29,7 @@ letteratura sul tema dice che un revisore adversariale trova errors che l'autore
 non vede.
 
 Nessun uso di `lean_check`: qui non si check niente. Quello che exits da qui è
-**materiale da leggere**, non un result_value.
+**materiale da leggere**, non un result.
 """
 from __future__ import annotations
 
@@ -109,11 +109,11 @@ do use it, name the step you attacked hardest."""
 def author_message(p, index) -> str:
     """Il problem, con TUTTE le definizioni che gli servono.
 
-    Il only_ statement non basta: `a n` o `IsPrimitiveTerm n` non si possono
+    Il only statement non basta: `a n` o `IsPrimitiveTerm n` non si possono
     dimostrare se non si sa come sono definiti. Si manda lo stesso text che
     riceve l'agent — il file dell'archive con le dimostrazioni nascoste — che
     contiene le definizioni, i termini di trial dei primes valori, e il commento
-    della source_.
+    della source.
     """
     from hide import file_without_proofs
     text = file_without_proofs(p, index)
@@ -157,8 +157,8 @@ def one_call(client, model, system, text, budget, cap, effort,
                              if b.type == "text").strip()
     if not output_text:
         # MISURATO l'11 settembre 2026: con effort `high` su questi problems il
-        # model ha spent 32.000 token di reasoning senza scrivere one_ line
-        # di answer, per $0,81 di niente, e il revisore ha poi recensito one_
+        # model ha spent 32.000 token di reasoning senza scrivere one line
+        # di answer, per $0,81 di niente, e il revisore ha poi recensito one
         # pagina bianca. Pagare e non ricevere nulla non e' un result ammissibile:
         # qui si ferma, con il reason exact.
         raise SpendLimitExceeded(
@@ -170,9 +170,9 @@ def one_call(client, model, system, text, budget, cap, effort,
     return output_text, answer.usage
 
 
-def extract(block: str, key_: str) -> str:
+def extract(block: str, key: str) -> str:
     for line in block.split("\n"):
-        if line.strip().upper().startswith(key_.upper()):
+        if line.strip().upper().startswith(key.upper()):
             return line.split(":", 1)[1].strip()[:200]
     return ""
 
@@ -187,18 +187,18 @@ def main() -> int:
     #   effort low,    cap 24k -> 20.402 token (16.353 di reasoning),
     #                               7.066 chars di matematica vera, end_turn
     # A effort high il model esaurisce lo spazio pensando e non conclude. A
-    # effort low conclude, e conclude bene: sul prime_ problem ha dimostrato che
+    # effort low conclude, e conclude bene: sul first problem ha dimostrato che
     # la congettura implica un caso del problem del totiente di Lehmer, che e'
-    # aperto, piu' cinque results parziali rigorosi. Il value_ predefinito e'
+    # aperto, piu' cinque results parziali rigorosi. Il value predefinito e'
     # quindi `low`, e non e' un risparmio: e' l'unico che funziona.
     ap.add_argument("--effort", default="low")
     ap.add_argument("--budget", type=float, required=True)
     ap.add_argument("--cap-problem", type=float, default=1.20)
     ap.add_argument("--report", default=str(ROOT / "runs" / "informale.json"))
-    ap.add_argument("--log_", default=None)
+    ap.add_argument("--log", default=None)
     args = ap.parse_args()
 
-    log_path = Path(args.log_) if args.log_ else (
+    log_path = Path(args.log) if args.log else (
         ROOT / "runs" / "jobs" / f"informale-{time.strftime('%Y%m%d-%H%M%S')}.log")
     log_path.parent.mkdir(parents=True, exist_ok=True)
     import agent
@@ -211,7 +211,7 @@ def main() -> int:
     budget = Budget(dollar_limit=args.budget, model=args.model)
     print(f"Modello {args.model}, effort {args.effort}, budget ${args.budget:.2f}, "
           f"cap ${args.problem_cap:.2f} per problem")
-    print("Nessuno strumento, nessun Lean: only_ matematica in linguaggio naturale.\n")
+    print("Nessuno strumento, nessun Lean: only matematica in linguaggio naturale.\n")
 
     results = []
     for i, name in enumerate(args.problems, 1):
@@ -229,17 +229,17 @@ def main() -> int:
             print(f"  autore:   {entry['confidence'] or '(non dichiarata)'}")
             print(f"            punto debole: {entry['punto_debole'][:100]}")
 
-            # Il revisore esiste per rompere one_ dimostrazione rivendicata. Se
-            # l'autore dichiara di non averne one_, non c'e' niente da arbitrare e
+            # Il revisore esiste per rompere one dimostrazione rivendicata. Se
+            # l'autore dichiara di non averne one, non c'e' niente da arbitrare e
             # la seconda call e' denaro buttato: sui problems di questo
             # insieme la maggioranza degli results e' PARTIAL o NO-PROOF, quindi
             # questa condizione e' la differenza fra dodici problems e venti.
             confidence = entry["confidence"].upper()
             if confidence.startswith(("PARTIAL", "NO-PROOF", "NO PROOF")):
                 entry["review"] = None
-                entry["verdict"] = "(non arbitrato: l'autore non rivendica one_ trial)"
+                entry["verdict"] = "(non arbitrato: l'autore non rivendica one trial)"
                 entry["finding"] = ""
-                print("  revisore: salta, l'autore non rivendica one_ trial")
+                print("  revisore: salta, l'autore non rivendica one trial")
             else:
                 review, _ = one_call(
                     client, args.model, REVIEWER, reviewer_message(p, trial),
@@ -268,9 +268,9 @@ def main() -> int:
         results.append(entry)
         # Il report si scrive a OGNI problem, non alla end. Misurato il 12
         # settembre 2026: un error mio (`review` non definita quando il
-        # revisore viene saltato) ha fatto morire il giro after il prime_ problem, e
-        # il text del prime_ -- gia' pagato -- e' andato perso perche' il file
-        # veniva scritto only_ in fondo. Un job che paga deve salvare mentre va.
+        # revisore viene saltato) ha fatto morire il giro after il first problem, e
+        # il text del first -- gia' pagato -- e' andato perso perche' il file
+        # veniva scritto only in fondo. Un job che paga deve salvare mentre va.
         Path(args.report).write_text(json.dumps(
             {"model": args.model, "effort": args.effort,
              "spent": budget.spent, "problem_cap": args.problem_cap,
@@ -291,7 +291,7 @@ def main() -> int:
     print(f"  report in {args.report}")
     if survivors:
         print("\n  ATTENZIONE: quello che sopravvive alla revisione NON e' un")
-        print("  result_value. E' materiale da leggere, e il step successivo e' il")
+        print("  result. E' materiale da leggere, e il step successivo e' il")
         print("  protocollo di docs/04 piu' la formalizzazione in Lean.")
     return 0
 

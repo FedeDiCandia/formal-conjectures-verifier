@@ -1,40 +1,40 @@
 #!/usr/bin/env python3
 """
-verify.py — il verifier delle dimostrazioni.
+verify.py — the proof verifier.
 
-COSA FA
--------
-Riceve un file Lean candidato e il name del theorem_ original dell'archive, e
-risponde ACCETTATO / RIFIUTATO. Accetta only_ se TUTTE queste cose sono vere:
+WHAT IT DOES
+------------
+It takes a candidate Lean file and the name of the archive's original theorem, and
+answers ACCEPTED / REJECTED. It accepts only if ALL of these hold:
 
-  1. il file non contiene costrutti vietati (controllo sintattico preventivo);
-  2. il file compila senza errors;
-  3. non contiene `sorry`, `admit` ne' new_ones dichiarazioni `axiom`;
-  4. gli axioms usati dal theorem_ sono only_ propext, Classical.choice, Quot.sound;
-  5. il TIPO del theorem_ e' identico a quello dell'statement original — il
-     confronto avviene sull'albero sintattico di Lean esportato, non sul text;
-  6. il file non ridefinisce ne' modifica le definizioni dell'archive usate
-     nell'statement;
-  7. il termine di trial e' accepted_one da one_ riesecuzione nel kernel di Lean;
-  8. non usa opzioni che disattivano i controlli del kernel.
+  1. the file contains no forbidden constructs (syntactic pre-scan);
+  2. the file compiles without errors;
+  3. it contains no `sorry`, no `admit` and no new `axiom` declarations;
+  4. the axioms the theorem uses are only propext, Classical.choice, Quot.sound;
+  5. the TYPE of the theorem is identical to the original statement — the
+     comparison is on Lean's exported syntax tree, not on the text;
+  6. the file neither redefines nor modifies the archive's definitions used in the
+     statement;
+  7. the proof term is accepted by a replay through the Lean kernel;
+  8. it uses no options that switch off the kernel's checks.
 
-COME LO FA
-----------
-I points 2, 4, 5, 6, 7 non sono implementati a mano: li delega a `comparator`
-(https://github.com/leanprover/comparator), il "giudice" scritto dal Lean FRO
-proprio per validare le dimostrazioni prodotte da modelli linguistici.
-comparator compila i two modules, li esporta in format_ text con `lean4export`
-(senza mai fidarsi degli .olean), compare gli enunciati, controlla gli axioms
-e infine RIESEGUE tutto nel kernel di Lean. E' molto piu' affidabile di
-qualunque cosa potremmo scrivere noi.
+HOW IT DOES IT
+--------------
+Points 2, 4, 5, 6 and 7 are not implemented here: they are delegated to
+`comparator` (https://github.com/leanprover/comparator), the judge written by the
+Lean FRO precisely to validate proofs produced by language models. comparator
+compiles the two modules, exports them as text with `lean4export` (never trusting
+the .olean files), compares the statements, checks the axioms and finally REPLAYS
+everything through the Lean kernel. It is far more reliable than anything we could
+write ourselves.
 
-I points 1, 3 e 8 sono il controllo sintattico di `guard.py`, che serve da difesa
-in depth' (vedi il commento in cima a quel file).
+Points 1, 3 and 8 are the syntactic pre-scan in `guard.py`, which is defence in
+depth (see the comment at the top of that file).
 
-USO
----
-    python3 verifier/verify.py NOME_TEOREMA FILE.lean
-    python3 verifier/verify.py NOME_TEOREMA FILE.lean --json
+USAGE
+-----
+    python3 verifier/verify.py THEOREM_NAME FILE.lean
+    python3 verifier/verify.py THEOREM_NAME FILE.lean --json
     python3 verifier/verify.py --batch jobs.jsonl --jobs 4
 """
 from __future__ import annotations
@@ -64,28 +64,27 @@ from index import ProblemIndex, Problem
 
 
 # ---------------------------------------------------------------------------
-# Risultato
+# The result
 # ---------------------------------------------------------------------------
 
-#: Esiti possibili.
-#: Modalita' di check.
-#:   stretta      -> si check l'statement dell'archive come e' scritto.
-#:   confutazione -> si check la NEGAZIONE di un problem con `answer(sorry)`
-#:                   proposizionale, against one_ challenge generata da noi (fidata).
-#:                   Vedi verifier/negation.py.
-STRICT = "stretta"
-REFUTATION = "confutazione"
+#: Verification modes.
+#:   strict     -> the archive's statement is checked as written.
+#:   refutation -> the NEGATION of a problem with a propositional `answer(sorry)`
+#:                 is checked, against a challenge we generate ourselves (trusted).
+#:                 See verifier/negation.py.
+STRICT = "strict"
+REFUTATION = "refutation"
 
-ACCEPTED = "ACCETTATO"
-REJECTED = "RIFIUTATO"
-ERROR = "ERRORE"
+ACCEPTED = "ACCEPTED"
+REJECTED = "REJECTED"
+ERROR = "ERROR"
 TIMEOUT = "TIMEOUT"
-UNVERIFIABLE = "NON_VERIFICABILE"
+UNVERIFIABLE = "UNVERIFIABLE"
 
 
 @dataclass
 class Check:
-    """Un singolo controllo, con il suo result."""
+    """One individual check, with its outcome."""
     name: str
     passed: bool
     detail: str = ""
@@ -101,7 +100,7 @@ class Result:
     status: str
     checks: list[Check] = field(default_factory=list)
     message: str = ""
-    #: errors di compilazione o messages di comparator, useful all'agent
+    #: compilation errors or comparator messages, useful to the agent
     errors: str = ""
     duration_s: float = 0.0
     raw_output: str = ""
@@ -122,17 +121,17 @@ class Result:
         if self.message:
             out += f"\n\n{self.message}"
         if self.errors:
-            out += f"\n\n--- messages di Lean / comparator ---\n{self.errors}"
+            out += f"\n\n--- messages from Lean / comparator ---\n{self.errors}"
         return out
 
 
 # ---------------------------------------------------------------------------
-# Gestione degli "slot": limita how_many processi Lean girano insieme
+# Slots: bound how many Lean processes run at once
 # ---------------------------------------------------------------------------
 
 class SlotPool:
-    """Una queue di N posti. Ogni check ne occupa one e usa il proprio name di
-    module Lean, cosi' two checks in parallelo non si pestano i piedi."""
+    """A queue of N places. Each verification takes one and uses its own Lean
+    module name, so two verifications in parallel do not tread on each other."""
 
     def __init__(self, size: int):
         self.size = size
@@ -150,27 +149,28 @@ class SlotPool:
 _default_pool: Optional[SlotPool] = None
 _pool_lock = threading.Lock()
 
-#: Moduli di challenge gia' portati in even, e il lock_ che serializza l'operazione.
-#: Serve perche' portare in even un module MODIFICA l'archive, e se lo facesse
-#: one_ check mentre un'altra ne sta prendendo l'fingerprint la seconda
-#: segnalerebbe (giustamente) che l'archive e' cambiato. Succedeva davvero.
+#: Challenge modules already brought up to date, and the lock that serialises the
+#: operation. It is needed because bringing a module up to date MODIFIES the
+#: archive, and if one verification did that while another was taking its
+#: fingerprint, the second would report (rightly) that the archive had changed.
+#: It really happened.
 _ready_challenges: set[str] = set()
 _challenges_lock = threading.Lock()
 
 
 def prepare_challenge(module: str, timeout: int) -> tuple[bool, str]:
-    """Compila il module dell'statement original, FUORI dalla sandbox.
+    """Compile the original statement's module, OUTSIDE the sandbox.
 
-    E' legittimo: la challenge e' un file dell'archive, o generato da noi dal suo
-    source_text, quindi fidato. Lo dice also_ il README di comparator ("as
-    Challenge is trusted, both the sandbox and lean4export step for Challenge
-    are not necessary").
+    This is legitimate: the challenge is either a file of the archive or generated
+    by us from its source, so it is trusted. comparator's README says so too ("as
+    Challenge is trusted, both the sandbox and lean4export step for Challenge are
+    not necessary").
 
-    E serve: inside la sandbox `lake` non puo' rimuovere gli artefacts
-    dell'archive, quindi se il module non e' gia' in even la compilazione si
-    ferma con "failed to remove output artifacts".
+    And it is necessary: inside the sandbox `lake` cannot remove the archive's
+    artefacts, so if the module is not already up to date the compilation stops
+    with "failed to remove output artifacts".
 
-    Si fa one_ volta per module, below lock_.
+    Done once per module, under a lock.
     """
     with _challenges_lock:
         if module in _ready_challenges:
@@ -193,16 +193,17 @@ def get_pool(size: Optional[int] = None) -> SlotPool:
 
 
 # ---------------------------------------------------------------------------
-# Esecuzione di comparator
+# Running comparator
 # ---------------------------------------------------------------------------
 
 def _run_with_timeout(cmd: list[str], cwd: Path, env: dict, timeout: int,
                       sandbox_profile: Optional[Path] = None) -> tuple[int, str]:
-    """Esegue un command con timeout, uccidendo l'INTERO albero di processi.
+    """Run a command with a timeout, killing the WHOLE process tree.
 
-    Serve perche' comparator lancia `lake`, che lancia `lean`: uccidere only_ il
-    padre lascerebbe i figli a consumare CPU per sempre. `start_new_session`
-    mette tutto in un group di processi che possiamo terminare in block.
+    This is needed because comparator launches `lake`, which launches `lean`:
+    killing only the parent would leave the children burning CPU for ever.
+    `start_new_session` puts everything in one process group we can terminate as a
+    block.
     """
     if sandbox_profile is not None:
         cmd = sandbox.wrap(cmd, sandbox_profile)
@@ -227,167 +228,168 @@ def _run_with_timeout(cmd: list[str], cwd: Path, env: dict, timeout: int,
 
 
 def _clean_leftovers(folder: Path, slot: int) -> None:
-    """Toglie gli artefacts rimasti dal PROPRIO slot in esecuzioni finite male.
+    """Remove artefacts left by OUR OWN slot in runs that ended badly.
 
-    Solo il proprio: gli altri slot possono essere in uso da checks che
-    girano in parallelo, e cancellarne i file mentre lavorano fa fallire la
-    compilazione con "failed to remove output artifacts". E' successo davvero,
-    su all_of e dodici le checks di un'esecuzione.
+    Only our own: the other slots may be in use by verifications running in
+    parallel, and deleting their files while they work makes the compilation fail
+    with "failed to remove output artifacts". That really happened, on all twelve
+    verifications of one run.
     """
-    built_ = config.ARCHIVE / ".lake" / "build"
-    for name in (f"S{slot}", f"Sfida{slot}", f"E{slot}"):
+    built = config.ARCHIVE / ".lake" / "build"
+    for name in (f"S{slot}", f"Challenge{slot}", f"E{slot}"):
         source_text = folder / f"{name}.lean"
-        artefacts = [Path(str(built_ / branch / config.SANDBOX_SUBDIR / name) + ext)
+        artefacts = [Path(str(built / branch / config.SANDBOX_SUBDIR / name) + ext)
                      for branch in ("lib/lean", "ir")
                      for ext in (".olean", ".ilean", ".trace", ".hash", ".c",
                                  ".o", ".c.hash", ".setup.json", ".olean.hash",
                                  ".ilean.hash")]
-        # Se il source_text non c'e' ma gli artefacts si', lake si confonde:
-        # si toglie tutto e si riparte clean_one.
+        # If the source is gone but the artefacts are still there, lake gets
+        # confused: remove everything and start clean.
         if not source_text.is_file():
             for a in artefacts:
                 a.unlink(missing_ok=True)
 
 
 def _classify(output: str) -> tuple[str, str]:
-    """Traduce l'output di comparator in (name del controllo failed, explanation)."""
+    """Turn comparator's output into (name of the failed check, explanation)."""
     m = re.search(r"Illegal axiom detected: '([^']+)'", output)
     if m:
         ax = m.group(1)
-        spiega = {
-            "sorryAx": "la dimostrazione contiene un `sorry` (un buco), diretto o "
-                       "ereditato da un lemma ausiliario",
-            "Lean.ofReduceBool": "e' state usato `native_decide`, che si fida del "
-                                 "compilatore invece che del kernel",
-            "Lean.trustCompiler": "e' state chiesto di fidarsi del compilatore",
-        }.get(ax, f"il theorem_ dipende dall'assioma `{ax}`, che non e' fra quelli permissions "
-                  f"({', '.join(config.PERMITTED_AXIOMS)})")
-        return "axioms permitted", f"assioma illecito `{ax}`: {spiega}"
+        explain = {
+            "sorryAx": "the proof contains a `sorry` (a hole), either directly or "
+                       "inherited from an auxiliary lemma",
+            "Lean.ofReduceBool": "`native_decide` was used, which trusts the compiler "
+                                 "rather than the kernel",
+            "Lean.trustCompiler": "the compiler was asked to be trusted",
+        }.get(ax, f"the theorem depends on the axiom `{ax}`, which is not among the "
+                  f"permitted ones ({', '.join(config.PERMITTED_AXIOMS)})")
+        return "permitted axioms", f"illegal axiom `{ax}`: {explain}"
 
     if "theorem statement do not match" in output:
-        return ("kind_ identico all'original",
-                "l'statement dimostrato NON e' identico a quello dell'archive. "
-                "Puo' essere un statement piu' debole, con ipotesi in piu', o "
-                "semplicemente scritto in way che Lean elabora diversamente.")
+        return ("type identical to the original",
+                "the statement proved is NOT identical to the archive's. It may be a "
+                "weaker statement, one with extra hypotheses, or simply written in a "
+                "way Lean elaborates differently.")
     if "constant kind don't match" in output:
-        return ("kind_ identico all'original",
-                "nel candidato la declaration ha one_ kind diversa (es. `def` invece di `theorem`)")
+        return ("type identical to the original",
+                "in the candidate the declaration has a different kind (e.g. `def` instead of `theorem`)")
     if "Solution constant is not a theorem" in output:
-        return ("kind_ identico all'original", "nel candidato la declaration non e' un theorem_")
+        return ("type identical to the original", "in the candidate the declaration is not a theorem")
     if "Const does not match between challenge and target" in output or \
        "does not match between challenge" in output:
         m2 = re.search(r"target '([^']+)'", output)
         which = f" (`{m2.group(1)}`)" if m2 else ""
-        return ("definizioni dell'archive intatte",
-                f"il candidato RIDEFINISCE in way diverso one_ definition usata "
-                f"nell'statement{which}. L'statement sembra uguale ma parla di other.")
+        return ("archive definitions intact",
+                f"the candidate REDEFINES, differently, a definition used in the "
+                f"statement{which}. The statement looks the same but talks about "
+                f"something else.")
     if "Const not found in solution" in output or "Constant not found in solution" in output:
         m2 = re.search(r"in solution:? '([^']+)'", output)
         which = f" `{m2.group(1)}`" if m2 else ""
-        return ("theorem_ presente", f"il candidato non dichiara{which}. Il name deve "
-                                    f"coincidere ESATTAMENTE con quello dell'archive, "
-                                    f"namespace compreso.")
+        return ("theorem present", f"the candidate does not declare{which}. The name has "
+                                  f"to match the archive's EXACTLY, namespace included.")
     if "kernel rejected the solution" in output:
-        return ("accepted_one dal kernel", "il kernel di Lean ha rifiutato il termine di trial")
+        return ("accepted by the kernel", "Lean's kernel rejected the proof term")
     if "error:" in output:
-        return ("compila senza errors", "il file non compila")
+        return ("compiles without errors", "the file does not compile")
     if "Child exited with" in output:
-        return ("compila senza errors", "la compilazione e' fallita")
-    return ("check di comparator", "comparator ha rifiutato il candidato")
+        return ("compiles without errors", "the compilation failed")
+    return ("comparator's check", "comparator rejected the candidate")
 
 
-#: Righe con cui `lake` annuncia lo state: non sono messages di Lean.
+#: Lines with which `lake` announces its state: they are not Lean messages.
 _LAKE_STATE = re.compile(r"^(Building |Exporting |Build completed|Running |"
                          r"[✔⚠✖ℹ] |info: \[|error: build failed|trace:)")
 
-#: Inizio di un message di Lean. Il message prosegue sulle lines successive
-#: finche' non ne comincia un other o non compare one_ line di state di lake.
+#: The start of a Lean message. The message continues on the following lines
+#: until another one begins or a lake state line appears.
 _MESSAGE_START = re.compile(r"^(info|warning|error): ")
 
-#: Linter di STILE dell'archive: si lamentano che il nostro module temporaneo
-#: non ha l'header di copyright, non ha il docstring di module, ecc.
-#: Sono irrilevanti — il file candidato non e' un contributo all'archive — e
-#: ripetono quindici lines di licenza a ogni message, inondando il context.
+#: The archive's STYLE linters: they complain that our temporary module has no
+#: copyright header, no module docstring, and so on. They are irrelevant — the
+#: candidate file is not a contribution to the archive — and they repeat fifteen
+#: lines of licence with every message, flooding the context.
 _LINTER_NOISE = re.compile(
     r"linter\.style\.(copyright|namespace|ams_attribute|category_attribute|moduleDocstring)"
     r"|The copyright header is incorrect"
     r"|missing a module docstring")
 
-#: Messaggi di comparator: lines isolate, senza il prefisso di Lean.
+#: comparator's messages: isolated lines, without Lean's prefix.
 _COMPARATOR_MESSAGE = re.compile(
     r"Illegal axiom|do not match|does not match|not found in|Constant not found|"
     r"rejected the solution|uncaught exception|kernel accepts")
 
 
 def _message_blocks(output: str) -> list[str]:
-    """Ricompone i messages di Lean, che sono blocks su piu' lines."""
+    """Reassemble Lean's messages, which are blocks spanning several lines."""
     blocks: list[str] = []
     current: list[str] = []
 
-    def close_():
+    def close():
         if current:
             blocks.append("\n".join(current).rstrip())
             current.clear()
 
     for line in output.split("\n"):
         if _MESSAGE_START.match(line):
-            close_()
+            close()
             current.append(line.rstrip())
         elif _LAKE_STATE.match(line):
-            close_()
+            close()
         elif current:
             current.append(line.rstrip())
         elif _COMPARATOR_MESSAGE.search(line):
             blocks.append(line.rstrip())
-    close_()
+    close()
     return blocks
 
 
 def _lean_errors(output: str, max_chars: int = 40_000) -> str:
-    """I messages di Lean e di comparator, da rimandare a chi ha scritto il file.
+    """Lean's and comparator's messages, to be sent back to whoever wrote the file.
 
-    Include DELIBERATAMENTE also_ i messages `info:`, cioe' l'output di
-    `#check`, `#print`, `exact?` e simili: sono il way normale di ispezionare
-    one_ definition, e senza di essi chi scrive la dimostrazione e' costretto a
-    dedurre le definizioni provocando errors di proposito.
+    It DELIBERATELY includes the `info:` messages too, that is the output of
+    `#check`, `#print`, `exact?` and the like: they are the normal way of
+    inspecting a definition, and without them whoever writes the proof has to
+    infer the definitions by provoking errors on purpose.
 
-    Toglie invece i linter di stile dell'archive, che sono puro rumore per un
-    file temporaneo e ripetono la licenza a ogni message.
+    It strips the archive's style linters, which are pure noise for a temporary
+    file and repeat the licence with every message.
     """
     useful = [b for b in _message_blocks(output) if not _LINTER_NOISE.search(b)]
 
-    # Toglie i duplicati esatti mantenendo l'order (Lean ripete lo stesso
-    # message one_ volta per ogni passata di compilazione).
-    seen, unique_ = set(), []
+    # Remove exact duplicates while keeping the order (Lean repeats the same
+    # message once per compilation pass).
+    seen, unique = set(), []
     for b in useful:
         if b not in seen:
             seen.add(b)
-            unique_.append(b)
+            unique.append(b)
 
-    text = "\n\n".join(unique_)
+    text = "\n\n".join(unique)
     if len(text) > max_chars:
-        text = text[:max_chars] + f"\n\n... [messages troncati a {max_chars} chars]"
+        text = text[:max_chars] + f"\n\n... [messages truncated at {max_chars} characters]"
     return text
 
 
 # ---------------------------------------------------------------------------
-# Verifica di un singolo candidato
+# Verifying a single candidate
 # ---------------------------------------------------------------------------
 
 def _tool_error(output: str) -> str | None:
-    """Riconosce i fallimenti che riguardano GLI STRUMENTI, non il candidato.
+    """Recognise failures that concern THE TOOLS, not the candidate.
 
-    Misurato il 12 settembre 2026: verificando A105020 sullo snapshot `main` (Lean
-    4.33.1) con il `lean4export` per Lean 4.27, comparator si e' fermato con
-    `failed to read file ... incompatible header`, e il report diceva «la
-    compilazione e' fallita» con result RIFIUTATO. Era falso: il candidato non era mai
-    state giudicato. Un fault degli tools deve risultare ERRORE, con la cause.
+    Measured on 12 September 2026: verifying A105020 on the `main` snapshot (Lean
+    4.33.1) with the `lean4export` built for Lean 4.27, comparator stopped with
+    `failed to read file ... incompatible header`, and the report said "the
+    compilation failed" with the verdict REJECTED. That was false: the candidate
+    had never been judged. A fault in the tools has to come out as ERROR, with the
+    cause.
     """
     if "incompatible header" in output:
-        return ("LA VERIFICA NON E' AVVENUTA: comparator ha found file .olean compiled "
-                "con one_ versione di Lean diversa da quella dei suoi tools "
-                "(`incompatible header`). Non dice niente sul candidato.\n\n"
-                "Per lo snapshot `main` (Lean 4.33.1) serve "
+        return ("THE VERIFICATION DID NOT HAPPEN: comparator found .olean files compiled "
+                "with a different version of Lean from its own tools "
+                "(`incompatible header`). This says nothing about the candidate.\n\n"
+                "For the `main` snapshot (Lean 4.33.1) you need "
                 "FCS_LEAN4EXPORT=external/lean4export-433/.lake/build/bin/lean4export.")
     return None
 
@@ -399,18 +401,17 @@ def verify(problem_id: str, candidate: Path | str, *,
            keep_workspace: bool = False,
            run_guard: bool = True,
            mode: str = STRICT) -> Result:
-    """Verifica `candidate` come dimostrazione del theorem_ `problem_id`.
+    """Verify `candidate` as a proof of the theorem `problem_id`.
 
-    `mode=REFUTATION` check la NEGAZIONE del problem invece del
-    problem: serve per i 107 problems open_ formalizzati con `answer(sorry)`
-    proposizionale, per i which_ones l'statement dell'archive afferma che la
-    answer e' "si'" e one_ confutazione non avrebbe other way di essere
-    verificata. Vedi verifier/negation.py.
+    `mode=REFUTATION` checks the NEGATION of the problem instead of the problem
+    itself: this is for the 107 open problems formalised with a propositional
+    `answer(sorry)`, for which the archive's statement asserts that the answer is
+    "yes" and a refutation would have no other way of being verified. See
+    verifier/negation.py.
 
-    `run_guard=False` salta il controllo sintattico preventivo. Serve SOLO ai
-    test, per dimostrare che also_ comparator — cioe' il giudice vero, non il
-    filtro testuale — rifiuta sorry, axioms added e native_decide. In uso
-    normale va lasciato attivo.
+    `run_guard=False` skips the syntactic pre-scan. It is there ONLY for the
+    tests, to show that comparator too — the real judge, not the textual filter —
+    rejects sorry, added axioms and native_decide. In normal use it stays on.
     """
     started = time.time()
     candidate = Path(candidate)
@@ -422,87 +423,86 @@ def verify(problem_id: str, candidate: Path | str, *,
                       message=message, errors=errors,
                       duration_s=time.time() - started, raw_output=raw)
 
-    # --- 0. l'environment e' a slot_?
+    # --- 0. is the environment in place?
     problems = config.check_installation()
     if problems:
-        return done(ERROR, "Ambiente non ready:\n  - " + "\n  - ".join(problems))
+        return done(ERROR, "Environment not ready:\n  - " + "\n  - ".join(problems))
 
     if not candidate.is_file():
-        return done(ERROR, f"File candidato non found: {candidate}")
+        return done(ERROR, f"Candidate file not found: {candidate}")
 
-    # --- 1. il problem esiste?
+    # --- 1. does the problem exist?
     try:
         index = index or ProblemIndex.load()
         problem: Problem = index.get(problem_id)
     except (KeyError, FileNotFoundError) as e:
         return done(ERROR, str(e))
-    checks.append(Check("problem riconosciuto",
-                        True, f"{problem.module} — categoria: {problem.category}"))
+    checks.append(Check("problem recognised",
+                        True, f"{problem.module} — category: {problem.category}"))
 
-    # --- 1bis. mode' di check
+    # --- 1b. verification mode
     if mode not in (STRICT, REFUTATION):
-        return done(ERROR, f"mode' sconosciuta: {mode!r} "
-                           f"(sono {STRICT!r} e {REFUTATION!r})")
+        return done(ERROR, f"unknown mode: {mode!r} "
+                           f"(they are {STRICT!r} and {REFUTATION!r})")
     negated_challenge = None
-    target_ = problem.theorem      # il theorem_ che comparator deve confrontare
-    allowed_module = None           # un import in piu', only_ per the route type_of%
+    target = problem.theorem      # the theorem comparator has to compare
+    allowed_module = None         # one extra import, only for the type_of% route
     if mode == REFUTATION:
-        ok, _perche = negation.can_be_negated(problem)
+        ok, _why_not = negation.can_be_negated(problem)
         try:
             negated_challenge = (negation.generate(problem) if ok
                             else negation.generate_by_kind(problem))
         except negation.NotNegatable as e:
-            checks.append(Check("il problem ammette one_ confutazione", False, str(e)))
-            return done(ERROR, f"Non si puo' costruire la challenge negata: {e}")
-        target_ = negated_challenge.target_ or problem.theorem
+            checks.append(Check("the problem admits a refutation", False, str(e)))
+            return done(ERROR, f"The negated challenge cannot be built: {e}")
+        target = negated_challenge.target or problem.theorem
         if negated_challenge.route == "answer":
-            detail = ("challenge negata generata dal source_text dell'archive: "
-                         "`answer(sorry)` sostituito da `answer(False)`, quindi "
-                         "l'statement passa da `True ↔ P` a `False ↔ P`, cioe' `¬P`")
+            detail = ("negated challenge generated from the archive's source: "
+                      "`answer(sorry)` replaced by `answer(False)`, so the statement "
+                      "goes from `True ↔ P` to `False ↔ P`, that is `¬P`")
         else:
             allowed_module = problem.module
-            detail = (f"challenge negata generata con `type_of%`: il target_ e' "
-                         f"`{target_}`, cioe' `¬ (type_of% @{problem.theorem})`. "
-                         f"Al candidato e' permesso importare `{problem.module}` per "
-                         f"leggere l'statement; appoggiarsi alla dimostrazione "
-                         f"dell'archive, che e' un `sorry`, viene rifiutato dal "
-                         f"controllo degli axioms")
-        checks.append(Check("il problem ammette one_ confutazione", True, detail))
+            detail = (f"negated challenge generated with `type_of%`: the target is "
+                      f"`{target}`, that is `¬ (type_of% @{problem.theorem})`. The "
+                      f"candidate is allowed to import `{problem.module}` in order to "
+                      f"read the statement; leaning on the archive's proof, which is a "
+                      f"`sorry`, is rejected by the axiom check")
+        checks.append(Check("the problem admits a refutation", True, detail))
 
-    # --- 2. l'statement original e' verificabile?
-    # Se l'statement stesso contiene un `sorry` (buco answer( ) non
-    # proposizionale) allora NESSUNA dimostrazione onesta e' possibile: il kind_
-    # da dimostrare e' incompleto. Va detto, non nascosto.
+    # --- 2. is the original statement verifiable at all?
+    # If the statement itself contains a `sorry` (a non-propositional answer( )
+    # hole) then NO honest proof is possible: the type to be proved is incomplete.
+    # That has to be said, not hidden.
     if problem.statement_has_sorry:
-        checks.append(Check("statement full_", False,
-                            "l'statement original contiene un buco `answer( )` non "
-                            "proposizionale (one_ answer da fornire, es. un number)"))
+        checks.append(Check("complete statement", False,
+                            "the original statement contains a non-propositional "
+                            "`answer( )` hole (an answer to supply, e.g. a number)"))
         return done(UNVERIFIABLE,
-                    "Questo problem chiede di FORNIRE UNA RISPOSTA, non only_ di dimostrare "
-                    "qualcosa: nell'statement c'e' `answer(sorry)` con un value_ che non e' "
-                    "one_ proposizione.\n"
-                    "Finche' la answer non e' fissata, il kind_ da dimostrare contiene un "
-                    "buco e qualunque trial dipenderebbe dall'assioma `sorryAx`.\n"
-                    "Inoltre — come avvertono sia l'archive sia comparator — riempire il buco "
-                    "e dimostrare l'statement NON basta a dire che il problem e' solved_one: "
-                    "one_ answer tautologica passerebbe la check formale pur essendo "
-                    "matematicamente vuota. Serve un giudizio umano.")
-    checks.append(Check("statement full_", True, "nessun buco `answer( )` da riempire"))
+                    "This problem asks you to SUPPLY AN ANSWER, not merely to prove "
+                    "something: the statement contains `answer(sorry)` with a value that "
+                    "is not a proposition.\n"
+                    "Until the answer is fixed, the type to be proved contains a hole and "
+                    "any proof would depend on the axiom `sorryAx`.\n"
+                    "Moreover — as both the archive and comparator warn — filling the hole "
+                    "and proving the statement is NOT enough to say the problem is solved: "
+                    "a tautological answer would pass the formal check while being "
+                    "mathematically empty. Human judgement is required.")
+    checks.append(Check("complete statement", True, "no `answer( )` hole to fill"))
 
-    # --- 3. controllo sintattico preventivo
+    # --- 3. syntactic pre-scan
     report = (guard.check_file(candidate, allowed_module=allowed_module)
               if run_guard else guard.GuardReport())
     if not report.ok:
         details = "\n".join(str(f) for f in report.findings)
-        checks.append(Check("controllo sintattico preventivo", False,
+        checks.append(Check("syntactic pre-scan", False,
                             f"{len(report.findings)} violations"))
         return done(REJECTED,
-                    "Il file contiene costrutti vietati:\n\n" + details, errors=details)
-    checks.append(Check("controllo sintattico preventivo", run_guard,
-                        "niente sorry/admit/axiom/native_decide, nessuna opzione pericolosa, "
-                        "import leciti" if run_guard else "SALTATO (mode' di test)"))
+                    "The file contains forbidden constructs:\n\n" + details, errors=details)
+    checks.append(Check("syntactic pre-scan", run_guard,
+                        "no sorry/admit/axiom/native_decide, no dangerous options, "
+                        "imports allowed" if run_guard else "SKIPPED (test mode)"))
 
-    # --- 4. prepara il module Solution inside l'albero dell'archive
+    # --- 4. prepare the Solution module inside the archive's tree
     pool = get_pool()
     owned_slot = slot is None
     if owned_slot:
@@ -511,11 +511,11 @@ def verify(problem_id: str, candidate: Path | str, *,
         sandbox_dir = config.ARCHIVE / config.SANDBOX_SUBDIR
         sandbox_dir.mkdir(parents=True, exist_ok=True)
 
-        # Ripulisce gli avanzi di esecuzioni interrotte. Se un processo viene
-        # ucciso a meta', lascia il source_text del module temporaneo senza i suoi
-        # artefacts (o viceversa), e al giro after `lake` si ferma con
-        # "no such file or directory". Costa niente e toglie di mezzo one_
-        # classe intera di guasti misteriosi.
+        # Clean up leftovers from interrupted runs. If a process is killed
+        # half-way it leaves the temporary module's source without its artefacts
+        # (or the other way round), and on the next round `lake` stops with "no
+        # such file or directory". It costs nothing and removes a whole class of
+        # mysterious faults.
         _clean_leftovers(sandbox_dir, slot)
 
         sol_name = f"S{slot}"
@@ -523,21 +523,21 @@ def verify(problem_id: str, candidate: Path | str, *,
         sol_module = f"{config.SANDBOX_MODULE_PREFIX}.{sol_name}"
         sol_path.write_text(candidate.read_text(encoding="utf-8"), encoding="utf-8")
 
-        # --- which module fa da Challenge
+        # --- which module acts as the Challenge
         challenge_path = None
         if negated_challenge is None:
-            challenge_module = problem.module          # l'archive, intatto
+            challenge_module = problem.module          # the archive, untouched
         else:
-            challenge_name = f"Sfida{slot}"
+            challenge_name = f"Challenge{slot}"
             challenge_path = sandbox_dir / f"{challenge_name}.lean"
             challenge_path.write_text(negated_challenge.text, encoding="utf-8")
             challenge_module = f"{config.SANDBOX_MODULE_PREFIX}.{challenge_name}"
-            checks.append(Check("la challenge negata e' stata generata", True, challenge_module))
+            checks.append(Check("negated challenge generated", True, challenge_module))
 
         cfg = {
             "challenge_module": challenge_module,
             "solution_module": sol_module,
-            "theorem_names": [target_],
+            "theorem_names": [target],
             "permitted_axioms": config.PERMITTED_AXIOMS,
         }
         with tempfile.TemporaryDirectory() as tmp:
@@ -545,11 +545,11 @@ def verify(problem_id: str, candidate: Path | str, *,
             cfg_path = tmp_dir / "config.json"
             cfg_path.write_text(json.dumps(cfg), encoding="utf-8")
 
-            # --- isolamento della compilazione
+            # --- isolating the compilation
             profile = None
             if config.USE_SANDBOX and sandbox.available():
-                # le folders devono esistere PRIMA: inside la sandbox non si
-                # puo' scrivere nella folder genitore per crearle
+                # the directories have to exist BEFOREHAND: inside the sandbox one
+                # cannot write to the parent directory in order to create them
                 for d in sandbox.writable_dirs(
                         config.ARCHIVE, config.SANDBOX_SUBDIR, tmp_dir):
                     d.mkdir(parents=True, exist_ok=True)
@@ -557,26 +557,26 @@ def verify(problem_id: str, candidate: Path | str, *,
                     tmp_dir / "check.sb",
                     sandbox.writable_dirs(config.ARCHIVE, config.SANDBOX_SUBDIR, tmp_dir),
                     config.ROOT)
-                checks.append(Check("compilazione isolata", True,
-                                    "sandbox-exec: niente rete, write_op only_ nella "
-                                    "folder del module temporaneo"))
+                checks.append(Check("isolated compilation", True,
+                                    "sandbox-exec: no network, writes only in the "
+                                    "temporary module's directory"))
             elif config.USE_SANDBOX:
-                checks.append(Check("compilazione isolata", False,
-                                    "sandbox-exec non available su questo system: la "
-                                    "compilazione del candidato NON e' isolata"))
+                checks.append(Check("isolated compilation", False,
+                                    "sandbox-exec is not available on this system: the "
+                                    "candidate's compilation is NOT isolated"))
 
-            # --- si porta in even il module della SFIDA (vedi prepare_challenge)
+            # --- bring the CHALLENGE module up to date (see prepare_challenge)
             ready, prep_output = prepare_challenge(challenge_module, timeout)
             if not ready:
-                checks.append(Check("module della challenge ready", False,
-                                    "non si riesce a compilare l'statement original"))
+                checks.append(Check("challenge module ready", False,
+                                    "the original statement cannot be compiled"))
                 return done(ERROR,
-                            "Non riesco a portare in even il module dell'statement "
-                            "original. E' un problem dell'archive o della sua "
-                            "compilazione, non del candidato.",
+                            "Cannot bring the original statement's module up to date. "
+                            "That is a problem with the archive or with its build, not "
+                            "with the candidate.",
                             errors=_lean_errors(prep_output), raw=prep_output)
 
-            # --- fingerprint dell'archive PRIMA della check
+            # --- the archive's fingerprint BEFORE the verification
             fingerprint_before = None
             if config.CHECK_FINGERPRINT:
                 fingerprint_before = fingerprint_module.compute(
@@ -591,38 +591,38 @@ def verify(problem_id: str, candidate: Path | str, *,
                 sandbox_profile=profile,
             )
 
-            # --- fingerprint DOPO: l'archive deve essere intatto
+            # --- fingerprint AFTER: the archive has to be intact
             if fingerprint_before is not None:
                 differences = fingerprint_module.compare(
                     fingerprint_before,
                     fingerprint_module.compute(config.ARCHIVE,
                                             exclude=Path(config.SANDBOX_SUBDIR).name))
                 if differences:
-                    checks.append(Check("archive intatto after la check", False,
+                    checks.append(Check("archive intact after the verification", False,
                                         "; ".join(differences)))
                     return done(ERROR,
-                                "LA VERIFICA NON E' ATTENDIBILE: compilare il file "
-                                "candidato ha modificato l'archive.\n\n"
+                                "THIS VERIFICATION IS NOT TRUSTWORTHY: compiling the "
+                                "candidate file modified the archive.\n\n"
                                 + "\n".join("  - " + d for d in differences) +
-                                "\n\nComparator compare la solution con l'statement "
-                                "che legge dai file compiled dell'archive. Se quei file "
-                                "cambiano, il confronto avviene against un problem alterato "
-                                "e l'result non vuol dire niente (assunto 2 del README di "
-                                "comparator). Ripristina l'archive con:\n"
+                                "\n\ncomparator compares the solution with the statement "
+                                "it reads from the archive's compiled files. If those files "
+                                "change, the comparison is against an altered problem and "
+                                "the result means nothing (assumption 2 of comparator's "
+                                "README). Restore the archive with:\n"
                                 f"  cd {config.ARCHIVE} && git checkout . && lake build",
                                 errors=_lean_errors(output), raw=output)
-                checks.append(Check("archive intatto after la check", True,
-                                    f"{fingerprint_before.n_content_files} file dell'archive "
-                                    f"invariati (hash del content) e "
-                                    f"{fingerprint_before.n_metadata_files} file delle dipendenze "
-                                    f"invariati (size e data)"))
+                checks.append(Check("archive intact after the verification", True,
+                                    f"{fingerprint_before.n_content_files} archive files "
+                                    f"unchanged (content hash) and "
+                                    f"{fingerprint_before.n_metadata_files} dependency files "
+                                    f"unchanged (size and timestamp)"))
     finally:
         if not keep_workspace:
             try:
                 sol_path.unlink(missing_ok=True)
                 if challenge_path is not None:
                     challenge_path.unlink(missing_ok=True)
-                # rimuove also_ l'artefatto compilato, per non lasciare spazzatura
+                # remove the compiled artefact too, so as not to leave rubbish
                 built = (config.ARCHIVE / ".lake" / "build" / "lib" / "lean"
                          / config.SANDBOX_SUBDIR / f"{sol_name}")
                 for ext in (".olean", ".ilean", ".trace", ".hash", ".c", ".o"):
@@ -632,61 +632,62 @@ def verify(problem_id: str, candidate: Path | str, *,
         if owned_slot:
             pool.release(slot)
 
-    # --- 5. result
+    # --- 5. the verdict
     if code == -signal.SIGKILL:
-        checks.append(Check("entro il tempo maximum", False, f"passed_ {timeout}s"))
-        return done(TIMEOUT, f"La check ha passed_one il tempo maximum di {timeout} seconds.",
+        checks.append(Check("within the time limit", False, f"exceeded {timeout}s"))
+        return done(TIMEOUT, f"The verification exceeded the time limit of {timeout} seconds.",
                     errors=_lean_errors(output), raw=output)
 
     if code == 0 and "Your solution is okay!" in output:
         for name, detail in [
-            ("compila senza errors", "il module candidato e' state compilato da lake"),
-            ("kind_ identico all'original",
-             "confronto fatto sull'albero sintattico esportato da lean4export, non sul text"),
-            ("definizioni dell'archive intatte",
-             "all_of le costanti usate nell'statement coincidono con quelle dell'archive"),
-            ("axioms permitted", ", ".join(config.PERMITTED_AXIOMS)),
-            ("accepted_one dal kernel", "termine di trial rieseguito nel kernel di Lean"),
+            ("compiles without errors", "the candidate module was compiled by lake"),
+            ("type identical to the original",
+             "compared on the syntax tree exported by lean4export, not on the text"),
+            ("archive definitions intact",
+             "every constant used in the statement matches the archive's"),
+            ("permitted axioms", ", ".join(config.PERMITTED_AXIOMS)),
+            ("accepted by the kernel", "proof term replayed through Lean's kernel"),
         ]:
             checks.append(Check(name, True, detail))
         if negated_challenge is not None:
             if negated_challenge.route == "answer":
                 explanation = (
-                    f"E' state dimostrato `False ↔ P`, cioe' `¬P`: la answer alla "
-                    f"domanda posta da {problem.theorem} e' NO.\n\n"
-                    "Questo CONTRADDICE l'statement dell'archive, che con "
-                    "`answer(sorry)` afferma che la answer e' si'. Se la "
-                    "confutazione e' corretta, la formalizzazione dell'archive va "
-                    "aggiornata a `answer(False)`.")
+                    f"`False ↔ P` has been proved, that is `¬P`: the answer to the "
+                    f"question {problem.theorem} poses is NO.\n\n"
+                    "This CONTRADICTS the archive's statement, which with "
+                    "`answer(sorry)` asserts that the answer is yes. If the refutation "
+                    "is correct, the archive's formalisation should be updated to "
+                    "`answer(False)`.")
             else:
                 explanation = (
-                    f"E' state dimostrato `{target_}`, cioe' "
-                    f"`¬ (type_of% @{problem.theorem})`: l'statement dell'archive, "
-                    f"come e' formalizzato, e' FALSO.\n\n"
-                    "Due letture possibili, e vanno distinte before di annunciare "
-                    "qualcosa: o la congettura e' falsa, o la formalizzazione non e' "
-                    "fedele alla source_ original. Il second_ caso e' il piu' frequente.")
+                    f"`{target}` has been proved, that is "
+                    f"`¬ (type_of% @{problem.theorem})`: the archive's statement, as "
+                    f"formalised, is FALSE.\n\n"
+                    "Two readings are possible, and they have to be told apart before "
+                    "anything is announced: either the conjecture is false, or the "
+                    "formalisation is not faithful to the original source. The second is "
+                    "the commoner case.")
             return done(ACCEPTED,
-                        "REFUTATION VALIDA.\n\n" + explanation + "\n\n"
-                        "Applicare il protocollo di docs/04-protocollo-ritrovamenti.md "
-                        "before di crederci: ricontrollo con un program indipendente, "
-                        "confronto con la source_ original, ricerca dello state noto in "
-                        "letteratura.", raw=output)
-        note = "La dimostrazione e' valida."
+                        "VALID REFUTATION.\n\n" + explanation + "\n\n"
+                        "Apply the protocol in docs/04-finding-protocol.md before "
+                        "believing it: re-check with an independent program, compare with "
+                        "the original source, and find out the problem's known state in "
+                        "the literature.", raw=output)
+        note = "The proof is valid."
         if problem.answer_placeholder_in_source:
             note += (
-                "\n\nATTENZIONE — questo problem e' formalizzato con `answer(sorry)`. "
-                "Con l'opzione predefinita dell'archive quel segnaposto diventa `True`, "
-                "quindi l'statement dimostrato e' `True ↔ P`, cioe' l'affermazione che la "
-                "answer alla domanda e' SI'. La check formale e' corretta, ma il "
-                "benchmark ha gia' chosen_one per te il verso della answer: se la answer "
-                "giusta fosse NO, questo statement sarebbe falso e non dimostrabile.")
+                "\n\nNOTE — this problem is formalised with `answer(sorry)`. Under the "
+                "archive's default option that placeholder becomes `True`, so the "
+                "statement proved is `True ↔ P`, the assertion that the answer to the "
+                "question is YES. The formal check is correct, but the benchmark has "
+                "already chosen the direction of the answer for you: if the right answer "
+                "were NO, this statement would be false and unprovable.")
         return done(ACCEPTED, note, raw=output)
 
     fault = _tool_error(output)
     if fault:
-        checks.append(Check("tools coerenti con l'archive", False,
-                            "file .olean con header incompatibile"))
+        checks.append(Check("tools consistent with the archive", False,
+                            ".olean files with an incompatible header"))
         return done(ERROR, fault, errors=_lean_errors(output), raw=output)
     check_name, explanation = _classify(output)
     checks.append(Check(check_name, False, explanation))
@@ -694,7 +695,7 @@ def verify(problem_id: str, candidate: Path | str, *,
 
 
 # ---------------------------------------------------------------------------
-# Verifica di un theorem_ NUOVO, con one_ challenge scritta a mano
+# Verifying a NEW theorem, against a hand-written challenge
 # ---------------------------------------------------------------------------
 
 _RE_CHALLENGE_AXIOM = re.compile(r"^\s*(?:private\s+|protected\s+)?axiom\b", re.MULTILINE)
@@ -705,30 +706,31 @@ def verify_free(challenge_text: str, candidate: Path | str, theorems: list[str],
                   timeout: Optional[int] = None,
                   slot: Optional[int] = None,
                   keep_workspace: bool = False) -> Result:
-    """Verifica theorems che NON stanno nell'archive, against one_ challenge scritta a mano.
+    """Verify theorems that are NOT in the archive, against a hand-written challenge.
 
-    `verify` compare un candidato con un statement dell'archive. Qui la challenge
-    (il module Challenge di comparator) la fornisce chi chiede la check: gli
-    enunciati dei theorems `theorems`, con `sorry` come dimostrazione. Il candidato deve
-    dichiarare gli stessi theorems e dimostrarli. Il resto e' la stessa catena di
-    `verify`: controllo sintattico, compilazione isolata, confronto degli enunciati
-    elaborati, axioms permitted, riesecuzione nel kernel, fingerprint dell'archive.
+    `verify` compares a candidate with a statement of the archive. Here the
+    challenge (comparator's Challenge module) is supplied by whoever asks for the
+    verification: the statements of the theorems in `theorems`, with `sorry` as the
+    proof. The candidate has to declare the same theorems and prove them. The rest
+    is the same chain as `verify`: syntactic pre-scan, isolated compilation,
+    comparison of the elaborated statements, permitted axioms, replay through the
+    kernel, fingerprint of the archive.
 
-    `allowed_modules` sono i modules dell'archive che il candidato puo' importare per
-    leggere definizioni ed enunciati. Appoggiarsi alle loro dimostrazioni, che per i
-    problems open_ sono `sorry`, viene rifiutato dal controllo degli axioms: e' lo
-    stesso argomento della away `type_of%` delle confutazioni.
+    `allowed_modules` are the archive's modules the candidate may import in order to
+    read definitions and statements. Leaning on their proofs, which for open
+    problems are `sorry`, is rejected by the axiom check: the same argument as the
+    `type_of%` route for refutations.
 
-    L'AVVERTENZA CHE CONTA: comparator garantisce che il candidato dimostri
-    esattamente gli enunciati della challenge. Se la challenge enuncia la cosa sbagliata, la
-    check certifica la cosa sbagliata. La challenge va letta da un essere umano, ed e'
-    per questo che deve restare corta.
+    THE WARNING THAT MATTERS: comparator guarantees that the candidate proves
+    exactly the challenge's statements. If the challenge states the wrong thing, the
+    verification certifies the wrong thing. The challenge has to be read by a human
+    being, which is why it has to stay short.
     """
     started = time.time()
     candidate = Path(candidate)
     timeout = timeout or config.TIMEOUT_SECONDS
     checks: list[Check] = []
-    label = "challenge libera: " + ", ".join(theorems)
+    label = "free challenge: " + ", ".join(theorems)
 
     def done(status: str, message: str = "", errors: str = "", raw: str = "") -> Result:
         return Result(problem=label, status=status, checks=checks,
@@ -737,38 +739,38 @@ def verify_free(challenge_text: str, candidate: Path | str, theorems: list[str],
 
     problems = config.check_installation()
     if problems:
-        return done(ERROR, "Ambiente non ready:\n  - " + "\n  - ".join(problems))
+        return done(ERROR, "Environment not ready:\n  - " + "\n  - ".join(problems))
     if not candidate.is_file():
-        return done(ERROR, f"File candidato non found: {candidate}")
+        return done(ERROR, f"Candidate file not found: {candidate}")
     if not theorems:
-        return done(ERROR, "nessun theorem_ da verificare")
+        return done(ERROR, "no theorem to verify")
     if _RE_CHALLENGE_AXIOM.search(challenge_text):
-        return done(ERROR, "la challenge dichiara un assioma: one_ challenge contiene only_ enunciati")
-    missing_ = [t for t in theorems
+        return done(ERROR, "the challenge declares an axiom: a challenge contains statements only")
+    missing = [t for t in theorems
                 if not re.search(r"\btheorem\s+(?:\S*\.)?" + re.escape(t.rsplit(".", 1)[-1])
                                  + r"\b", challenge_text)]
-    if missing_:
-        return done(ERROR, "la challenge non dichiara: " + ", ".join(missing_))
-    checks.append(Check("challenge ben formata", True,
-                        f"{len(theorems)} enunciati, nessun assioma dichiarato"))
+    if missing:
+        return done(ERROR, "the challenge does not declare: " + ", ".join(missing))
+    checks.append(Check("well-formed challenge", True,
+                        f"{len(theorems)} statements, no axiom declared"))
 
     report = guard.check_file(candidate, allowed_module=tuple(allowed_modules) or None)
     if not report.ok:
         details = "\n".join(str(f) for f in report.findings)
-        checks.append(Check("controllo sintattico preventivo", False,
+        checks.append(Check("syntactic pre-scan", False,
                             f"{len(report.findings)} violations"))
-        return done(REJECTED, "Il file contiene costrutti vietati:\n\n" + details,
+        return done(REJECTED, "The file contains forbidden constructs:\n\n" + details,
                     errors=details)
-    checks.append(Check("controllo sintattico preventivo", True,
-                        "niente sorry/admit/axiom/native_decide; modules dell'archive "
-                        "importabili: " + (", ".join(allowed_modules) or "nessuno")))
+    checks.append(Check("syntactic pre-scan", True,
+                        "no sorry/admit/axiom/native_decide; archive modules that may be "
+                        "imported: " + (", ".join(allowed_modules) or "none")))
 
     pool = get_pool()
     owned_slot = slot is None
     if owned_slot:
         slot = pool.acquire()
     sandbox_dir = config.ARCHIVE / config.SANDBOX_SUBDIR
-    sol_name, challenge_name = f"S{slot}", f"Sfida{slot}"
+    sol_name, challenge_name = f"S{slot}", f"Challenge{slot}"
     sol_path = sandbox_dir / f"{sol_name}.lean"
     challenge_path = sandbox_dir / f"{challenge_name}.lean"
     code, output = None, ""
@@ -796,21 +798,21 @@ def verify_free(challenge_text: str, candidate: Path | str, theorems: list[str],
                     tmp_dir / "check.sb",
                     sandbox.writable_dirs(config.ARCHIVE, config.SANDBOX_SUBDIR, tmp_dir),
                     config.ROOT)
-                checks.append(Check("compilazione isolata", True,
-                                    "sandbox-exec: niente rete, write_op only_ nella "
-                                    "folder del module temporaneo"))
+                checks.append(Check("isolated compilation", True,
+                                    "sandbox-exec: no network, writes only in the "
+                                    "temporary module's directory"))
             elif config.USE_SANDBOX:
-                checks.append(Check("compilazione isolata", False,
-                                    "sandbox-exec non available: compilazione NON isolata"))
+                checks.append(Check("isolated compilation", False,
+                                    "sandbox-exec not available: compilation NOT isolated"))
 
             ready, prep_output = prepare_challenge(challenge_module, timeout)
             if not ready:
-                checks.append(Check("module della challenge ready", False,
-                                    "la challenge non compila"))
-                return done(ERROR, "La SFIDA non compila: va corretto il text della challenge, "
-                                   "non il candidato.",
+                checks.append(Check("challenge module ready", False,
+                                    "the challenge does not compile"))
+                return done(ERROR, "The CHALLENGE does not compile: it is the challenge's "
+                                   "text that needs fixing, not the candidate.",
                             errors=_lean_errors(prep_output), raw=prep_output)
-            checks.append(Check("module della challenge ready", True, challenge_module))
+            checks.append(Check("challenge module ready", True, challenge_module))
 
             fingerprint_before = None
             if config.CHECK_FINGERPRINT:
@@ -829,16 +831,16 @@ def verify_free(challenge_text: str, candidate: Path | str, theorems: list[str],
                     fingerprint_module.compute(config.ARCHIVE,
                                             exclude=Path(config.SANDBOX_SUBDIR).name))
                 if differences:
-                    checks.append(Check("archive intatto after la check", False,
+                    checks.append(Check("archive intact after the verification", False,
                                         "; ".join(differences)))
                     return done(ERROR,
-                                "LA VERIFICA NON E' ATTENDIBILE: l'archive e' cambiato "
-                                "durante la check.\n"
+                                "THIS VERIFICATION IS NOT TRUSTWORTHY: the archive changed "
+                                "during it.\n"
                                 + "\n".join("  - " + d for d in differences),
                                 errors=_lean_errors(output), raw=output)
-                checks.append(Check("archive intatto after la check", True,
-                                    f"{fingerprint_before.n_content_files} file dell'archive e "
-                                    f"{fingerprint_before.n_metadata_files} delle dipendenze invariati"))
+                checks.append(Check("archive intact after the verification", True,
+                                    f"{fingerprint_before.n_content_files} archive files and "
+                                    f"{fingerprint_before.n_metadata_files} dependency files unchanged"))
     finally:
         if not keep_workspace:
             for name, path in ((sol_name, sol_path), (challenge_name, challenge_path)):
@@ -854,29 +856,29 @@ def verify_free(challenge_text: str, candidate: Path | str, theorems: list[str],
             pool.release(slot)
 
     if code == -signal.SIGKILL:
-        checks.append(Check("entro il tempo maximum", False, f"passed_ {timeout}s"))
-        return done(TIMEOUT, f"La check ha passed_one il tempo maximum di {timeout} seconds.",
+        checks.append(Check("within the time limit", False, f"exceeded {timeout}s"))
+        return done(TIMEOUT, f"The verification exceeded the time limit of {timeout} seconds.",
                     errors=_lean_errors(output), raw=output)
     if code == 0 and "Your solution is okay!" in output:
         for name, detail in [
-            ("compila senza errors", "il module candidato e' state compilato da lake"),
-            ("enunciati identici alla challenge",
-             "confronto sull'albero sintattico esportato da lean4export, non sul text"),
-            ("definizioni usate intatte",
-             "le costanti usate negli enunciati coincidono con quelle della challenge e "
-             "dell'archive"),
-            ("axioms permitted", ", ".join(config.PERMITTED_AXIOMS)),
-            ("accepted_one dal kernel", "termini di trial rieseguiti nel kernel di Lean"),
+            ("compiles without errors", "the candidate module was compiled by lake"),
+            ("statements identical to the challenge",
+             "compared on the syntax tree exported by lean4export, not on the text"),
+            ("definitions used are intact",
+             "the constants used in the statements match those of the challenge and of "
+             "the archive"),
+            ("permitted axioms", ", ".join(config.PERMITTED_AXIOMS)),
+            ("accepted by the kernel", "proof terms replayed through Lean's kernel"),
         ]:
             checks.append(Check(name, True, detail))
         return done(ACCEPTED,
-                    "Tutti gli enunciati della challenge sono dimostrati.\n\n"
-                    "Quello che la check NON dice: che la challenge enunci la cosa giusta. "
-                    "Va letta.", raw=output)
+                    "Every statement of the challenge is proved.\n\n"
+                    "What the verification does NOT say: that the challenge states the "
+                    "right thing. It has to be read.", raw=output)
     fault = _tool_error(output)
     if fault:
-        checks.append(Check("tools coerenti con l'archive", False,
-                            "file .olean con header incompatibile"))
+        checks.append(Check("tools consistent with the archive", False,
+                            ".olean files with an incompatible header"))
         return done(ERROR, fault, errors=_lean_errors(output), raw=output)
     check_name, explanation = _classify(output)
     checks.append(Check(check_name, False, explanation))
@@ -884,22 +886,22 @@ def verify_free(challenge_text: str, candidate: Path | str, theorems: list[str],
 
 
 # ---------------------------------------------------------------------------
-# Verifica in parallelo
+# Verifying in parallel
 # ---------------------------------------------------------------------------
 
 def verify_many(jobs: list[tuple[str, Path]], *, jobs_parallel: Optional[int] = None,
                 timeout: Optional[int] = None) -> list[Result]:
-    """Verifica piu' candidates, con al maximum N processi Lean insieme."""
+    """Verify several candidates, with at most N Lean processes at once."""
     n = jobs_parallel or config.MAX_PARALLEL
     pool = SlotPool(n)
     index = ProblemIndex.load()
 
-    # Tutte le sfide si portano in even PRIMA di cominciare: e' l'unico step
-    # che modifica l'archive, e farlo mentre le checks girano in parallelo
-    # falsa il controllo dell'fingerprint.
-    for problema_id, _ in jobs:
+    # Every challenge is brought up to date BEFORE starting: it is the only step
+    # that modifies the archive, and doing it while verifications run in parallel
+    # falsifies the fingerprint check.
+    for pid, _ in jobs:
         try:
-            prepare_challenge(index.get(problema_id).module, timeout or config.TIMEOUT_SECONDS)
+            prepare_challenge(index.get(pid).module, timeout or config.TIMEOUT_SECONDS)
         except KeyError:
             pass
     results: list[Optional[Result]] = [None] * len(jobs)
@@ -908,8 +910,8 @@ def verify_many(jobs: list[tuple[str, Path]], *, jobs_parallel: Optional[int] = 
         s = pool.acquire()
         try:
             results[i] = verify(problem_id, path, index=index, timeout=timeout, slot=s)
-        except Exception as e:              # non lasciamo morire un thread in silence
-            results[i] = Result(problem=problem_id, status=ERROR, message=f"eccezione: {e!r}")
+        except Exception as e:              # never let a thread die in silence
+            results[i] = Result(problem=problem_id, status=ERROR, message=f"exception: {e!r}")
         finally:
             pool.release(s)
 
@@ -923,23 +925,23 @@ def verify_many(jobs: list[tuple[str, Path]], *, jobs_parallel: Optional[int] = 
 
 
 # ---------------------------------------------------------------------------
-# Riga di command
+# Command line
 # ---------------------------------------------------------------------------
 
 def main() -> int:
     ap = argparse.ArgumentParser(
-        description="Verifica one_ dimostrazione Lean against l'statement original dell'archive.")
-    ap.add_argument("problem", nargs="?", help="name full_ del theorem_, es. Erdos10.erdos_10")
-    ap.add_argument("file", nargs="?", help="file Lean candidato")
-    ap.add_argument("--json", action="store_true", help="show il result_value in JSON")
+        description="Verify a Lean proof against the archive's original statement.")
+    ap.add_argument("problem", nargs="?", help="the theorem's full name, e.g. Erdos10.erdos_10")
+    ap.add_argument("file", nargs="?", help="the candidate Lean file")
+    ap.add_argument("--json", action="store_true", help="print the result as JSON")
     ap.add_argument("--timeout", type=int, default=None, help="seconds (default: %d)" % config.TIMEOUT_SECONDS)
-    ap.add_argument("--jobs", type=int, default=None, help="processi Lean in parallelo (default: %d)" % config.MAX_PARALLEL)
-    ap.add_argument("--batch", help="file JSONL con lines {\"problem\":..., \"file\":...}")
-    ap.add_argument("--confutazione", action="store_true",
-                    help="check la NEGAZIONE del problem (only_ per i problems con "
-                         "answer(sorry) proposizionale): l'statement diventa `False ↔ P`")
+    ap.add_argument("--jobs", type=int, default=None, help="Lean processes in parallel (default: %d)" % config.MAX_PARALLEL)
+    ap.add_argument("--batch", help="a JSONL file with lines {\"problem\":..., \"file\":...}")
+    ap.add_argument("--refute", action="store_true",
+                    help="verify the NEGATION of the problem (only for problems with a "
+                         "propositional answer(sorry)): the statement becomes `False ↔ P`")
     ap.add_argument("--keep-workspace", action="store_true",
-                    help="non cancellare il module Lean generato (per capire cosa e' successo)")
+                    help="do not delete the generated Lean module (to see what happened)")
     args = ap.parse_args()
 
     if args.batch:
@@ -956,7 +958,7 @@ def main() -> int:
             for r in results:
                 print(r.render()); print()
             ok = sum(1 for r in results if r.accepted)
-            print(f"=== {ok}/{len(results)} accettati ===")
+            print(f"=== {ok}/{len(results)} accepted ===")
         return 0 if all(r.accepted for r in results) else 1
 
     if not args.problem or not args.file:
@@ -965,7 +967,7 @@ def main() -> int:
 
     r = verify(args.problem, args.file, timeout=args.timeout,
                keep_workspace=args.keep_workspace,
-               mode=REFUTATION if args.confutazione else STRICT)
+               mode=REFUTATION if args.refute else STRICT)
     print(r.to_json() if args.json else r.render())
     return 0 if r.accepted else 1
 

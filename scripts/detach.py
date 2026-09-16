@@ -1,9 +1,9 @@
 """
 Avvia un command DISTACCATO dal processo che lo lancia.
 
-Perche' serve: `nohup ... &` da one_ shell che poi exits non basta sempre — su
+Perche' serve: `nohup ... &` da one shell che poi exits non basta sempre — su
 macOS il group di processi viene comunque terminato quando la shell chiamante
-muore. `start_new_session=True` mette il command in one_ sessione tutta sua, e
+muore. `start_new_session=True` mette il command in one sessione tutta sua, e
 li' sopravvive.
 
 Uso:
@@ -39,9 +39,9 @@ def main() -> int:
     # se ne sta girando one con lo stesso name, non si raddoppia
     if pid_file.is_file():
         try:
-            old_ = int(pid_file.read_text().strip())
-            os.kill(old_, 0)
-            print(f"il job '{name}' sta gia' girando (PID {old_})")
+            old = int(pid_file.read_text().strip())
+            os.kill(old, 0)
+            print(f"il job '{name}' sta gia' girando (PID {old})")
             return 1
         except (ValueError, ProcessLookupError, PermissionError):
             pass

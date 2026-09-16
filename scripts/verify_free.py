@@ -1,4 +1,4 @@
-"""Verifica theorems new_items against one_ challenge scritta a mano (verify.verify_free).
+"""Verifica theorems new_items against one challenge scritta a mano (verify.verify_free).
 
     env FCS_ARCHIVE=$PWD/external/fc-main FCS_INDEX=$PWD/verifier/problem_index_main.json \\
       .venv/bin/python scripts/verify_free.py \\
@@ -40,11 +40,11 @@ def main() -> int:
     if a.report:
         Path(a.report).write_text(json.dumps({
             "result": r.status, "seconds": round(r.duration_s, 1),
-            "controlli": [{"name": c.name, "passed_one": c.passed, "detail": c.detail}
+            "controlli": [{"name": c.name, "exceeded": c.passed, "detail": c.detail}
                           for c in r.checks],
             "message": r.message, "errors": r.errors,
             "uscita_comparator": r.raw_output[-6000:]}, indent=1, ensure_ascii=False))
-    return 0 if r.status == "ACCETTATO" or r.status.upper().startswith("ACC") else 1
+    return 0 if r.status == "ACCEPTED" or r.status.upper().startswith("ACC") else 1
 
 
 if __name__ == "__main__":

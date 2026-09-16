@@ -8,7 +8,7 @@
 #   ./run.sh segui     [name]               guarda il log che scorre
 #   ./run.sh guarda [--segui]               che cosa sta facendo l'agente adesso
 #   ./run.sh ferma     [name]               interrompe
-#   ./run.sh resume  <name>               riparte dall'last_ checkpoint
+#   ./run.sh resume  <name>               riparte dall'last checkpoint
 #
 # I jobs disponibili sono elencati da `./run.sh` senza arguments.
 # ---------------------------------------------------------------------------
@@ -36,7 +36,7 @@ COMANDI
   segui    [name]               mostra il log mentre scorre (Ctrl-C per uscire:
                                 il job continua).
   ferma    [name]               interrompe un job. Senza name, li list_them.
-  resume <name>               riparte dall'last_ checkpoint.
+  resume <name>               riparte dall'last checkpoint.
 
 JOBS
   agente       Fa tentare a un agente one o piu' problems.
@@ -45,10 +45,10 @@ JOBS
 
   caccia       Esegue le ricerche di controesempi gia' preparate in
                runs/hunt/. Non usa l'API e non costa niente.
-               opzioni:  --only_ NOME   --hours N
+               opzioni:  --only NOME   --hours N
 
   snapshot     Prepara lo snapshot dell'archive da un commit fisso di main.
-               Non usa l'API. Dura circa un'now_ e occupa one_ decina di GB.
+               Non usa l'API. Dura circa un'now e occupa one decina di GB.
 
   test         Esegue la suite di test del progetto.
 
@@ -82,7 +82,7 @@ cmd_stima() {
       ;;
     caccia)
       echo "Lavoro: caccia ai controesempi"
-      echo "  Costo in crediti API: ZERO. Gira only_ sul tuo computer."
+      echo "  Costo in crediti API: ZERO. Gira only sul tuo computer."
       local n; n=$(ls "$ROOT/runs/hunt"/*.json 2>/dev/null | wc -l | tr -d ' ')
       echo "  Ricerche preparate: $n"
       echo "  Durata: quella che decidi con --hours (predefinito: finche' non la fermi)."
@@ -91,7 +91,7 @@ cmd_stima() {
     snapshot)
       echo "Lavoro: preparazione dello snapshot da main"
       echo "  Costo in crediti API: ZERO."
-      echo "  Durata: circa un'now_ (scaricamento della cache di Mathlib e compilazione)."
+      echo "  Durata: circa un'now (scaricamento della cache di Mathlib e compilazione)."
       echo "  Spazio su disco: circa 11 GB."
       echo "  Spazio libero adesso: $(df -g "$ROOT" | tail -1 | awk '{print $4}') GB."
       ;;
@@ -142,7 +142,7 @@ cmd_lancia() {
       ;;
     snapshot)
       cmd_stima snapshot
-      conferma "Scarichera' diversi GB e compilera' per circa un'now_." || exit 0
+      conferma "Scarichera' diversi GB e compilera' per circa un'now." || exit 0
       command=(bash "$ROOT/scripts/setup_snapshot_main.sh")
       ;;
     test)
@@ -160,8 +160,8 @@ cmd_lancia() {
   } > "$(file_meta "$job")"
 
   # `caffeinate -i` impedisce al computer di addormentarsi mentre work.
-  # Senza, un job di otto hours si interrompe al prime_ coperchio chiuso.
-  # Il distacco passa da scripts/distacca.py: `nohup ... &` da one_ shell che poi
+  # Senza, un job di otto hours si interrompe al first coperchio chiuso.
+  # Il distacco passa da scripts/distacca.py: `nohup ... &` da one shell che poi
   # exits non basta su macOS, il group di processi viene terminato comunque.
   "$PY" "$ROOT/scripts/distacca.py" "$job" -- caffeinate -i "${command[@]}"
 
@@ -210,7 +210,7 @@ cmd_guarda() {
     # `tac` e' GNU e su macOS non esiste: `tail -r` fa la stessa cosa
     ls -t "$ROOT/runs/job" 2>/dev/null | tail -r | nl -w3 -s'. ' | sed 's/^/   /'
     echo
-    echo "  L'last_ della list_ e' quello su cui sta lavorando adesso."
+    echo "  L'last della items e' quello su cui sta lavorando adesso."
   else
     echo "   (nessuna folder di job ancora)"
   fi
@@ -218,18 +218,18 @@ cmd_guarda() {
   echo
   echo "  ── LEAN sta verificando in questo istante? ───────────────────"
   if pgrep -f "lean --" >/dev/null 2>&1 || pgrep -f "lake env" >/dev/null 2>&1; then
-    echo "   sì: one_ check e' in corso (dura dai 30 seconds ai 2 minuti)"
+    echo "   sì: one check e' in corso (dura dai 30 seconds ai 2 minuti)"
   else
     echo "   no: in questo istante l'agente sta pensando o scrivendo code"
   fi
 
   echo
   echo "  ── L'ULTIMO PROGRAMMA che il model ha scritto da sé ────────"
-  local last_
-  last_=$(ls -t "$ROOT"/runs/job/*/program.py 2>/dev/null | head -1)
-  if [ -n "$last_" ]; then
-    echo "   da $(dirname "$last_" | xargs basename):"
-    sed 's/^/     /' "$last_" | head -20
+  local last
+  last=$(ls -t "$ROOT"/runs/job/*/program.py 2>/dev/null | head -1)
+  if [ -n "$last" ]; then
+    echo "   da $(dirname "$last" | xargs basename):"
+    sed 's/^/     /' "$last" | head -20
   else
     echo "   (nessuno: non ha ancora usato run_python)"
   fi
@@ -244,14 +244,14 @@ import json, sys
 from pathlib import Path
 d = json.loads(Path(sys.argv[1]).read_text())
 if "spent" in d:
-    print(f"   last_ report: {Path(sys.argv[1]).name}")
+    print(f"   last report: {Path(sys.argv[1]).name}")
     print(f"   spent ${d['spent']:.4f} su ${d['budget']:.2f}")
-    ris = sum(1 for t in d.get('attempts', []) if t['solved_one'])
-    print(f"   solved_ {ris} su {len(d.get('attempts', []))}")
+    ris = sum(1 for t in d.get('attempts', []) if t['solved'])
+    print(f"   solved {ris} su {len(d.get('attempts', []))}")
 FINE
   fi
-  echo "   (mentre un giro e' in corso la spesa si vede only_ alla end:"
-  echo "    il report viene scritto quando l'last_ problem e' finito)"
+  echo "   (mentre un giro e' in corso la spesa si vede only alla end:"
+  echo "    il report viene scritto quando l'last problem e' finito)"
   echo
 }
 

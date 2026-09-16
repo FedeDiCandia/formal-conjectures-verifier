@@ -2,7 +2,7 @@
 Stima quanto costerebbe far lavorare l'agent su certi problems.
 
 Non chiama l'API e non spende niente: usa il count dei token, che e'
-gratuito, e i data_ MISURATI nelle esecuzioni precedenti.
+gratuito, e i data MISURATI nelle esecuzioni precedenti.
 
 Ogni number prodotto dice da dove viene:
   MISURATO  osservato in un'esecuzione vera
@@ -52,14 +52,14 @@ def estimate(problems: list[str], budget: float, effort: str, max_iterations: in
 
     print("DA COSA PARTO (MISURATO)")
     print("-" * 70)
-    print(f"  Una sola esecuzione vera, su un only_ problem, con effort high:")
+    print(f"  Una sola esecuzione vera, su un only problem, con effort high:")
     print(f"    {MEASURE['chiamate_osservate']} calls")
-    print(f"    cost mean_ per call     ${MEASURE['costo_medio_chiamata']:.4f}")
-    print(f"    cost median_ per call   ${MEASURE['costo_mediano_chiamata']:.4f}")
+    print(f"    cost mean per call     ${MEASURE['costo_medio_chiamata']:.4f}")
+    print(f"    cost median per call   ${MEASURE['costo_mediano_chiamata']:.4f}")
     print(f"    cost maximum per call   ${MEASURE['costo_massimo_chiamata']:.4f}")
-    print(f"    tempo mean_ per iteration   {MEASURE['secondi_per_iterazione']} s")
+    print(f"    tempo mean per iteration   {MEASURE['secondi_per_iterazione']} s")
     print()
-    print("  ATTENZIONE: un only_ problem osservato. Questi numbers servono a")
+    print("  ATTENZIONE: un only problem osservato. Questi numbers servono a")
     print("  farsi un'idea, non a fare previsioni precise. La distribuzione era")
     print("  molto storta: two calls su nove valevano il 60% della spesa.")
     print()
@@ -72,19 +72,19 @@ def estimate(problems: list[str], budget: float, effort: str, max_iterations: in
 
     print("QUANTO POTREBBE COSTARE (STIMATO)")
     print("-" * 70)
-    mean_ = MEASURE["costo_medio_chiamata"] * factor
-    median_ = MEASURE["costo_mediano_chiamata"] * factor
+    mean = MEASURE["costo_medio_chiamata"] * factor
+    median = MEASURE["costo_mediano_chiamata"] * factor
     for label, per_call, iterations in [
-        ("ottimistico (poche iterations, calls corte)", median_, 5),
-        ("realistico  (come l'unica esecuzione osservata)", mean_, 9),
-        ("pessimistico (arriva al cap di spesa)", mean_, max_iterations),
+        ("ottimistico (poche iterations, calls corte)", median, 5),
+        ("realistico  (come l'unica esecuzione osservata)", mean, 9),
+        ("pessimistico (arriva al cap di spesa)", mean, max_iterations),
     ]:
         total = min(per_call * iterations, cap) * n
         minuti = iterations * MEASURE["secondi_per_iterazione"] * n / 60
         print(f"  {label}")
         print(f"      ${total:.2f} in tutto, circa {minuti:.0f} minuti")
     print()
-    print(f"  LIMIT RIGIDO: ${budget:.2f}. Non puo' essere passed_one: before di")
+    print(f"  LIMIT RIGIDO: ${budget:.2f}. Non puo' essere exceeded: before di")
     print(f"  ogni call si compute il cost maximum possibile e, se non ci")
     print(f"  sta nel residue, la call non parte.")
     print()
@@ -95,7 +95,7 @@ def estimate(problems: list[str], budget: float, effort: str, max_iterations: in
         try:
             idx = ProblemIndex.load()
         except FileNotFoundError:
-            print("  (index non built_: non posso descriverli)")
+            print("  (index non built: non posso descriverli)")
             return
         for name in problems:
             try:
@@ -103,9 +103,9 @@ def estimate(problems: list[str], budget: float, effort: str, max_iterations: in
             except KeyError as e:
                 print(f"  ! {name}: {str(e)[:80]}")
                 continue
-            state = ("solved_one nell'archive con trial pulita"
+            state = ("solved nell'archive con trial pulita"
                      if pr.archive_proof_is_clean else
-                     "solved_one nell'archive ma con axioms non permitted"
+                     "solved nell'archive ma con axioms non permitted"
                      if pr.proof_is_sorry_free else "APERTO")
             print(f"  {name}")
             print(f"      {pr.category} | {state} | statement {len(pr.statement)} chars")

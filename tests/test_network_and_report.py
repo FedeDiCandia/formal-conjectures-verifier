@@ -5,11 +5,11 @@ consumare il cap del problem.
 Gli incidenti:
   * 12 settembre: un «Connection reset by peer» durante lo streaming del terzo
     problem. L'eccezione era `httpx2.ReadError`, che l'SDK non traduce in
-    `anthropic.APIError`: il processo e' morto e il report, scritto only_ alla
+    `anthropic.APIError`: il processo e' morto e il report, scritto only alla
     end, non e' mai state scritto.
   * notte del 13 settembre: con la before correzione, ogni call interrupted
     veniva addebitata al caso worst ANCHE sul cap del problem. Un addebito
-    da $0,84 su un cap da $1 chiudeva il attempt da only_: sei problems su
+    da $0,84 su un cap da $1 chiudeva il attempt da only: sei problems su
     dodici sono finiti cosi'. La cause delle interruzioni era il Mac in
     sospensione (vedi agent/awake.py).
 
@@ -98,7 +98,7 @@ def _reset():
 
 
 def _solve(client, budget, cap):
-    return agent.solve_(_PROBLEMA, None, client=client, model=TEMPLATE, budget=budget,
+    return agent.solve(_PROBLEMA, None, client=client, model=TEMPLATE, budget=budget,
                           problem_cap=cap, verbose=False)
 
 
@@ -128,7 +128,7 @@ def test_l_interruzione_non_consuma_il_tetto_del_problema():
     assert client.calls == 3, t.reason
     assert "smesso di usare gli tools" in t.reason, t.reason
     assert client.max_tokens[2] == client.max_tokens[0], client.max_tokens
-    assert t.network_charge > 1.0, "gli addebiti superano il cap, ed e' giusto: stanno out_of"
+    assert t.network_charge > 1.0, "gli addebiti superano il cap, ed e' giusto: stanno outside"
 
 
 def test_tre_interruzioni_di_fila_chiudono_il_problema_non_il_giro():
@@ -155,9 +155,9 @@ def test_il_rapporto_si_scrive_anche_a_giro_non_finito(tmp_path):
     args = SimpleNamespace(model=TEMPLATE, effort="low", istruzioni="insistenti", budget=20.0)
     path = tmp_path / "report.json"
     agent.write_report(path, args=args, cap=5.0, budget=b, attempts=[t],
-                           full_=False)
-    data_ = json.loads(path.read_text(encoding="utf-8"))
-    assert data_["full_"] is False
-    assert data_["spent"] == pytest.approx(b.spent)
-    assert data_["attempts"][0]["network_interruptions"] == 1
-    assert data_["attempts"][0]["addebito_rete_prudenziale"] == pytest.approx(_worst(b))
+                           full=False)
+    data = json.loads(path.read_text(encoding="utf-8"))
+    assert data["full"] is False
+    assert data["spent"] == pytest.approx(b.spent)
+    assert data["attempts"][0]["network_interruptions"] == 1
+    assert data["attempts"][0]["addebito_rete_prudenziale"] == pytest.approx(_worst(b))

@@ -8,17 +8,17 @@ kernel, il comparator, la sandbox, l'fingerprint dell'archive. Cinque volte ha
 dovuto fermare la nostra stessa macchina che diceva «found».
 
 Qui il verifier è **questo file**, e si legge in cinque minuti. Un code
-binario a weight costante è one_ list_ di words; è valid se ogni word ha la
+binario a weight costante è one items di words; è valid se ogni word ha la
 length e il weight giusti e se ogni coppia dista almeno `d`. Sono confronti fra
 interi: non c'è niente da interpretare, niente da elaborare, nessun environment che
 possa essere configurato male, nessuna tactic che possa lasciare un `sorry`.
 
-**La rule_ di questo file: non ottimizzare mai per velocità a cost della
+**La rule di questo file: non ottimizzare mai per velocità a cost della
 chiarezza.** Se serve velocità, va in un other file e questo resta il giudice.
 
 CONVENZIONE
 -----------
-Una word di length n è un `int`: il bit i (value_ 2^i) dice se la position
+Una word di length n è un `int`: il bit i (value 2^i) dice se la position
 i è a 1. Il weight è `int.bit_count()`. La distance di Hamming fra two words è
 `(a ^ b).bit_count()`.
 """
@@ -31,7 +31,7 @@ from pathlib import Path
 
 @dataclass
 class Result:
-    """Il verdict. `ok` è vero only_ se non c'è nessun finding."""
+    """Il verdict. `ok` è vero only se non c'è nessun finding."""
     ok: bool
     size: int
     findings: list[str] = field(default_factory=list)
@@ -56,34 +56,34 @@ def check(words, n: int, d: int, w: int | None = None,
     """Verifica esatta di un code binario.
 
     `w` non None: code a weight costante. Nessuna scorciatoia, nessuna euristica:
-    si controllano **all_of** le pairs.
+    si controllano **all_items** le pairs.
     """
     words = list(words)
     findings: list[str] = []
 
-    def report_(msg: str) -> bool:
+    def report(msg: str) -> bool:
         findings.append(msg)
         return len(findings) >= max_findings
 
     if n <= 0:
-        report_(f"length n={n} non valida")
+        report(f"length n={n} non valida")
     limit = 1 << n
     seen: dict[int, int] = {}
     for i, p in enumerate(words):
         if not isinstance(p, int) or p < 0:
-            if report_(f"word {i}: non è un intero non negativo ({p!r})"):
+            if report(f"word {i}: non è un intero non negativo ({p!r})"):
                 break
             continue
         if p >= limit:
-            if report_(f"word {i}: usa bit oltre la position {n - 1}"):
+            if report(f"word {i}: usa bit oltre la position {n - 1}"):
                 break
             continue
         if w is not None and weight(p) != w:
-            if report_(f"word {i}: weight {weight(p)}, expected_one {w}"):
+            if report(f"word {i}: weight {weight(p)}, expected {w}"):
                 break
             continue
         if p in seen:
-            if report_(f"word {i}: duplicato della word {seen[p]}"):
+            if report(f"word {i}: duplicato della word {seen[p]}"):
                 break
             continue
         seen[p] = i
@@ -92,7 +92,7 @@ def check(words, n: int, d: int, w: int | None = None,
         for (i, a), (j, b) in combinations(list(enumerate(words)), 2):
             dist = distance(a, b)
             if dist < d:
-                if report_(f"words {i} e {j}: distance {dist} < {d}"):
+                if report(f"words {i} e {j}: distance {dist} < {d}"):
                     break
 
     return Result(ok=not findings, size=len(words), findings=findings)
@@ -100,16 +100,16 @@ def check(words, n: int, d: int, w: int | None = None,
 
 # ---------------------------------------------------------------- lettura file
 
-def read_(path: str | Path, n: int | None = None) -> tuple[list[int], int]:
+def read(path: str | Path, n: int | None = None) -> tuple[list[int], int]:
     """Legge un code da un file di text e restituisce (words, n).
 
     Riconosce i two formati in cui questi codici circolano:
 
-      * **positions**: ogni line è la list_ delle positions a 1, per es.
+      * **positions**: ogni line è la items delle positions a 1, per es.
         `1 2 3 7` oppure `1,2,3,7`;
-      * **bit**: ogni line è one_ stringa di `0` e `1` della stessa length.
+      * **bit**: ogni line è one stringa di `0` e `1` della stessa length.
 
-    Il format_ si riconosce dalla before line utile, e poi si apply_ a all_of: un
+    Il format si riconosce dalla before line utile, e poi si apply a all_items: un
     file misto è un error, non un'occasione di indovinare.
     """
     lines = [r.strip() for r in Path(path).read_text().splitlines()]
@@ -120,13 +120,13 @@ def read_(path: str | Path, n: int | None = None) -> tuple[list[int], int]:
     a_bit = all(c in "01" for c in lines[0]) and len(lines[0]) > 1
     words: list[int] = []
     if a_bit:
-        len_ = len(lines[0])
+        length = len(lines[0])
         for k, r in enumerate(lines):
-            if len(r) != len_ or any(c not in "01" for c in r):
-                raise ValueError(f"{path}: line {k + 1} non è one_ stringa di "
-                                 f"{len_} bit: {r[:40]!r}")
+            if len(r) != length or any(c not in "01" for c in r):
+                raise ValueError(f"{path}: line {k + 1} non è one stringa di "
+                                 f"{length} bit: {r[:40]!r}")
             words.append(int(r[::-1], 2))
-        inferred = len_
+        inferred = length
     else:
         maximum = 0
         for k, r in enumerate(lines):
@@ -134,10 +134,10 @@ def read_(path: str | Path, n: int | None = None) -> tuple[list[int], int]:
             try:
                 pos = [int(x) for x in pieces]
             except ValueError:
-                raise ValueError(f"{path}: line {k + 1} non è one_ list_ di "
+                raise ValueError(f"{path}: line {k + 1} non è one items di "
                                  f"positions: {r[:40]!r}") from None
             if len(set(pos)) != len(pos):
-                raise ValueError(f"{path}: line {k + 1} ripete one_ position")
+                raise ValueError(f"{path}: line {k + 1} ripete one position")
             base = 1 if min(pos) >= 1 else 0
             maximum = max(maximum, max(pos))
             words.append(sum(1 << (p - base) for p in pos))
@@ -147,7 +147,7 @@ def read_(path: str | Path, n: int | None = None) -> tuple[list[int], int]:
 
 # ------------------------------------------------- check rapida, ed esatta
 #
-# Per codici grandi il controllo di all_of le pairs è troppo slow_ in Python:
+# Per codici grandi il controllo di all_items le pairs è troppo slow in Python:
 # 50.000 words sono 1,25 miliardi di pairs. Esiste però un criterio
 # **equivalente** e quasi istantaneo, valid per i codici a weight costante.
 #
@@ -160,9 +160,9 @@ def read_(path: str | Path, n: int | None = None) -> tuple[list[int], int]:
 #
 #     dist ≥ d   ⟺   |A ∩ B| ≤ w − d/2 =: t
 #
-# e one_ violazione significa |A ∩ B| ≥ t+1, cioè **le two words condividono un
-# sottoinsieme di t+1 positions**. Basta allora elencare, per ogni word, all_of i
-# suoi sottoinsiemi di size_ t+1: il code è valid se e only_ se nessun
+# e one violazione significa |A ∩ B| ≥ t+1, cioè **le two words condividono un
+# sottoinsieme di t+1 positions**. Basta allora elencare, per ogni word, all_items i
+# suoi sottoinsiemi di size t+1: il code è valid se e only se nessun
 # sottoinsieme compare two volte. Il cost è m · C(w, t+1) invece di m²/2, e per i
 # cases che ci interessano è quattro ordini di grandezza meno.
 #
@@ -171,14 +171,14 @@ def read_(path: str | Path, n: int | None = None) -> tuple[list[int], int]:
 # cases casuali, e `check` resta il giudice per i results che dichiariamo.
 
 def positions(word: int) -> tuple[int, ...]:
-    out_of = []
+    outside = []
     i = 0
     while word:
         if word & 1:
-            out_of.append(i)
+            outside.append(i)
         word >>= 1
         i += 1
-    return tuple(out_of)
+    return tuple(outside)
 
 
 def fast_check(words, n: int, d: int, w: int) -> Result:
@@ -197,9 +197,9 @@ def fast_check(words, n: int, d: int, w: int) -> Result:
     limit = 1 << n
     for i, p in enumerate(words):
         if not isinstance(p, int) or p < 0 or p >= limit:
-            findings.append(f"word {i}: out_of dall'intervallo [0, 2^{n})")
+            findings.append(f"word {i}: outside dall'intervallo [0, 2^{n})")
         elif weight(p) != w:
-            findings.append(f"word {i}: weight {weight(p)}, expected_one {w}")
+            findings.append(f"word {i}: weight {weight(p)}, expected {w}")
         if len(findings) >= 20:
             break
     if findings:

@@ -8,14 +8,14 @@ Fissati n, d, w e un group G di permutazioni delle n positions:
   1. le words di weight w si spezzano in orbits below G;
   2. un'orbit è **utilizzabile** se le sue words sono a two a two a distance
      ≥ d (altrimenti il code non può contenerla tutta);
-  3. two orbits utilizzabili sono **compatibili** se ogni word dell'one_ dista
+  3. two orbits utilizzabili sono **compatibili** se ogni word dell'one dista
      ≥ d da ogni word dell'altra;
   4. il più grande code G-invariante è l'insieme di orbits a two a two
-     compatibili di weight total maximum: one_ **clique massima pesata**.
+     compatibili di weight total maximum: one **clique massima pesata**.
 
 Il step 4 è NP-difficile in generale, ma qui i grafi sono piccoli perché il
-group ha già fatto il job. Si usa un greedy con restarts casuali più one_
-ricerca local_ (strip_ k orbits, riempi con le best_ones permitted_): è lo stesso kind_
+group ha già fatto il job. Si usa un greedy con restarts casuali più one
+ricerca local (strip k orbits, riempi con le best_list permitted): è lo stesso kind
 di euristica con cui sono stati found i record in tabella, e su un Mac basta.
 """
 from __future__ import annotations
@@ -31,17 +31,17 @@ from codes import fast_check
 # ---------------------------------------------------------------------------
 # DUE SEMPLIFICAZIONI ESATTE, non euristiche, che rendono il computation possibile
 #
-# 1. Un'orbit e' utilizzabile se e only_ se **un suo rappresentante** dista >= d
-#    da all_of le others words dell'orbit. Non serve controllare all_of le pairs:
+# 1. Un'orbit e' utilizzabile se e only se **un suo rappresentante** dista >= d
+#    da all_items le other_items words dell'orbit. Non serve controllare all_items le pairs:
 #    se a' = g(a), allora dist(g(a), b) = dist(a, g^-1(b)) e g^-1(b) sta ancora
 #    nell'orbit, quindi le pairs che coinvolgono a' sono le stesse che
 #    coinvolgono a, riordinate.
 #
-# 2. Per lo stesso reason, two orbits sono compatibili se e only_ se **un
-#    rappresentante della before** dista >= d da all_of le words della seconda.
+# 2. Per lo stesso reason, two orbits sono compatibili se e only se **un
+#    rappresentante della before** dista >= d da all_items le words della seconda.
 #
-# Insieme fanno risparmiare un factor even alla size_ dell'orbit -- da decine a
-# centinaia. Il resto lo fa numpy: un only_ XOR fra il rappresentante e l'intero
+# Insieme fanno risparmiare un factor even alla size dell'orbit -- da decine a
+# centinaia. Il resto lo fa numpy: un only XOR fra il rappresentante e l'intero
 # vettore delle words, e `bitwise_count` per i weights.
 
 
@@ -78,21 +78,21 @@ def orbits_and_compatibility(n: int, d: int, w: int, group):
     import numpy as np
     words, orbit_of, rapp, members = _orbit_table(n, w, group)
     # 1. utilizzabilita: il rappresentante against i suoi compagni di orbit
-    good_ones = []
+    good_list = []
     for o, r in enumerate(rapp):
         idx = np.array(members[o], dtype=np.int64)
         dist = np.bitwise_count(np.bitwise_xor(words[idx], np.uint64(r)))
         if bool(np.all((dist == 0) | (dist >= d))):
-            good_ones.append(o)
-    if not good_ones:
+            good_list.append(o)
+    if not good_list:
         return [], [], []
-    nuovo_id = {o: i for i, o in enumerate(good_ones)}
-    orbits = [tuple(sorted(int(words[i]) for i in members[o])) for o in good_ones]
+    nuovo_id = {o: i for i, o in enumerate(good_list)}
+    orbits = [tuple(sorted(int(words[i]) for i in members[o])) for o in good_list]
     weights = [len(o) for o in orbits]
 
-    # 2. compatibilita: il rappresentante against all_of le words, in un colpo
-    neighbours = [set(range(len(good_ones))) - {i} for i in range(len(good_ones))]
-    for i, o in enumerate(good_ones):
+    # 2. compatibilita: il rappresentante against all_items le words, in un colpo
+    neighbours = [set(range(len(good_list))) - {i} for i in range(len(good_list))]
+    for i, o in enumerate(good_list):
         dist = np.bitwise_count(np.bitwise_xor(words, np.uint64(rapp[o])))
         culprits = orbit_of[(dist > 0) & (dist < d)]
         for c in set(int(x) for x in culprits):
@@ -107,7 +107,7 @@ def orbite_utilizzabili(n: int, d: int, w: int, group) -> list[tuple[int, ...]]:
     """Le orbits di weight w che al loro interno rispettano la distance d."""
     t = w - d // 2
     seen = set()
-    out_of = []
+    outside = []
     for support in combinations(range(n), w):
         word = sum(1 << i for i in support)
         if word in seen:
@@ -120,10 +120,10 @@ def orbite_utilizzabili(n: int, d: int, w: int, group) -> list[tuple[int, ...]]:
             orbit.add(f)
         seen |= orbit
         orbit = tuple(sorted(orbit))
-        good_one = all((a ^ b).bit_count() >= d for a, b in combinations(orbit, 2))
-        if good_one:
-            out_of.append(orbit)
-    return out_of
+        good = all((a ^ b).bit_count() >= d for a, b in combinations(orbit, 2))
+        if good:
+            outside.append(orbit)
+    return outside
 
 
 def compatibilita(orbits: list[tuple[int, ...]], d: int) -> list[set[int]]:
@@ -141,26 +141,26 @@ def compatibilita(orbits: list[tuple[int, ...]], d: int) -> list[set[int]]:
 def weighted_clique(weights: list[int], neighbours: list[set[int]], *,
                   restarts: int = 200, seed: int = 0,
                   local_steps: int = 60) -> list[int]:
-    """Greedy con restarts casuali e ricerca local_. Restituisce gli indices chosen."""
+    """Greedy con restarts casuali e ricerca local. Restituisce gli indices chosen."""
     rng = random.Random(seed)
     m = len(weights)
     best: list[int] = []
     best_value = 0
 
-    def complete_(chosen: list[int], permitted: set[int]) -> tuple[list[int], int]:
+    def complete(chosen: list[int], permitted: set[int]) -> tuple[list[int], int]:
         chosen = list(chosen)
         permitted = set(permitted)
         while permitted:
             # preferisci il weight high, a parità chi lascia più opzioni
             candidates = sorted(permitted, key=lambda i: (-weights[i], -len(neighbours[i] & permitted)))
             head = candidates[:3]
-            chosen_one = rng.choice(head) if len(head) > 1 and rng.random() < 0.3 else candidates[0]
-            chosen.append(chosen_one)
-            permitted &= neighbours[chosen_one]
+            pick = rng.choice(head) if len(head) > 1 and rng.random() < 0.3 else candidates[0]
+            chosen.append(pick)
+            permitted &= neighbours[pick]
         return chosen, sum(weights[i] for i in chosen)
 
     for _ in range(restarts):
-        chosen, value_ = complete_([], set(range(m)))
+        chosen, value = complete([], set(range(m)))
         for _ in range(local_steps):
             if len(chosen) <= 1:
                 break
@@ -170,11 +170,11 @@ def weighted_clique(weights: list[int], neighbours: list[set[int]], *,
             for i in kept:
                 permitted &= neighbours[i]
             permitted -= set(kept)
-            new_items, new_value = complete_(kept, permitted)
-            if new_value >= value_:
-                chosen, value_ = new_items, new_value
-        if value_ > best_value:
-            best, best_value = chosen, value_
+            new_items, new_value = complete(kept, permitted)
+            if new_value >= value:
+                chosen, value = new_items, new_value
+        if value > best_value:
+            best, best_value = chosen, value
     return best
 
 
@@ -183,7 +183,7 @@ def search_for(n: int, d: int, w: int, groups: dict, *, restarts: int = 200,
     """Prova ogni group e restituisce il best code found.
 
     I groups troppo piccoli si scartano: con |G| piccolo le orbits sono tante
-    how_many_ le words, il grafo di compatibilita' diventa enorme e il method perde
+    how_many le words, il grafo di compatibilita' diventa enorme e il method perde
     il suo vantaggio. Il caso che ha fatto sbattere il naso: `blocchi7x3` su n=21
     ha order 3, quindi 98 mila orbits e 29 miliardi di confronti.
     """

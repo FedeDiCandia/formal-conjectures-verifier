@@ -1,8 +1,8 @@
-"""Il log_ dell'agent: le lines devono arrivare sul file mentre gira.
+"""Il log dell'agent: le lines devono arrivare sul file mentre gira.
 
-Serve a one_ cosa sola, e non e' tecnica: chi guarda da un other terminale deve
-poter vedere che il job sta andando. Prima il report si scriveva only_ alla
-end, e un giro da un'now_ sembrava fermo.
+Serve a one cosa sola, e non e' tecnica: chi guarda da un other terminale deve
+poter vedere che il job sta andando. Prima il report si scriveva only alla
+end, e un giro da un'now sembrava fermo.
 """
 import sys
 from pathlib import Path
@@ -15,21 +15,21 @@ import agent
 
 
 def test_scrive_su_schermo_e_su_file_riga_per_riga(tmp_path, capsys):
-    log_ = tmp_path / "below" / "log_.log"
-    doppio = agent._Doppio(sys.stdout, log_)
+    log = tmp_path / "below" / "log.log"
+    doppio = agent._Doppio(sys.stdout, log)
     doppio.write("before line\n")
     # la line deve essere GIA' sul file, senza aspettare la closure
-    assert log_.read_text(encoding="utf-8") == "before line\n"
+    assert log.read_text(encoding="utf-8") == "before line\n"
     doppio.write("seconda line\n")
-    assert log_.read_text(encoding="utf-8").count("\n") == 2
+    assert log.read_text(encoding="utf-8").count("\n") == 2
     doppio.flush()
     assert "before line" in capsys.readouterr().out
 
 
 def test_crea_la_cartella_se_manca(tmp_path):
-    log_ = tmp_path / "a" / "b" / "c.log"
-    agent._Doppio(sys.stdout, log_).write("x\n")
-    assert log_.is_file()
+    log = tmp_path / "a" / "b" / "c.log"
+    agent._Doppio(sys.stdout, log).write("x\n")
+    assert log.is_file()
 
 
 def test_non_si_rompe_se_qualcuno_chiede_isatty(tmp_path):

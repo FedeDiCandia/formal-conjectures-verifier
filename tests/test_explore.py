@@ -3,11 +3,11 @@ Test dello strumento di exploration (verifier/explore.py).
 
 PERCHE' ESISTE QUESTO STRUMENTO
 -------------------------------
-Nel prime_ shakedown l'agent ha spent NOVE checks su nove per ispezionare
-l'API di Mathlib, non per consegnare one_ dimostrazione — e ci e' succeeded only_
-provocando errors di kind_ di proposito, perche' il verifier non gli
+Nel first shakedown l'agent ha spent NOVE checks su nove per ispezionare
+l'API di Mathlib, non per consegnare one dimostrazione — e ci e' succeeded only
+provocando errors di kind di proposito, perche' il verifier non gli
 restituiva i messages informativi di Lean. Quelle nove checks sono costate
-$1,81 e 740 seconds senza produrre un only_ attempt vero.
+$1,81 e 740 seconds senza produrre un only attempt vero.
 
 `lean_explore` fa la parte utile a capire: compila e riporta tutto, senza
 comparator, senza confronto degli enunciati, senza riesecuzione nel kernel.
@@ -31,16 +31,16 @@ def setup_module(module):
         pytest.skip("environment non installato", allow_module_level=True)
 
 
-# --- il guard vale also_ in exploration ------------------------------------
+# --- il guard vale also in exploration ------------------------------------
 
 def test_in_esplorazione_si_puo_importare_il_modulo_del_problema():
-    """E' l'unica rule_ allentata: serve per fare `#print` sulle definizioni
-    dell'archive. In one_ solution resta vietato, perche' dichiarerebbe un
+    """E' l'unica rule allentata: serve per fare `#print` sulle definizioni
+    dell'archive. In one solution resta vietato, perche' dichiarerebbe un
     name che esiste gia'."""
     src = "import FormalConjectures.Wikipedia.Selfridge\n#print Selfridge.IsSelfridge\n"
     assert guard.check_source(src, exploration=True).ok
     assert not guard.check_source(src, exploration=False).ok, \
-        "in one_ solution l'import del module del problem deve restare vietato"
+        "in one solution l'import del module del problem deve restare vietato"
 
 
 def test_in_esplorazione_il_codice_eseguibile_resta_vietato():
@@ -82,19 +82,19 @@ example (n : ℕ) (h : 3 < n) : n = 7 := by
 
 
 def test_print_di_una_struttura_dell_archivio_arriva_completo(inspection):
-    """Il caso che nel prime_ shakedown l'agent non riusciva a ottenere."""
+    """Il caso che nel first shakedown l'agent non riusciva a ottenere."""
     m = inspection.messages
     assert "structure Selfridge.IsPseudoSelfridge" in m
-    # all_of e quattro i fields, non only_ il prime_
-    for field_ in ["is_odd", "mod_5", "pow_2", "fib"]:
-        assert field_ in m, f"manca il field_ {field_}"
-    assert "constructor:" in m, "also_ il costruttore deve comparire"
+    # all_items e quattro i fields, non only il first
+    for field in ["is_odd", "mod_5", "pow_2", "fib"]:
+        assert field in m, f"manca il field {field}"
+    assert "constructor:" in m, "also il costruttore deve comparire"
 
 
 def test_print_di_una_definizione_di_mathlib_mostra_il_corpo(inspection):
     assert "def Nat.Perfect" in inspection.messages
     assert "properDivisors" in inspection.messages, \
-        "il body della definition, non only_ il name"
+        "il body della definition, non only il name"
 
 
 def test_check_mostra_il_tipo_con_gli_impliciti(inspection):
@@ -123,9 +123,9 @@ def test_l_esplorazione_gira_isolata(inspection):
     assert inspection.isolated, "deve girare inside sandbox-exec"
 
 
-#: Quanto dura one_ check COMPLETA, misurata su ciascuno snapshot. Serve a
+#: Quanto dura one check COMPLETA, misurata su ciascuno snapshot. Serve a
 #: dare un senso alla threshold qui below: l'exploration ha ragione di esistere
-#: only_ se costa one_ frazione di one_ check.
+#: only se costa one frazione di one check.
 #:   bench-v1 (Lean 4.27):  32,9 s  — misurato con `time`
 #:   main     (Lean 4.33):  47-114 s — misurato su 13 checks d'archive
 FULL_VERIFICATION = {"FormalConjectures.Util.ProblemImports": 33.0,
@@ -134,7 +134,7 @@ FULL_VERIFICATION = {"FormalConjectures.Util.ProblemImports": 33.0,
 
 def test_l_esplorazione_e_piu_rapida_di_una_verifica(inspection):
     """Il reason per cui esiste: se l'exploration non fosse sensibilmente piu'
-    rapida di one_ check complete_, non servirebbe a niente.
+    rapida di one check complete, non servirebbe a niente.
 
     Si prende il MIGLIORE di two misure. Non e' per far passare il test: la
     grandezza da misurare e' quanto costa un'exploration su questa macchina,
@@ -151,8 +151,8 @@ def test_l_esplorazione_e_piu_rapida_di_una_verifica(inspection):
             "#check @Nat.floor\n"))
         seconds = min(seconds, again.seconds)
     assert seconds < piena * 0.7, (
-        f"troppo lenta: {seconds:.1f}s against i {piena:.0f}s di one_ "
-        f"check complete_ su questo snapshot")
+        f"troppo lenta: {seconds:.1f}s against i {piena:.0f}s di one "
+        f"check complete su questo snapshot")
 
 
 def test_il_timeout_interrompe_una_tattica_che_non_termina():
@@ -162,7 +162,7 @@ example : True := by
   have : ∀ n : ℕ, n = n := fun n => rfl
   trivial
 """), timeout=5)
-    # non ci aspettiamo che questo specifico file scada: verifichiamo only_ che
+    # non ci aspettiamo che questo specifico file scada: verifichiamo only che
     # il parametro sia rispettato e non faccia saltare la funzione
     assert r.seconds < 60
 
@@ -170,12 +170,12 @@ example : True := by
 # --- gli slot: two explorations insieme non devono mescolarsi ----------------
 
 def test_due_esplorazioni_insieme_non_si_mescolano():
-    """Il finding che questo test fix_ era della specie worst.
+    """Il finding che questo test fix era della specie worst.
 
     Il file di inspection vive nell'albero dell'archive e il suo name E' il name
     del module Lean, quindi era fisso: `E0.lean`. Due explorations insieme si
     sovrascrivevano il file e ognuna leggeva i messages dell'altra. Nella caccia
-    agli artefacts questo ha fatto sembrare che one_ tactic banale avesse chiuso
+    agli artefacts questo ha fatto sembrare che one tactic banale avesse chiuso
     un problem aperto di topologia: i messages che arrivavano erano di un other
     problem, compilato da un other processo.
     """

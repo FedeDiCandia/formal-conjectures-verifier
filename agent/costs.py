@@ -7,12 +7,12 @@ non sono stime, sono i token effettivamente fatturati.
 Il limit viene fatto rispettare in DUE momenti:
 
   * a posteriori, sommando quanto e' state spent;
-  * a priori, PRIMA di ogni call: si count_ esattamente how_many token
+  * a priori, PRIMA di ogni call: si count esattamente how_many token
     entreranno nella richiesta (con l'endpoint di count, che e' gratuito) e
     si compute il cost MASSIMO possibile di quella call. Se non ci sta nel
     residue, la call non parte.
 
-Il second_ controllo e' quello che rende il limit davvero rigido: senza, one_
+Il second controllo e' quello che rende il limit davvero rigido: senza, one
 singola answer lunga potrebbe sforare di parecchio before che ce ne accorgiamo.
 """
 from __future__ import annotations
@@ -33,22 +33,22 @@ class Prices:
 #: Listino ufficiale (platform.claude.com/docs — Prompt caching, tabella prices;
 #: verificato il 2026-09-10).
 #:
-#: I moltiplicatori NON sono uguali per all_of i modelli, quindi qui sono scritti
+#: I moltiplicatori NON sono uguali per all_items i modelli, quindi qui sono scritti
 #: i prices assoluti invece di calcolarli:
 #:   - write_op in cache a 5 minuti: 1,25 volte l'input;
-#:   - write_op in cache a 1 now_:    2 volte l'input  (non 1,25!);
+#:   - write_op in cache a 1 now:    2 volte l'input  (non 1,25!);
 #:   - lettura da cache:              0,1 volte l'input,
 #:     TRANNE Fable 5.1 e Mythos 5.1, che usano 0,025 volte.
 #: Prices in dollari per milione di token, VERIFICATI sulla pagina ufficiale
 #: <https://platform.claude.com/docs/en/about-claude/pricing> l'11 settembre 2026.
 #: Si tengono in forma assoluta e non come moltiplicatori perche' i moltiplicatori
 #: NON sono universali: la lettura dalla cache costa 0,1x il prezzo d'ingresso su
-#: all_of i modelli tranne Fable 5.1 e Mythos 5.1, dove costa 0,025x. Con un
+#: all_items i modelli tranne Fable 5.1 e Mythos 5.1, dove costa 0,025x. Con un
 #: moltiplicatore unico il budget di Fable 5.1 sarebbe sbagliato di quattro volte
-#: sulla entry che in one_ sessione lunga pesa piu' di all_of.
+#: sulla entry che in one sessione lunga pesa piu' di all_items.
 #:
 #: Nota sul confronto fra modelli: Fable 5.1 costa il doppio di Opus 5 in ingresso
-#: e in output, ma la sua lettura dalla cache costa la META' in value_ assoluto
+#: e in output, ma la sua lettura dalla cache costa la META' in value assoluto
 #: ($0,25 against $0,50). Sul profile di token di un attempt lungo — MISURATO da
 #: Epoch AI: 36,9 milioni di token read_count dalla cache against 685 mila in output —
 #: il report reale non e' 2x ma 1,45x.
@@ -88,15 +88,15 @@ class Usage:
     cache_read: int = 0
     calls: int = 0
 
-    def add_(self, usage) -> None:
+    def add(self, usage) -> None:
         self.input_tokens += getattr(usage, "input_tokens", 0) or 0
         self.output_tokens += getattr(usage, "output_tokens", 0) or 0
         self.cache_read += getattr(usage, "cache_read_input_tokens", 0) or 0
 
-        # L'API distingue le scritture in cache a 5 minuti da quelle a 1 now_,
+        # L'API distingue le scritture in cache a 5 minuti da quelle a 1 now,
         # che costano il doppio. Se il detail non c'e' (risposte vecchie o
-        # altri fornitori), si usa il total e lo si count_ come 5 minuti — e'
-        # la tariffa piu' bassa, quindi il field_ dettagliato va preferito
+        # altri fornitori), si usa il total e lo si count come 5 minuti — e'
+        # la tariffa piu' bassa, quindi il field dettagliato va preferito
         # quando c'e', per non SOTTOstimare.
         detail = getattr(usage, "cache_creation", None)
         if detail is not None:
@@ -151,19 +151,19 @@ class Budget:
         return self.spent >= self.dollar_limit
 
     def record(self, usage, problem: str = "") -> None:
-        self.usage.add_(usage)
+        self.usage.add(usage)
         if problem:
-            self.per_problem.setdefault(problem, Usage()).add_(usage)
+            self.per_problem.setdefault(problem, Usage()).add(usage)
 
     # --- il controllo a priori, quello che rende rigido il limit -----------
 
     def max_possible_cost(self, input_tokens: int, max_tokens: int) -> float:
-        """Il cost worst che one_ call puo' avere.
+        """Il cost worst che one call puo' avere.
 
         Peggiore davvero:
           * ogni token di ingresso viene contato alla tariffa di SCRITTURA in
             cache, che e' la piu' cara delle three possibilita' (1,25 volte
-            l'input). In pratica one_ parte sara' letta dalla cache e costera'
+            l'input). In pratica one parte sara' letta dalla cache e costera'
             dieci volte meno, ma qui non si scommette;
           * l'output viene contata come se il model riempisse tutto lo spazio
             concessogli da `max_tokens`.
@@ -182,7 +182,7 @@ class Budget:
             raise SpendLimitExceeded(
                 f"Non parto: questa call puo' costare fino a ${worst:.4f} "
                 f"({input_tokens:,} token in ingresso, fino a {max_tokens:,} in output) "
-                f"ma restano only_ ${self.residue:.4f} "
+                f"ma restano only ${self.residue:.4f} "
                 f"(spesi ${self.spent:.4f} su ${self.dollar_limit:.2f}).")
 
     def affordable_max_tokens(self, input_tokens: int, cap: int,

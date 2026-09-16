@@ -1,13 +1,13 @@
 """
 Sceglie i problems su cui calibrare l'agent.
 
-Un problem enters nella calibrazione only_ se soddisfa TUTTE queste condizioni:
+Un problem enters nella calibrazione only se soddisfa TUTTE queste condizioni:
 
-1. l'archive ne fornisce one_ dimostrazione (non e' un problem aperto);
-2. quella dimostrazione usa only_ gli axioms permitted (niente native_decide,
+1. l'archive ne fornisce one dimostrazione (non e' un problem aperto);
+2. quella dimostrazione usa only gli axioms permitted (niente native_decide,
    niente sorryAx ereditato da un lemma);
 3. quella dimostrazione, estratta e compilata da sola, viene ACCETTATA da
-   verify.py. E' il controllo che count_: i primes two sono necessari ma non
+   verify.py. E' il controllo che count: i primes two sono necessari ma non
    sufficienti.
 
 Per ciascuno si riportano:
@@ -17,10 +17,10 @@ Per ciascuno si riportano:
   dell'addestramento del model;
 - l'ESITO della check della dimostrazione d'archive.
 
-Sul risk di memorizzazione, one_ precisazione doverosa: il cut dichiarato
+Sul risk di memorizzazione, one precisazione doverosa: il cut dichiarato
 per claude-opus-5 e' maggio 2026. Il tag di benchmark bench-v1-lean4.27.0 e' del
 6 maggio 2026, quindi OGNI dimostrazione contenuta in quel tag e' anteriore al
-cut. Calibrare li' misura also_ quanto il model ricorda. Per avere problems
+cut. Calibrare li' misura also quanto il model ricorda. Per avere problems
 post-cut serve lo snapshot da main (vedi scripts/setup_snapshot_main.sh).
 """
 from __future__ import annotations
@@ -55,7 +55,7 @@ def proof_lines(p) -> int:
 def level(n: int) -> str:
     if n <= 0:
         return "?"
-    return "facile" if n <= 3 else "mean_" if n <= 12 else "difficile"
+    return "facile" if n <= 3 else "mean" if n <= 12 else "difficile"
 
 
 def git(archive: Path, *args) -> str:
@@ -68,7 +68,7 @@ def proof_date(p, archive: Path) -> tuple[str, str]:
     try:
         rel = str(p.source_file.relative_to(archive))
     except ValueError:
-        return "?", "file out_of dall'archive"
+        return "?", "file outside dall'archive"
     try:
         src = p.source_text()
         pos = _separator_position(src)
@@ -116,7 +116,7 @@ def main() -> int:
             verified[d["problem"]] = d
     else:
         print(f"ATTENZIONE: {f} non esiste. Senza le checks non posso dire")
-        print("which_ones dimostrazioni d'archive passano davvero il verifier.")
+        print("which dimostrazioni d'archive passano davvero il verifier.")
 
     lines = []
     for p in idx.find(archive_proof_clean=True):
@@ -124,7 +124,7 @@ def main() -> int:
             continue
         v = verified.get(p.theorem)
         result = v["result"] if v else "non verificata"
-        if result != "ACCETTATO":
+        if result != "ACCEPTED":
             continue
         n = proof_lines(p)
         data, method = proof_date(p, archive)
@@ -139,12 +139,12 @@ def main() -> int:
             "descrizione": (p.docstring or "").strip()[:300],
         })
 
-    lines.sort(key=lambda r: (r["level"] != "facile", r["level"] != "mean_",
+    lines.sort(key=lambda r: (r["level"] != "facile", r["level"] != "mean",
                               r["proof_lines"]))
 
     # selection: N per level, preferendo il risk di memorizzazione piu' low
     selection = []
-    for lv in ("facile", "mean_", "difficile"):
+    for lv in ("facile", "mean", "difficile"):
         candidates = [r for r in lines if r["level"] == lv]
         candidates.sort(key=lambda r: ({"BASSO": 0, "INCERTO": 1, "ALTO": 2,
                                        "ignoto": 3}[r["rischio_memorizzazione"]],
@@ -152,7 +152,7 @@ def main() -> int:
         selection += candidates[:args.quanti_per_livello]
 
     Path(args.output).write_text(
-        json.dumps({"all_of": lines, "selection": selection}, ensure_ascii=False, indent=2),
+        json.dumps({"all_items": lines, "selection": selection}, ensure_ascii=False, indent=2),
         encoding="utf-8")
 
     print(f"Archivio: {archive}")
@@ -177,9 +177,9 @@ def main() -> int:
     count = {}
     for r in lines:
         count[r["rischio_memorizzazione"]] = count.get(r["rischio_memorizzazione"], 0) + 1
-    print(f"\nRischio di memorizzazione su all_of i candidates: {count}")
+    print(f"\nRischio di memorizzazione su all_items i candidates: {count}")
     if count.get("ALTO", 0) == len(lines) and lines:
-        print("\n  TUTTI ad high risk. E' expected_one: il tag di benchmark e' del")
+        print("\n  TUTTI ad high risk. E' expected: il tag di benchmark e' del")
         print("  2026-05-06 e il cut dell'addestramento e' maggio 2026, quindi")
         print("  ogni dimostrazione del tag e' anteriore. Per avere problems")
         print("  post-cut serve lo snapshot da main.")

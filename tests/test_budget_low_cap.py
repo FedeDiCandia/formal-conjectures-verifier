@@ -3,8 +3,8 @@
 Il finding che questi test fissano ha invalidato un esperimento intero. Il
 controllo del budget si fermava quando `max_tokens` scendeva below 6000, che con
 i prices di Fable 5.1 vale $0,30 di margine per call: con un cap da $0,50
-per problem l'agent aveva one_ call sola, e su two problems su undici ne ha
-avute zero. Il result_value sembrava «il model si arrende» ed era «il contabile
+per problem l'agent aveva one call sola, e su two problems su undici ne ha
+avute zero. Il result sembrava «il model si arrende» ed era «il contabile
 non lo lascia lavorare».
 
 Qui si simula l'aritmetica del ciclo, senza chiamare l'API.
@@ -22,7 +22,7 @@ from costs import Budget, Usage
 
 def _possible_calls(model: str, cap: float, input_tokens: int,
                         cost_per_call: float) -> int:
-    """Quante calls riesce a fare, con la rule_ vera del ciclo."""
+    """Quante calls riesce a fare, con la rule vera del ciclo."""
     b = Budget(dollar_limit=cap * 10, model=model)
     spent_here = 0.0
     calls = 0
@@ -58,22 +58,22 @@ def test_con_tetto_basso_e_fable_fa_piu_di_una_chiamata():
     calls da 5 centesimi, di calls ce ne stanno parecchie."""
     n = _possible_calls("claude-fable-5-1", cap=0.50,
                             input_tokens=8000, cost_per_call=0.05)
-    assert n >= 5, f"only_ {n} calls con $0,50 di cap"
+    assert n >= 5, f"only {n} calls con $0,50 di cap"
 
 
 def test_la_soglia_vecchia_fermava_il_tentativo_prima_di_cominciare():
-    """I numbers real_ones dell'incidente, presi dal log_ della variant B.
+    """I numbers real_list dell'incidente, presi dal log della variant B.
 
     `SidorenkoConjecture...non_bipartite_necessary`: 16 287 token in ingresso,
-    cap $0,50, spent $0,00. Con la threshold old_one il attempt non partiva
-    nemmeno; con quella new_ fa la sua call.
+    cap $0,50, spent $0,00. Con la threshold previous il attempt non partiva
+    nemmeno; con quella new fa la sua call.
     """
-    old_one = 6_000
+    previous = 6_000
     b = Budget(dollar_limit=5.0, model="claude-fable-5-1")
     max_tokens = b.affordable_max_tokens(16_287, agent.MAX_TOKENS, residue=0.50)
-    assert max_tokens < old_one, "questi sono i numbers che fermavano il attempt"
+    assert max_tokens < previous, "questi sono i numbers che fermavano il attempt"
     assert max_tokens >= agent.MIN_USEFUL_TOKENS, (
-        "con la threshold new_ lo stesso attempt deve poter partire")
+        "con la threshold new lo stesso attempt deve poter partire")
 
 
 def test_il_limite_resta_rigido():
@@ -99,7 +99,7 @@ def test_il_limite_resta_rigido():
 
 
 def test_sotto_la_soglia_minima_si_ferma():
-    """Se non c'è spazio nemmeno per one_ answer minima, il attempt finisce."""
+    """Se non c'è spazio nemmeno per one answer minima, il attempt finisce."""
     b = Budget(dollar_limit=5.0, model="claude-fable-5-1")
     mt = b.affordable_max_tokens(10_000, agent.MAX_TOKENS, residue=0.02)
     assert mt < agent.MIN_USEFUL_TOKENS
@@ -117,7 +117,7 @@ def test_il_tentativo_interrotto_dal_budget_non_perde_il_lavoro_fatto():
     finiva nel report con $0,00 e zero checks.
 
     E' successo nel giro 0 bis: il settimo problem risultava a cost zero
-    mentre il log_ mostrava one_ check consegnata. Un report che
+    mentre il log mostrava one check consegnata. Un report che
     sottostima la spesa e' un problem di sicurezza, non di cosmetica: il
     limit rigido si controlla proprio su quei numbers.
     """

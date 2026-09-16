@@ -154,11 +154,11 @@ def compare(before: Fingerprint, after: Fingerprint, max_listed: int = 12) -> li
     vanished = [p for p in before.content if p not in after.content]
     appeared = [p for p in after.content if p not in before.content]
 
-    def list_them(label: str, which_ones: list[str]) -> None:
-        if not which_ones:
+    def list_them(label: str, which: list[str]) -> None:
+        if not which:
             return
-        shown = ", ".join(sorted(which_ones)[:max_listed])
-        rest = f" (and {len(which_ones) - max_listed} more)" if len(which_ones) > max_listed else ""
+        shown = ", ".join(sorted(which)[:max_listed])
+        rest = f" (and {len(which) - max_listed} more)" if len(which) > max_listed else ""
         differences.append(f"{label}: {shown}{rest}")
 
     list_them(f"{len(modified)} archive files MODIFIED", modified)

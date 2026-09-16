@@ -1,7 +1,7 @@
 """
 Sottopone al verifier le dimostrazioni che l'archive stesso fornisce.
 
-Il controllo sugli axioms (field_ `archiveProofAxioms`) e' necessario ma non
+Il controllo sugli axioms (field `archiveProofAxioms`) e' necessario ma non
 sufficiente: non dice se la dimostrazione, estratta dal suo file e compilata da
 sola, arriva davvero in fondo. Per saperlo bisogna provarci, ed e' quello che
 fa questo script.
@@ -46,7 +46,7 @@ else:
 
 print(f"Problemi da verificare: {len(chosen)}\n", flush=True)
 
-# Si portano in even all_of i modules PRIMA di cominciare: e' l'unico step che
+# Si portano in even all_items i modules PRIMA di cominciare: e' l'unico step che
 # modifica l'archive, e farlo durante le checks parallele falsa il
 # controllo dell'fingerprint.
 from verify import prepare_challenge
@@ -71,19 +71,19 @@ def work(i, p):
             results[i] = {"problem": p.theorem, "result": "NON_ESTRAIBILE",
                             "reason": str(e), "seconds": 0}
             return
-        tmp = Path(f"/tmp/prova_archivio_{slot}_{i}.lean")
+        tmp = Path(f"/tmp/archive_proof_run{slot}_{i}.lean")
         tmp.write_text(extracted.text, encoding="utf-8")
         try:
             r = verify(p.theorem, tmp, index=idx, slot=slot, timeout=900)
         finally:
             tmp.unlink(missing_ok=True)
-        failed_ = [c.name for c in r.checks if not c.passed]
+        failed = [c.name for c in r.checks if not c.passed]
         results[i] = {
             "problem": p.theorem, "categoria": p.category,
             "proof_lines": proof_lines(p),
-            "result": r.status, "controlli_falliti": failed_,
+            "result": r.status, "controlli_falliti": failed,
             "errors": (r.errors or "")[:400],
-            "teoremi_rimossi": extracted.teoremi_rimossi,
+            "theorems_removed": extracted.theorems_removed,
             "seconds": time.time() - t0,
             "assiomi_archivio": p.archive_proof_axioms,
         }
@@ -98,13 +98,13 @@ for f in threads: f.start()
 for f in threads: f.join()
 
 results = [r for r in results if r]
-ok = [r for r in results if r["result"] == "ACCETTATO"]
+ok = [r for r in results if r["result"] == "ACCEPTED"]
 print(f"\n{'='*78}")
 print(f"ACCETTATE: {len(ok)} su {len(results)}   "
       f"(tempo total {time.time()-avvio_globale:.0f}s)")
 print(f"{'='*78}")
 for r in results:
-    if r["result"] != "ACCETTATO":
+    if r["result"] != "ACCEPTED":
         print(f"  RIFIUTATA  {r['problem']}")
         print(f"             {r['result']}  {r.get('controlli_falliti')}")
         if r.get("errors"):

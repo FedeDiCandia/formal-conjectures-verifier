@@ -20,7 +20,7 @@ QUALI GRUPPI
   cyclic(n)         x → x+1 mod n. Ordine n. Il più usato in letteratura.
   affine(n, a)       x → a·x+b mod n, con a in ⟨a⟩ ≤ (Z/n)*. Ordine n·ord(a).
   blocks(sizes)    rotation simultanea di blocks consecutivi: è il group del
-                     format_ `$EXEC cycle`, utile quando n non è prime_.
+                     format `$EXEC cycle`, utile quando n non è first.
 """
 from __future__ import annotations
 
@@ -32,14 +32,14 @@ def _close(generators: list[tuple[int, ...]], n: int) -> list[tuple[int, ...]]:
     seen = {ident}
     frontier = [ident]
     while frontier:
-        new_ = []
+        new = []
         for q in frontier:
             for g in generators:
                 r = tuple(g[q[i]] for i in range(n))
                 if r not in seen:
                     seen.add(r)
-                    new_.append(r)
-        frontier = new_
+                    new.append(r)
+        frontier = new
     return sorted(seen)
 
 
@@ -68,8 +68,8 @@ def blocks(sizes: list[int]) -> list[tuple[int, ...]]:
 
 
 def group_names(n: int) -> dict[str, list[tuple[int, ...]]]:
-    """Un repertorio ragionevole di groups da provare per one_ data length n."""
-    out_of: dict[str, list] = {f"Z{n}": cyclic(n)}
+    """Un repertorio ragionevole di groups da provare per one data length n."""
+    outside: dict[str, list] = {f"Z{n}": cyclic(n)}
     for a in range(2, n):
         if gcd(a, n) != 1:
             continue
@@ -80,12 +80,12 @@ def group_names(n: int) -> dict[str, list[tuple[int, ...]]]:
             order += 1
             if order > n:
                 break
-        if 2 <= order <= n and f"Z{n}:{order}" not in out_of:
-            out_of[f"Z{n}:{order}"] = affine(n, a)
+        if 2 <= order <= n and f"Z{n}:{order}" not in outside:
+            outside[f"Z{n}:{order}"] = affine(n, a)
     for k in (2, 3, 4, 5, 6, 7):
         if n % k == 0 and k < n:
-            out_of[f"blocks{k}x{n // k}"] = blocks([n // k] * k)
-    return out_of
+            outside[f"blocks{k}x{n // k}"] = blocks([n // k] * k)
+    return outside
 
 
 # --------------------------------------------------- corpi finiti: n = potenza di p
@@ -96,8 +96,8 @@ def group_names(n: int) -> dict[str, list[tuple[int, ...]]]:
 # e danno orbits diverse: le costruzioni classiche dei disegni vivono qui.
 
 def _field(p: int, k: int):
-    """F_{p^k} come interi 0..p^k-1, con total_sum e prodotto. Polinomio chosen_one per
-    attempts: il prime_ monico irriducibile in order lessicografico."""
+    """F_{p^k} come interi 0..p^k-1, con total_sum e prodotto. Polinomio chosen per
+    attempts: il first monico irriducibile in order lessicografico."""
     q = p ** k
 
     def digits(x):
@@ -118,17 +118,17 @@ def _field(p: int, k: int):
 
     def product_mod(a, b, module):
         ca, cb = digits(a), digits(b)
-        raw_ = [0] * (2 * k - 1)
+        raw = [0] * (2 * k - 1)
         for i, x in enumerate(ca):
             for j, y in enumerate(cb):
-                raw_[i + j] = (raw_[i + j] + x * y) % p
+                raw[i + j] = (raw[i + j] + x * y) % p
         for i in reversed(range(k, 2 * k - 1)):
-            c = raw_[i]
+            c = raw[i]
             if c:
-                raw_[i] = 0
+                raw[i] = 0
                 for j in range(k):
-                    raw_[i - k + j] = (raw_[i - k + j] - c * module[j]) % p
-        return number(raw_[:k])
+                    raw[i - k + j] = (raw[i - k + j] - c * module[j]) % p
+        return number(raw[:k])
 
     for cand in range(q):
         module = digits(cand)              # x^k = module (come polinomio di grado < k)
@@ -152,14 +152,14 @@ def _field(p: int, k: int):
 def affine_field(p: int, k: int, multiplicative_order: int | None = None):
     """Traslazioni di F_{p^k}, eventualmente con la moltiplicazione per g^m.
 
-    Senza argomento: il only_ group additivo, elementare abeliano di order p^k.
+    Senza argomento: il only group additivo, elementare abeliano di order p^k.
     Con `multiplicative_order = h`: si aggiunge la moltiplicazione per un elemento
     di order h, ottenendo un group di order p^k * h.
     """
     q = p ** k
     total_sum, prodotto, g = _field(p, k)
     # Il group additivo di F_{p^k} e' elementare abeliano di order p^k: NON si
-    # generate aggiungendo 1 (che da' only_ un ciclo di order p, la caratteristica).
+    # generate aggiungendo 1 (che da' only un ciclo di order p, la caratteristica).
     # Servono le traslazioni per ogni elemento della base 1, x, x^2, ...
     base = [p ** j for j in range(k)]
     generators = [tuple(total_sum(i, b) for i in range(q)) for b in base]
@@ -176,17 +176,17 @@ def affine_field(p: int, k: int, multiplicative_order: int | None = None):
 
 def repertorio(n: int) -> dict[str, list[tuple[int, ...]]]:
     """Tutti i groups che vale la pena provare su n points, con names parlanti."""
-    out_of = dict(group_names(n))
+    outside = dict(group_names(n))
     for p in (2, 3, 5, 7, 11, 13):
         k = 1
         while p ** k <= n:
             if p ** k == n and k > 1:
                 try:
-                    out_of[f"F{n}+"] = affine_field(p, k)
+                    outside[f"F{n}+"] = affine_field(p, k)
                     for h in range(2, n):
                         if (n - 1) % h == 0:
-                            out_of[f"F{n}:{h}"] = affine_field(p, k, h)
+                            outside[f"F{n}:{h}"] = affine_field(p, k, h)
                 except ValueError:
                     pass
             k += 1
-    return out_of
+    return outside

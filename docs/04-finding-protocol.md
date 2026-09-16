@@ -180,7 +180,7 @@ verifier.
 - If the problem is `True ↔ ∀ n, P n` and we have a counterexample, prove the
   **negated challenge**:
   ```bash
-  ./.venv/bin/python verifier/verify.py NAME file.lean --confutazione
+  ./.venv/bin/python verifier/verify.py NAME file.lean --refute
   ```
 
 **Why:** until there is a proof the verifier accepts, there is nothing. A number

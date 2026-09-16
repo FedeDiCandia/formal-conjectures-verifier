@@ -1,14 +1,14 @@
 """verify_free: la check di theorems che NON stanno nell'archive.
 
 Il caso d'uso che l'ha fatto nascere e' A105020 ⟺ Goldbach (ricerca/lean/). Qui si
-controlla che il new_one ingresso del verifier abbia gli stessi denti di `verify`:
+controlla che il new_item ingresso del verifier abbia gli stessi denti di `verify`:
 
-  * accetta one_ dimostrazione giusta di un statement della challenge;
+  * accetta one dimostrazione giusta di un statement della challenge;
   * rifiuta un statement DIVERSO dichiarato con lo stesso name;
   * rifiuta chi si appoggia alla dimostrazione `sorry` di un problem aperto
     dell'archive importato — e' la ragione per cui importare modules dell'archive
-    non e' one_ scappatoia;
-  * rifiuta `sorry` nel candidato, axioms nella challenge, theorems missing_ nella challenge.
+    non e' one scappatoia;
+  * rifiuta `sorry` nel candidato, axioms nella challenge, theorems missing nella challenge.
 """
 import sys
 from pathlib import Path
@@ -126,7 +126,7 @@ def test_appoggiarsi_al_sorry_di_un_problema_aperto_e_rifiutato(tmp_path):
 
 
 def test_un_olean_incompatibile_e_un_errore_di_strumenti_non_un_rifiuto():
-    """Il fault del 12 settembre 2026: RIFIUTATO invece di ERRORE."""
+    """Il fault del 12 settembre 2026: REJECTED invece di ERROR."""
     from verify import _tool_error
     output = ("uncaught exception: failed to read file '/x/Sfida0.olean', "
               "incompatible header")

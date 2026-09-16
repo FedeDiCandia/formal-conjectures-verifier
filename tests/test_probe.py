@@ -1,4 +1,4 @@
-"""Il verdict della probe automatica non deve scambiare un `sorry` per one_ trial."""
+"""Il verdict della probe automatica non deve scambiare un `sorry` per one trial."""
 import json
 import sys
 from pathlib import Path
@@ -49,6 +49,6 @@ def test_riclassifica_declassa_e_toglie_attenzione(tmp_path):
         "ATTENZIONE": "la tactic plausible ha chiusa la forma diritta",
     }]), encoding="utf-8")
     assert probe_lean.reclassify(f) == 1
-    data_ = json.loads(f.read_text(encoding="utf-8"))
-    assert data_[0]["trials"][0]["result"] == "aperta"
-    assert "ATTENZIONE" not in data_[0]
+    data = json.loads(f.read_text(encoding="utf-8"))
+    assert data[0]["trials"][0]["result"] == "aperta"
+    assert "ATTENZIONE" not in data[0]

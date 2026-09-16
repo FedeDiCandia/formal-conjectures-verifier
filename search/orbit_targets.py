@@ -3,7 +3,7 @@ Il motore a orbits sulle cells che contano.
 
 PERCHÉ, MISURATO
 ----------------
-La ricerca local_ su words casuali (`tabu.py`) ha pareggiato 78 bounds su 119
+La ricerca local su words casuali (`tabu.py`) ha pareggiato 78 bounds su 119
 sulle cells piccole, ma sulle 34 cells con **divario aperto** ha pareggiato 1 su
 34, con residui di 69–441 violations. Non è vicina: è nella regione sbagliata.
 
@@ -37,13 +37,13 @@ from push import targets             # noqa: E402
 DATA_DIR = ROOT / "research_data"
 
 
-def one_(arguments) -> dict:
+def one(arguments) -> dict:
     n, d, w, entry, restarts = arguments
     t0 = time.time()
     r = search_for(n, d, w, group_names(n), restarts=restarts, max_orbits=40_000)
     mio = r["best"]["size"]
     result = {"cell": f"A({n},{d},{w})", "pubblicato": entry["inferiore"],
-             "superiore": entry["superiore"], "source_": entry["source_"],
+             "superiore": entry["superiore"], "source": entry["source"],
              "nostro": mio, "group": r["best"]["group"],
              "candidate": comb(n, w), "seconds": round(time.time() - t0, 1),
              "per_gruppo": {k: v for k, v in r["per_gruppo"].items()}}
@@ -59,13 +59,13 @@ def main() -> int:
     restarts = int(sys.argv[1]) if len(sys.argv) > 1 else 400
     how_many = int(sys.argv[2]) if len(sys.argv) > 2 else 34
     maximum = int(sys.argv[3]) if len(sys.argv) > 3 else 120_000
-    list_ = targets(maximum, how_many)
-    print(f"{len(list_)} cells con divario aperto, motore a orbits, "
+    items = targets(maximum, how_many)
+    print(f"{len(items)} cells con divario aperto, motore a orbits, "
           f"{restarts} restarts per group.\n")
-    jobs = [(n, d, w, v, restarts) for _, n, d, w, v in list_]
+    jobs = [(n, d, w, v, restarts) for _, n, d, w, v in items]
     results = []
     with Pool(processes=min(8, os.cpu_count() or 1)) as pool:
-        for e in pool.imap_unordered(one_, jobs):
+        for e in pool.imap_unordered(one, jobs):
             results.append(e)
             discard = e["nostro"] - e["pubblicato"]
             mark = ("SUPERATO" if discard > 0 else
@@ -75,16 +75,16 @@ def main() -> int:
                   f"group {str(e['group']):<14} {e['seconds']:>7.1f}s")
             sys.stdout.flush()
             (DATA_DIR / "fase3_orbite.json").write_text(json.dumps(results, indent=1))
-    won_ = [e for e in results if e["nostro"] > e["pubblicato"]]
+    won = [e for e in results if e["nostro"] > e["pubblicato"]]
     even = sum(1 for e in results if e["nostro"] == e["pubblicato"])
-    print(f"\n{'=' * 70}\npareggiati {even}/{len(results)}   passed_ {len(won_)}")
-    for e in won_:
+    print(f"\n{'=' * 70}\npareggiati {even}/{len(results)}   passed {len(won)}")
+    for e in won:
         print(f"  {e['cell']}: {e['nostro']} invece di {e['pubblicato']}. "
-              f"Giudice slow_: {e.get('giudice_lento')}. APPLICARE docs/04.")
-    if not won_:
-        best_ones = sorted(results, key=lambda e: e["pubblicato"] - e["nostro"])[:5]
-        print("Nessun limit passed_one. Le cinque cells piu' neighbours:")
-        for e in best_ones:
+              f"Giudice slow: {e.get('giudice_lento')}. APPLICARE docs/04.")
+    if not won:
+        best_list = sorted(results, key=lambda e: e["pubblicato"] - e["nostro"])[:5]
+        print("Nessun limit exceeded. Le cinque cells piu' neighbours:")
+        for e in best_list:
             print(f"  {e['cell']}: {e['nostro']} against {e['pubblicato']} "
                   f"({e['nostro'] - e['pubblicato']:+d}), group {e['group']}")
     return 0

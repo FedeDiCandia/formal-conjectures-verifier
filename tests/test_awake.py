@@ -1,7 +1,7 @@
 """Il controllo di awake: niente giro se il Mac puo' sospendersi.
 
 Nella notte del 13 settembre il Mac e' andato in sospensione durante il giro e
-ogni sospensione ha chiuso one_ connessione con l'API. I testi qui below sono
+ogni sospensione ha chiuso one connessione con l'API. I testi qui below sono
 presi da `pmset` su questa macchina, quella notte.
 """
 import sys

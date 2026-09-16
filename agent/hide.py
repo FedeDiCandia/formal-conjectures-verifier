@@ -1,13 +1,13 @@
 """
 Nasconde le dimostrazioni gia' presenti nell'archive.
 
-Per collaudare onestamente un agent su un problem gia' solved_one bisogna
+Per collaudare onestamente un agent su un problem gia' solved bisogna
 togliergli la answer. Questo module prende il file source_text di un problem e
 sostituisce OGNI dimostrazione con `sorry`, ottenendo esattamente l'aspetto che
 il file avrebbe se il problem fosse ancora aperto.
 
-Si sostituiscono all_of le dimostrazioni del file, non only_ quella del theorem_
-target_: i lemmi neighbours sono spesso i passaggi intermedi della solution e
+Si sostituiscono all_items le dimostrazioni del file, non only quella del theorem
+target: i lemmi neighbours sono spesso i passaggi intermedi della solution e
 lasciarli sarebbe come lasciare mezzo compito svolto.
 """
 from __future__ import annotations
@@ -29,9 +29,9 @@ def _separator_position(text: str) -> int | None:
     """Indice del `:=` che separa l'statement dalla dimostrazione.
 
     Va cercato al level esterno: in `theorem f (n : ℕ := 3) : P := trial` il
-    prime_ `:=` sta inside le parentesi e non c'enters.
+    first `:=` sta inside le parentesi e non c'enters.
 
-    E vanno saltati i COMMENTI. Le positions che Lean riporta per one_
+    E vanno saltati i COMMENTI. Le positions che Lean riporta per one
     declaration partono dal docstring, non dalla word `theorem`, e un
     docstring puo' contenere code di example con inside un `:=`. Senza questo
     accorgimento il cut finirebbe inside la documentazione.
@@ -79,7 +79,7 @@ def _separator_position(text: str) -> int | None:
     return None
 
 
-#: Parole che introducono one_ LEGATURA, non la dimostrazione. Un `:=` che le
+#: Parole che introducono one LEGATURA, non la dimostrazione. Un `:=` che le
 #: segue appartiene a loro.
 _BINDERS = ("let", "have", "set", "obtain", "suffices", "calc", "fun", "where",
              "if", "then", "else", "with", "do", "match")
@@ -124,7 +124,7 @@ def replace_proof(declaration: str) -> str:
 
 
 def file_without_proofs(problem: Problem, index: ProblemIndex) -> str:
-    """Il file del problem con all_of le dimostrazioni sostituite da `sorry`."""
+    """Il file del problem con all_items le dimostrazioni sostituite da `sorry`."""
     text = problem.source_file.read_text(encoding="utf-8")
     lines = text.split("\n")
 
@@ -144,27 +144,27 @@ def file_without_proofs(problem: Problem, index: ProblemIndex) -> str:
         block[-1] = block[-1][:r["endCol"]]
         head = block[0][:r["startCol"]]
         block[0] = block[0][r["startCol"]:]
-        new_one = replace_proof("\n".join(block))
-        new_lines = (head + new_one + queue).split("\n")
+        new_item = replace_proof("\n".join(block))
+        new_lines = (head + new_item + queue).split("\n")
         lines[line_start:line_end + 1] = new_lines
 
     return "\n".join(lines)
 
 
 def check_it_is_hidden(problem: Problem, hidden_text: str) -> None:
-    """Verifica che la dimostrazione del theorem_ BERSAGLIO sia stata sostituita.
+    """Verifica che la dimostrazione del theorem BERSAGLIO sia stata sostituita.
 
     Un shakedown in cui la answer trapela non misura niente, quindi questo
     controllo deve esserci. Ma va fatto sulla DICHIARAZIONE GIUSTA: la before
     versione cercava il text della dimostrazione in tutto il file, e dava
-    falso allarme quando un other theorem_ dello stesso file aveva la stessa
-    dimostrazione di one_ line. E' successo con
+    falso allarme quando un other theorem dello stesso file aveva la stessa
+    dimostrazione di one line. E' successo con
     DiophantineTuple.fermat_4_tuple, dove three theorems condividono
     `by norm_num [IsDiophantineTuple]`: il shakedown si e' interrotto pur
     essendo tutto in order.
     """
     short = problem.theorem.split(".")[-1]
-    # la declaration del target_ inside il text nascosto
+    # la declaration del target inside il text nascosto
     m = re.search(rf"(?:theorem|lemma)\s+[\w'.«»]*{re.escape(short)}(?![\w']) ?[\s\S]*?"
                   rf"(?=\n(?:@\[|/--|theorem |lemma |def |abbrev |instance |end |namespace |"
                   rf"variable |open |section )|\Z)",
@@ -180,7 +180,7 @@ def check_it_is_hidden(problem: Problem, hidden_text: str) -> None:
             f"Non riesco a individuare la dimostrazione di {problem.theorem} "
             f"nel text nascosto.")
     # Si togliono i commenti: la declaration estratta puo' portarsi dietro
-    # one_ line di commento che segue (per example "-- Sanity checks"), e
+    # one line di commento che segue (per example "-- Sanity checks"), e
     # confrontarla come se fosse dimostrazione dava un falso allarme.
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "verifier"))
     from guard import strip_comments_and_strings
@@ -188,4 +188,4 @@ def check_it_is_hidden(problem: Problem, hidden_text: str) -> None:
     if trial not in ("by sorry", "sorry"):
         raise AssertionError(
             f"La dimostrazione di {problem.theorem} NON e' stata nascosta: al "
-            f"suo slot_ c'e' ancora {trial[:120]!r}. Il shakedown non sarebbe valid.")
+            f"suo slot c'e' ancora {trial[:120]!r}. Il shakedown non sarebbe valid.")

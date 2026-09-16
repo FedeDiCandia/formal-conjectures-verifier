@@ -6,7 +6,7 @@ PERCHÉ QUESTO È LO STRUMENTO GIUSTO, E LE EURISTICHE NON LO SONO
 Un code a weight costante con d even è un oggetto di teoria dei disegni. Posto
 t = w − d/2, two words possono condividere al maximum t positions, cioè
 
-    **ogni sottoinsieme di t+1 positions sta in al maximum one_ word.**
+    **ogni sottoinsieme di t+1 positions sta in al maximum one word.**
 
 Per A(27,8,5) si ha t = 1: sono i sottoinsiemi di 5 elementi di un insieme di 27, a
 two a two intersecantisi in al maximum un punto. È il **number di pacchetto**
@@ -24,13 +24,13 @@ invece di words, e per simmetria basta **un vincolo per orbit di
 (t+1)-sottoinsiemi**. Su A(27,8,5) below Z27 si passa da 80.730 variables e 351
 vincoli a 2.990 variables e 13 vincoli.
 
-**La differenza che count_:** l'ILP non restituisce «ho found», restituisce
+**La differenza che count:** l'ILP non restituisce «ho found», restituisce
 «questo è il maximum». Il maximum code G-invariante diventa un fatto dimostrato,
 non un result di ricerca. Una euristica non potrà mai dire «32 è impossibile below
 Z27»; questo sì.
 
-Il solutore è HiGHS, libero e su one_ macchina sola — il caso che nel piano avevo
-chiamato «un'arma che possiamo prendere also_ noi», non one_ barriera.
+Il solutore è HiGHS, libero e su one macchina sola — il caso che nel piano avevo
+chiamato «un'arma che possiamo prendere also noi», non one barriera.
 """
 from __future__ import annotations
 
@@ -42,11 +42,11 @@ import numpy as np
 from codes import fast_check
 
 
-def orbit_subsets(n: int, size_: int, group) -> tuple[list[tuple], dict]:
-    """Le orbits dei sottoinsiemi di `size_` points, e la map_ insieme -> orbit."""
+def orbit_subsets(n: int, size: int, group) -> tuple[list[tuple], dict]:
+    """Le orbits dei sottoinsiemi di `size` points, e la mapping insieme -> orbit."""
     whose: dict[tuple, int] = {}
     representatives: list[tuple] = []
-    for S in combinations(range(n), size_):
+    for S in combinations(range(n), size):
         if S in whose:
             continue
         o = len(representatives)
@@ -59,19 +59,19 @@ def orbit_subsets(n: int, size_: int, group) -> tuple[list[tuple], dict]:
 def word_orbits(n: int, w: int, group) -> list[tuple[int, ...]]:
     """Le orbits delle words di weight w, come tuple di supports."""
     seen = set()
-    out_of = []
+    outside = []
     for S in combinations(range(n), w):
         if S in seen:
             continue
         orbit = {tuple(sorted(p[i] for i in S)) for p in group}
         seen |= orbit
-        out_of.append(tuple(sorted(orbit)))
-    return out_of
+        outside.append(tuple(sorted(orbit)))
+    return outside
 
 
-def solve_(n: int, d: int, w: int, group, *, seconds: float = 300.0,
+def solve(n: int, d: int, w: int, group, *, seconds: float = 300.0,
             silence: bool = True) -> dict:
-    """Il maximum code G-invariante, per ILP exact. Restituisce also_ se è ottimo."""
+    """Il maximum code G-invariante, per ILP exact. Restituisce also se è ottimo."""
     if d % 2:
         raise ValueError("serve d even")
     t = w - d // 2
@@ -84,7 +84,7 @@ def solve_(n: int, d: int, w: int, group, *, seconds: float = 300.0,
     _, whose = orbit_subsets(n, t + 1, group)
     n_constraints = max(whose.values()) + 1
 
-    # coefficiente: how_many_ words dell'orbit contengono un dato (t+1)-sottoinsieme.
+    # coefficiente: how_many words dell'orbit contengono un dato (t+1)-sottoinsieme.
     # Per simmetria basta un vincolo per orbit di sottoinsiemi, e come
     # rappresentante si prende un qualunque S della classe.
     coef = np.zeros((n_constraints, len(orbits)), dtype=np.float64)
@@ -133,7 +133,7 @@ def solve_(n: int, d: int, w: int, group, *, seconds: float = 300.0,
 
 def risolvi_completo(n: int, d: int, w: int, *, seconds: float = 1800.0,
                      silence: bool = False, threshold: int | None = None) -> dict:
-    """L'ILP **senza group prescritto**: all_of le words, all_of i vincoli.
+    """L'ILP **senza group prescritto**: all_items le words, all_items i vincoli.
 
     PERCHÉ VALE LA PENA
     -------------------
@@ -154,7 +154,7 @@ def risolvi_completo(n: int, d: int, w: int, *, seconds: float = 1800.0,
     """
     t = w - d // 2
     if t < 0 or t >= w:
-        raise ValueError(f"t = {t} out_of dai cases useful")
+        raise ValueError(f"t = {t} outside dai cases useful")
 
     supports = list(combinations(range(n), w))
     indice_S = {S: i for i, S in enumerate(combinations(range(n), t + 1))}

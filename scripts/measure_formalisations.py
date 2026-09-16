@@ -7,7 +7,7 @@ Ogni number viene dal report JSON scritto da agent/agent.py o dall'listing dei
 candidates di scripts/select_formalisations.py: niente ricopiato a mano.
 
 LIMIT DICHIARATO DI QUESTO GIRO: e' state lanciato con `--silenzioso`, quindi
-il log_ non contiene i messages di error di Lean. La diagnosi dei fallimenti
+il log non contiene i messages di error di Lean. La diagnosi dei fallimenti
 si fa sulla kind delle checks consegnate (non compila / compila con un buco /
 statement diverso) e sul riassunto del reasoning del model, iteration per
 iteration, che il report conserva.
@@ -40,34 +40,34 @@ _MATE = re.compile(r"(don't|do not|can't|cannot) (see|find) (a|the|how)|need(s)?
 
 def band(c: dict) -> str:
     m = set(c["reasons"])
-    hard = m & {"source_: articolo", "source_: theorem_ profondo",
+    hard = m & {"source: articolo", "source: theorem profondo",
                 "statement: infinito/analisi", "computation grande"}
-    if "source_: trial corta" in m and not hard:
+    if "source: trial corta" in m and not hard:
         return "A"
     if c["categoria"] == "textbook" and not hard:
         return "B"
     if not hard:
         return "C"
-    if hard == {"source_: articolo"}:
+    if hard == {"source: articolo"}:
         return "D"
     return "E"
 
 
 DESCRIZIONE = {
-    "A": "la source_ dice che la trial e' corta, niente di hard",
+    "A": "la source dice che la trial e' corta, niente di hard",
     "B": "textbook, niente di hard",
     "C": "research solved senza segnali",
     "D": "trial citata da un articolo",
-    "E": "segnali duri (theorem_ profondo, infinito/analisi, computation grande)",
+    "E": "segnali duri (theorem profondo, infinito/analisi, computation grande)",
 }
 
 
 def ostacolo(t: dict) -> str:
     """Matematica, API di Mathlib, o indeterminato, dal reasoning e dalle checks."""
-    if t["solved_one"]:
+    if t["solved"]:
         return "-"
     if not t.get("iterazioni_dettaglio"):
-        return (f"non determinabile dal report ({t.get('source_', 'niente detail')}); "
+        return (f"non determinabile dal report ({t.get('source', 'niente detail')}); "
                 f"{t['explorations']} explorations, {t['checks']} checks")
     text =" ".join(it.get("reasoning", "") for it in t["iterazioni_dettaglio"])
     api, mate = len(_API.findall(text)), len(_MATE.findall(text))
@@ -89,7 +89,7 @@ def ostacolo(t: dict) -> str:
 
 def main() -> int:
     # Piu' reports si sommano, nell'order dato: il giro del 12 settembre e' state
-    # interrotto da un error di rete ed e' ripreso in un second_ processo.
+    # interrotto da un error di rete ed e' ripreso in un second processo.
     reports = [json.loads(Path(a).read_text(encoding="utf-8")) for a in sys.argv[1:]]
     report = reports[0]
     candidates = json.loads(CANDIDATES.read_text(encoding="utf-8"))
@@ -108,25 +108,25 @@ def main() -> int:
     print(f"{'#':>2} {'band':6} {'result':11} {'cost':>7} {'it':>3} {'ver':>3}  problem")
     for i, t in enumerate(attempts, 1):
         f = band(by_name[t["problem"]]) if t["problem"] in by_name else "?"
-        print(f"{i:2d} {f:6} {'ACCETTATO' if t['solved_one'] else 'non chiuso':11} "
+        print(f"{i:2d} {f:6} {'ACCEPTED' if t['solved'] else 'non chiuso':11} "
               f"${t['cost']:6.3f} {t['iterations']:3d} {t['checks']:3d}  {t['problem']}")
-        if not t["solved_one"]:
+        if not t["solved"]:
             print(f"{'':26}{t['reason'][:90]}")
             print(f"{'':26}ostacolo: {ostacolo(t)}")
 
-    solved_ = [t for t in attempts if t["solved_one"]]
-    # la spesa dei attempts interrotti non e' registrata: si count_ al suo maximum
+    solved = [t for t in attempts if t["solved"]]
+    # la spesa dei attempts interrotti non e' registrata: si count al suo maximum
     spesa = spent + non_registrato
-    print(f"\nACCETTATI DAL VERIFICATORE: {len(solved_)} su {len(set(t['problem'] for t in attempts))} "
+    print(f"\nACCETTATI DAL VERIFICATORE: {len(solved)} su {len(set(t['problem'] for t in attempts))} "
           f"problems tentati")
-    if solved_:
-        print(f"cost per successo (spesa total / successi): ${spesa / len(solved_):.3f}"
+    if solved:
+        print(f"cost per successo (spesa total / successi): ${spesa / len(solved):.3f}"
               + (" (con la spesa non registrata al maximum)" if non_registrato else ""))
-        print(f"cost mean_ di un successo, da only_: "
-              f"${sum(t['cost'] for t in solved_) / len(solved_):.3f}")
-    failed_ = [t for t in attempts if not t["solved_one"]]
-    if failed_:
-        print(f"cost mean_ di un failure: ${sum(t['cost'] for t in failed_) / len(failed_):.3f}")
+        print(f"cost mean di un successo, da only: "
+              f"${sum(t['cost'] for t in solved) / len(solved):.3f}")
+    failed = [t for t in attempts if not t["solved"]]
+    if failed:
+        print(f"cost mean di un failure: ${sum(t['cost'] for t in failed) / len(failed):.3f}")
 
     # --- proiezione
     rate: dict[str, tuple[int, int]] = {}
@@ -134,13 +134,13 @@ def main() -> int:
         if t["problem"] in by_name:
             f = band(by_name[t["problem"]])
             ok, n = rate.get(f, (0, 0))
-            rate[f] = (ok + t["solved_one"], n + 1)
-    count_ = collections.Counter(band(c) for c in candidates)
+            rate[f] = (ok + t["solved"], n + 1)
+    count = collections.Counter(band(c) for c in candidates)
     print("\nPROIEZIONE PER FASCIA")
     for f in "ABCDE":
         ok, n = rate.get(f, (0, 0))
         misurato = f"{ok}/{n} misurati" if n else "non misurata"
-        print(f"  {f} {count_[f]:5d} candidates  {misurato:15s}  {DESCRIZIONE[f]}")
+        print(f"  {f} {count[f]:5d} candidates  {misurato:15s}  {DESCRIZIONE[f]}")
     return 0
 
 

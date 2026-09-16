@@ -1,6 +1,6 @@
 """Aiuti condivisi dai test che fanno partire Lean davvero.
 
-Serve a one_ cosa sola: gli stessi test devono girare su all_of e two gli
+Serve a one cosa sola: gli stessi test devono girare su all_items e two gli
 snapshot dell'archive. Su `bench-v1` il module di utility' si chiama
 `FormalConjectures.Util.ProblemImports`, su `main` `FormalConjecturesUtil`.
 Invece di tenere two copie di ogni file di trial, si riscrive la line di

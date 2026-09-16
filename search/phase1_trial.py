@@ -2,7 +2,7 @@
 Fase 1 vera: la nostra ricerca, da zero, against i bounds pubblicati.
 
 Il step zero (`riproduci.py`) ha mostrato che sappiamo leggere e verificare i
-record. Qui si misura la cosa che count_: **partendo da niente, quanto ci
+record. Qui si misura la cosa che count: **partendo da niente, quanto ci
 avviciniamo?** Per ogni cell si trial un repertorio di groups, si search_for la clique
 pesata massima fra le orbits, e si compare con la tabella.
 
@@ -27,8 +27,8 @@ DATA_DIR = ROOT / "research_data"
 
 
 def select(bounds: dict, *, max_words: int, max_combinations: int,
-           how_many_: int) -> list[tuple[str, dict]]:
-    """Celle alla portata di un prime_ giro: piccole, e con un limit pubblicato."""
+           how_many: int) -> list[tuple[str, dict]]:
+    """Celle alla portata di un first giro: piccole, e con un limit pubblicato."""
     candidate = []
     for k, v in bounds.items():
         n, d, w = (int(x) for x in k.split(","))
@@ -41,19 +41,19 @@ def select(bounds: dict, *, max_words: int, max_combinations: int,
     candidate.sort(key=lambda kv: (-int(kv[1]["superiore"] is not None
                                        and kv[1]["superiore"] > kv[1]["inferiore"]),
                                    kv[1]["inferiore"]))
-    return candidate[:how_many_]
+    return candidate[:how_many]
 
 
 def main() -> int:
     bounds = json.loads((DATA_DIR / "limiti_cwc.json").read_text())
     cells = select(bounds, max_words=400, max_combinations=300_000,
-                   how_many_=int(sys.argv[1]) if len(sys.argv) > 1 else 12)
-    print(f"{len(cells)} cells nel prime_ giro.\n")
+                   how_many=int(sys.argv[1]) if len(sys.argv) > 1 else 12)
+    print(f"{len(cells)} cells nel first giro.\n")
     print(f"{'cell':<14}{'pubbl.':>8}{'nostro':>8}{'result':>12}  "
-          f"{'group':<14}{'source_':<8}{'tempo':>7}")
+          f"{'group':<14}{'source':<8}{'tempo':>7}")
     print("-" * 78)
     results = []
-    count_ = {"PAREGGIATO": 0, "SOTTO": 0, "SOPRA": 0}
+    count = {"PAREGGIATO": 0, "SOTTO": 0, "SOPRA": 0}
     for k, v in cells:
         n, d, w = (int(x) for x in k.split(","))
         t0 = time.time()
@@ -65,28 +65,28 @@ def main() -> int:
             state = "PAREGGIATO"
         else:
             state = "SOTTO"
-        count_[state] += 1
+        count[state] += 1
         dt = time.time() - t0
         print(f"A({n},{d},{w})".ljust(14)
               + f"{v['inferiore']:>8}{mio:>8}{state:>12}  "
-              + f"{str(r['best']['group']):<14}{v['source_']:<8}{dt:>6.1f}s")
+              + f"{str(r['best']['group']):<14}{v['source']:<8}{dt:>6.1f}s")
         sys.stdout.flush()
         entry = {"cell": f"A({n},{d},{w})", "pubblicato": v["inferiore"],
-                "nostro": mio, "state": state, "source_": v["source_"],
+                "nostro": mio, "state": state, "source": v["source"],
                 "group": r["best"]["group"], "seconds": round(dt, 1),
                 "per_gruppo": r["per_gruppo"]}
         if state == "SOPRA":
-            # il giudice slow_, non quello fast_, e le words per esteso
+            # il giudice slow, non quello fast, e le words per esteso
             g = check(r["best"]["words"], n, d, w)
             entry["giudice_lento"] = g.ok
             entry["words"] = r["best"]["words"]
             print(f"    ATTENZIONE: above il limit pubblicato. "
-                  f"Giudice slow_: {'valid' if g.ok else g.findings[:2]}. "
-                  f"Applicare docs/04 before di chiamarlo result_value.")
+                  f"Giudice slow: {'valid' if g.ok else g.findings[:2]}. "
+                  f"Applicare docs/04 before di chiamarlo result.")
         results.append(entry)
     (DATA_DIR / "fase1_ricerca.json").write_text(json.dumps(results, indent=1))
     print("-" * 78)
-    print("  ".join(f"{s}: {c}" for s, c in count_.items()))
+    print("  ".join(f"{s}: {c}" for s, c in count.items()))
     return 0
 
 

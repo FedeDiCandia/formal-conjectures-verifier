@@ -226,7 +226,7 @@ they could put anything in it.
 Usage:
 
 ```bash
-./.venv/bin/python verifier/verify.py THEOREM_NAME file.lean --confutazione
+./.venv/bin/python verifier/verify.py THEOREM_NAME file.lean --refute
 ```
 
 How all this is tested without solving an open problem: comparator compares the

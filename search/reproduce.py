@@ -10,14 +10,14 @@ esattamente l'error che questo progetto ha già fatto cinque volte.
 
 Questo script download i codici espliciti delle tables di Brouwer, li espande, li
 check con il nostro giudice e compare la size con il limit inferiore
-che la tabella rivendica. Tre results possibili, e all_of e three sono informazione:
+che la tabella rivendica. Tre results possibili, e all_items e three sono informazione:
 
   CONFERMATO   la size e la validità corrispondono alla tabella
   DISCORDE     il code è valid ma di size diversa da quella dichiarata
   NON VALIDO   il code non soddisfa i vincoli (quasi certamente colpa nostra:
-               un format_ che non sappiamo leggere)
+               un format che non sappiamo leggere)
 
-I file si scaricano one_ volta sola e restano in `research_data/codici/`.
+I file si scaricano one volta sola e restano in `research_data/codici/`.
 """
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "search"))
 
-from codes import Result, read_, check, fast_check   # noqa: E402
+from codes import Result, read, check, fast_check   # noqa: E402
 from orbits import expand, expand_cyclic                  # noqa: E402
 
 DATA_DIR = ROOT / "research_data"
@@ -40,33 +40,33 @@ PAUSE = 0.4      # cortesia verso un server universitario
 
 
 def download(relative: str) -> Path:
-    local_ = CACHE / relative.replace("/", "_")
-    if local_.is_file() and local_.stat().st_size > 0:
-        return local_
+    local = CACHE / relative.replace("/", "_")
+    if local.is_file() and local.stat().st_size > 0:
+        return local
     CACHE.mkdir(parents=True, exist_ok=True)
     # `curl` e non urllib: il Python di questo Mac non ha i certificati di
     # system e ogni https fallisce con CERTIFICATE_VERIFY_FAILED.
     result = subprocess.run(
         ["curl", "-sS", "-L", "--max-time", "45", "-A",
          "ricerca-codici/1.0 (check indipendente di bounds pubblicati)",
-         "-o", str(local_), BASE + relative],
+         "-o", str(local), BASE + relative],
         capture_output=True, text=True)
-    if result.returncode != 0 or not local_.is_file() or local_.stat().st_size == 0:
-        local_.unlink(missing_ok=True)
+    if result.returncode != 0 or not local.is_file() or local.stat().st_size == 0:
+        local.unlink(missing_ok=True)
         raise OSError(f"curl ha failed ({result.returncode}): "
                       f"{result.stderr.strip()[:120]}")
     time.sleep(PAUSE)
-    return local_
+    return local
 
 
-def load_(path: Path) -> tuple[list[int], int, str]:
+def load(path: Path) -> tuple[list[int], int, str]:
     """Legge un code in qualunque dei formati in cui è pubblicato."""
-    raw_ = path.read_text(errors="replace").lstrip()
-    head = raw_[:200].lower()
+    raw = path.read_text(errors="replace").lstrip()
+    head = raw[:200].lower()
     if head.startswith("$base=16"):
         # listing di words in esadecimale
-        words = [int(r.strip(), 16) for r in raw_.splitlines()[1:] if r.strip()]
-        width = max((len(r.strip()) for r in raw_.splitlines()[1:] if r.strip()),
+        words = [int(r.strip(), 16) for r in raw.splitlines()[1:] if r.strip()]
+        width = max((len(r.strip()) for r in raw.splitlines()[1:] if r.strip()),
                         default=0)
         # la width in digits esadecimali non dice n: gli zeri in head si
         # perdono. Si restituisce 0 e chi chiama usa l'n della cell.
@@ -81,21 +81,21 @@ def load_(path: Path) -> tuple[list[int], int, str]:
                            f"{info['seeds']} seeds)")
     if head.startswith("$exec"):
         raise ValueError(f"command $EXEC non gestito: {head.splitlines()[0]!r}")
-    words, n = read_(path)
+    words, n = read(path)
     return words, n, "listing di words"
 
 
-def one_(key_: str, entry: dict) -> dict:
-    n, d, w = (int(x) for x in key_.split(","))
-    result = {"cell": f"A({n},{d},{w})", "expected_one": entry["inferiore"],
-             "source_": entry["source_"], "file": entry["code"]}
+def one(key: str, entry: dict) -> dict:
+    n, d, w = (int(x) for x in key.split(","))
+    result = {"cell": f"A({n},{d},{w})", "expected": entry["inferiore"],
+             "source": entry["source"], "file": entry["code"]}
     try:
         path = download(entry["code"])
-        words, read_n, format_ = load_(path)
-        result["format_"] = format_
+        words, read_n, format = load(path)
+        result["format"] = format
         if read_n and read_n != n:
             result["state"] = "DISCORDE"
-            result["note"] = f"length letta {read_n}, expected_value {n}"
+            result["note"] = f"length letta {read_n}, waited {n}"
             return result
         v = fast_check(words, n, d, w)
         result["found"] = v.size
@@ -122,22 +122,22 @@ def main() -> int:
     to_do = {k: v for k, v in bounds.items() if v["code"]}
     print(f"{len(to_do)} cells con code esplicito pubblicato.\n")
     results = []
-    count_: dict[str, int] = {}
+    count: dict[str, int] = {}
     for i, (k, v) in enumerate(sorted(to_do.items(),
                                       key=lambda kv: kv[1]["inferiore"]), 1):
-        e = one_(k, v)
+        e = one(k, v)
         results.append(e)
-        count_[e["state"]] = count_.get(e["state"], 0) + 1
+        count[e["state"]] = count.get(e["state"], 0) + 1
         mark = {"CONFERMATO": "ok", "DISCORDE": "??", "NON VALIDO": "XX"}.get(
             e["state"], "--")
         print(f"[{i:3d}/{len(to_do)}] {mark} {e['cell']:<14} "
-              f"expected_one {e['expected_one']:>6}  "
+              f"expected {e['expected']:>6}  "
               f"found {str(e.get('found', '-')):>6}  "
-              f"{e.get('format_', '')}  {e.get('note', '')}")
+              f"{e.get('format', '')}  {e.get('note', '')}")
         sys.stdout.flush()
     (DATA_DIR / "riproduzione.json").write_text(json.dumps(results, indent=1))
     print("\n" + "=" * 70)
-    for state, how_many in sorted(count_.items(), key=lambda kv: -kv[1]):
+    for state, how_many in sorted(count.items(), key=lambda kv: -kv[1]):
         print(f"  {state:<14} {how_many}")
     print(f"\nRapporto in {DATA_DIR / 'riproduzione.json'}")
     return 0

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # ---------------------------------------------------------------------------
-# Prepara un second_ snapshot dell'archive, preso da un commit FISSO di `main`.
+# Prepara un second snapshot dell'archive, preso da un commit FISSO di `main`.
 #
 # PERCHE'
 # Il tag di benchmark `bench-v1-lean4.27.0` e' del 2026-05-06, cioe' proprio
 # alla data di cut dell'addestramento di claude-opus-5 (maggio 2026). Ogni
 # dimostrazione contenuta in quel tag era quindi pubblica su GitHub before
-# dell'addestramento: calibrare un agente su quei problems misura also_ quanto
-# il model ricorda, non only_ quanto sa dimostrare.
+# dell'addestramento: calibrare un agente su quei problems misura also quanto
+# il model ricorda, non only quanto sa dimostrare.
 #
 # Su `main` ci sono 548 file di problems added after il 1 giugno 2026. Quelli
 # sono materiale post-cutoff.
@@ -35,13 +35,13 @@ step "0/6  Controlli preliminari"
 LIBERI=$(df -g "$ROOT" | tail -1 | awk '{print $4}')
 echo "  spazio libero: ${LIBERI} GB"
 if [ "$LIBERI" -lt 25 ]; then
-  echo "  ERRORE: servono almeno 25 GB liberi, ce ne sono ${LIBERI}."
+  echo "  ERROR: servono almeno 25 GB liberi, ce ne sono ${LIBERI}."
   exit 1
 fi
 
 step "1/6  Worktree del commit $COMMIT_MAIN"
 # Un worktree condivide la folder .git con il clone esistente: risparmia
-# circa un gigabyte e il tempo di un second_ clone.
+# circa un gigabyte e il tempo di un second clone.
 if [ ! -d "$SNAP" ]; then
   git -C "$EXT/formal-conjectures" fetch --quiet origin main
   git -C "$EXT/formal-conjectures" worktree add --detach "$SNAP" "$COMMIT_MAIN"
@@ -61,13 +61,13 @@ step "3/6  Cache di Mathlib (LUNGO)"
 
 step "3b/6  Disattivazione della libreria a doppio glob"
 # Il branch `main` dichiara DUE librerie che compilano gli stessi file nella
-# stessa folder di build: `FormalConjectures` (con `google.answer` al value_
+# stessa folder di build: `FormalConjectures` (con `google.answer` al value
 # predefinito `alwaysTrue`) e `FormalConjecturesAnswerPostpone` (con
 # `postpone`). Gli .olean si sovrascrivono a vicenda, quindi l'statement
-# elaborato di un problem con `answer(sorry)` cambia second_ l'ULTIMO command
+# elaborato di un problem con `answer(sorry)` cambia second l'ULTIMO command
 # di build eseguito: `lake build FormalConjectures` da' `True ↔ P`,
 # `lake build <singolo module>` da' `sorryAx ↔ P`. Un giudice non puo' lavorare
-# su un target_ che si muove, quindi la seconda libreria viene commentata.
+# su un target che si muove, quindi la seconda libreria viene commentata.
 # Serve alla CI di upstream per un controllo secondario, non alla check.
 if grep -q '^name = "FormalConjecturesAnswerPostpone"' "$SNAP/lakefile.toml"; then
   python3 - "$SNAP/lakefile.toml" <<'PYEOF'

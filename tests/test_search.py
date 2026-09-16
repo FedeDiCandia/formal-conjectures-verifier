@@ -1,9 +1,9 @@
 """
 Test dell'infrastruttura per le ricerche lunghe (verifier/search.py).
 
-Le three cose che devono funzionare, perche' senza di esse one_ ricerca di otto
+Le three cose che devono funzionare, perche' senza di esse one ricerca di otto
 hours e' inutilizzabile:
-  * l'isolamento (niente rete, niente scritture out_of dalla folder);
+  * l'isolamento (niente rete, niente scritture outside dalla folder);
   * il checkpoint, scritto in way che un'interruzione non lo corrompa;
   * la ripresa, che deve ripartire da dove si era arrivati e non da capo.
 """
@@ -43,10 +43,10 @@ if os.path.exists(checkpoint):
     found = d.get("found", [])
 
 stopped = False
-def stop_(s, f):
+def stop(s, f):
     global stopped
     stopped = True
-signal.signal(signal.SIGTERM, stop_)
+signal.signal(signal.SIGTERM, stop)
 
 def salva():
     tmp = state + ".tmp"
@@ -70,7 +70,7 @@ print(json.dumps({"event": "end", "position": n, "examined": n}), flush=True)
 
 
 def test_una_ricerca_arriva_in_fondo(tmp_path):
-    r = search_module.Search("prova_conta", COUNTING_PROGRAM, folder=tmp_path / "count_",
+    r = search_module.Search("prova_conta", COUNTING_PROGRAM, folder=tmp_path / "count",
                                variables={"FINO_A": 50})
     result = r.run(verbose=False)
     assert result.completed, f"non completed: {result.to_json()}"
@@ -81,20 +81,20 @@ def test_una_ricerca_arriva_in_fondo(tmp_path):
 
 
 def test_le_variabili_arrivano_al_programma(tmp_path):
-    """L'environment del figlio e' minimum di proposito: niente key_ API, niente
+    """L'environment del figlio e' minimum di proposito: niente key API, niente
     PATH del progetto. I parametri vanno passati esplicitamente."""
     program = """
 import json, os
 v = os.environ.get("MIO_PARAMETRO", "assente")
-key_ = "presente" if "ANTHROPIC_API_KEY" in os.environ else "assente"
+key = "presente" if "ANTHROPIC_API_KEY" in os.environ else "assente"
 with open(os.environ["SEARCH_STATE"], "w") as f:
-    json.dump({"position": v, "examined": 1, "found": [key_]}, f)
+    json.dump({"position": v, "examined": 1, "found": [key]}, f)
 """
     r = search_module.Search("prova_var", program, folder=tmp_path / "var",
                                variables={"MIO_PARAMETRO": "ciao"})
     result = r.run(verbose=False)
     assert result.position == "ciao"
-    assert result.found == ["assente"], "la key_ API non deve essere visibile"
+    assert result.found == ["assente"], "la key API non deve essere visibile"
 
 
 def test_il_checkpoint_viene_scritto(tmp_path):
@@ -111,18 +111,18 @@ def test_la_ripresa_riparte_da_dove_era_arrivata(tmp_path):
     folder = tmp_path / "ripresa"
     r = search_module.Search("prova_ripresa", COUNTING_PROGRAM, folder=folder,
                                variables={"FINO_A": 100000, "PAUSE": 0.02})
-    prime_ = r.run(max_seconds=2.0, verbose=False)
-    assert prime_.interrupted, "mi aspettavo un'interruzione per tempo scaduto"
-    assert prime_.position > 0, "deve aver fatto qualcosa before di fermarsi"
-    arrivato = prime_.position
+    first = r.run(max_seconds=2.0, verbose=False)
+    assert first.interrupted, "mi aspettavo un'interruzione per tempo scaduto"
+    assert first.position > 0, "deve aver fatto qualcosa before di fermarsi"
+    arrivato = first.position
 
     # seconda esecuzione: deve RIPRENDERE
     r.variables = {"FINO_A": arrivato + 30, "PAUSE": 0.001}
-    second_ = r.run(verbose=False)
-    assert second_.completed
-    assert second_.position == arrivato + 30
+    second = r.run(verbose=False)
+    assert second.completed
+    assert second.position == arrivato + 30
     # se fosse ripartita da zero, il tempo sarebbe state molto maggiore
-    assert second_.examined == arrivato + 30
+    assert second.examined == arrivato + 30
 
 
 def test_riprendi_falso_ricomincia_da_capo(tmp_path):
@@ -131,8 +131,8 @@ def test_riprendi_falso_ricomincia_da_capo(tmp_path):
                                variables={"FINO_A": 20, "PAUSE": 0.001})
     r.run(verbose=False)
     r.variables = {"FINO_A": 10, "PAUSE": 0.001}
-    second_ = r.run(resume=False, verbose=False)
-    assert second_.position == 10, "con resume=False deve ripartire da zero"
+    second = r.run(resume=False, verbose=False)
+    assert second.position == 10, "con resume=False deve ripartire da zero"
 
 
 NETWORK_PROGRAM = '''
@@ -155,9 +155,9 @@ def test_la_ricerca_non_ha_accesso_alla_rete(tmp_path):
 
 WRITE_PROGRAM = '''
 import json, os
-target_ = os.environ.get("BERSAGLIO", "/tmp/prova_fuori.txt")
+target = os.environ.get("BERSAGLIO", "/tmp/prova_fuori.txt")
 try:
-    open(target_, "w").write("x")
+    open(target, "w").write("x")
     result = "SCRITTURA RIUSCITA"
 except Exception as e:
     result = type(e).__name__
@@ -183,7 +183,7 @@ import json, os
 import numpy as np, sympy
 v = int(np.sum(np.arange(101)))
 p = int(sympy.prime(1000))
-print(json.dumps({"event": "progress", "position": v, "prime_": p}), flush=True)
+print(json.dumps({"event": "progress", "position": v, "first": p}), flush=True)
 with open(os.environ["SEARCH_STATE"], "w") as f:
     json.dump({"position": v, "examined": 1, "found": [p]}, f)
 '''

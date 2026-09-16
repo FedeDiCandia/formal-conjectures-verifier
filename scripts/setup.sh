@@ -12,17 +12,17 @@ EXT="$ROOT/external"
 BIN="$ROOT/tools/bin"
 
 # --- Versioni bloccate -----------------------------------------------------
-# Il tag di benchmark decide TUTTO il resto: fix_ la versione di Lean.
+# Il tag di benchmark decide TUTTO il resto: fix la versione di Lean.
 FC_TAG="bench-v1-lean4.27.0"
 LEAN_VERSION="v4.27.0"
 
-# comparator: usiamo l'last_one versione. NON deve girare sulla stessa versione
+# comparator: usiamo l'latest versione. NON deve girare sulla stessa versione
 # di Lean del progetto (vedi docs/02-verifier.md), ma deve essere recente
-# abbastanza da capire il format_ di export current e da supportare i
+# abbastanza da capire il format di export current e da supportare i
 # "buchi di definition" (definition_names), che ci servono per answer( ).
 COMPARATOR_REV="2312244"
 
-# lean4export: il source_text e' quello recente (format_ di export compatibile con
+# lean4export: il source_text e' quello recente (format di export compatibile con
 # comparator) MA compilato con Lean 4.27.0, perche' deve leggere gli .olean
 # dell'archive, che sono legati alla versione di Lean.
 LEAN4EXPORT_REV="master"
@@ -52,7 +52,7 @@ fi
 git -C "$EXT/formal-conjectures" fetch --tags --quiet
 git -C "$EXT/formal-conjectures" checkout --quiet "$FC_TAG"
 test "$(cat "$EXT/formal-conjectures/lean-toolchain")" = "leanprover/lean4:$LEAN_VERSION" \
-  || { echo "ERRORE: il tag richiede un Lean diverso da $LEAN_VERSION"; exit 1; }
+  || { echo "ERROR: il tag richiede un Lean diverso da $LEAN_VERSION"; exit 1; }
 
 step "3/7  Cache di Mathlib + compilazione dell'archive (LUNGO: ~30-60 min)"
 ( cd "$EXT/formal-conjectures" && lake exe cache get && lake build )

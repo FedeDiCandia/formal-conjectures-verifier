@@ -1,30 +1,28 @@
 """
-Estrae la dimostrazione che l'archive fornisce, come file candidato autonomo.
+Extract the proof the archive supplies, as a self-contained candidate file.
 
-A COSA SERVE
-------------
-Per calibrare un agent servono problems di cui si conosca la answer. Ma
-"l'archive lo ha solved_one" non basta: la sua dimostrazione potrebbe usare
-`decide +native` (95 cases) o dipendere da un lemma con un buco (17 cases), e il
-nostro verifier la rifiuterebbe. Chiedere a un agent di risolvere one di
-quei problems significa chiedergli di fare MEGLIO dell'archive, e un
-failure non direbbe niente sull'agent.
+WHAT IT IS FOR
+--------------
+Calibrating an agent needs problems whose answer is known. But "the archive has
+solved it" is not enough: its proof might use `decide +native` (95 cases) or
+depend on a lemma with a hole (17 cases), and our verifier would reject it. Asking
+an agent to solve one of those problems means asking it to do BETTER than the
+archive, and a failure would say nothing about the agent.
 
-Il controllo sugli axioms (field_ `archiveProofAxioms` dell'index) e' one_
-condizione necessaria ma non sufficiente: non dice se la dimostrazione, estratta
-dal suo file e compilata da sola, arriva davvero in fondo al verifier. Per
-saperlo bisogna provarci.
+The axiom check (the index's `archiveProofAxioms` field) is a necessary but not
+sufficient condition: it does not say whether the proof, extracted from its file
+and compiled on its own, really makes it through the verifier. Finding that out
+means trying.
 
-Questo module costruisce il file candidato che l'archive stesso consegnerebbe:
-gli import, le definizioni locals_, i lemmi ausiliari DIMOSTRATI e il theorem_
-target_ con la sua dimostrazione vera. Vengono tolte only_ le dichiarazioni
-che contengono `sorry`, perche' il verifier rifiuta un file che ne
-contenga.
+This module builds the candidate file the archive itself would submit: the
+imports, the local definitions, the auxiliary lemmas that ARE proved, and the
+target theorem with its real proof. Only the declarations containing `sorry` are
+removed, because the verifier rejects a file that contains any.
 
-Togliere TUTTI gli altri theorems era la scelta sbagliata: alla before trial 9
-dimostrazioni su 23 sono fallite con "Unknown identifier", perche' usavano un
-lemma neighbour nello stesso file. Il failure era dell'estrattore, non
-dell'archive.
+Removing ALL the other theorems was the wrong choice: on the first attempt 9
+proofs out of 23 failed with "Unknown identifier", because they used a
+neighbouring lemma from the same file. The failure was the extractor's, not the
+archive's.
 """
 from __future__ import annotations
 
@@ -38,46 +36,45 @@ from index import Problem, ProblemIndex   # noqa: E402
 
 
 class NotExtractable(ValueError):
-    """Non si puo' costruire un candidato autonomo per questo problem."""
+    """No self-contained candidate can be built for this problem."""
 
 
 @dataclass
 class ArchiveProof:
     problem: str
     text: str
-    teoremi_rimossi: int
+    theorems_removed: int
 
 
-#: Parole key_ che aprono one_ DICHIARAZIONE.
+#: Keywords that open a DECLARATION.
 _DECLARATIONS = ("theorem", "lemma", "def", "abbrev", "instance", "structure",
                   "inductive", "class", "example", "opaque", "axiom")
 
-#: Modificatori che possono precedere one_ word key_.
+#: Modifiers that may precede a keyword.
 _MODIFIERS = ("private", "protected", "noncomputable", "partial", "unsafe",
                  "scoped", "local", "nonrec", "public", "meta", "mutual")
 
-#: Comandi di struttura: aprono un block ma non dichiarano nulla.
-#: Si confrontano come PAROLE INTERE. Confrontarli come prefissi e' state un
-#: finding vero: la line di un docstring che cominciava con "endomorphism of a
-#: finite set is surjective. -/" veniva letta come un `end`, il block del
-#: theorem_ precedente si fermava one_ line troppo presto e la queue del docstring
-#: restava penzolante, con "unexpected identifier; expected command". Succedeva
-#: su GottschalkSurjunctivity.isSurjunctive_of_finite.
+#: Structural commands: they open a block but declare nothing.
+#: They are matched as WHOLE WORDS. Matching them as prefixes was a real defect:
+#: a docstring line beginning "endomorphism of a finite set is surjective. -/"
+#: was read as an `end`, the previous theorem's block ended one line too early
+#: and the tail of the docstring was left dangling, with "unexpected identifier;
+#: expected command". It happened on
+#: GottschalkSurjunctivity.isSurjunctive_of_finite.
 _STRUCTURAL = ("namespace", "end", "section", "import", "open", "variable",
                 "variables", "universe", "set_option", "attribute", "notation",
                 "notation3", "deriving", "macro", "macro_rules", "syntax",
                 "elab", "elab_rules", "run_cmd")
 
-#: Questi two invece si attaccano al loro argomento (`#check`, `/-!# Titolo`).
+#: These two, by contrast, attach to their argument (`#check`, `/-!# Title`).
 _STRUCTURAL_PREFIX = ("#", "/-!")
 
 _RE_STRUCTURAL = re.compile(
     "^(?:" + "|".join(re.escape(p) for p in _STRUCTURAL) + r")(?![A-Za-z0-9_'])")
-# NB: `/-` NON e' qui. Ci era finito, e siccome `/--` comincia con `/-` i
-# docstring tornavano a essere inizi di block: rimuovendo un theorem_ il suo
-# docstring restava penzolante, con l'error
-# "unexpected token '/--'; expected 'lemma'". Un docstring appartiene sempre
-# alla declaration che lo segue, mai a se' stesso.
+# NB: `/-` is NOT here. It was once, and since `/--` begins with `/-` docstrings
+# became block openers again: removing a theorem left its docstring dangling, with
+# the error "unexpected token '/--'; expected 'lemma'". A docstring always belongs
+# to the declaration that follows it, never to itself.
 
 
 def _opens_declaration(line: str) -> bool:
@@ -99,17 +96,16 @@ def _opens_structure(line: str) -> bool:
 
 
 def _blocks(lines: list[str]) -> list[tuple[int, int]]:
-    """Spezza il file in blocks di prime_ level: (line iniziale, line finale).
+    """Split the file into top-level blocks: (first line, last line).
 
-    Il punto delicato: un docstring `/-- ... -/` e un attributo `@[...]`
-    APPARTENGONO alla declaration che li segue. Trattarli come blocks a se'
-    e' esattamente l'error che, alla before trial, faceva rimanere un docstring
-    penzolante after aver rimosso il suo theorem_, con l'error
-    "unexpected token '/--'; expected 'lemma'".
+    The delicate point: a docstring `/-- ... -/` and an attribute `@[...]` BELONG
+    to the declaration that follows them. Treating them as blocks of their own is
+    exactly the error that, on the first attempt, left a docstring dangling after
+    its theorem had been removed, with "unexpected token '/--'; expected 'lemma'".
 
-    Quindi: si individuano before le lines che aprono one_ declaration o un
-    command di struttura, poi ciascuna viene estesa ALL'INDIETRO per assorbire
-    gli attributi, i docstring e le lines vuote che la precedono.
+    So: first the lines that open a declaration or a structural command are found,
+    then each is extended BACKWARDS to absorb the attributes, docstrings and blank
+    lines that precede it.
     """
     starts = [i for i, r in enumerate(lines)
              if _opens_declaration(r) or _opens_structure(r)]
@@ -117,7 +113,7 @@ def _blocks(lines: list[str]) -> list[tuple[int, int]]:
         return [(0, len(lines) - 1)]
 
     def extend_backwards(i: int, limit: int) -> int:
-        """Riporta l'start del block above attributi, docstring e lines vuote."""
+        """Move the block's start above attributes, docstrings and blank lines."""
         j = i
         while j - 1 > limit:
             prec = lines[j - 1]
@@ -125,7 +121,7 @@ def _blocks(lines: list[str]) -> list[tuple[int, int]]:
             if not bare:
                 j -= 1
                 continue
-            # attributo, eventualmente su piu' lines
+            # an attribute, possibly spanning several lines
             if bare.endswith("]") and "@[" in "\n".join(lines[max(limit + 1, j - 6):j]):
                 k = j - 1
                 while k > limit and "@[" not in lines[k]:
@@ -136,7 +132,7 @@ def _blocks(lines: list[str]) -> list[tuple[int, int]]:
             if bare.startswith("@["):
                 j -= 1
                 continue
-            # docstring o commento chiuso subito above
+            # a docstring or comment closed just above
             if bare.endswith("-/"):
                 k = j - 1
                 level = 0
@@ -152,16 +148,16 @@ def _blocks(lines: list[str]) -> list[tuple[int, int]]:
 
     bounds = []
     for k, i in enumerate(starts):
-        # Il limit della risalita e' la line della declaration PRECEDENTE,
-        # non la end del suo block: la end del block precedente e' proprio
-        # cio' che stiamo per correggere. Usare quella bloccava la risalita al
-        # prime_ step, e docstring e attributi restavano attaccati alla
-        # declaration sbagliata.
+        # The limit of the backwards walk is the line of the PREVIOUS
+        # declaration, not the end of its block: the end of the previous block is
+        # exactly what we are about to correct. Using that stopped the walk at the
+        # first step, and docstrings and attributes stayed attached to the wrong
+        # declaration.
         limit = starts[k - 1] if k > 0 else -1
         start = extend_backwards(i, limit)
         end = (starts[k + 1] - 1) if k + 1 < len(starts) else len(lines) - 1
         bounds.append([start, end])
-    # risistema i confini: il block n finisce dove comincia il block n+1
+    # tidy the bounds: block n ends where block n+1 begins
     for k in range(len(bounds) - 1):
         bounds[k][1] = bounds[k + 1][0] - 1
     if bounds and bounds[0][0] > 0:
@@ -170,42 +166,41 @@ def _blocks(lines: list[str]) -> list[tuple[int, int]]:
 
 
 def _without_comments(text: str) -> str:
-    """Toglie commenti e stringhe, per non scambiare un `sorry` citato in un
-    commento per un vero buco."""
+    """Strip comments and strings, so that a `sorry` quoted in a comment is not
+    mistaken for a real hole."""
     import guard
     return guard.strip_comments_and_strings(text)
 
 
 def _comment_imbalance(text: str) -> int:
-    """Quante chiusure `-/` in piu' rispetto alle aperture `/-`.
+    """How many `-/` closers there are in excess of `/-` openers.
 
-    Serve quando si rimuove un block: se conteneva la closure di un commento
-    cominciato piu' above, va rimessa, altrimenti il commento resta aperto e si
-    mangia tutto il resto del file.
+    This matters when a block is removed: if it contained the closer of a comment
+    that began higher up, the closer has to be put back, or the comment stays open
+    and swallows the rest of the file.
     """
-    apre = closes = 0
+    opens = closes = 0
     i, n = 0, len(text)
     while i < n - 1:
-        if text[i] == "-" and text[i + 1] == "-" and apre == closes:
+        if text[i] == "-" and text[i + 1] == "-" and opens == closes:
             while i < n and text[i] != "\n":
                 i += 1
             continue
         if text[i] == "/" and text[i + 1] == "-":
-            apre += 1; i += 2; continue
+            opens += 1; i += 2; continue
         if text[i] == "-" and text[i + 1] == "/":
             closes += 1; i += 2; continue
         i += 1
-    return closes - apre
+    return closes - opens
 
 
 def _cut_open_comment(text: str) -> str:
-    """Toglie un commento a block rimasto aperto.
+    """Remove a block comment that has been left open.
 
-    Troncare il file after il theorem_ target_ puo' cadere inside un commento
-    `/- ... -/` il cui `-/` stava piu' in low. Lean si ferma con
-    "unterminated comment". Qui si trova il `/-` rimasto senza closure e si
-    size_ da li' in poi: e' only_ un commento, non si perde nulla di
-    matematico.
+    Truncating the file after the target theorem can land inside a comment
+    `/- ... -/` whose `-/` was further down. Lean then stops with "unterminated
+    comment". Here the `/-` left without a closer is found and everything from
+    there on is cut: it is only a comment, so nothing mathematical is lost.
     """
     depth = 0
     last_opening = None
@@ -232,12 +227,12 @@ def _cut_open_comment(text: str) -> str:
 
 
 def _missing_closers(text: str) -> str:
-    """Le lines `end` che servono a richiudere namespace e sezioni.
+    """The `end` lines needed to close namespaces and sections again.
 
-    Troncare il file after il theorem_ target_ lascia open_ i `namespace` e i
-    `section` che lo contengono, e Lean si ferma con "Unexpected name after
-    `end`" oppure con one_ sezione non chiusa. Qui si tiene la stack di cio' che
-    e' state aperto e si closes in order inverso.
+    Truncating the file after the target theorem leaves the `namespace`s and
+    `section`s containing it open, and Lean stops with "Unexpected name after
+    `end`" or with an unclosed section. Here a stack of what has been opened is
+    kept, and closed in reverse order.
     """
     stack: list[str] = []
     for line in text.split("\n"):
@@ -255,7 +250,7 @@ def _missing_closers(text: str) -> str:
                 stack.pop()
     if not stack:
         return ""
-    lines = ["", "-- chiusure aggiunte automaticamente after il troncamento del file"]
+    lines = ["", "-- closers added automatically after the file was truncated"]
     for name in reversed(stack):
         lines.append(f"end {name}".rstrip())
     return "\n".join(lines) + "\n"
@@ -268,18 +263,18 @@ def _declared_name(block: str) -> str | None:
 
 
 def extract(problem: Problem, index: ProblemIndex) -> ArchiveProof:
-    """Il file dell'archive senza all_of gli altri theorems."""
+    """The archive's file without the other theorems."""
     if not problem.proof_is_complete:
         raise NotExtractable(
-            f"{problem.theorem}: l'archive non ne fornisce one_ dimostrazione "
-            f"(il termine di trial contiene `sorry`)")
+            f"{problem.theorem}: the archive supplies no proof of it "
+            f"(the proof term contains `sorry`)")
     if not problem.range:
-        raise NotExtractable(f"{problem.theorem}: position nel source_text sconosciuta")
+        raise NotExtractable(f"{problem.theorem}: position in the source is unknown")
 
     text = problem.source_file.read_text(encoding="utf-8")
     lines = text.split("\n")
 
-    # Nome short del theorem_ target_: nel file e' scritto senza il namespace.
+    # Short name of the target theorem: in the file it is written without the namespace.
     short = problem.theorem.split(".")[-1]
     name_parts = problem.theorem.split(".")
 
@@ -295,24 +290,22 @@ def extract(problem: Problem, index: ProblemIndex) -> ArchiveProof:
             if is_target:
                 kept.append(block)
                 found = True
-                # Tutto cio' che viene DOPO il theorem_ target_ non puo'
-                # servirgli: in Lean un file si legge dall'high in low.
-                # Tenerlo causava soltanto errors, perche' quei theorems usavano
-                # a loro volta lemmi che avevamo dovuto rimuovere.
+                # Nothing AFTER the target theorem can be of use to it: a Lean
+                # file is read from the top down. Keeping it only caused errors,
+                # because those theorems in turn used lemmas we had had to remove.
                 break
-            clean_one = _without_comments(block)
-            # Si rimuovono also_ i lemmi neighbours che usano `native_decide` o
-            # `decide +native`: il verifier rifiuta l'intero file se li
-            # trova, e il theorem_ target_ non ne ha bisogno (se ne avesse
-            # bisogno, i suoi axioms non sarebbero clean_ones e il problem non
-            # sarebbe fra i candidates).
-            if ("sorry" in clean_one or "native_decide" in clean_one
-                    or re.search(r"\+\s*native", clean_one)):
+            clean = _without_comments(block)
+            # Neighbouring lemmas that use `native_decide` or `decide +native`
+            # are removed too: the verifier rejects the whole file if it finds
+            # them, and the target theorem does not need them (if it did, its
+            # axioms would not be clean and the problem would not be a candidate).
+            if ("sorry" in clean or "native_decide" in clean
+                    or re.search(r"\+\s*native", clean)):
                 removed += 1
-                # Se il block rimosso CHIUDEVA un commento aperto piu' above,
-                # togliendolo si lascia il commento aperto e tutto il resto del
-                # file — target_ compreso — finisce inside il commento. Si
-                # rimette la closure al slot_ suo.
+                # If the removed block CLOSED a comment opened higher up,
+                # removing it leaves that comment open and the rest of the file —
+                # the target included — ends up inside the comment. So the closer
+                # is put back in its place.
                 deficit = _comment_imbalance(block)
                 if deficit > 0:
                     kept.append("-/" * deficit)
@@ -321,41 +314,41 @@ def extract(problem: Problem, index: ProblemIndex) -> ArchiveProof:
 
     if not found:
         raise NotExtractable(
-            f"{problem.theorem}: non sono succeeded a individuare la declaration "
-            f"nel file (name expected_one `{short}`)")
+            f"{problem.theorem}: could not locate the declaration in the file "
+            f"(expected name `{short}`)")
 
     body = "\n".join(kept)
-    # Rimettere a slot_ la closure di un commento puo' lasciare un docstring
-    # VUOTO (`/--` seguito subito da `-/`): Lean lo rifiuta, perche' un
-    # docstring deve documentare qualcosa. Si toglie.
+    # Putting a comment's closer back can leave an EMPTY docstring (`/--`
+    # immediately followed by `-/`): Lean rejects that, because a docstring has to
+    # document something. So it is removed.
     body = re.sub(r"/--\s*-/\s*\n", "", body)
     body = _cut_open_comment(body)
     body += _missing_closers(body)
 
-    # Controllo di sicurezza: after all_of queste manipolazioni il theorem_
-    # target_ deve essere ancora li'. Se non c'e', il file compilerebbe
-    # benissimo e comparator fallirebbe con un PANIC oscuro
-    # ("Constant not found"): meglio un error chiaro adesso.
+    # Safety check: after all this manipulation the target theorem must still be
+    # there. If it is not, the file would compile perfectly well and comparator
+    # would fail with an obscure PANIC ("Constant not found"): better a clear
+    # error now.
     if not re.search(rf"(?:theorem|lemma)\s+{re.escape(short)}(?![\w'])", body) and \
        not re.search(rf"(?:theorem|lemma)\s+\S*{re.escape(short)}(?![\w'])", body):
         raise NotExtractable(
-            f"{problem.theorem}: after l'estrazione il theorem_ target_ non e' "
-            f"piu' nel file. E' un finding dell'estrattore, non dell'archive.")
+            f"{problem.theorem}: after extraction the target theorem is no longer "
+            f"in the file. That is a defect of the extractor, not of the archive.")
 
     header = (
         "/-\n"
-        "  DIMOSTRAZIONE DELL'ARCHIVIO, estratta automaticamente.\n"
+        "  THE ARCHIVE'S PROOF, extracted automatically.\n"
         "\n"
-        f"  Problema: {problem.theorem}\n"
-        f"  Modulo:   {problem.module}\n"
-        f"  Rimossi:  {removed} theorems dello stesso file che contenevano `sorry`\n"
-        f"            (i lemmi ausiliari DIMOSTRATI sono stati kept: spesso\n"
-        f"            la dimostrazione del target_ li usa)\n"
+        f"  Problem: {problem.theorem}\n"
+        f"  Module:  {problem.module}\n"
+        f"  Removed: {removed} theorems from the same file that contained `sorry`\n"
+        f"           (auxiliary lemmas that ARE proved were kept: the target's\n"
+        f"           proof often uses them)\n"
         "\n"
-        "  Serve a stabilire se la dimostrazione fornita dall'archive passa\n"
-        "  davvero il nostro verifier. Se non passa, il problem non e'\n"
-        "  utilizzabile per calibrare un agent.\n"
+        "  This exists to establish whether the proof the archive supplies really\n"
+        "  passes our verifier. If it does not, the problem cannot be used to\n"
+        "  calibrate an agent.\n"
         "-/\n")
     return ArchiveProof(problem=problem.theorem,
                          text=header + body,
-                         teoremi_rimossi=removed)
+                         theorems_removed=removed)
