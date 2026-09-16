@@ -52,8 +52,8 @@ Around it this repository adds:
 |---|---|
 | a syntactic pre-scan | rejects 24 commands, 22 attributes, 19 metaprogramming monads, 6 tokens and 6 options that run code at elaboration time, before Lean ever sees the file |
 | a sandbox | `sandbox-exec`: no network, writes only inside the judge's own scratch directory |
-| an archive fingerprint | content hashes of 786 `.olean` files and 795 sources, taken **before and after** every verification |
-| a refutation mode | builds `theorem X_disproof : ¬ (type_of% @X)` as a trusted challenge, so a counterexample can be certified the same way a proof is |
+| an archive fingerprint | content hashes of every archive file (5,378 in the benchmark snapshot, 10,370 on `main`) plus metadata for its dependencies, taken **before and after** every verification |
+| a refutation mode | builds `theorem X_refutation : ¬ (type_of% @X)` as a trusted challenge, so a counterexample can be certified the same way a proof is |
 | a hard spending limit | the maximum possible cost of the next API call is computed *before* making it |
 
 Only `propext`, `Classical.choice` and `Quot.sound` are permitted axioms.
