@@ -34,3 +34,13 @@ build/
 dati_ricerca/codici/
 dati_ricerca/Andw.html
 dati_ricerca/binary-1.html
+
+# Note di lavoro interne, non pubblicate
+interno/
+
+# Configurazione locale degli strumenti
+.claude/
+
+# Indici generati: li ricostruisce `python verifier/index.py --build`
+verifier/problem_index.json
+verifier/problem_index_main.json
