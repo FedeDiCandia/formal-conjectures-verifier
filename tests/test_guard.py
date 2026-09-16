@@ -1,5 +1,5 @@
 """
-Test del controllo sintattico preventivo (verifier/guard.py).
+Tests of the syntactic pre-scan (verifier/guard.py).
 
 These are fast tests: they do not start Lean. They guarantee two things:
   * the guard does NOT raise false alarms on legitimate code (otherwise it would

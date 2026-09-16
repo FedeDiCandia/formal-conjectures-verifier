@@ -45,7 +45,7 @@ def setup_module(module):
         pytest.skip("Environment not installed:\n  - " + "\n  - ".join(problems),
                     allow_module_level=True)
     if not config.INDEX_FILE.is_file():
-        pytest.skip("Indice mancante: run `python verifier/index.py --build`",
+        pytest.skip("Index missing: run `python verifier/index.py --build`",
                     allow_module_level=True)
 
 
@@ -90,12 +90,12 @@ def test_1_it_accepts_a_correct_proof():
     """The most important requirement: if the verifier NEVER accepted
     nothing, it would be useless even while being perfectly safe."""
     r = _check("1_correct.lean")
-    assert r.status == ACCEPTED, f"expected ACCEPTED, ottenuto {r.status}:\n{r.render()}"
+    assert r.status == ACCEPTED, f"expected ACCEPTED, got {r.status}:\n{r.render()}"
     passed = {c.name for c in r.checks if c.passed}
     for expected in ["compiles without errors", "type identical to the original",
                      "archive definitions intact", "permitted axioms",
-                   "accepted dal kernel"]:
-        assert expected in passed, f"controllo mancante: {expected}"
+                     "accepted by the kernel"]:
+        assert expected in passed, f"missing check: {expected}"
 
 
 # --- 2. It REJECTS a proof containing `sorry` --------------------------------
@@ -185,7 +185,7 @@ def test_7_it_flags_the_problems_with_an_answer_hole():
     with_hole = idx.find(has_answer_hole=True)
     assert with_hole, "the index should contain problems with answer( ) holes"
     r = verify(with_hole[0].theorem, fixture("1_correct.lean"), index=idx)
-    assert r.status == UNVERIFIABLE, f"expected UNVERIFIABLE, ottenuto {r.status}"
+    assert r.status == UNVERIFIABLE, f"expected UNVERIFIABLE, got {r.status}"
     assert "answer" in r.message.lower()
 
 
@@ -194,7 +194,7 @@ def test_7_it_flags_the_problems_with_an_answer_hole():
 def test_8_the_timeout_works():
     """With one second available no verification can finish."""
     r = _check("1_correct.lean", timeout=1)
-    assert r.status == TIMEOUT, f"expected TIMEOUT, ottenuto {r.status}"
+    assert r.status == TIMEOUT, f"expected TIMEOUT, got {r.status}"
     assert "within the time limit" in _failed_rule(r)
 
 

@@ -67,7 +67,7 @@ def setup_module(module):
     if config.check_installation():
         pytest.skip("environment not installed", allow_module_level=True)
     if not config.INDEX_FILE.is_file():
-        pytest.skip("index mancante", allow_module_level=True)
+        pytest.skip("index missing", allow_module_level=True)
 
 
 @pytest.fixture(scope="module")
@@ -164,7 +164,7 @@ def test_modalita_sconosciuta_viene_rifiutata(tmp_path):
 
 def _reason(result) -> set[str]:
     return {c.name for c in result.checks
-            if not c.passed and c.name != "controllo sintattico preventivo"}
+            if not c.passed and c.name != "syntactic pre-scan"}
 
 
 def test_in_strict_mode_a_candidate_with_True_matches(tmp_path):
